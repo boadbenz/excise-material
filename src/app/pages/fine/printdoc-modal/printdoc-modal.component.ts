@@ -8,7 +8,7 @@ import { appConfig } from "app/app.config";
 import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ManageComponent } from '../manage/manage.component';
+// import { ManageComponent } from '../manage/manage.component';
 
 @Component({
     selector: 'app-printdoc-modal',
@@ -18,6 +18,10 @@ import { ManageComponent } from '../manage/manage.component';
 
 export class PrintDocModalComponent implements OnInit {
 
+    printDoc: any[]
+    sort = 'asc';
+    public data: any
+    
     condtion: ICompareCon = {};
 
     TitleName: String;
@@ -36,12 +40,14 @@ export class PrintDocModalComponent implements OnInit {
         private _router: Router,
         private preloader: PreloaderService,
         private http: HttpClient,
-        private manageComponent: ManageComponent,
+        // private manageComponent: ManageComponent,
         private httpClient: HttpClient
     ) { }
 
 
     ngOnInit() {
+        this.printDoc = this.data;
+        console.log("fine data : ",this.data)
         this.getCompareByID();
         //this.getCompareDoc();
     }
@@ -121,19 +127,19 @@ export class PrintDocModalComponent implements OnInit {
         //             this.preloader.setShowPreloader(false);
         //         })
         // }
-        if (this.check.checkbox3) {
-            console.log("Chk3")
-            var mCompareID = this.manageComponent.params.CompareID;
-            var mIndictmentID = this.manageComponent.params.IndictmentID;
-            this.preloader.setShowPreloader(true);
-            await this.ReportForm3(mCompareID, mIndictmentID, this.ArrestCode)
-                .subscribe(x => {
-                    const file = new Blob([x], { type: 'application/pdf' });
-                    const fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                    this.preloader.setShowPreloader(false);
-                })
-        }
+        // if (this.check.checkbox3) {
+        //     console.log("Chk3")
+        //     var mCompareID = this.manageComponent.params.CompareID;
+        //     var mIndictmentID = this.manageComponent.params.IndictmentID;
+        //     this.preloader.setShowPreloader(true);
+        //     await this.ReportForm3(mCompareID, mIndictmentID, this.ArrestCode)
+        //         .subscribe(x => {
+        //             const file = new Blob([x], { type: 'application/pdf' });
+        //             const fileURL = URL.createObjectURL(file);
+        //             window.open(fileURL);
+        //             this.preloader.setShowPreloader(false);
+        //         })
+        // }
         // if (this.check.checkbox4) {
         //     console.log("Chk4")
         //     // var mCompareID = this.manageComponent.params.CompareID;

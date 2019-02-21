@@ -20,7 +20,7 @@ export class EvidenceOutService {
 
   getByKeyword(Textsearch: any) {
     const params = JSON.stringify(Textsearch);
-    const url = `${appConfig.api8778}/EvidenceOutgetByKeyword`;
+    const url = `${appConfig.api8778}/EvidenceOutListgetByKeyword`;
     return this.http.post<EvidenceOut[]>(url, params, this.httpOptions);
   }
 

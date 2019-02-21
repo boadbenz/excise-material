@@ -9,11 +9,12 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { ArrestService } from '../../model/arrest.service';
 import { LawsuitService } from '../../model/lawsuit.service';
-import { MasterService }  from '../../model/master.service';
+import { MasterService } from '../../model/master.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MyDatePickerModule } from 'mydatepicker';
+import { PrintDocModalComponent } from '../printdoc-modal/printdoc-modal.component'
 
 const routes: Routes = [
   {
@@ -32,23 +33,26 @@ const routes: Routes = [
 ];
 @NgModule({
   imports: [
-      FormsModule,
-      CommonModule,
-      RouterModule.forChild(routes),
-      HttpModule,
-      HttpClientModule,
-      CardActionsModule,
-      MatAutocompleteModule,
-      PrintDocModalModule,
-      MyDatePickerTHModule,
-      MyDatePickerModule
+    FormsModule,
+    CommonModule,
+    RouterModule.forChild(routes),
+    HttpModule,
+    HttpClientModule,
+    CardActionsModule,
+    MatAutocompleteModule,
+    PrintDocModalModule,
+    MyDatePickerTHModule,
+    MyDatePickerModule,
   ],
   providers: [FineService,
-      ArrestService,
-      LawsuitService,
-      MasterService
+    ArrestService,
+    LawsuitService,
+    MasterService,
   ],
   declarations: [ManageComponent],
+  entryComponents: [
+    PrintDocModalComponent
+  ],
   exports: [MatAutocompleteModule]
 })
 export class ManageModule { }

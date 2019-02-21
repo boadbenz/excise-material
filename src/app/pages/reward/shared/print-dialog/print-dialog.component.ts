@@ -41,14 +41,15 @@ export class PrintDialogComponent extends CONFIG implements OnInit {
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
 
-  FG: FormGroup;
-  get PrintDoc(): FormArray {
-    return this.FG.get('PrintDoc') as FormArray;
-  }
+  // FG: FormGroup;
+  // get PrintDoc(): FormArray {
+  //   return this.FG.get('PrintDoc') as FormArray;
+  // }
   async ngOnInit() {
 
     this.printDoc = this.data;
 
+    console.log("reward data : ",this.data)
 
     // this.preLoaderService.setShowPreloader(true);
     // this.FG = this.fb.group({
