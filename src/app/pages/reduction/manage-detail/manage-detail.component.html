@@ -186,7 +186,7 @@
     <div class="form-group row">
       <label class="col-form-label text-left col-md-2">เหตุผลในการปรับ : </label>
       <div class="col-md-10">
-        <textarea class="form-control" type="text" rows="5" [(ngModel)]="adjustFine[0].CompareReason" name="positionLawName" [disabled]="showField"></textarea>
+        <textarea class="form-control" type="text" rows="5" [(ngModel)]="compareReason" name="positionLawName" [disabled]="showField"></textarea>
       </div>
     </div>
     <div class="table-responsive table-striped no-wrap">
@@ -210,12 +210,12 @@
             <td>{{item.ProductDesc}}</td>
             <td>{{item.ProductFine}}</td>
             <td>
-              <input type="text" [(ngModel)]="item.CompareFine" name="CompareFine" class="form-control" [disabled]="showField">
+              <input type="number" [(ngModel)]="item.CompareFine" name="CompareFine" class="form-control" [disabled]="showField" (keyup)="enterNewValue($event, i)">
             </td>
             <td>{{item.CompareFineDiff}}</td>
             <td class="status-increase" *ngIf="item.CompareFineStatus">ปรับเพิ่ม</td>
             <td class="status-decrease" *ngIf="!item.CompareFineStatus">ปรับลด</td>
-            <td>{{item.CompareFineTreasuryMoney }}</td>
+            <td>{{item.CompareFineTreasuryMoney}}</td>
             <td>{{item.CompareFineBribeMoney}}</td>
             <td>{{item.CompareFineRewardMoney}}</td>
           </tr>
