@@ -652,11 +652,11 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     // const printDoc = [...printDocfine];
 
-    // const dialogRef = this.dialog.open(PrintDocModalComponent, {
-    //   backdrop: 'static'
-    // });
-    // dialogRef.componentInstance.data = "printDoc";
-    // dialogRef.result.then(res => {});
+    const dialogRef = this.dialog.open(PrintDocModalComponent, {
+      backdrop: 'static'
+    });
+    dialogRef.componentInstance.data = "printDoc";
+    dialogRef.result.then(res => {});
 
   }
   async deleteCompare() {
