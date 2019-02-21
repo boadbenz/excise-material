@@ -20,13 +20,16 @@ export class EvidenceOutService {
 
   getByKeyword(Textsearch: any) {
     const params = JSON.stringify(Textsearch);
+    // const url = `${appConfig.api8778}/EvidenceOutgetByKeyword`;
     const url = `${appConfig.api8778}/EvidenceOutListgetByKeyword`;
+
     return this.http.post<EvidenceOut[]>(url, params, this.httpOptions);
   }
 
   async getByConAdv(form: any): Promise<any> {
     const params = JSON.stringify(form);
-    const url = `${appConfig.api8778}/EvidenceOutgetByConAdv`;
+    // const url = `${appConfig.api8778}/EvidenceOutgetByConAdv`;
+    const url = `${appConfig.api8778}/EvidenceOutListgetByConAdv`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

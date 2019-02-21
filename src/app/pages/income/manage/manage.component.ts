@@ -1128,7 +1128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // 
         // return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
         //return date.getHours() + ":" + date.getMinutes();
-        return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false });
+        return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false }) + " น.";
     }
 
     selectedChkAll() {
