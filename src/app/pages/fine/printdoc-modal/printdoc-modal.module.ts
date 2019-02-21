@@ -5,6 +5,7 @@ import { CardActionsModule } from '../../component/card-actions/card-actions.mod
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {ManageComponent} from '../manage/manage.component'
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
@@ -12,6 +13,7 @@ import {ManageComponent} from '../manage/manage.component'
     RouterModule,
     CardActionsModule,
     FormsModule,
+    NgbModule.forRoot(),
   ],
   declarations: [
       PrintDocModalComponent

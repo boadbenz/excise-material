@@ -8,6 +8,7 @@ import { appConfig } from "app/app.config";
 import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { NgbModalRef, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 // import { ManageComponent } from '../manage/manage.component';
 
 @Component({
@@ -27,7 +28,7 @@ export class PrintDocModalComponent implements OnInit {
     TitleName: String;
     FirstName: String;
     LastName: String;
-
+    
     @Input() pCompareID: string;
     @Input() ArrestCode: string;
 
@@ -35,6 +36,7 @@ export class PrintDocModalComponent implements OnInit {
     @Output() c = new EventEmitter();
     check: any = {};
     constructor(
+        private ActiveModal: NgbActiveModal,
         private fineService: FineService,
         private fb: FormBuilder,
         private _router: Router,
@@ -47,7 +49,7 @@ export class PrintDocModalComponent implements OnInit {
 
     ngOnInit() {
         this.printDoc = this.data;
-        console.log("fine data : ",this.data)
+        console.log("fine printDoc : ",this.printDoc)
         this.getCompareByID();
         //this.getCompareDoc();
     }
@@ -242,6 +244,9 @@ export class PrintDocModalComponent implements OnInit {
 
         // this._router.navigate([`/fine/list`]);
     }
+    // closeDialog() {
+    //     this.ActiveModal.close();
+    //   }
     private httpOptions = {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
@@ -421,6 +426,7 @@ export class PrintDocModalComponent implements OnInit {
         console.log('dd');
         this.d.emit('esc');
         this.d.emit(e);
+        this.ActiveModal.close();
     }
 
     close(e: any) {

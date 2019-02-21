@@ -32,7 +32,7 @@ import Swal from 'sweetalert2'
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import swal from 'sweetalert2';
 import { replaceFakePath } from 'app/config/dataString';
-import { PrintDocModalComponent } from '../printdoc-modal/printdoc-modal.component';
+import { PrintDocModalComponent } from '../../fine/printdoc-modal/printdoc-modal.component';
 
 @Component({
   selector: 'app-manage',
@@ -130,7 +130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private masDocumentMainService: MasDocumentMainService,
     private fb: FormBuilder,
     public dialog: NgbModal,
-    // public printDocModalComponent: PrintDocModalComponent
+    // public PrintDocModalComponent: PrintDocModalComponent
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
@@ -641,7 +641,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // })
     // .toPromise();
     // const printDocfine: any[] = RequestReward.map(m => ({
-    //   DocName: `${m.RequestRewardCode || ''}: คำร้องขอรับเงินรางวัล`,
+    //   DocName: `${m.RequestRewardCode || ''}: แบบฟอร์มบันทึกคำให้การของผู้ต้องหา ส.ส.2/53`,
     //   DocType: 'แบบฟอร์ม', RequestRewardID: `${m.RequestRewardID}`, checked: false, TypeName: "RR"
     // }));
 
