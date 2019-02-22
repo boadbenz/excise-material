@@ -161,6 +161,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
               ProductFine: 16100,
               ProductID: 1136,
               VatValue: 2300,
+              start_index: 0
             },
             {
               CompareDetailID: 989,
@@ -174,6 +175,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
               ProductFine: 16100,
               ProductID: 1136,
               VatValue: 2300,
+              start_index: 0
             },
             {
               CompareDetailID: 989,
@@ -187,6 +189,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
               ProductFine: 16100,
               ProductID: 1136,
               VatValue: 2300,
+              start_index: 0
             },
             {
               CompareDetailID: 989,
@@ -200,6 +203,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
               ProductFine: 16100,
               ProductID: 1136,
               VatValue: 2300,
+              start_index: 0
             },
             {
               CompareDetailID: 989,
@@ -213,6 +217,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
               ProductFine: 16100,
               ProductID: 1136,
               VatValue: 2300,
+              start_index: 0
             },
             {
               CompareDetailID: 989,
@@ -226,6 +231,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
               ProductFine: 16100,
               ProductID: 1136,
               VatValue: 2300,
+              start_index: 0
             },
             {
               CompareDetailID: 989,
@@ -239,10 +245,32 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
               ProductFine: 16100,
               ProductID: 1136,
               VatValue: 2300,
+              start_index: 0
+            },
+            {
+              CompareDetailID: 989,
+              CompareFineID: 813,
+              CompareReason: 'ไม่มี',
+              FineRate: 7,
+              FineType: 3,
+              IsActive: 1,
+              LawbreakerName: 'หยวก3  เหมศรี',
+              ProductDesc: null,
+              ProductFine: 16100,
+              ProductID: 1136,
+              VatValue: 2300,
+              start_index: 0
             }
           ];
 
           await this.adjustFine.forEach((element, i) => {
+            if (i === 0) {
+              element.start_index = i;
+            } else if (element.LawbreakerName !== this.adjustFine[i - 1].LawbreakerName) {
+              element.start_index = i;
+            } else {
+              element.start_index = this.adjustFine[i - 1].start_index;
+            }
             this.calAdjustFine(i);
           });
         }
@@ -280,18 +308,15 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
                                                     - this.adjustFine[index].CompareFineTreasuryMoney
                                                     - this.adjustFine[index].CompareFineBribeMoney;
     }
+
+    console.log(this.adjustFine);
   }
 
-  public sumAllAdjustFine(column, end = this.adjustFine.length, last = false): any {
+  public sumAllAdjustFine(column, start = 0, end = this.adjustFine.length): any {
     let sum = 0;
-    for (let i = this.startIndexSum; i < end; i++) {
+    for (let i = start; i < end; i++) {
       sum += this.adjustFine[i][column];
     }
-
-    // this.startIndexSum = (end && last) ? end : 2;
-    // if (last) {
-    //   this.startIndexSum = end ? end : this.adjustFine.length;
-    // }
     return sum;
   }
 

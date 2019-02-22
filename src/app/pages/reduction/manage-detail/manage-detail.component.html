@@ -206,16 +206,16 @@
         </thead>
         <tbody>
             <ng-template ngFor let-item [ngForOf]="adjustFine" let-i="index">
-              <!-- <tr class="footable" *ngIf="i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName">
-                <th colspan="2">{{i}}</th>
-                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('ProductFine', i) : ''}}</th>
-                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFine', i) : ''}}</th>
-                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFineDiff', i) : ''}}</th>
+              <tr class="footable" *ngIf="i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName">
+                <th colspan="2"></th>
+                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('ProductFine', adjustFine[i - 1].start_index, i) : ''}}</th>
+                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFine', adjustFine[i - 1].start_index, i) : ''}}</th>
+                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFineDiff', adjustFine[i - 1].start_index, i) : ''}}</th>
                 <th></th>
-                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFineTreasuryMoney', i) : ''}}</th>
-                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFineBribeMoney', i) : ''}}</th>
-                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFineRewardMoney', i, true) : ''}}</th>
-              </tr> -->
+                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFineTreasuryMoney', adjustFine[i - 1].start_index, i) : ''}}</th>
+                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFineBribeMoney', adjustFine[i - 1].start_index, i) : ''}}</th>
+                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFineRewardMoney', adjustFine[i - 1].start_index, i) : ''}}</th>
+              </tr>
               <!-- <div [hidden]="true">{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? startList.push(i): ''}}}</div> -->
               <tr class="footable">
                 <td>{{i == 0 || item.LawbreakerName != adjustFine[i - 1].LawbreakerName ? item.LawbreakerName : ''}}</td>
@@ -230,6 +230,17 @@
                 <td>{{item.CompareFineTreasuryMoney}}</td>
                 <td>{{item.CompareFineBribeMoney}}</td>
                 <td>{{item.CompareFineRewardMoney}}</td>
+              </tr>
+
+              <tr class="footable" *ngIf="i !== 0 && i === (adjustFine.length - 1)">
+                <th colspan="2"></th>
+                <th>{{(i !== 0 && i === (adjustFine.length - 1)) ? sumAllAdjustFine('ProductFine', item.start_index, i + 1) : ''}}</th>
+                <th>{{(i !== 0 && i === (adjustFine.length - 1)) ? sumAllAdjustFine('CompareFine', item.start_index, i + 1) : ''}}</th>
+                <th>{{(i !== 0 && i === (adjustFine.length - 1)) ? sumAllAdjustFine('CompareFineDiff', item.start_index, i + 1) : ''}}</th>
+                <th></th>
+                <th>{{(i !== 0 && i === (adjustFine.length - 1)) ? sumAllAdjustFine('CompareFineTreasuryMoney', item.start_index, i + 1) : ''}}</th>
+                <th>{{(i !== 0 && i === (adjustFine.length - 1)) ? sumAllAdjustFine('CompareFineBribeMoney', item.start_index, i + 1) : ''}}</th>
+                <th>{{(i !== 0 && i === (adjustFine.length - 1)) ? sumAllAdjustFine('CompareFineRewardMoney', item.start_index, i + 1) : ''}}</th>
               </tr>
             </ng-template>
         </tbody>
