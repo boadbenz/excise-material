@@ -303,10 +303,6 @@ export class DialogJudgment {
                     } else {
                         let PaymentFine = await this.insert()
                         if (PaymentFine.IsSuccess) {
-                            Swal({
-                                text: "บันทึกสำเร็จ",
-                                type: 'success',
-                            })
                             if (this.lawsuitArrestFormDialog.IsFine == true) {
                                 let payment = []
                                 for (let i = 0; i < PaymentFine.LawsuitPaymentFine.length; i++) {
@@ -321,11 +317,16 @@ export class DialogJudgment {
                                     }
                                 }
                                 await this.lawsuitService.LawsuitPaymentFineDetailinsAll(payment)
-                                this.dialogRef.close({
-                                    IndictmentDetailID: this.data.lawsuitArrest.IndictmentDetailID,
-                                    JudgementID: PaymentFine.JudgementID
-                                });
                             }
+                            this.dialogRef.close({
+                                IndictmentDetailID: this.data.lawsuitArrest.IndictmentDetailID,
+                                JudgementID: PaymentFine.JudgementID
+                            });
+                            Swal({
+                                text: "บันทึกสำเร็จ",
+                                type: 'success',
+                            })
+                           
                         }
                     }
                     this.closePopup()

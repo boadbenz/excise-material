@@ -123,7 +123,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.43');
+    this.sidebarService.setVersion('0.0.0.44');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -605,15 +605,17 @@ export class ManageComponent implements OnInit {
             type: 'success',
           })
           let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
-          if (isLaw != 0) {
-            this.setButtonCase()
-          } else {
-            this.setButtonCaseIslaw()
+          if (checkComplete.length != 0) {
+            if (isLaw != 0) {
+              this.setButtonCase()
+            } else {
+              this.setButtonCaseIslaw()
+            }
+            let popup = {
+              checkComplete: checkComplete
+            }
+            this.viewNotComplete(popup)
           }
-          let popup = {
-            checkComplete: checkComplete
-          }
-          this.viewNotComplete(popup)
         } else {
           Swal({
             text: "บันทึกไม่สำเร็จ",
