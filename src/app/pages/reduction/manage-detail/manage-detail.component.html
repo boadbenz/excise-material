@@ -205,21 +205,46 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="footable" *ngFor="let item of adjustFine; let i = index;">
-            <td>{{item.LawbreakerName}}</td>
-            <td>{{item.ProductDesc}}</td>
-            <td>{{item.ProductFine}}</td>
-            <td>
-              <input type="number" [(ngModel)]="item.CompareFine" name="CompareFine" class="form-control" [disabled]="showField" (keyup)="enterNewValue($event, i)">
-            </td>
-            <td>{{item.CompareFineDiff}}</td>
-            <td class="status-increase" *ngIf="item.CompareFineStatus">ปรับเพิ่ม</td>
-            <td class="status-decrease" *ngIf="!item.CompareFineStatus">ปรับลด</td>
-            <td>{{item.CompareFineTreasuryMoney}}</td>
-            <td>{{item.CompareFineBribeMoney}}</td>
-            <td>{{item.CompareFineRewardMoney}}</td>
-          </tr>
+            <ng-template ngFor let-item [ngForOf]="adjustFine" let-i="index">
+              <!-- <tr class="footable" *ngIf="i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName">
+                <th colspan="2">{{i}}</th>
+                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('ProductFine', i) : ''}}</th>
+                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFine', i) : ''}}</th>
+                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFineDiff', i) : ''}}</th>
+                <th></th>
+                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFineTreasuryMoney', i) : ''}}</th>
+                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFineBribeMoney', i) : ''}}</th>
+                <th>{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? sumAllAdjustFine('CompareFineRewardMoney', i, true) : ''}}</th>
+              </tr> -->
+              <!-- <div [hidden]="true">{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? startList.push(i): ''}}}</div> -->
+              <tr class="footable">
+                <td>{{i == 0 || item.LawbreakerName != adjustFine[i - 1].LawbreakerName ? item.LawbreakerName : ''}}</td>
+                <td>{{item.ProductDesc}}</td>
+                <td>{{item.ProductFine}}</td>
+                <td>
+                  <input type="number" [(ngModel)]="item.CompareFine" name="CompareFine" class="form-control" [disabled]="showField" (keyup)="enterNewValue($event, i)">
+                </td>
+                <td>{{item.CompareFineDiff}}</td>
+                <td class="status-increase" *ngIf="item.CompareFineStatus">ปรับเพิ่ม</td>
+                <td class="status-decrease" *ngIf="!item.CompareFineStatus">ปรับลด</td>
+                <td>{{item.CompareFineTreasuryMoney}}</td>
+                <td>{{item.CompareFineBribeMoney}}</td>
+                <td>{{item.CompareFineRewardMoney}}</td>
+              </tr>
+            </ng-template>
         </tbody>
+        <tfoot>
+          <tr class="footable">
+            <th colspan="2">รวม</th>
+            <th>{{sumAllAdjustFine('ProductFine')}}</th>
+            <th>{{sumAllAdjustFine('CompareFine')}}</th>
+            <th>{{sumAllAdjustFine('CompareFineDiff')}}</th>
+            <th></th>
+            <th>{{sumAllAdjustFine('CompareFineTreasuryMoney')}}</th>
+            <th>{{sumAllAdjustFine('CompareFineBribeMoney')}}</th>
+            <th>{{sumAllAdjustFine('CompareFineRewardMoney')}}</th>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>
