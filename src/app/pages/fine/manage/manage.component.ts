@@ -134,13 +134,13 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.48');
+    this.sidebarService.setVersion('0.0.0.49');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
     // set true
-    this.navService.setNextPageButton(true);
-    this.navService.setInnerTextNextPageButton('ส่งเงินรายได้');
+    // this.navService.setNextPageButton(true);
+    // this.navService.setInnerTextNextPageButton('ส่งเงินรายได้');
     this.IsOutside = 0;
     this.receipt.list = [];
     const d: Date = new Date();
@@ -179,7 +179,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(false);
         this.navService.setCancelButton(false);
         this.navService.setSaveButton(false);
-        this.navService.setNextPageButton(true);
+        // this.navService.setNextPageButton(true);
       } else {
         this.navService.setSaveButton(true);
         this.navService.setCancelButton(true);
@@ -540,7 +540,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.navService.setCancelButton(false);
       this.navService.setSaveButton(false);
 
-      this.navService.setNextPageButton(true);
+      // this.navService.setNextPageButton(true);
       if (p['code1']) {
         this.params.CompareID = p['code1'];
       }
@@ -570,7 +570,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(false);
         this.navService.setCancelButton(false);
         this.navService.setSaveButton(false);
-        this.navService.setNextPageButton(true);
+        // this.navService.setNextPageButton(true);
       }
     });
     this.OnSubscribe.cancel = this.navService.onCancel.subscribe(async status => {
@@ -597,7 +597,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               this.navService.setSearchBar(false);
               this.navService.setCancelButton(false);
               this.navService.setSaveButton(false);
-              this.navService.setNextPageButton(true);
+              // this.navService.setNextPageButton(true);
               this.preloader.setShowPreloader(false);
               this.showEditField = true;
             } else {
