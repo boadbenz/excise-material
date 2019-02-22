@@ -326,6 +326,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.approveReportList[i].departOrder = cmpD[i].CommandNo;
         this.approveReportList[i].detailFact = cmpD[i].Fact;
         this.approveReportList[i].other = cmpD[i].CompareReason;
+        this.receipt.list[i].ApproveType = cmpD[i].ApproveReportType ? cmpD[i].ApproveReportType : 1; //add for printReport
         let j = 0;
         // console.log( this.approveReportList[i]);
         i++;
@@ -470,7 +471,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       // this.e ditUser.PaymentFineAppointDate.formatted
       if (compare.CompareDetailReceipt.length > 0) {
         const length: any = (this.compareDataUpdateTmp.CompareDetail.length - compare.CompareDetailReceipt.length) + i;
-        console.log(this.receipt.list[i]);
+        console.log("++++", this.receipt.list[i]);
         // this.receipt.list[i].TotalFine = compare.CompareFine;
         if (!this.receipt.list[i]) {
           this.receipt.list.push({});
@@ -487,7 +488,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.receipt.list[i].CompareDetailID = compare.CompareDetailReceipt[recLastIndex].CompareDetailID;
       }
       console.log('compare');
-      console.log(compare);
+      console.log('++++compare : ', compare);
       this.params.CompareDetailID = compare.CompareDetailID
       if (compare.CompareDetailFine) {
         for (const cd of compare.CompareDetailFine) {
@@ -635,34 +636,139 @@ export class ManageComponent implements OnInit, OnDestroy {
     })
   }
 
-  public Indict:any
+  public ReportAll: any[]
+  public ScannerKD3: any[]
+  public ScannerKD4: any[]
+  public ScannerKD5: any[]
+  public ScannerKD6: any[]
+  // public ReportKD4: any[]
+  // public ReportKD5: any[]
+  // public ReportKD6: any[]
   public async buttonPrint() {
-    // const RequestBribe: IRequestBribe[] = await this.requestBribeService
-    // .RequestBribegetByRequestBribeRewardID({
-    //   RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
-    // })
-    // .toPromise();
-    // const comparePrintDoc: ComparePrintDoc[] = await this.fineService.compareArrestGetByCon({
-    //   IndictmentID: this.Indict.getValue()
-    // })
-    // .toPromise();
-    // const printDocfine: any[] = RequestReward.map(m => ({
-    //   DocName: `${m.RequestRewardCode || ''}: แบบฟอร์มบันทึกคำให้การของผู้ต้องหา ส.ส.2/53`,
-    //   DocType: 'แบบฟอร์ม', RequestRewardID: `${m.RequestRewardID}`, checked: false, TypeName: "RR"
+
+    // var compareID = this.params.CompareID
+    // var indictmentID = this.params.IndictmentID
+    // this.params
+    console.log("++++print params : ", this.params)
+    console.log("++++this.approveReportList : ", this.approveReportList)
+
+    var CompareCIA = [{
+      CompareID: this.params.CompareID,
+      IndictmentID: this.params.IndictmentID,
+      ArrestCode: this.params.ArrestCode
+    }]
+
+    // var compareDetailID: any[] = this.receipt.list[0].CompareDetailID;
+    // const Repoer = [this.params + this.approveReportList]
+    console.log("++++this.receipt.list; : ", this.receipt.list)
+
+
+
+    const printDocfine: any[] = CompareCIA.map(m => ({
+      DocName: `แบบฟอร์มบันทึกคำให้การของผู้ต้องหา ส.ส.2/52 `,
+      DocType: 'แบบฟอร์ม', CompareID: `${m.CompareID}`, IndictmentID: `${m.IndictmentID}`,
+      ArrestCode: `${m.ArrestCode}`, checked: false, TypeName: "2/52"
+    }));
+
+    // console.log("++++printDocfine : ",printDocfine)
+
+    const printDocfine1: any[] = this.receipt.list.map(m => ({
+      DocName: `แบบฟอร์มบันทึกคำให้การของผู้ต้องหา ส.ส.2/53 ${m.LawBrakerName || ''}`,
+      DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "2/53"
+    }));
+
+    const printDocfine2: any[] = this.receipt.list.map(m => ({
+      DocName: `แบบฟอร์มใบเสร็จรับเงินค่าปรับเปรียบเทียบคดี ${m.LawBrakerName || ''}`,
+      DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`,
+      CompareReceiptID: `${m.CompareReceiptID}`, checked: false, TypeName: "Receipt"
+    }))
+
+    const printDocfine3: any[] = this.receipt.list.map(m => ({
+      DocName: `แบบฟอร์มรายงานขออนุมัติการเปรียบเทียบคดี คด.2 ${m.LawBrakerName || ''}`,
+      DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD2"
+    }));
+
+    console.log("this.receipt.list.length : ", this.receipt.list.length - 1)
+
+    for (var i = 0; i <= this.receipt.list.length - 1; i++) {
+      if (this.receipt.list[i].ApproveType == 1) {
+        this.ScannerKD3 = this.receipt.list[i];
+        this.ScannerKD3 = [{
+          LawBrakerName: this.receipt.list[i].LawBrakerName,
+          CompareDetailID: this.receipt.list[i].CompareDetailID
+        }]
+      }
+      if (this.receipt.list[i].ApproveType == 2) {
+        this.ScannerKD4 = [{
+          LawBrakerName: this.receipt.list[i].LawBrakerName,
+          CompareDetailID: this.receipt.list[i].CompareDetailID
+        }]
+      }
+      if (this.receipt.list[i].ApproveType == 3) {
+        this.ScannerKD5 = [{
+          LawBrakerName: this.receipt.list[i].LawBrakerName,
+          CompareDetailID: this.receipt.list[i].CompareDetailID
+        }]
+      }
+      if (this.receipt.list[i].ApproveType == 4) {
+        this.ScannerKD6 = [{
+          LawBrakerName: this.receipt.list[i].LawBrakerName,
+          CompareDetailID: this.receipt.list[i].CompareDetailID
+        }]
+      }
+    }
+
+    console.log("++++ScannerKD3 : ", this.ScannerKD3)
+    console.log("++++ScannerKD4 : ", this.ScannerKD4)
+    console.log("++++ScannerKD5 : ", this.ScannerKD5)
+    console.log("++++ScannerKD6 : ", this.ScannerKD6)
+
+
+    this.receipt.list.forEach(list => {
+      if (this.ScannerKD3) {
+        // console.log("ApproveType == 1")
+        this.ReportAll = this.ScannerKD3.map(m => ({
+          DocName: `แบบฟอร์มแบบอนุมัติ 1 คด.3 ${m.LawBrakerName || ''}`,
+          DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD3"
+        }));
+      }
+      if (this.ScannerKD4) {
+        // console.log("ApproveType == 2")
+        this.ReportAll = this.ScannerKD4.map(m => ({
+          DocName: `แบบฟอร์มแบบอนุมัติ 2 คด.4 ${m.LawBrakerName || ''}`,
+          DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD4"
+        }));
+      }
+      if (this.ScannerKD5) {
+        // console.log("ApproveType == 3")
+        this.ReportAll = this.ScannerKD5.map(m => ({
+          DocName: `แบบฟอร์มแบบอนุมัติ 3 คด.5 ${m.LawBrakerName || ''}`,
+          DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD5"
+        }));
+      }
+      if (this.ScannerKD6) {
+        // console.log("ApproveType == 4")
+        this.ReportAll = this.ScannerKD6.map(m => ({
+          DocName: `แบบฟอร์มแบบอนุมัติ 4 คด.6 ${m.LawBrakerName || ''}`,
+          DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD6"
+        }));
+      }
+    });
+
+    // const printDocfine4: any[] = this.receipt.list.map(m => ({
+    //   DocName: `แบบฟอร์มรายงานขออนุมัติการเปรียบเทียบคดี คด.3 ${m.LawBrakerName || ''}`,
+    //   DocType: 'แบบฟอร์ม',  CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD3"
     // }));
 
-    //  const printDocfine: any[0] = {
-    //   DocName: 'แบบฟอร์มบันทึกการเปรียบเทียบคดี ส.ส.2/52',
-    //   DocType: 'แบบฟอร์ม', RequestRewardID: `1234`, checked: false, TypeName: "RR"
-    // };
-
-    // const printDoc = [...printDocfine];
+    // console.log("+++ ReportAll : ",this.ReportAll)
+    const printDoc = [...printDocfine, ...printDocfine1, ...printDocfine2, ...printDocfine3,...this.ReportAll]; //, ... this.ReportKD5, ... this.ReportKD6
 
     const dialogRef = this.dialog.open(PrintDocModalComponent, {
-      backdrop: 'static'
+      backdrop: 'static',
+
     });
-    dialogRef.componentInstance.data = "printDoc";
-    dialogRef.result.then(res => {});
+    dialogRef.componentInstance.data = printDoc;
+    dialogRef.result.then(res => { });
 
   }
   async deleteCompare() {
@@ -865,7 +971,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setCancelButton(false);
         this.navService.setSaveButton(false);
         this.showEditField = status;
-        console.log(this.params.CompareID);
+        // console.log(this.params.CompareID);
         Swal(
           '',
           'บันทึกข้อมูลสำเร็จ.',
