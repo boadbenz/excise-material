@@ -33,6 +33,7 @@ import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import swal from 'sweetalert2';
 import { replaceFakePath } from 'app/config/dataString';
 import { PrintDocModalComponent } from '../../fine/printdoc-modal/printdoc-modal.component';
+import { ComparePrintDoc } from '../comparePrint';
 
 @Component({
   selector: 'app-manage',
@@ -633,11 +634,16 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
     })
   }
-  public async buttonPrint() {
 
-    // const RequestReward: IRequestReward[] = await this.requestRewardService
-    // .RequestRewardgetByRequestBribeRewardID({
+  public Indict:any
+  public async buttonPrint() {
+    // const RequestBribe: IRequestBribe[] = await this.requestBribeService
+    // .RequestBribegetByRequestBribeRewardID({
     //   RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
+    // })
+    // .toPromise();
+    // const comparePrintDoc: ComparePrintDoc[] = await this.fineService.compareArrestGetByCon({
+    //   IndictmentID: this.Indict.getValue()
     // })
     // .toPromise();
     // const printDocfine: any[] = RequestReward.map(m => ({

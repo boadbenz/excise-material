@@ -105,7 +105,8 @@ export class PrintDocModalComponent implements OnInit {
 
     async onPrint(form: any) {
         // if (this.check.checkbox1) {
-        //     var mCompareID = this.manageComponent.params.CompareID;
+            // var mCompareID = this.manageComponent.params.CompareID;
+            // console.log("+++ mCompareID : ",mCompareID)
         //     var mIndictmentID = this.manageComponent.params.IndictmentID;
         //     this.preloader.setShowPreloader(true);
         //     await this.ReportForm1(mCompareID, mIndictmentID)
