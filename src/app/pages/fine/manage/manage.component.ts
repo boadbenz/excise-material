@@ -328,7 +328,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.approveReportList[i].other = cmpD[i].CompareReason;
         this.receipt.list[i].ApproveType = cmpD[i].ApproveReportType ? cmpD[i].ApproveReportType : 1; //add for printReport
         let j = 0;
-        // console.log( this.approveReportList[i]);
         i++;
       }
       i = 0;
@@ -636,21 +635,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     })
   }
 
-  public ReportAll: any[]
-  public ScannerKD3: any[]
-  public ScannerKD4: any[]
-  public ScannerKD5: any[]
-  public ScannerKD6: any[]
-  // public ReportKD4: any[]
-  // public ReportKD5: any[]
-  // public ReportKD6: any[]
-  public async buttonPrint() {
 
-    // var compareID = this.params.CompareID
-    // var indictmentID = this.params.IndictmentID
-    // this.params
-    console.log("++++print params : ", this.params)
-    console.log("++++this.approveReportList : ", this.approveReportList)
+  public async buttonPrint() {
+    var ReportAll = []
+    var ScannerKD3 = []
+    var ScannerKD4 = []
+    var ScannerKD5 = []
+    var ScannerKD6 = []
 
     var CompareCIA = [{
       CompareID: this.params.CompareID,
@@ -658,19 +649,11 @@ export class ManageComponent implements OnInit, OnDestroy {
       ArrestCode: this.params.ArrestCode
     }]
 
-    // var compareDetailID: any[] = this.receipt.list[0].CompareDetailID;
-    // const Repoer = [this.params + this.approveReportList]
-    console.log("++++this.receipt.list; : ", this.receipt.list)
-
-
-
     const printDocfine: any[] = CompareCIA.map(m => ({
       DocName: `แบบฟอร์มบันทึกคำให้การของผู้ต้องหา ส.ส.2/52 `,
       DocType: 'แบบฟอร์ม', CompareID: `${m.CompareID}`, IndictmentID: `${m.IndictmentID}`,
       ArrestCode: `${m.ArrestCode}`, checked: false, TypeName: "2/52"
     }));
-
-    // console.log("++++printDocfine : ",printDocfine)
 
     const printDocfine1: any[] = this.receipt.list.map(m => ({
       DocName: `แบบฟอร์มบันทึกคำให้การของผู้ต้องหา ส.ส.2/53 ${m.LawBrakerName || ''}`,
@@ -688,80 +671,56 @@ export class ManageComponent implements OnInit, OnDestroy {
       DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD2"
     }));
 
-    console.log("this.receipt.list.length : ", this.receipt.list.length - 1)
-
     for (var i = 0; i <= this.receipt.list.length - 1; i++) {
       if (this.receipt.list[i].ApproveType == 1) {
-        this.ScannerKD3 = this.receipt.list[i];
-        this.ScannerKD3 = [{
+        ScannerKD3.push({
           LawBrakerName: this.receipt.list[i].LawBrakerName,
-          CompareDetailID: this.receipt.list[i].CompareDetailID
-        }]
+          CompareDetailID: this.receipt.list[i].CompareDetailID,
+          ApproveType: this.receipt.list[i].ApproveType
+        })
       }
       if (this.receipt.list[i].ApproveType == 2) {
-        this.ScannerKD4 = [{
+        ScannerKD4.push({
           LawBrakerName: this.receipt.list[i].LawBrakerName,
-          CompareDetailID: this.receipt.list[i].CompareDetailID
-        }]
+          CompareDetailID: this.receipt.list[i].CompareDetailID,
+          ApproveType: this.receipt.list[i].ApproveType
+        })
       }
       if (this.receipt.list[i].ApproveType == 3) {
-        this.ScannerKD5 = [{
+        ScannerKD5.push({
           LawBrakerName: this.receipt.list[i].LawBrakerName,
-          CompareDetailID: this.receipt.list[i].CompareDetailID
-        }]
+          CompareDetailID: this.receipt.list[i].CompareDetailID,
+          ApproveType: this.receipt.list[i].ApproveType
+        })
       }
       if (this.receipt.list[i].ApproveType == 4) {
-        this.ScannerKD6 = [{
+        ScannerKD6.push({
           LawBrakerName: this.receipt.list[i].LawBrakerName,
-          CompareDetailID: this.receipt.list[i].CompareDetailID
-        }]
+          CompareDetailID: this.receipt.list[i].CompareDetailID,
+          ApproveType: this.receipt.list[i].ApproveType
+        })
       }
     }
 
-    console.log("++++ScannerKD3 : ", this.ScannerKD3)
-    console.log("++++ScannerKD4 : ", this.ScannerKD4)
-    console.log("++++ScannerKD5 : ", this.ScannerKD5)
-    console.log("++++ScannerKD6 : ", this.ScannerKD6)
+    const resultsKD3: any[] = ScannerKD3.map(m => ({
+      DocName: `แบบฟอร์มแบบอนุมัติ 1 คด.3 ${m.LawBrakerName || ''}`,
+      DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD3"
+    }));
+    const resultsKD4: any[] = ScannerKD4.map(m => ({
+      DocName: `แบบฟอร์มแบบอนุมัติ 2 คด.4 ${m.LawBrakerName || ''}`,
+      DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD4"
+    }));
+    const resultsKD5: any[] = ScannerKD5.map(m => ({
+      DocName: `แบบฟอร์มแบบอนุมัติ 3 คด.5 ${m.LawBrakerName || ''}`,
+      DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD5"
+    }));
+    const resultsKD6: any[] = ScannerKD6.map(m => ({
+      DocName: `แบบฟอร์มแบบอนุมัติ 4 คด.6 ${m.LawBrakerName || ''}`,
+      DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD6"
+    }));
 
-
-    this.receipt.list.forEach(list => {
-      if (this.ScannerKD3) {
-        // console.log("ApproveType == 1")
-        this.ReportAll = this.ScannerKD3.map(m => ({
-          DocName: `แบบฟอร์มแบบอนุมัติ 1 คด.3 ${m.LawBrakerName || ''}`,
-          DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD3"
-        }));
-      }
-      if (this.ScannerKD4) {
-        // console.log("ApproveType == 2")
-        this.ReportAll = this.ScannerKD4.map(m => ({
-          DocName: `แบบฟอร์มแบบอนุมัติ 2 คด.4 ${m.LawBrakerName || ''}`,
-          DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD4"
-        }));
-      }
-      if (this.ScannerKD5) {
-        // console.log("ApproveType == 3")
-        this.ReportAll = this.ScannerKD5.map(m => ({
-          DocName: `แบบฟอร์มแบบอนุมัติ 3 คด.5 ${m.LawBrakerName || ''}`,
-          DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD5"
-        }));
-      }
-      if (this.ScannerKD6) {
-        // console.log("ApproveType == 4")
-        this.ReportAll = this.ScannerKD6.map(m => ({
-          DocName: `แบบฟอร์มแบบอนุมัติ 4 คด.6 ${m.LawBrakerName || ''}`,
-          DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD6"
-        }));
-      }
-    });
-
-    // const printDocfine4: any[] = this.receipt.list.map(m => ({
-    //   DocName: `แบบฟอร์มรายงานขออนุมัติการเปรียบเทียบคดี คด.3 ${m.LawBrakerName || ''}`,
-    //   DocType: 'แบบฟอร์ม',  CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD3"
-    // }));
-
-    // console.log("+++ ReportAll : ",this.ReportAll)
-    const printDoc = [...printDocfine, ...printDocfine1, ...printDocfine2, ...printDocfine3,...this.ReportAll]; //, ... this.ReportKD5, ... this.ReportKD6
+    ReportAll = [...resultsKD3, ...resultsKD4, ...resultsKD5, ...resultsKD6]
+    const printDoc = [...printDocfine, ...printDocfine1, ...printDocfine2, ...printDocfine3, ...ReportAll]; //, ... this.ReportKD5, ... this.ReportKD6
 
     const dialogRef = this.dialog.open(PrintDocModalComponent, {
       backdrop: 'static',
