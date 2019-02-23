@@ -22,13 +22,13 @@ export class PrintDocModalComponent implements OnInit {
     printDoc: any[]
     sort = 'asc';
     public data: any
-    
+
     condtion: ICompareCon = {};
 
     TitleName: String;
     FirstName: String;
     LastName: String;
-    
+
     @Input() pCompareID: string;
     @Input() ArrestCode: string;
 
@@ -43,13 +43,13 @@ export class PrintDocModalComponent implements OnInit {
         private preloader: PreloaderService,
         private http: HttpClient,
         // private manageComponent: ManageComponent,
-        private httpClient: HttpClient
+        private httpClient: HttpClient,
     ) { }
 
 
     ngOnInit() {
         this.printDoc = this.data;
-        console.log("fine printDoc : ",this.printDoc)
+        console.log("fine printDoc : ", this.printDoc)
         this.getCompareByID();
         //this.getCompareDoc();
     }
@@ -103,10 +103,95 @@ export class PrintDocModalComponent implements OnInit {
         }
     }
 
+    onSelect(index) {
+        console.log("onSelect")
+        if (this.printDoc[index].checked == false) {
+            this.printDoc[index].checked = true;
+        } else if (this.printDoc[index].checked == true) {
+            this.printDoc[index].checked = false;
+        }
+    }
+
     async onPrint(form: any) {
+
+
+        for (var i = 0; i < this.printDoc.length; i++) {
+            if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == '2/53') {
+                console.log("onSelect : ",this.printDoc[i])
+                this.ReportForm06_001(this.printDoc[i].CompareDetailID).subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+            }
+            if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'Receipt') {
+                console.log("onSelect : ",this.printDoc[i])
+                this.ReportForm06_002(this.printDoc[i].CompareDetailID, this.printDoc[i].CompareReceiptID).subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+            }
+            if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == '2/52') {
+                console.log("onSelect : ",this.printDoc[i])
+                this.ReportForm06_003(this.printDoc[i].CompareID, this.printDoc[i].IndictmentID, this.printDoc[i].ArrestCode).subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+            }
+            if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD2') {
+                console.log("onSelect : ",this.printDoc[i])
+                this.ReportForm06_005(this.printDoc[i].CompareDetailID).subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+            }
+            if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD3') {
+                console.log("onSelect : ",this.printDoc[i])
+                this.ReportForm06_006(this.printDoc[i].CompareDetailID).subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+            }
+            if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD4') {
+                console.log("onSelect : ",this.printDoc[i])
+                this.ReportForm06_007(this.printDoc[i].CompareDetailID).subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+            }
+            if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD5') {
+                console.log("onSelect : ",this.printDoc[i])
+                this.ReportForm06_008(this.printDoc[i].CompareDetailID).subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+            }
+            if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD6') {
+                console.log("onSelect : ",this.printDoc[i])
+                this.ReportForm06_009(this.printDoc[i].CompareDetailID).subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+            }
+        }
         // if (this.check.checkbox1) {
-            // var mCompareID = this.manageComponent.params.CompareID;
-            // console.log("+++ mCompareID : ",mCompareID)
+        // var mCompareID = this.manageComponent.params.CompareID;
+        // console.log("+++ mCompareID : ",mCompareID)
         //     var mIndictmentID = this.manageComponent.params.IndictmentID;
         //     this.preloader.setShowPreloader(true);
         //     await this.ReportForm1(mCompareID, mIndictmentID)
@@ -229,7 +314,7 @@ export class PrintDocModalComponent implements OnInit {
         //             this.preloader.setShowPreloader(false);
         //         })
         // }
-        
+
         // let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
         // if (_print.length) {
         // if (this.check.checkbox3) {
@@ -280,10 +365,9 @@ export class PrintDocModalComponent implements OnInit {
     // }
 
 
-    ReportForm1(mCompareID: string, mIndictmentID: string) {
+    ReportForm06_001(CompareDetailID: string) {
         const params = {
-            CompareID: mCompareID,
-            IndictmentID: mIndictmentID
+            CompareDetailID: CompareDetailID
         };
         const url = `${appConfig.apiReport}/ILG60_00_06_001.aspx`;
 
@@ -297,10 +381,10 @@ export class PrintDocModalComponent implements OnInit {
             .map(x => x)
             .finally(() => this.onEnd());
     }
-    ReportForm2(mCompareID: string, mIndictmentID: string) {
+    ReportForm06_002(CompareDetailID: string, CompareReceiptID: string) {
         const params = {
-            CompareID: mCompareID,
-            IndictmentID: mIndictmentID
+            CompareDetailID: CompareDetailID,
+            CompareReceiptID: CompareReceiptID
         };
         const url = `${appConfig.apiReport}/ILG60_00_06_002.aspx`;
 
@@ -314,7 +398,7 @@ export class PrintDocModalComponent implements OnInit {
             .map(x => x)
             .finally(() => this.onEnd());
     }
-    ReportForm3(mCompareID: string, mIndictmentID: string, ArrestCode: string) {
+    ReportForm06_003(mCompareID: string, mIndictmentID: string, ArrestCode: string) {
         const params = {
             CompareID: mCompareID,
             IndictmentID: mIndictmentID,
@@ -331,24 +415,10 @@ export class PrintDocModalComponent implements OnInit {
             .map(x => x)
             .finally(() => this.onEnd());
     }
-    ReportForm4(LawsuitID: string) {
+
+    ReportForm06_005(CompareDetailID: string) {
         const params = {
-            LawsuitID: LawsuitID
-        };
-        const url = `${appConfig.apiReport}/ILG60_00_06_004.aspx`;
-        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
-            .catch(this.onCatch)
-            .do((res: Response) => {
-                this.onSuccess(res);
-            }, (error: any) => {
-                this.onError(error);
-            })
-            .map(x => x)
-            .finally(() => this.onEnd());
-    }
-    ReportForm5(RequestBribeID: string) {
-        const params = {
-            RequestBribeID: RequestBribeID
+            CompareDetailID: CompareDetailID
         };
         const url = `${appConfig.apiReport}/ILG60_00_06_005.aspx`;
         return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
@@ -361,7 +431,7 @@ export class PrintDocModalComponent implements OnInit {
             .map(x => x)
             .finally(() => this.onEnd());
     }
-    ReportForm6(CompareDetailID: string) {
+    ReportForm06_006(CompareDetailID: string) {
         const params = {
             CompareDetailID: CompareDetailID
         };
@@ -376,7 +446,7 @@ export class PrintDocModalComponent implements OnInit {
             .map(x => x)
             .finally(() => this.onEnd());
     }
-    ReportForm7(CompareDetailID: string) {
+    ReportForm06_007(CompareDetailID: string) {
         const params = {
             CompareDetailID: CompareDetailID
         };
@@ -391,7 +461,7 @@ export class PrintDocModalComponent implements OnInit {
             .map(x => x)
             .finally(() => this.onEnd());
     }
-    ReportForm8(CompareDetailID: string) {
+    ReportForm06_008(CompareDetailID: string) {
         const params = {
             CompareDetailID: CompareDetailID
         };
@@ -406,7 +476,7 @@ export class PrintDocModalComponent implements OnInit {
             .map(x => x)
             .finally(() => this.onEnd());
     }
-    ReportForm9(CompareDetailID: string) {
+    ReportForm06_009(CompareDetailID: string) {
         const params = {
             CompareDetailID: CompareDetailID
         };
@@ -421,7 +491,7 @@ export class PrintDocModalComponent implements OnInit {
             .map(x => x)
             .finally(() => this.onEnd());
     }
-    
+
 
     dismiss(e: any) {
         console.log('dd');
