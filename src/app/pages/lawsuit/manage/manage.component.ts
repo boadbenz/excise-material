@@ -123,7 +123,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.43');
+    this.sidebarService.setVersion('0.0.0.44');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -603,17 +603,20 @@ export class ManageComponent implements OnInit {
           Swal({
             text: "บันทึกสำเร็จ",
             type: 'success',
+          }).then(async result => {
+            let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
+            if (isLaw != 0) {
+              this.setButtonCase()
+            } else {
+              this.setButtonCaseIslaw()
+            }
+            let popup = {
+              checkComplete: checkComplete
+            }
+            this.preLoaderService.setShowPreloader(false);
+            this.viewNotComplete(popup)
           })
-          let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
-          if (isLaw != 0) {
-            this.setButtonCase()
-          } else {
-            this.setButtonCaseIslaw()
-          }
-          let popup = {
-            checkComplete: checkComplete
-          }
-          this.viewNotComplete(popup)
+
         } else {
           Swal({
             text: "บันทึกไม่สำเร็จ",
@@ -626,9 +629,8 @@ export class ManageComponent implements OnInit {
           Swal({
             text: "บันทึกสำเร็จ",
             type: 'success',
-          })
-          let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
-          if (checkComplete.length != 0) {
+          }).then(async result => {
+            let checkComplete = await this.lawsuitService.LawsuitArrestCheckNotComplete(this.lawsuitArrestForm.controls['ArrestCode'].value)
             if (isLaw != 0) {
               this.setButtonCase()
             } else {
@@ -637,10 +639,9 @@ export class ManageComponent implements OnInit {
             let popup = {
               checkComplete: checkComplete
             }
+            this.preLoaderService.setShowPreloader(false);
             this.viewNotComplete(popup)
-          }
-          this.preLoaderService.setShowPreloader(false);
-
+          })
         } else {
           Swal({
             text: "บันทึกไม่สำเร็จ",
@@ -1492,8 +1493,6 @@ export class ManageComponent implements OnInit {
   }
 
   viewNotComplete(item) {
-    ///###change path to lawsuit detail
-    console.log('viewData===>', item);
     const dialogRef = this.dialog.open(DialogNotComplete, {
       width: '80%',
       maxWidth: 'none',
