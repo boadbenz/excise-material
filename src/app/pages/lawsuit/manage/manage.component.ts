@@ -616,7 +616,6 @@ export class ManageComponent implements OnInit {
             this.preLoaderService.setShowPreloader(false);
             this.viewNotComplete(popup)
           })
-
         } else {
           Swal({
             text: "บันทึกไม่สำเร็จ",
