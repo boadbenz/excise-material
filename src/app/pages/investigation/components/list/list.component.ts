@@ -26,7 +26,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     private destroy$: Subject<boolean> = new Subject<boolean>();
 
-    permissionCheck: any;
+
 
     _dateStartFrom: any;
     _dateStartTo: any;
@@ -62,6 +62,13 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        // var permissionCheck: any = [{
+        //     IsCreate: 0,
+        //     IsDelete: 0,
+        //     IsRead: 0,
+        //     IsUpdate: 0
+        // }];
+        var permissionCheck: any
         console.log("onList")
         var userAccountID = localStorage.getItem('UserAccountID')
         var programCode = 'ILG60-01-00'
@@ -71,7 +78,7 @@ export class ListComponent implements OnInit, OnDestroy {
         };
         console.log('params : ', params)
         this.investgateService.PermissionCheck(params).subscribe(async res => {
-            this.permissionCheck = res;
+            permissionCheck = await res
             console.log('Ok PermissionCheck : ', res)
         })
 
@@ -86,24 +93,16 @@ export class ListComponent implements OnInit, OnDestroy {
         })
 
         this.navService.onNextPage.subscribe(async status => {
-            // console.log("+++IsCreate : ", this.permissionCheck)
-            if(status){
-                if (this.permissionCheck.IsCreate != 1) {
+            console.log("+++IsCreate onclick : ", permissionCheck)
+            if (status && permissionCheck != undefined) {
+                if (permissionCheck.IsCreate != 1) {
+                    console.log('IsCreate != 1 ','  IsCreate : ',permissionCheck.IsCreate)
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
-                } else if(this.permissionCheck.IsCreate == 1){
+                } else if (permissionCheck.IsCreate == 1) {
+                    console.log('IsCreate == 1','  IsCreate : ',permissionCheck.IsCreate)
                     this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
                 }
-
             }
-            // if (this.permissionCheck.IsCreate != 1) {
-            //     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
-            // } else {
-            //     if (status) {
-            //         await this.navService.setOnNextPage(false);
-            //         this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
-            //     }
-            // }
-
         })
 
     }
