@@ -18,6 +18,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import swal from 'sweetalert2'
 import { sortFormArray } from 'app/pages/arrests/arrest.helper';
+import { InvestgateService } from '../../services/investgate.service'
 
 
 @Component({
@@ -49,6 +50,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     isRequired: boolean;
     investigateForm: FormGroup;
 
+    permissionCheck: any;
+
     myDatePickerOptions = MyDatePickerOptions;
 
     @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -71,7 +74,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         private ngbModel: NgbModal,
         private sidebarService: SidebarService,
         private s_invest: fromService.InvestgateService,
-        private store: Store<fromStore.AppState>
+        private store: Store<fromStore.AppState>,
+        private investgateService: InvestgateService
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -88,6 +92,19 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.active_Route();
         this.navigate_Service();
         this.createForm();
+
+        console.log("onManage")
+        var userAccountID = localStorage.getItem('UserAccountID')
+        var programCode = 'ILG60-01-00'
+        const params = {
+            UserAccountID: userAccountID,
+            ProgramCode: programCode
+        };
+        console.log('params : ', params)
+        this.investgateService.PermissionCheck(params).subscribe(async res => {
+            this.permissionCheck = res;
+            console.log('Ok PermissionCheck : ', res)
+        })
     }
 
     ngAfterViewInit(): void {
@@ -166,15 +183,25 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
-                await this.navService.setOnSave(false);
-                this.onSave();
+                if (this.permissionCheck.IsUpdate != 1) {
+                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
+                } else if (this.permissionCheck.IsUpdate == 1) {
+                    await this.navService.setOnSave(false);
+                    this.onSave();
+                }
+
             }
         });
 
         this.navService.onDelete.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
-                await this.navService.setOnDelete(false);
-                this.onDelete();
+                if (this.permissionCheck.IsDelete != 1) {
+                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
+                } else if (this.permissionCheck.IsDelete == 1) {
+                    await this.navService.setOnDelete(false);
+                    this.onDelete();
+                }
+
             }
         });
 

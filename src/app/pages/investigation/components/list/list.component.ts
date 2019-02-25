@@ -14,6 +14,7 @@ import { Subject } from 'rxjs/Subject';
 import swal from 'sweetalert2';
 import { InvestgateService } from '../../services/investgate.service'
 import { error } from 'util';
+import { async } from '@angular/core/testing';
 
 @Component({
     selector: 'app-list',
@@ -24,6 +25,8 @@ export class ListComponent implements OnInit, OnDestroy {
     staffCode = localStorage.getItem('staffCode');
 
     private destroy$: Subject<boolean> = new Subject<boolean>();
+
+    permissionCheck: any;
 
     _dateStartFrom: any;
     _dateStartTo: any;
@@ -68,11 +71,8 @@ export class ListComponent implements OnInit, OnDestroy {
         };
         console.log('params : ', params)
         this.investgateService.PermissionCheck(params).subscribe(async res => {
-            // if (!error) {
-                console.log('Ok PermissionCheck : ', res)
-            // }else console.log('Nooooo')
-
-
+            this.permissionCheck = res;
+            console.log('Ok PermissionCheck : ', res)
         })
 
         this.advSearch.next(true)
@@ -86,10 +86,24 @@ export class ListComponent implements OnInit, OnDestroy {
         })
 
         this.navService.onNextPage.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnNextPage(false);
-                this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
+            // console.log("+++IsCreate : ", this.permissionCheck)
+            if(status){
+                if (this.permissionCheck.IsCreate != 1) {
+                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
+                } else if(this.permissionCheck.IsCreate == 1){
+                    this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
+                }
+
             }
+            // if (this.permissionCheck.IsCreate != 1) {
+            //     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
+            // } else {
+            //     if (status) {
+            //         await this.navService.setOnNextPage(false);
+            //         this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
+            //     }
+            // }
+
         })
 
     }
