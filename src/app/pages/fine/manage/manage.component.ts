@@ -723,7 +723,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     const printDoc = [...printDocfine, ...printDocfine1, ...printDocfine2, ...printDocfine3, ...ReportAll]; //, ... this.ReportKD5, ... this.ReportKD6
 
     const dialogRef = this.dialog.open(PrintDocModalComponent, {
-      backdrop: 'static',
+      backdrop: 'static', size: 'lg'
 
     });
     dialogRef.componentInstance.data = printDoc;
