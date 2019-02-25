@@ -111,6 +111,7 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('officeShortName', this.OfficeShortName);
             localStorage.setItem('staffCode', res.StaffCode);
             localStorage.setItem('officeCode', res.OfficeCode);
+            localStorage.setItem('UserAccountID',res.UserAccountID)
             let url = decodeURIComponent(this.returnUrl);
             this.router.navigateByUrl(url);
           } else this.errMsg = res.Msg;

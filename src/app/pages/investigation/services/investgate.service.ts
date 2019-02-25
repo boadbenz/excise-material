@@ -45,6 +45,12 @@ export class InvestgateService {
   private onCatch(error: any, caught: Observable<any>): Observable<any> {
     return Observable.throw(error);
   }
+
+
+PermissionCheck(params) {
+  const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
+  return this.http.post(url, params).map(x => x.json());
+}
   
   InvestigateDetailgetByCon(InvestigateDetailID: string) {
     const params = { InvestigateDetailID };

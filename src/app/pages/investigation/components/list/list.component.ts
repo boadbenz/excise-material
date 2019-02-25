@@ -12,6 +12,8 @@ import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
 import { compareDate, getDateMyDatepicker, toLocalShort, convertDateForSave, MyDatePickerOptions, setZeroHours } from 'app/config/dateFormat';
 import { Subject } from 'rxjs/Subject';
 import swal from 'sweetalert2';
+import { InvestgateService } from '../../services/investgate.service'
+import { error } from 'util';
 
 @Component({
     selector: 'app-list',
@@ -40,7 +42,8 @@ export class ListComponent implements OnInit, OnDestroy {
         private s_invest: fromServices.InvestgateService,
         private router: Router,
         private sidebarService: SidebarService,
-        private preLoader: PreloaderService
+        private preLoader: PreloaderService,
+        private investgateService: InvestgateService
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -56,6 +59,22 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        console.log("onList")
+        var userAccountID = localStorage.getItem('UserAccountID')
+        var programCode = 'ILG60-01-00'
+        const params = {
+            UserAccountID: userAccountID,
+            ProgramCode: programCode
+        };
+        console.log('params : ', params)
+        this.investgateService.PermissionCheck(params).subscribe(async res => {
+            if (!error) {
+                console.log('Ok PermissionCheck : ', res)
+            }else console.log('Nooooo')
+
+
+        })
+
         this.advSearch.next(true)
         this.sidebarService.setVersion(this.s_invest.version);
 
