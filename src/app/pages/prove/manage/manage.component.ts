@@ -571,7 +571,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                     this.oEvidenceInItem = {
                         EvidenceInItemID: "",
-                        EvidenceInItemCode: "",
+                        EvidenceInItemCode: "Auto Generate",
                         ProductSeq: i,
                         EvidenceInID: "",
                         GroupCode: this.lsProveProduct[i].GroupCode,
@@ -1000,7 +1000,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async InsEvidence() {
-        await this.generateItemCode();
+        //await this.generateItemCode();
         await this.InsEvidenceInExternal();
     }
 

@@ -37,6 +37,7 @@ export class ListComponent implements OnInit, OnDestroy {
     StatusOption = [];
     options = [];
     rawOptions = [];
+    lsData = [];
 
     RevenueStatus: string;
     EvidenceOutType: string;
@@ -109,7 +110,7 @@ export class ListComponent implements OnInit, OnDestroy {
                     this.modal = this.ngbModel.open(this.evidenceTypeModel, { size: 'lg', centered: true });
                 }
                 else {
-                    this._router.navigate(['/evidenceOut/manage', this.evitype, 'C', 'NEW', '0']);
+                    this._router.navigate(['/evidenceOut/manage', this.evitype, 'C', 'NEW']);
                 }
             }
         })
@@ -151,7 +152,7 @@ export class ListComponent implements OnInit, OnDestroy {
                         case '15':
                             data.urls[1].title = "ค้นหารายการนำของกลางออกจากคลัง";
                             data.codePage = "ILG60-15-01-00-00";
-                            this.EvidenceOutType = "5";
+                            this.EvidenceOutType = "3";
                             break;
                         case '16':
                             data.urls[1].title = "ค้นหารายการโอนย้ายของกลาง";
@@ -167,27 +168,44 @@ export class ListComponent implements OnInit, OnDestroy {
         });
     }
 
-    clickView(EvidenceOutID: string, EvidenceInType: string) {
-        if (this.evitype == "11" && EvidenceInType == "0") {
-            this._router.navigate(['/evidenceOut/manage', '11I', 'R', EvidenceOutID, "0"]);
-        } else if (this.evitype == "11" && EvidenceInType == "1") {
-            this._router.navigate(['/evidenceOut/manage', "11E", 'R', EvidenceOutID, "0"]);
+    clickView(EvidenceOutID: string, EvidenceOutType: string) {
+        if (this.evitype == "11" && EvidenceOutType == "0") {
+            this._router.navigate(['/evidenceOut/manage', '11I', 'R', EvidenceOutID]);
+        } else if (this.evitype == "11" && EvidenceOutType == "1") {
+            this._router.navigate(['/evidenceOut/manage', "11E", 'R', EvidenceOutID]);
+        } else if (this.evitype == "15" && EvidenceOutType == "6") {
+            this._router.navigate(['/evidenceOut/manage', "15G", 'R', EvidenceOutID]);
+        } else if (this.evitype == "15" && EvidenceOutType == "7") {
+            this._router.navigate(['/evidenceOut/manage', "15D", 'R', EvidenceOutID]);
         } else {
-            this._router.navigate(['/evidenceOut/manage', this.evitype, 'R', EvidenceOutID, "0"]);
+            this._router.navigate(['/evidenceOut/manage', this.evitype, 'R', EvidenceOutID]);
         }
     }
 
     async onSearch(p: any) {
+        this.lsData = [];
+        if (this.EvidenceOutType == "3") {
+            await this.getByKeyword(p, "3");
+            await this.getByKeyword(p, "5");
+        } else {
+            await this.getByKeyword(p, this.EvidenceOutType);
+        }
+
+        this.onSearchComplete(this.lsData)
+        this.preloader.setShowPreloader(false);
+    }
+
+    async getByKeyword(p: any, pOutType: string) {
         var paramsOther = {
             TextSearch: p.TextSearch,
-            EvidenceOutType: this.EvidenceOutType,
+            EvidenceOutType: pOutType,
             OfficeCode: localStorage.getItem("officeCode")
         }
 
-        this.EvidenceService.getByKeyword(paramsOther).subscribe(list => {
-            this.onSearchComplete(list)
-
-            this.preloader.setShowPreloader(false);
+        await this.EvidenceService.getByKeyword(paramsOther).then(async list => {
+            list.map(f => {
+                this.lsData.push(f);
+            })
         });
     }
 
@@ -240,6 +258,21 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async onAdvSearch() {
         this.preloader.setShowPreloader(true);
+
+        this.lsData = [];
+        if (this.EvidenceOutType == "3") {
+            await this.GetAdvSearch("3");
+            await this.GetAdvSearch("5");
+        } else {
+            await this.GetAdvSearch(this.EvidenceOutType);
+        }
+
+        this.onSearchComplete(this.lsData)
+        this.preloader.setShowPreloader(false);
+    }
+
+    async GetAdvSearch(pOutType: string) {
+
         let sDate, eDate, sFullDate, eFullDate;
 
         // วันที่คืน/วันที่ขาย/วันที่ทำลาย/วันที่นำออก/วันที่โอนย้าย/วันที่จัดเก็บพิพิธภัณฑ์ เริ่มต้น
@@ -300,13 +333,14 @@ export class ListComponent implements OnInit, OnDestroy {
             StaffName: this.StaffName,
             StaffOfficeName: this.OfficeName,
             OfficeCode: localStorage.getItem("officeCode"),
-            EvidenceOutType: this.EvidenceOutType
+            EvidenceOutType: pOutType
         }
 
 
         await this.EvidenceService.getByConAdv(oEvidenceOut).then(async list => {
-            this.onSearchComplete(list);
-            this.preloader.setShowPreloader(false);
+            list.map(f => {
+                this.lsData.push(f);
+            })
         }, (err: HttpErrorResponse) => {
             swal('', err.message, 'error');
             this.preloader.setShowPreloader(false);

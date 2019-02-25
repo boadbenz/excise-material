@@ -904,7 +904,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async generateItemCode() {
         for (let i = 0; i < this.ListEvidenceInItem.length; i++) {
-            if (this.ListEvidenceInItem[i].IsNewItem == true) {
+            if (this.ListEvidenceInItem[i].IsNewItem == true || this.ListEvidenceInItem[i].EvidenceInItemCode === "Auto Generate") {
                 await this.EviService.TransactionRunningItemgetByCon("IN", this.ListEvidenceInItem[i].GroupCode, this.WarehouseID).then(async item => {
                     let date = new Date();
 
