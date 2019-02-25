@@ -6,8 +6,9 @@ import { Subject } from 'rxjs/Subject';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReductionModelListComponent } from './reduction-model-list/reduction-model-list.component';
 
-import { PrintDocumentComponent } from './print-document/print-document.component';
+// import { PrintDocumentComponent } from './print-document/print-document.component';///////////
 // import { AddReduceComponent } from './add-reduce/add-reduce.component';
+import { PrintDocModalComponent } from '../print-doc-modal/print-doc-modal.component'
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -21,9 +22,9 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   private onPrintSubscribe: any
   modal:any
 
-  @ViewChild(PrintDocumentComponent) printDocumentComponent: PrintDocumentComponent;
+  // @ViewChild(PrintDocumentComponent) printDocumentComponent: PrintDocumentComponent;///////////////
 
-  @ViewChild('printList') public printList: TemplateRef<any>;
+  // @ViewChild('printList') public printList: TemplateRef<any>;//////////////////
 
   tableData = [];
 
@@ -66,13 +67,14 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   public print_dialog: any;
   public compareID: string;
   public indictmentID: string;
+  
 
   constructor
     (private router: Router,
       private activeRoute: ActivatedRoute,
       private navService: NavigationService,
       private readonly apiServer: ReductionApiService,
-      private ngbModel: NgbModal
+      public ngbModel: NgbModal
     ) { }
 
   ngOnInit() {
@@ -115,12 +117,6 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     });
 
-    this.navServiceSub = this.navService.onPrint.subscribe(status => {
-      if (status) {
-        // this.showPrintPopup(this.printList);
-      }
-    });
-
     this._adjustArrestgetByCon(this.compareID);
     this._adjustReceiptgetByCon(this.compareID);
     this._adjustDetailgetByCon(this.compareID);
@@ -139,13 +135,33 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
       if (status) {
         await this.navService.setOnPrint(false);
-        this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+        // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+        this.buttonPrint()
       }
     })
 
   }
+  public async buttonPrint() {
+    var tester = [{a:'ada',b:'jyhfdtsd'}]
+    var ReportAll = []
 
-  // public onPrint = (content) => {
+    console.log("++++detailData : ",this.detailData)
+    const test: any[] = tester.map(m => ({
+      DocName: `xxx `,
+      DocType: 'แบบฟอร์ม', CompareDetailID: `xxx `, checked: false, TypeName: "xxx"
+    }));
+
+    ReportAll = [...test]
+    const dialogRef = this.ngbModel.open(PrintDocModalComponent, {
+      backdrop: 'static', size: 'lg'
+    });
+
+    dialogRef.componentInstance.data = ReportAll;
+    dialogRef.result.then(res => { });
+
+  }
+
+  // public onPrint = (content) => {//////////////////////
   //   console.log("Print2")
   //   this.modal = this.ngbModel.open(content, { size: 'lg', centered: true });
   // }

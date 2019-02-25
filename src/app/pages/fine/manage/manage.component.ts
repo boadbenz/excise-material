@@ -130,8 +130,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private sidebarService: SidebarService,
     private masDocumentMainService: MasDocumentMainService,
     private fb: FormBuilder,
-    public dialog: NgbModal,
-    // public PrintDocModalComponent: PrintDocModalComponent
+    public dialog: NgbModal
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};

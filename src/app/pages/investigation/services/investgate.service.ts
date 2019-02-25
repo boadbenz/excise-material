@@ -42,14 +42,21 @@ export class InvestgateService {
     console.log('Error, status code: ' + res.status);
   }
 
+
   private onCatch(error: any, caught: Observable<any>): Observable<any> {
     return Observable.throw(error);
   }
 
 
-PermissionCheck(params) {
+  PermissionCheck(params) {
   const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
   return this.http.post(url, params).map(x => x.json());
+  // try {
+  //   const res =  this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+  //   return res as any;
+  // } catch (error) {
+  //   return [];
+  // }
 }
   
   InvestigateDetailgetByCon(InvestigateDetailID: string) {

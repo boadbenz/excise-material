@@ -68,9 +68,9 @@ export class ListComponent implements OnInit, OnDestroy {
         };
         console.log('params : ', params)
         this.investgateService.PermissionCheck(params).subscribe(async res => {
-            if (!error) {
+            // if (!error) {
                 console.log('Ok PermissionCheck : ', res)
-            }else console.log('Nooooo')
+            // }else console.log('Nooooo')
 
 
         })
