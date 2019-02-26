@@ -30,7 +30,7 @@ import { MasterService } from '../../model/master.service';
 export class ManageComponent implements OnInit, OnDestroy {
     private sub: any;
     private onSaveSubscribe: any;
-    private onEditSubscribe: any;
+    //private onEditSubscribe: any;
     private onDeleSubscribe: any;
     private onPrintSubscribe: any;
     private onNextPageSubscribe: any;
@@ -83,6 +83,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     EvidenceOutType: string;    // ประเภทการจำหน่ายของกลาง 0 = คืนภายใน, 1 = คืนภายนอก, 2 = ทำลาย, 3 = ขาย, 4 = ยืม, 5 = เข้าพิพิธภัณฑ์, 6 = ใช้ในราชการ, 7 = บริจาค, 8 = โอนย้าย
     DestinationCode: string;    // รหัสหน่วยงานที่ Login
     EvidenceInType: string;     // ประเภทการตรวจรับ
+    Textsearch: string;
+    EviCode: string;
 
 
     StaffRequestID: string;     // รหัสผู้ขอ / ผู้เสนอ
@@ -91,6 +93,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     StaffApproveoptions = [];   // ผู้อนุมัติ
     StaffEvidenceID: string;    // รหัสผู้จำหน่าย
     StaffEvidenceoptions = [];  // ผู้จำหน่าย
+    StaffReceiveID: string;    // รหัสผู้รับบริจาค
+    StaffReceiveoptions = [];  // ผู้รับบริจาค
     rawStaffOptions = [];       // ผู้ขอ / ผู้เสนอ
     rawWarehouseOptions = [];   // Warehouse
     Warehouseoptions = [];
@@ -105,6 +109,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     oEviOutStaffRequest: EvidenceOutStaff;
     oEviOutStaffApprove: EvidenceOutStaff;
     oEviOutStaffEvidence: EvidenceOutStaff;
+    oEviOutStaffReceive: EvidenceOutStaff;
     oEvidenceOutItem: EvidenceOutItem;
     oEvidenceOut: EvidenceOut;
     oStockBalance: EvidenceOutStockBalance;
@@ -152,7 +157,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.EvidenceOutTime = this.getCurrentTime();
 
         this.EvidenceOutCode = "Auto Generate";
-        this.WarehouseID = "1";
+        this.WarehouseID = "";
         this.DestinationCode = localStorage.getItem("officeCode");
         await this.getWarehouse();
 
@@ -164,10 +169,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // this.onCancelSubscribe.unsubscribe();
+        this.onCancelSubscribe.unsubscribe();
         // this.onEditSubscribe.unsubscribe();
         this.onSaveSubscribe.unsubscribe();
-        // this.onDeleSubscribe.unsubscribe();
+        this.onDeleSubscribe.unsubscribe();
         this.onPrintSubscribe.unsubscribe();
     }
 
@@ -176,7 +181,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
             this.evitype = p['type'];
-            this.EvidenceInType = p['intype'];
 
             switch (this.mode) {
                 case 'C':
@@ -214,47 +218,64 @@ export class ManageComponent implements OnInit, OnDestroy {
                             data.urls[2].title = "จัดการข้อมูลรายการคืนของกลาง จากหน่วยงานภายใน";
                             data.codePage = "ILG60-11-02-00-00";
                             this.EvidenceOutType = "0"
+                            this.EvidenceInType = "0";
+                            this.EviCode = "RT";
                             break;
                         case '11E':
                             data.urls[1].title = "ค้นหารายการคืนของกลาง";
                             data.urls[2].title = "จัดการข้อมูลรายการคืนของกลาง จากหน่วยงานภายนอก";
                             data.codePage = "ILG60-11-03-00-00";
                             this.EvidenceOutType = "0"
+                            this.EvidenceInType = "1";
+                            this.EviCode = "RT";
                             break;
                         case '12':
                             data.urls[1].title = "ค้นหารายการจัดเก็บเข้าพิพิธภัณฑ์";
                             data.urls[2].title = "จัดการข้อมูลรายการจัดเก็บเข้าพิพิธภัณฑ์";
                             data.codePage = "ILG60-12-04-00-00";
                             this.EvidenceOutType = "4"
+                            this.EvidenceInType = "0";
+                            this.EviCode = "MU";
                             break;
                         case '13':
                             data.urls[1].title = "ค้นหารายการขายของกลาง";
                             data.urls[2].title = "จัดการข้อมูลรายการขายของกลาง";
                             data.codePage = "ILG60-13-02-00-00";
                             this.EvidenceOutType = "2"
+                            this.EvidenceInType = "0";
+                            this.EviCode = "SL";
                             break;
                         case '14':
                             data.urls[1].title = "ค้นหารายการทำลายของกลาง";
                             data.urls[2].title = "จัดการข้อมูลรายการทำลายของกลาง";
                             data.codePage = "ILG60-14-02-00-00";
                             this.EvidenceOutType = "1"
+                            this.EvidenceInType = "0";
+                            this.EviCode = "DT";
                             break;
                         case '15G':
                             data.urls[1].title = "ค้นหารายการนำของกลางออกจากคลัง";
                             data.urls[2].title = "จัดการข้อมูลรายการนำของกลางออกจากคลังไปใช้ทางราชการ";
                             data.codePage = "ILG60-15-02-00-00";
-                            this.EvidenceOutType = "5"
+                            this.EvidenceOutType = "3"
+                            this.EvidenceInType = "0";
+                            this.EviCode = "BO";
+                            break;
                         case '15D':
                             data.urls[1].title = "ค้นหารายการนำของกลางออกจากคลัง";
                             data.urls[2].title = "จัดการข้อมูลรายการนำของกลางออกจากคลังไปบริจาค";
                             data.codePage = "ILG60-15-02-00-00";
                             this.EvidenceOutType = "5"
+                            this.EvidenceInType = "0";
+                            this.EviCode = "DN";
                             break;
                         case '16':
                             data.urls[1].title = "ค้นหารายการโอนย้ายของกลาง";
                             data.urls[2].title = "จัดการข้อมูลรายการโอนย้ายของกลาง";
                             data.codePage = "ILG60-16-02-00-00";
                             this.EvidenceOutType = "6"
+                            this.EvidenceInType = "0";
+                            this.EviCode = "TF";
                             break;
                     }
 
@@ -290,8 +311,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                             || this.PayDate == "" || this.PayDate == undefined
                             || this.PayTime == "" || this.PayTime == undefined
                             || this.StaffApproveName == "" || this.StaffApproveName == undefined
-                            || this.ArrestCode == null || this.ArrestCode == undefined
-                            || this.Lawsuit == null || this.Lawsuit == undefined) {
+                            // || this.ArrestCode == null || this.ArrestCode == undefined
+                            // || this.Lawsuit == null || this.Lawsuit == undefined
+                        ) {
                             flgValidate = true;
                         }
                         break;
@@ -355,6 +377,56 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }
             }
         });
+
+        this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
+            if (status) {
+                this.navService.setOnCancel(false);
+
+                swal({
+                    title: '',
+                    text: Message.confirmAction,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'ยืนยัน',
+                    cancelButtonText: 'ยกเลิก'
+                }).then((result) => {
+                    if (result.value) {
+                        if (this.mode === 'C') {
+                            this.router.navigate([`/evidenceOut/list/${this.evitype}`]);
+                        } else if (this.mode === 'R') {
+                            // set false
+                            this.navService.setSaveButton(false);
+                            this.navService.setCancelButton(false);
+                            // set true
+                            this.navService.setPrintButton(true);
+                            this.navService.setEditButton(true);
+                            this.navService.setDeleteButton(true);
+                            this.navService.setEditField(true);
+
+                            this.ShowEvidenceOut();
+                        }
+                    }
+                    else {
+                        this.navService.setSaveButton(true);
+                        this.navService.setCancelButton(true);
+
+                        this.navService.setPrintButton(false);
+                        this.navService.setEditButton(false);
+                        this.navService.setDeleteButton(false);
+                        this.navService.setEditField(false);
+                    }
+                })
+            }
+        });
+
+        this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnDelete(false);
+                this.onDelete();
+            }
+        });
     }
 
     LoadDataFromLocalStorage() {
@@ -378,7 +450,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: localStorage.getItem("officeCode"),
             OfficeName: tempUser[0].OfficeName,
             OfficeShortName: localStorage.getItem("officeShortName"),
-            ContributorID: "45",
+            ContributorID: "39",
             IsActive: "1"
         }
 
@@ -441,6 +513,35 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.PosEvidence = localStorage.getItem("operationPosName");
         this.DeptEvidence = localStorage.getItem("officeShortName");
         this.DeptCodeEvidence = localStorage.getItem("officeCode");
+
+         // ----- ผู้บริจาค -----
+         /*
+         this.oEviOutStaffReceive = {
+            EvidenceOutStaffID: "",
+            EvidenceOutID: "",
+            StaffCode: localStorage.getItem("staffCode"),
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "45",
+            IsActive: "1"
+        }
+
+        this.StaffReceiverName = localStorage.getItem("fullName");
+        this.PosReceiver = localStorage.getItem("operationPosName");
+        this.DeptReceiver = localStorage.getItem("officeShortName");
+        this.DeptCodeReceiver = localStorage.getItem("officeCode");
+        */      
     }
 
     ShowEvidenceOut() {
@@ -463,11 +564,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.ApproveDate = setDateMyDatepicker(new Date(res.ApproveDate));
                 this.ApproveTime = res.ApproveTime;
                 if (res.ReturnDate == null || res.ReturnDate == '') { this.ReturnDate = ""; } else { this.ReturnDate = setDateMyDatepicker(new Date(res.ReturnDate)) }
-                this.Remark = res.Remark;
+                this.Remark = `${res.Remark == 'null' || res.Remark == null ? '' : res.Remark}`;
                 this.ApproveNo = res.ApproveNo
 
 
-                var sTemp = res.EvidenceOutStaff.filter(f => f.ContributorID == "45");
+                var sTemp = res.EvidenceOutStaff.filter(f => f.ContributorID == "39");
                 if (sTemp.length > 0) {
                     this.StaffRequestName = `${sTemp[0].TitleName == 'null' || sTemp[0].TitleName == null ? '' : sTemp[0].TitleName}`
                         + `${sTemp[0].FirstName == 'null' || sTemp[0].FirstName == null ? '' : sTemp[0].FirstName}` + ' '
@@ -516,15 +617,28 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.oEviOutStaffEvidence = sTemp[0];
                 }
 
+
+                sTemp = res.EvidenceOutStaff.filter(f => f.ContributorID == "45");
+                if (sTemp.length > 0) {
+                    this.StaffReceiverName = `${sTemp[0].TitleName == 'null' || sTemp[0].TitleName == null ? '' : sTemp[0].TitleName}`
+                        + `${sTemp[0].FirstName == 'null' || sTemp[0].FirstName == null ? '' : sTemp[0].FirstName}` + ' '
+                        + `${sTemp[0].LastName == 'null' || sTemp[0].LastName == null ? '' : sTemp[0].LastName}`;
+                    this.PosReceiver = sTemp[0].PositionName;
+                    this.DeptReceiver = sTemp[0].OfficeName;
+                    this.StaffReceiveID = sTemp[0].EvidenceOutStaffID;
+                    this.oEviOutStaffReceive = sTemp[0];
+                }
+
                 // -------------- Product -------------------------
                 let t = 0;
                 this.oEvidenceOut.EvidenceOutItem.map(item => {
-                    let oInItem = res.EvidenceOutItem.filter(f => f.EvidenceOutItemID == item.EvidenceOutItemID)[0].EvidenceStock[0].EvidenceInItem[0];
-                    item.EvidenceOutStockBalance = res.EvidenceOutItem.filter(f => f.EvidenceOutItemID == item.EvidenceOutItemID)[0].EvidenceStock;
-                    item.EvidenceInItemCode = oInItem.EvidenceInItemCode;
+                    //let oInItem = res.EvidenceOutItem.filter(f => f.EvidenceOutItemID == item.EvidenceOutItemID)[0].EvidenceOutStockBalance[0].EvidenceInItem[0];
+                    //item.EvidenceOutStockBalance = res.EvidenceOutItem.filter(f => f.EvidenceOutItemID == item.EvidenceOutItemID)[0].EvidenceStock;
+                    //item.EvidenceInItemCode = oInItem.EvidenceInItemCode;
                     item.InitBalanceQty = item.EvidenceOutStockBalance[0].BalanceQty + item.Qty;
                     item.BalanceQtyUnit = item.EvidenceOutStockBalance[0].BalanceQtyUnit;
-                    item.ProductDesc = oInItem.ProductDesc
+                    item.BalanceQty = item.EvidenceOutStockBalance[0].BalanceQty;
+                    //item.ProductDesc = oInItem.ProductDesc
 
                     item.Qty = item.Qty;
                     item.IsNewItem = false;
@@ -592,6 +706,19 @@ export class ManageComponent implements OnInit, OnDestroy {
         //                          Product
         // -----------------------------------------------------------
         if (this.ListEvidenceOutItem.length > 0) {
+            this.oEvidenceOut.EvidenceOutItem.map(m => {
+                let stock = {
+                    "BalanceQty": m.BalanceQty,
+                    "StockID": m.StockID
+                }
+
+                this.EvidenceOutService.EvidenceOutStockBalanceupdByCon(stock).then(async rt => {
+                    if (!rt.IsSuccess) {
+                        isSuccess = rt.IsSuccess;
+                    }
+                }, (error) => { console.error(error); });
+            })
+
             this.ListEvidenceOutItem.map(async item => {
                 item.EvidenceOutID = this.oEvidenceOut.EvidenceOutID;
                 item.EvidenceOutStockBalance = [];
@@ -689,6 +816,51 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
+    async onDelete() {
+        swal({
+            title: '',
+            text: Message.confirmAction,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.value) {
+                let isSuccess: boolean = true;
+
+                this.oEvidenceOut.EvidenceOutItem.map(m => {
+                    let stock = {
+                        "BalanceQty": m.InitBalanceQty,
+                        "StockID": m.StockID
+                    }
+
+                    this.EvidenceOutService.EvidenceOutStockBalanceupdByCon(stock).then(async rt => {
+                        if (!rt.IsSuccess) {
+                            isSuccess = rt.IsSuccess;
+                        }
+                    }, (error) => { console.error(error); });
+                })
+
+                this.EvidenceOutService.EvidenceOutupdDelete(this.EvidenceOutID).then(async rt => {
+                    if (!rt.IsSuccess) {
+                        isSuccess = rt.IsSuccess;
+                    }
+                }, (error) => { console.error(error); });
+
+
+                if (isSuccess) {
+                    this.oEvidenceOut = {};
+                    this.ShowAlertSuccess(Message.saveComplete);
+                    this.router.navigate([`/evidenceOut/list/${this.evitype}`]);
+                } else {
+                    this.ShowAlertError(Message.saveFail);
+                }
+            }
+        })
+    }
+
     async setData() {
         this.oEvidenceOut = {
             EvidenceOutID: this.EvidenceOutID,
@@ -716,10 +888,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
 
         if (this.evitype != "11I") {
-            this.oEvidenceOut.BookNo = null;
-            this.oEvidenceOut.ReceiptNo = null;
-            this.oEvidenceOut.PayDate = null;
-            this.oEvidenceOut.PayTime = null;
+            this.oEvidenceOut.BookNo = "";
+            this.oEvidenceOut.ReceiptNo = "";
+            this.oEvidenceOut.PayDate = "";
+            this.oEvidenceOut.PayTime = "";
         }
 
         this.ListEvidenceOutItem.map(async item => {
@@ -761,6 +933,22 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (this.oEviOutStaffEvidence != null && this.oEviOutStaffEvidence != undefined) {
             this.oEvidenceOut.EvidenceOutStaff.push(this.oEviOutStaffEvidence);
         }
+
+         // ผู้บริจาค
+         if (this.evitype == "15D")
+         {
+            this.oEviOutStaffReceive = {
+                EvidenceOutStaffID: this.StaffReceiveID,
+                EvidenceOutID: this.EvidenceOutID,
+                FirstName: this.StaffReceiverName,
+                PositionName: this.PosReceiver,
+                OfficeName: this.DeptReceiver,
+                ContributorID: "45",
+                IsActive: "1"
+            }
+
+            this.oEvidenceOut.EvidenceOutStaff.push(this.oEviOutStaffReceive);
+         }
     }
 
     async TransactionRunningForIns() {
@@ -768,7 +956,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (item.length == 0) {
                 this.RevService.TransactionRunninginsAll(this.DeptCodeEvidence, "ops_evidence_in", "RC").then(async res => {
                     if (res.IsSuccess) {
-                        this.EvidenceOutCode = "RC" + this.oEviOutStaffEvidence.OfficeCode + (this.EvidenceOutDate.date.year + 543).toString().substring(4, 2) + "00001";
+                        this.EvidenceOutCode = this.EviCode + this.oEviOutStaffEvidence.OfficeCode + (this.EvidenceOutDate.date.year + 543).toString().substring(4, 2) + "00001";
                         this.oEvidenceOut.EvidenceOutCode = this.EvidenceOutCode;
 
                         await this.InsEvidenceOut();
@@ -781,7 +969,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         var pad = "00000"
                         var RunningNo = pad.substring(0, pad.length - item[0].RunningNo.toString().length) + (+item[0].RunningNo + 1);
 
-                        this.EvidenceOutCode = "RC" + this.oEviOutStaffEvidence.OfficeCode + (this.EvidenceOutDate.date.year + 543).toString().substring(4, 2) + RunningNo;
+                        this.EvidenceOutCode = this.EviCode + this.oEviOutStaffEvidence.OfficeCode + (this.EvidenceOutDate.date.year + 543).toString().substring(4, 2) + RunningNo;
                         this.oEvidenceOut.EvidenceOutCode = this.EvidenceOutCode;
 
                         await this.InsEvidenceOut();
@@ -819,7 +1007,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     await this.ShowEvidenceOut();
 
                     this.preloader.setShowPreloader(false);
-                    this.router.navigate([`/evidenceOut/manage/${this.evitype}/R/${this.EvidenceOutID}/${this.EvidenceInType}`]);
+                    this.router.navigate([`/evidenceOut/manage/${this.evitype}/R/${this.EvidenceOutID}`]);
                 }
             } else {
                 this.ShowAlertError(Message.saveFail);
@@ -899,7 +1087,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         let tDate = _Date;
 
         if (tDate != undefined) {
-            return setZeroHours(new Date(`${tDate.year}-${tDate.month}-${tDate.day}`));
+            // return setZeroHours(new Date(`${tDate.year}-${tDate.month}-${tDate.day}`));
+            return tDate.year + '-' + tDate.month + '-' + tDate.day + ' 00:00:00.0000';
         }
 
         return "";
@@ -959,7 +1148,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: event.OfficeCode,
             OfficeName: event.OfficeName,
             OfficeShortName: event.OfficeShortName,
-            ContributorID: "45",
+            ContributorID: "39",
             IsActive: "1"
         }
 
@@ -989,7 +1178,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: "",
             OfficeName: "",
             OfficeShortName: "",
-            ContributorID: "45",
+            ContributorID: "39",
             IsActive: "1"
         }
     }
@@ -1149,6 +1338,85 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsActive: "1"
         }
     }
+
+    // *******************************************
+    // ------------------ ผู้บรับริจาค -----------------
+    // *******************************************
+    /*
+    StaffReceiveEvidenceonAutoChange(value: string) {
+        this.ClearStaffReceiveEvidenceData();
+
+        if (value == '') {
+            this.StaffReceiveoptions = [];
+        } else {
+            if (this.rawStaffOptions.length == 0) {
+                this.getEvidenceOutStaff();
+            }
+
+            this.StaffReceiveoptions = this.rawStaffOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    StaffReceiveEvidenceonAutoFocus(value: string) {
+        if (value == '') {
+            this.StaffReceiveoptions = [];
+            this.ClearStaffEvidenceData();
+        }
+    }
+
+    StaffReceiveEvidenceonAutoSelecteWord(event) {
+        this.oEviOutStaffReceive = {
+            EvidenceOutStaffID: this.StaffReceiveID,
+            EvidenceOutID: this.EvidenceOutID,
+            StaffCode: event.StaffCode,
+            TitleName: event.TitleName,
+            FirstName: event.FirstName,
+            LastName: event.LastName,
+            PositionCode: event.OperationPosCode,
+            PositionName: event.OperationPosName,
+            PosLevel: event.PosLevel,
+            PosLevelName: event.PosLevelName,
+            DepartmentCode: event.OperationDeptCode,
+            DepartmentName: event.OperationDeptName,
+            DepartmentLevel: event.DeptLevel,
+            OfficeCode: event.OfficeCode,
+            OfficeName: event.OfficeName,
+            OfficeShortName: event.OfficeShortName,
+            ContributorID: "45",
+            IsActive: "1"
+        }
+
+        this.PosReceiver = event.OperationPosName;
+        this.DeptReceiver = event.OfficeName;
+        this.DeptCodeReceiver = event.officeCode;
+    }
+
+    ClearStaffReceiveEvidenceData() {
+        this.PosReceiver = "";
+        this.DeptReceiver = "";
+
+        this.oEviOutStaffReceive = {
+            EvidenceOutStaffID: this.StaffReceiveID,
+            EvidenceOutID: this.EvidenceOutID,
+            StaffCode: "",
+            TitleName: "",
+            FirstName: "",
+            LastName: "",
+            PositionCode: "",
+            PositionName: "",
+            PosLevel: "",
+            PosLevelName: "",
+            DepartmentCode: "",
+            DepartmentName: "",
+            DepartmentLevel: "",
+            OfficeCode: "",
+            OfficeName: "",
+            OfficeShortName: "",
+            ContributorID: "45",
+            IsActive: "1"
+        }
+    }
+    */
 
     // **********************************
     // ------------ Document -----------
@@ -1312,6 +1580,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.EvidenceOutService.getProduct(this.WarehouseID, this.EvidenceInType).then(async res => {
             if (res) {
                 this.rawProductOptions = res;
+                this.rawProductList = [];
 
                 this.rawProductOptions.map(f => {
                     f.EvidenceOutInItem.forEach(element => {
@@ -1326,7 +1595,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                             ReceiveSize: element.EvidenceOutStockBalance[0].ReceiveSize,
                             ReceiveSizeUnit: element.EvidenceOutStockBalance[0].ReceiveSizeUnit,
                             StockID: element.EvidenceOutStockBalance[0].StockID,
-                            
+
                             IsChecked: false
                         }
 
@@ -1472,7 +1741,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     ClosePopupProduct() {
         let ls = this.ProductList.filter(x => x.IsChecked == true)
 
-        if(ls.length > 0){
+        if (ls.length > 0) {
             ls.map(m => {
                 this.oEvidenceOutItem = {
                     StockID: m.StockID,
@@ -1496,7 +1765,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     IsNewItem: true,
                     IsDelItem: false
                 };
-    
+
                 this.ListEvidenceOutItem.push(this.oEvidenceOutItem);
             });
         } else {
@@ -1504,7 +1773,25 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             return false;
         }
-        
+
         $("#ProductPopup .close").click();
+    }
+
+    clickSearch(){
+        let tempProduct = [];
+
+        if(this.evitype == '11I' && this.Textsearch != ""){
+            tempProduct = this.rawProductList.filter(f => f.LawsuitNo.toLowerCase().indexOf(this.Textsearch.toLowerCase()) > -1)
+        } else if(this.evitype == '11E' && this.Textsearch != ""){
+            tempProduct = this.rawProductList.filter(f => f.DeliveryNo.toLowerCase().indexOf(this.Textsearch.toLowerCase()) > -1)
+        } else {
+            tempProduct = this.rawProductList;
+        }
+        
+        // set total record
+        this.paginage.TotalItems = tempProduct.length;
+        this.ProductList = this.rawProductList.slice(0, this.paginage.RowsPerPageOptions[0]);
+
+        
     }
 }

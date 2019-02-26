@@ -517,29 +517,30 @@
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้รับบริจาค :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffReceiverName" name="StaffReceiverName" placeholder=""
-                        aria-label="Number" matInput [matAutocomplete]="auto4" (input)="StaffRequestonAutoChange($event.target.value)"
-                        (focus)="StaffRequestonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    <input type="text" [(ngModel)]="StaffReceiverName" name="StaffReceiverName" class="form-control" [disabled]="showEditField">
+                    <!-- <input type="text" matInput class="form-control" [(ngModel)]="StaffReceiverName" name="StaffReceiverName" placeholder=""
+                        aria-label="Number" matInput [matAutocomplete]="auto4" (input)="StaffReceiveEvidenceonAutoChange($event.target.value)"
+                        (focus)="StaffReceiveEvidenceonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
                         required>
                     <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
-                        <mat-option *ngFor="let sOption of StaffRequestoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                            (click)="StaffRequestonAutoSelecteWord(sOption)" (onSelectionChange)="StaffRequestonAutoSelecteWord(sOption)">
+                        <mat-option *ngFor="let sOption of StaffReceiveoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                            (click)="StaffReceiveEvidenceonAutoSelecteWord(sOption)" (onSelectionChange)="StaffReceiveEvidenceonAutoSelecteWord(sOption)">
                             {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
                         </mat-option>
-                    </mat-autocomplete>
+                    </mat-autocomplete> -->
                 </div>
             </div>
         </div>
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="PosReceiver" name="PosReceiver" class="form-control" readonly>
+                <input type="text" [(ngModel)]="PosReceiver" name="PosReceiver" class="form-control" [disabled]="showEditField">
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" name="DeptReceiver" [(ngModel)]="DeptReceiver" class="form-control" readonly>
+                    <input type="text" name="DeptReceiver" [(ngModel)]="DeptReceiver" class="form-control" [disabled]="showEditField">
                 </div>
             </div>
         </div>
@@ -658,21 +659,13 @@
                 <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control" readonly>
             </div>
 
-            <label for="" class="col-lg-2 col-md-4 control-label">ประเภทหน่วยงานปลายทาง :</label>
-            <div class="col-lg-4 col-md-7 col-sm-8">
-                <div class="form-group ">
-                    <input type="text" name="RevenueNo" [(ngModel)]="RevenueNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
-                </div>
+            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บปลายทาง :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField">
             </div>
         </div>
 
         <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงานปลายทาง :</label>
-            <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField">
-            </div>
-
             <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสืออนุมัติ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
@@ -680,9 +673,7 @@
                         required>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">วันที่อนุมัติ :
             </label>
             <div class="form-group input-group col-lg-4 col-md-7">
@@ -694,7 +685,9 @@
                 <input type="text" [(ngModel)]="ApproveTime" name="ApproveTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
                     [ngClass]="{'ng-touched':isRequired}" required>
             </div>
+        </div>
 
+        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
@@ -709,22 +702,20 @@
                     </mat-autocomplete>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control" readonly>
             </div>
+        </div>
 
+        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
             </div>
-        </div>
 
-        <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
+            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บต้นทาง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto17"
                     (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
@@ -736,9 +727,11 @@
                     </mat-option>
                 </mat-autocomplete>
             </div>
+        </div>
 
+        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการโอนย้าย :</label>
-            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+            <div class="form-group col-lg-10 col-md-8 col-sm-8">
                 <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField">
             </div>
         </div>
@@ -781,13 +774,14 @@
                                 <th style="width:14%">เลขทะเบียนบัญชี</th>
                                 <th>ชื่อของกลาง</th>
                                 <th style="width:10%">จำนวน</th>
-                                <th style="width:10%">หน่วย</th>
+                                <!-- <th style="width:10%">หน่วย</th> -->
                                 <th style="width:10%" *ngIf="evitype == '11I' || evitype == '11E'">จำนวนคืน</th>
                                 <th style="width:10%" *ngIf="evitype == '12'">จำนวนจัดเก็บ</th>
                                 <th style="width:10%" *ngIf="evitype == '13'">จำนวนขาย</th>
                                 <th style="width:10%" *ngIf="evitype == '14'">จำนวนทำลาย</th>
                                 <th style="width:10%" *ngIf="evitype == '15G' || evitype == '15D'">จำนวนจำหน่าย</th>
                                 <th style="width:10%" *ngIf="evitype == '16'">จำนวนที่โอนย้าย</th>
+                                <th style="width:10%">จำนวนคงเหลือ</th>
                                 <th style="width:10%">หน่วย</th>
                                 <!-- <th *ngIf="evitype == '15G' || evitype == '15D'">จำนวนรับ</th>
                                 <th *ngIf="evitype == '15G' || evitype == '15D'">หน่วย</th> -->
@@ -819,7 +813,7 @@
                                     <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.EvidenceInItemCode"
                                         name="item.ProductDesc" placeholder="" aria-label="Number" [matAutocomplete]="auto18"
                                         (input)="ProductonAutoChange($event.target.value, item.ProductSeq)" (focus)="ProductonAutoFocus($event.target.value)"
-                                        [disabled]="showEditField || evitype == '11E'" [ngClass]="{'ng-touched':isRequired}"
+                                        [disabled]="showEditField || evitype == '11E' || evitype == '11I' || mode == 'R'" [ngClass]="{'ng-touched':isRequired}"
                                         required>
                                     <mat-autocomplete autoActiveFirstOption #auto18="matAutocomplete">
                                         <mat-option *ngFor="let pOption of Productoptions" [value]="pOption.EvidenceInItemCode" (click)="ProductonAutoSelecteWord(pOption, item.ProductSeq)"
@@ -840,18 +834,23 @@
                                 </th>
 
                                 <!-- หน่วย -->
-                                <th>
+                                <!-- <th>
                                     <select [(ngModel)]="item.BalanceQtyUnit" name="item.BalanceQtyUnit" class="form-control form-control-sm" style="font-size: 14px"
                                         readonly>
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select>
-                                </th>
+                                </th> -->
 
                                 <!-- จำนวนคืน, จำนวนจัดเก็บ, จำนวนขาย, จำนวนทำลาย, ชำรุด, จำนวนส่ง -->
                                 <th>
                                     <input type="text" [(ngModel)]="item.Qty" name="item.Qty" class="form-control form-control-sm" [disabled]="showEditField"
                                         [ngClass]="{'ng-touched':isRequired}" required (input)="CalReturn(item.ProductSeq)">
+                                </th>
+
+                                <!-- จำนวนคงเหลือ -->
+                                <th>
+                                    <input type="text" [(ngModel)]="item.BalanceQty" name="item.BalanceQty" class="form-control form-control-sm" readonly>
                                 </th>
 
                                 <!-- หน่วย -->
@@ -1117,8 +1116,8 @@
                     </div>
 
                     <div class="col-lg-4">
-                        <input type="search" name="Textsearch" id="" ngModel class="form-control form-control-sm">
-                        <a href="javaScript:void(0);" (click)="clickSearch(formSearch)" class="srh-btn">
+                        <input type="text" [(ngModel)]="Textsearch" name="Textsearch" id="" class="form-control form-control-sm" (keydown.enter)="clickSearch()">
+                        <a href="javaScript:void(0);" (click)="clickSearch()" class="srh-btn">
                             <i class="ti-search"></i>
                         </a>
                     </div>

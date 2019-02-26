@@ -18,23 +18,12 @@ export class EvidenceOutService {
       })
   };
 
-  // getByKeyword(Textsearch: any) {
-  //   const params = JSON.stringify(Textsearch);
-  //   // const url = `${appConfig.api8778}/EvidenceOutgetByKeyword`;
-  //   const url = `${appConfig.api8778}/EvidenceOutListgetByKeyword`;
-
-  //   return this.http.post<EvidenceOut[]>(url, params, this.httpOptions);
-  // }
-  async getByKeyword(Textsearch: any): Promise<any> {
+  getByKeyword(Textsearch: any) {
     const params = JSON.stringify(Textsearch);
+    // const url = `${appConfig.api8778}/EvidenceOutgetByKeyword`;
     const url = `${appConfig.api8778}/EvidenceOutListgetByKeyword`;
 
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res as any;
-    } catch (error) {
-      return [];
-    }
+    return this.http.post<EvidenceOut[]>(url, params, this.httpOptions);
   }
 
   async getByConAdv(form: any): Promise<any> {
@@ -139,30 +128,6 @@ export class EvidenceOutService {
   async EvidenceOutupdByCon(oEvidence: EvidenceOut): Promise<any> {
     const params = JSON.stringify(oEvidence);
     const url = `${appConfig.api8778}/EvidenceOutupdByCon`;
-
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      return [];
-    }
-  }
-
-  async EvidenceOutupdDelete(EvidenceOutID: string): Promise<any> {
-    const params = { EvidenceOutID };
-    const url = `${appConfig.api8778}/EvidenceOutupdDelete`;
-
-    try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      return [];
-    }
-  }
-
-  async EvidenceOutStockBalanceupdByCon(oStock: any): Promise<any> {
-    const params = JSON.stringify(oStock);
-    const url = `${appConfig.api8778}/EvidenceOutStockBalanceupdByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
