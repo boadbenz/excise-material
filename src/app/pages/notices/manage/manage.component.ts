@@ -148,7 +148,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.38');
+        this.sidebarService.setVersion('0.0.2.39');
 
         this.navigate_service();
         this.active_route();
@@ -274,14 +274,13 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private navigate_service() {
         this.onShowEditFieldSubscribe = this.navService.showFieldEdit.subscribe(async p => {
-            console.log(this.noticeForm);
             if(this.noticeForm&&this.noticeForm.value.IsArrest==1){
                 this.showSwal("ไม่สามารถแก้ไขข้อมูลได้", "warning");
                 p = true;
                 
                 // await this.navService.setEditField(true);
                 await this.navService.setEditButton(true);
-                await this.navService.setPrintButton(false);
+                await this.navService.setPrintButton(true);
                 await this.navService.setDeleteButton(false);
                 await this.navService.setNextPageButton(true);
                 // // set false
