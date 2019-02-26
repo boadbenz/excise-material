@@ -568,6 +568,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if(res.IsArrest==1){
             this.navService.setDeleteButton(false);
+            this.navService.setEditButton(false);
+            this.navService.setCancelButton(true);
         }
 
         const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
