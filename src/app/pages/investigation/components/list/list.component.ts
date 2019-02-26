@@ -16,6 +16,7 @@ import { InvestgateService } from '../../services/investgate.service'
 import { error } from 'util';
 import { async } from '@angular/core/testing';
 
+
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
@@ -27,7 +28,8 @@ export class ListComponent implements OnInit, OnDestroy {
     private destroy$: Subject<boolean> = new Subject<boolean>();
 
 
-
+    permisCheck: any
+    perBeforReturn: any
     _dateStartFrom: any;
     _dateStartTo: any;
     DateStartTo: any;
@@ -68,21 +70,21 @@ export class ListComponent implements OnInit, OnDestroy {
         //     IsRead: 0,
         //     IsUpdate: 0
         // }];
-        var permissionCheck: any = null
-        // console.log("onList")
-        var userAccountID = localStorage.getItem('UserAccountID')
-        var programCode = 'ILG60-01-00'
-        const params = {
-            UserAccountID: userAccountID,
-            ProgramCode: programCode
-        };
-        // console.log('params : ', params)
-        this.investgateService.PermissionCheck(params).then(pRes => {
-            console.error('ngOnInit PermissionCheck !!: ', pRes);
-            permissionCheck = pRes
-        }, (error) => { console.error('error : ', error); });
+        // var permissionCheck: any = null
+        // // console.log("onList")
+        // var userAccountID = localStorage.getItem('UserAccountID')
+        // var programCode = 'ILG60-01-00'
+        // const params = {
+        //     UserAccountID: userAccountID,
+        //     ProgramCode: programCode
+        // };
+        // // console.log('params : ', params)
+        // this.investgateService.PermissionCheck(params).then(pRes => {
+        //     console.error('ngOnInit PermissionCheck !!: ', pRes);
+        //     permissionCheck = pRes
+        // }, (error) => { console.error('error : ', error); });
         //-------------------------------------------------------------------
-        
+
         this.advSearch.next(true)
         this.sidebarService.setVersion(this.s_invest.version);
 
@@ -94,17 +96,52 @@ export class ListComponent implements OnInit, OnDestroy {
         })
 
         this.navService.onNextPage.subscribe(async status => {
-            // console.log("+++IsCreate onclick : ", permissionCheck)
-            if (status && permissionCheck != undefined) {
-                if (permissionCheck.IsCreate != 1) {
-                    console.log('IsCreate != 1 ', '  IsCreate !!: ', permissionCheck.IsCreate)
+
+            console.log("status : ", status)
+            if (status) {
+                var pmCheck = this.permissionCheck('IsCreate')
+
+                console.log('pmCheck !: ', await pmCheck)
+                if (await pmCheck != 1) {
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                } else if (permissionCheck.IsCreate == 1) {
-                    console.log('IsCreate == 1', '  IsCreate !!: ', permissionCheck.IsCreate)
+                    console.log('IsCreate != 1 ', '  IsCreate !!: ', pmCheck)
+                } else if (await pmCheck == 1) {
                     this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
+                    console.log('IsCreate else ', '  IsCreate !!: ', pmCheck)
                 }
             }
         })
+    }
+
+    async permissionCheck(subscribe) {
+        var userAccountID = localStorage.getItem('UserAccountID')
+        var programCode = 'ILG60-01-00'
+        const params = {
+            UserAccountID: userAccountID,
+            ProgramCode: programCode
+        };
+        await this.investgateService.PermissionCheck(params).then(pRes => {
+            this.permisCheck = pRes
+
+            if (subscribe == 'IsCreate') {
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsCreate;
+                // return res;
+            } else if (subscribe == 'IsDelete') {
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsDelete;
+                // return res;
+            } else if (subscribe == 'IsRead') {
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsRead;
+                // return res;
+            } else if (subscribe == 'IsUpdate') {
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsUpdate;
+                // return res;
+            }
+        }, (error) => { console.error('error : ', error); });
+        return this.perBeforReturn
     }
 
     ngOnDestroy(): void {
