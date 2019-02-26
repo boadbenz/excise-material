@@ -149,6 +149,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
         this.paginage.TotalItems = 0;
+        this.subSetNextPage.unsubscribe();
     }
 
     onSearch(form: any) {
