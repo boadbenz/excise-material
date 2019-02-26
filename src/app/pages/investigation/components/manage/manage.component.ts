@@ -183,24 +183,24 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
-                if (this.permissionCheck.IsUpdate != 1) {
-                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
-                } else if (this.permissionCheck.IsUpdate == 1) {
+                // if (this.permissionCheck.IsUpdate != 1) {
+                //     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
+                // } else if (this.permissionCheck.IsUpdate == 1) {
                     await this.navService.setOnSave(false);
                     this.onSave();
-                }
+                // }
 
             }
         });
 
         this.navService.onDelete.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
-                if (this.permissionCheck.IsDelete != 1) {
-                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
-                } else if (this.permissionCheck.IsDelete == 1) {
+                // if (this.permissionCheck.IsDelete != 1) {
+                //     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
+                // } else if (this.permissionCheck.IsDelete == 1) {
                     await this.navService.setOnDelete(false);
                     this.onDelete();
-                }
+                // }
 
             }
         });

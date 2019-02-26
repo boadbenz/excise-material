@@ -93,18 +93,20 @@ export class ListComponent implements OnInit, OnDestroy {
         })
 
         this.navService.onNextPage.subscribe(async status => {
-            console.log("+++IsCreate onclick : ", permissionCheck)
-            if (status && permissionCheck != undefined) {
-                if (permissionCheck.IsCreate != 1) {
-                    console.log('IsCreate != 1 ','  IsCreate : ',permissionCheck.IsCreate)
-                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
-                } else if (permissionCheck.IsCreate == 1) {
-                    console.log('IsCreate == 1','  IsCreate : ',permissionCheck.IsCreate)
-                    this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
-                }
+            // console.log("+++IsCreate onclick : ", permissionCheck)
+            // if (status && permissionCheck != undefined) {
+            //     if (permissionCheck.IsCreate != 1) {
+            //         console.log('IsCreate != 1 ', '  IsCreate : ', permissionCheck.IsCreate)
+            //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
+            //     } else if (permissionCheck.IsCreate == 1) {
+            //         console.log('IsCreate == 1', '  IsCreate : ', permissionCheck.IsCreate)
+                    // this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
+                // }
+            // }
+            if (status) {
+                this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
             }
         })
-
     }
 
     ngOnDestroy(): void {
