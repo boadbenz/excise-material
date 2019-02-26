@@ -29,7 +29,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     card1 = true;
     card2 = true;
-
+    public permissionCheck: any
     private destroy$: Subject<boolean> = new Subject<boolean>();
 
     private obInvest: Observable<fromModels.InvestigateModel>;
@@ -49,8 +49,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     showEditField: any;
     isRequired: boolean;
     investigateForm: FormGroup;
-
-    permissionCheck: any;
 
     myDatePickerOptions = MyDatePickerOptions;
 
@@ -88,23 +86,24 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
+
         this.sidebarService.setVersion(this.s_invest.version);
         this.active_Route();
         this.navigate_Service();
         this.createForm();
 
-        console.log("onManage")
+        // console.log("onList")
         var userAccountID = localStorage.getItem('UserAccountID')
         var programCode = 'ILG60-01-00'
         const params = {
             UserAccountID: userAccountID,
             ProgramCode: programCode
         };
-        console.log('params : ', params)
-        this.investgateService.PermissionCheck(params).subscribe(async res => {
-            this.permissionCheck = res;
-            console.log('Ok PermissionCheck : ', res)
-        })
+        // console.log('params : ', params)
+        this.investgateService.PermissionCheck(params).then(pRes => {
+            // console.error('ngOnInit PermissionCheck : ', pRes);
+            this.permissionCheck = pRes
+        }, (error) => { console.error('error : ', error); });
     }
 
     ngAfterViewInit(): void {
@@ -182,26 +181,29 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         })
 
         this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
-            if (status) {
-                // if (this.permissionCheck.IsUpdate != 1) {
-                //     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
-                // } else if (this.permissionCheck.IsUpdate == 1) {
+            if (status && this.permissionCheck != undefined) {
+                if (this.permissionCheck.IsUpdate != 1) {
+                    // console.log('IsCreate != 1 ', '  IsCreate : ', this.permissionCheck.IsUpdate)
+                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+                } else if (this.permissionCheck.IsUpdate == 1) {
+                    // console.log('IsCreate == 1', '  IsCreate : ', this.permissionCheck.IsUpdate)
                     await this.navService.setOnSave(false);
                     this.onSave();
-                // }
-
+                }
             }
+
         });
 
         this.navService.onDelete.takeUntil(this.destroy$).subscribe(async status => {
-            if (status) {
-                // if (this.permissionCheck.IsDelete != 1) {
-                //     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติกต่อผู้ดูแลระบบ', 'warning');
-                // } else if (this.permissionCheck.IsDelete == 1) {
+            if (status && this.permissionCheck != undefined) {
+                if (this.permissionCheck.IsDelete != 1) {
+                    // console.log('IsCreate != 1 ', '  IsCreate : ', this.permissionCheck.IsDelete)
+                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+                } else if (this.permissionCheck.IsDelete == 1) {
+                    // console.log('IsCreate == 1', '  IsCreate : ', this.permissionCheck.IsDelete)
                     await this.navService.setOnDelete(false);
                     this.onDelete();
-                // }
-
+                }
             }
         });
 

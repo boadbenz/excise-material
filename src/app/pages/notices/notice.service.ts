@@ -24,6 +24,17 @@ export class NoticeService {
             })
     };
 
+    async PermissionCheck(params: any): Promise<any> {
+        const paramss = JSON.stringify(params);
+        const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
+        try {
+          const res = await this.http.post<any>(url, paramss, this.httpOptions).toPromise();
+          return res;
+        } catch (error) {
+          return [];
+        }
+      }
+
     private async responsePromisModify(params: string, url: string) {
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
         if (res.IsSuccess == 'False') {
