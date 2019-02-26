@@ -267,38 +267,20 @@ export class ManageComponent implements OnInit, OnDestroy {
         };
         // console.log('params : ', params)
         await this.noticeService.PermissionCheck(params).then(pRes => {
-            console.error('ngOnInit PermissionCheck !!: ', pRes);
             this.permisCheck = pRes
-            console.error('ngOnInit this.permisCheck !!: ', this.permisCheck);
 
             if (subscribe == 'IsCreate') {
-                console.log("subscribe : ", subscribe)
-                console.log("subscribe permissionCheck : ", this.permisCheck)
                 this.perBeforReturn = 0;
                 this.perBeforReturn = this.permisCheck.IsCreate;
-                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
-                // return res;
             } else if (subscribe == 'IsDelete') {
-                console.log("subscribe : ", subscribe)
-                console.log("subscribe permissionCheck : ", this.permisCheck)
                 this.perBeforReturn = 0;
                 this.perBeforReturn = this.permisCheck.IsDelete;
-                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
-                // return res;
             } else if (subscribe == 'IsRead') {
-                console.log("subscribe : ", subscribe)
-                console.log("subscribe permissionCheck : ", this.permisCheck)
                 this.perBeforReturn = 0;
                 this.perBeforReturn = this.permisCheck.IsRead;
-                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
-                // return res;
             } else if (subscribe == 'IsUpdate') {
-                console.log("subscribe : ", subscribe)
-                console.log("subscribe permissionCheck : ", this.permisCheck)
                 this.perBeforReturn = 0;
                 this.perBeforReturn = this.permisCheck.IsUpdate;
-                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
-                // return res;
             }
         }, (error) => { console.error('error : ', error); });
         return this.perBeforReturn
@@ -371,10 +353,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
             if (status) {
                 var pmCheck = this.permissionCheck('IsUpdate')
-                console.log('pmCheck !: ', await pmCheck)
                 if (await pmCheck != 1) {
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                    console.log('IsCreate != 1 ', '  IsCreate !!: ', pmCheck)
                 } else if (await pmCheck == 1) {
 
                     await this.navService.setOnSave(false);
@@ -455,10 +435,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
             if (status) {
                 var pmCheck = this.permissionCheck('IsDelete')
-                console.log('pmCheck !: ', await pmCheck)
                 if (await pmCheck != 1) {
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                    console.log('IsCreate != 1 ', '  IsCreate !!: ', pmCheck)
                 } else if (await pmCheck == 1) {
                     await this.navService.setOnDelete(false);
 

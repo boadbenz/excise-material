@@ -23,6 +23,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
     permisCheck: any
     perBeforReturn: any
+    PerStatus: any = false;
+
     months: any[];
     monthsTh: any[];
 
@@ -69,6 +71,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+
         this.sidebarService.setVersion('0.0.2.39');
         this.paginage.TotalItems = 0;
 
@@ -86,16 +89,15 @@ export class ListComponent implements OnInit, OnDestroy {
         });
 
         this.subSetNextPage = this.navservice.onNextPage.subscribe(async status => {
-            console.log("status : ", status)
-            if (status) {
+
+            if (this.subSetNextPage) {
                 var pmCheck = this.permissionCheck('IsCreate')
                 console.log('pmCheck !: ', await pmCheck)
                 if (await pmCheck != 1) {
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                    console.log('IsCreate != 1 ', '  IsCreate !!: ', pmCheck)
                 } else if (await pmCheck == 1) {
-                    this._router.navigate([`/suppression/investigation/manage/C/NEW`]);
-                    console.log('IsCreate else ', '  IsCreate !!: ', pmCheck)
+                    await this.navservice.setOnNextPage(false);
+                    this._router.navigateByUrl('/notice/manage/C/NEW?from=new');
                 }
             }
 
@@ -112,34 +114,27 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async permissionCheck(subscribe) {
-        // var permissionCheck: any = null
-        // console.log("onList")
         var userAccountID = localStorage.getItem('UserAccountID')
         var programCode = 'ILG60-02-00'
         const params = {
             UserAccountID: userAccountID,
             ProgramCode: programCode
         };
-        // console.log('params : ', params)
         await this.noticeService.PermissionCheck(params).then(pRes => {
             this.permisCheck = pRes
 
             if (subscribe == 'IsCreate') {
                 this.perBeforReturn = 0;
                 this.perBeforReturn = this.permisCheck.IsCreate;
-                // return res;
             } else if (subscribe == 'IsDelete') {
                 this.perBeforReturn = 0;
                 this.perBeforReturn = this.permisCheck.IsDelete;
-                // return res;
             } else if (subscribe == 'IsRead') {
                 this.perBeforReturn = 0;
                 this.perBeforReturn = this.permisCheck.IsRead;
-                // return res;
             } else if (subscribe == 'IsUpdate') {
                 this.perBeforReturn = 0;
                 this.perBeforReturn = this.permisCheck.IsUpdate;
-                // return res;
             }
         }, (error) => { console.error('error : ', error); });
         return this.perBeforReturn

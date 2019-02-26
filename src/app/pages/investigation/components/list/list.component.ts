@@ -27,6 +27,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     private destroy$: Subject<boolean> = new Subject<boolean>();
 
+    private subSetNextPage: any;
 
     permisCheck: any
     perBeforReturn: any
@@ -95,10 +96,10 @@ export class ListComponent implements OnInit, OnDestroy {
             }
         })
 
-        this.navService.onNextPage.subscribe(async status => {
+        this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
 
             console.log("status : ", status)
-            if (status) {
+            if (this.subSetNextPage) {
                 var pmCheck = this.permissionCheck('IsCreate')
 
                 console.log('pmCheck !: ', await pmCheck)
