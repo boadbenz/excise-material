@@ -66,6 +66,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onCancelSubscribe: any;
     private onShowEditFieldSubscribe: any;
 
+    permisCheck: any
+    perBeforReturn: any
+
     actionFrom: string;
     months: any[];
     programSpect: string = 'ILG60-02-02-00-00';
@@ -80,7 +83,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     searchFailed = false;
     isConceal = false;
     isRequired: boolean;
-    permissionCheck: any
 
     myDatePickerOptions = MyDatePickerOptions;
 
@@ -146,18 +148,18 @@ export class ManageComponent implements OnInit, OnDestroy {
     async ngOnInit() {
 
 
-        console.log("onList")
-        var userAccountID = localStorage.getItem('UserAccountID')
-        var programCode = 'ILG60-02-00'
-        const params = {
-            UserAccountID: userAccountID,
-            ProgramCode: programCode
-        };
-        console.log('params : ', params)
-        this.noticeService.PermissionCheck(params).then(pRes => {
-            console.error('ngOnInit PermissionCheck : ', pRes);
-            this.permissionCheck = pRes
-        }, (error) => { console.error('error : ', error); });
+        // console.log("onList")
+        // var userAccountID = localStorage.getItem('UserAccountID')
+        // var programCode = 'ILG60-02-00'
+        // const params = {
+        //     UserAccountID: userAccountID,
+        //     ProgramCode: programCode
+        // };
+        // console.log('params : ', params)
+        // this.noticeService.PermissionCheck(params).then(pRes => {
+        //     console.error('ngOnInit PermissionCheck : ', pRes);
+        //     this.permissionCheck = pRes
+        // }, (error) => { console.error('error : ', error); });
         //-----------------------------------------------------------------------------------------
         this.months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
         this.activatedRoute.queryParams.subscribe(params => {
@@ -254,6 +256,54 @@ export class ManageComponent implements OnInit, OnDestroy {
         sessionStorage.setItem("notice_current_page", tmps[0] + "?from=edit");
     }
 
+    async permissionCheck(subscribe) {
+        // var permissionCheck: any = null
+        // console.log("onList")
+        var userAccountID = localStorage.getItem('UserAccountID')
+        var programCode = 'ILG60-01-00'
+        const params = {
+            UserAccountID: userAccountID,
+            ProgramCode: programCode
+        };
+        // console.log('params : ', params)
+        await this.noticeService.PermissionCheck(params).then(pRes => {
+            console.error('ngOnInit PermissionCheck !!: ', pRes);
+            this.permisCheck = pRes
+            console.error('ngOnInit this.permisCheck !!: ', this.permisCheck);
+
+            if (subscribe == 'IsCreate') {
+                console.log("subscribe : ", subscribe)
+                console.log("subscribe permissionCheck : ", this.permisCheck)
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsCreate;
+                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
+                // return res;
+            } else if (subscribe == 'IsDelete') {
+                console.log("subscribe : ", subscribe)
+                console.log("subscribe permissionCheck : ", this.permisCheck)
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsDelete;
+                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
+                // return res;
+            } else if (subscribe == 'IsRead') {
+                console.log("subscribe : ", subscribe)
+                console.log("subscribe permissionCheck : ", this.permisCheck)
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsRead;
+                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
+                // return res;
+            } else if (subscribe == 'IsUpdate') {
+                console.log("subscribe : ", subscribe)
+                console.log("subscribe permissionCheck : ", this.permisCheck)
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsUpdate;
+                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
+                // return res;
+            }
+        }, (error) => { console.error('error : ', error); });
+        return this.perBeforReturn
+    }
+
     private active_route() {
         this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
@@ -291,7 +341,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private navigate_service() {
         this.onShowEditFieldSubscribe = this.navService.showFieldEdit.subscribe(async p => {
-            if(this.noticeForm&&this.noticeForm.value.IsArrest==1){
+            if (this.noticeForm && this.noticeForm.value.IsArrest == 1) {
                 this.showSwal("ไม่สามารถแก้ไขข้อมูลได้", "warning");
                 p = true;
 
@@ -319,14 +369,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
-
-            if (status && this.permissionCheck != undefined) {
-                if (this.permissionCheck.IsUpdate != 1) {
-                    console.log('IsUpdate != 1 ', '  IsUpdate : ', this.permissionCheck.IsUpdate)
+            if (status) {
+                var pmCheck = this.permissionCheck('IsUpdate')
+                console.log('pmCheck !: ', await pmCheck)
+                if (await pmCheck != 1) {
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                } else if (this.permissionCheck.IsUpdate == 1) {
-                    console.log('IsUpdate == 1', '  IsUpdate : ', this.permissionCheck.IsUpdate)
-                    // if (status) {
+                    console.log('IsCreate != 1 ', '  IsCreate !!: ', pmCheck)
+                } else if (await pmCheck == 1) {
 
                     await this.navService.setOnSave(false);
 
@@ -361,24 +410,64 @@ export class ManageComponent implements OnInit, OnDestroy {
                     } else if (this.mode === 'R') {
                         this.onReviced();
                     }
-                    // }
+                    console.log('IsCreate else ', '  IsCreate !!: ', pmCheck)
                 }
             }
+            // if (status) {
+
+            // await this.navService.setOnSave(false);
+
+            // if (!this.noticeForm.valid) {
+            //     this.isRequired = true;
+            //     this.showSwal(Message.checkData, "warning");
+            //     return false;
+            // }
+
+            // if (this.noticeCode=="NEW") {
+            //     this.isRequired = true;
+            //     this.showSwal("Please check your notice code.", "warning");
+            //     return false;
+            // }
+
+            // const sDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDate);
+            // const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate);
+
+            // if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+            //     this.showSwal(Message.checkData, "warning");
+            //     return;
+            // }
+
+            // this.noticeForm.value.NoticeInformer.map(item => {
+            //     item.InformerType = item.InformerType == true ? 1 : 0;
+            // });
+
+            // if (this.mode === 'C') {
+            //     await this.getTransactionRunning(this.noticeForm.value.NoticeStaff[0].DepartmentCode || this.noticeForm.value.NoticeStaff[0].OfficeCode);
+            //     // this.onCreate();
+
+            // } else if (this.mode === 'R') {
+            //     this.onReviced();
+            // }
+            // }
+
         });
 
         this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
-            if (status && this.permissionCheck != undefined) {
-                if (this.permissionCheck.IsDelete != 1) {
-                    console.log('IsDelete != 1 ', '  IsDelete : ', this.permissionCheck.IsDelete)
+            if (status) {
+                var pmCheck = this.permissionCheck('IsDelete')
+                console.log('pmCheck !: ', await pmCheck)
+                if (await pmCheck != 1) {
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                } else if (this.permissionCheck.IsDelete == 1) {
-                    console.log('IsDelete == 1', '  IsDelete : ', this.permissionCheck.IsDelete)
+                    console.log('IsCreate != 1 ', '  IsCreate !!: ', pmCheck)
+                } else if (await pmCheck == 1) {
                     await this.navService.setOnDelete(false);
-                        this.deleteNotice.text = Message.confirmAction;
-                        this.deleteNotice.show();
-                        // this.onDelete();
+
+                    this.deleteNotice.text = Message.confirmAction;
+                    this.deleteNotice.show();
+                    // this.onDelete();
                 }
             }
+
             // if (status) {
             //     await this.navService.setOnDelete(false);
 
@@ -599,7 +688,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsArrest: res.IsArrest || 0
         });
 
-        if(res.IsArrest==1){
+        if (res.IsArrest == 1) {
             this.navService.setDeleteButton(false);
             this.navService.setEditButton(false);
             this.navService.setCancelButton(true);
