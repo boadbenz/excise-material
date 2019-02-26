@@ -366,7 +366,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       });
   }
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.13');
+    this.sidebarService.setVersion('0.0.1.14');
 
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
@@ -923,6 +923,16 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       }
 
     }
+    this.navService.setPrintButton(true); // 1.2.5(1)
+    this.navService.setEditButton(true); // 1.2.5(2)
+    this.navService.setDeleteButton(true); // 1.2.5(3)
+    this.navService.setNextPageButton(true); // 1.2.5(4)
+    this.navService.setSaveButton(false);
+    this.navService.setCancelButton(false);
+    this.navService.setSearchBar(false);
+    this.navService.setNewButton(false);
+    this.navService.setEditField(false);
+    this.navService.setPrevPageButton(false);
   }
 
   private buttonCancel() {
