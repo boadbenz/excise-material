@@ -85,6 +85,12 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     runningOfficeCode = localStorage.getItem('officeCode');
     runningPrefix = 'TN';
 
+    permisCheck: any
+    perBeforReturn: any
+    private subSetNextPage: any;
+    // private subSetSavePage: any;
+    // private subSetDeletePage: any;
+    // private subSetEditPage: any;
 
     readonly lawbreakerType = LawbreakerTypes;
     readonly entityType = EntityTypes;
@@ -407,6 +413,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
         this.clearForm();
+        this.subSetNextPage.unsubscribe();
     }
 
     private createForm(): FormGroup {
@@ -462,87 +469,227 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         });
     }
 
+    async permissionCheck(subscribe) {
+        var userAccountID = localStorage.getItem('UserAccountID')
+        var programCode = 'ILG60-01-00'
+        const params = {
+            UserAccountID: userAccountID,
+            ProgramCode: programCode
+        };
+        // console.log('params : ', params)
+        await this.s_arrest.PermissionCheck(params).then(pRes => {
+            console.log('ngOnInit PermissionCheck !!: ', pRes);
+            this.permisCheck = pRes
+            console.log('ngOnInit this.permisCheck !!: ', this.permisCheck);
+
+            if (subscribe == 'IsCreate') {
+                console.log("subscribe : ", subscribe)
+                console.log("subscribe permissionCheck : ", this.permisCheck)
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsCreate;
+                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
+                // return res;
+            } else if (subscribe == 'IsDelete') {
+                console.log("subscribe : ", subscribe)
+                console.log("subscribe permissionCheck : ", this.permisCheck)
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsDelete;
+                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
+                // return res;
+            } else if (subscribe == 'IsRead') {
+                console.log("subscribe : ", subscribe)
+                console.log("subscribe permissionCheck : ", this.permisCheck)
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsRead;
+                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
+                // return res;
+            } else if (subscribe == 'IsUpdate') {
+                console.log("subscribe : ", subscribe)
+                console.log("subscribe permissionCheck : ", this.permisCheck)
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsUpdate;
+                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
+                // return res;
+            }
+        }, (error) => { console.error('error : ', error); });
+        return this.perBeforReturn
+    }
+
     private navigate_Service() {
+
         this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p.valueOf();
         });
 
         this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
+
             if (status) {
-                // set action save = false
-                await this.navService.setOnSave(false);
-                if (this.arrestFG.invalid) {
-                    this.isRequired = true;
-                    if (this.arrestFG.get('ArrestLocale').invalid)
-                        this.ILG60_03_02_00_00_E18.next(true);
+                var pmCheck = this.permissionCheck('IsUpdate')
+                if (await pmCheck != 1) {
+                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+                } else if (await pmCheck == 1) {
+                    // set action save = false
+                    await this.navService.setOnSave(false);
+                    if (this.arrestFG.invalid) {
+                        this.isRequired = true;
+                        if (this.arrestFG.get('ArrestLocale').invalid)
+                            this.ILG60_03_02_00_00_E18.next(true);
 
-                    swal('', Message.checkData, 'warning')
-                    return false;
-                }
+                        swal('', Message.checkData, 'warning')
+                        return false;
+                    }
 
-                const _ArrestDate = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
-                const notice: fromModels.ArrestNotice[] = this.ArrestNotice.value
-                    .filter(x => _ArrestDate.valueOf() < (new Date(x.NoticeDate)).valueOf());
+                    const _ArrestDate = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
+                    const notice: fromModels.ArrestNotice[] = this.ArrestNotice.value
+                        .filter(x => _ArrestDate.valueOf() < (new Date(x.NoticeDate)).valueOf());
 
-                // ถ้ามีรายการ วันที่จับกุม < วันที่แจ้งความ ให้ออกจาก function
-                if (notice.length) {
-                    swal('', '“วันที่จับกุม” ต้องมากกว่าหรือเท่ากับ “วันที่แจ้งความ” ในส่วนใบแจ้งความนำจับ', 'warning')
-                    return;
-                }
+                    // ถ้ามีรายการ วันที่จับกุม < วันที่แจ้งความ ให้ออกจาก function
+                    if (notice.length) {
+                        swal('', '“วันที่จับกุม” ต้องมากกว่าหรือเท่ากับ “วันที่แจ้งความ” ในส่วนใบแจ้งความนำจับ', 'warning')
+                        return;
+                    }
 
-                let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
-                if (staff.length < 1) {
-                    swal('', 'ต้องมีรายการผู้จับกุมอย่างน้อย 1 รายการ', 'warning')
-                    return;
-                }
-                if (staff.filter(x => x.ContributorID == '6').length !== 1) {
-                    swal('', 'ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” 1 รายการ', 'warning');
-                    return;
-                }
-                if (staff.filter(x => !x.ContributorID || !x.FullName).length > 0) {
-                    swal('', 'กรุณาผู้จับกุมให้ครบถ้วน', 'warning');
-                    return;
-                }
-                const lawbreaker: fromModels.ArrestLawbreaker[] = this.ArrestLawbreaker.value.filter(x => x.IsModify != 'd');
-                const product: fromModels.ArrestProduct[] = this.ArrestProduct.value.filter(x => x.IsModify != 'd');
-                if (product.filter(x => !x.ProductDesc || !x.Qty || !x.QtyUnit || !x.NetVolume || !x.NetVolumeUnit).length) {
-                    swal('', 'กรุณาระบุข้อมูลของกลางให้ครบถ้วน', 'warning');
-                    return;
-                }
+                    let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
+                    if (staff.length < 1) {
+                        swal('', 'ต้องมีรายการผู้จับกุมอย่างน้อย 1 รายการ', 'warning')
+                        return;
+                    }
+                    if (staff.filter(x => x.ContributorID == '6').length !== 1) {
+                        swal('', 'ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” 1 รายการ', 'warning');
+                        return;
+                    }
+                    if (staff.filter(x => !x.ContributorID || !x.FullName).length > 0) {
+                        swal('', 'กรุณาผู้จับกุมให้ครบถ้วน', 'warning');
+                        return;
+                    }
+                    const lawbreaker: fromModels.ArrestLawbreaker[] = this.ArrestLawbreaker.value.filter(x => x.IsModify != 'd');
+                    const product: fromModels.ArrestProduct[] = this.ArrestProduct.value.filter(x => x.IsModify != 'd');
+                    if (product.filter(x => !x.ProductDesc || !x.Qty || !x.QtyUnit || !x.NetVolume || !x.NetVolumeUnit).length) {
+                        swal('', 'กรุณาระบุข้อมูลของกลางให้ครบถ้วน', 'warning');
+                        return;
+                    }
 
-                if (lawbreaker.length <= 0 && product.length <= 0) {
-                    this.ILG60_03_02_00_00_E21.next(true);
-                    this.ILG60_03_03_00_00_E15.next(true);
-                    swal('', 'ต้องมีรายการ “ผู้ต้องหา” หรือ “ของกลาง” อย่างน้อย 1 รายการ', 'warning');
-                    return;
+                    if (lawbreaker.length <= 0 && product.length <= 0) {
+                        this.ILG60_03_02_00_00_E21.next(true);
+                        this.ILG60_03_03_00_00_E15.next(true);
+                        swal('', 'ต้องมีรายการ “ผู้ต้องหา” หรือ “ของกลาง” อย่างน้อย 1 รายการ', 'warning');
+                        return;
+                    }
+                    const arrestIndictment: fromModels.ArrestIndictment[] = this.ArrestIndictment.value.filter(x => x.IsModify != 'd');
+                    if (!arrestIndictment.length) {
+                        this.ILG60_03_02_00_00_E25.next(true);
+                        swal('', '“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ', 'warning')
+                        return;
+                    }
+                    if (arrestIndictment.filter(x => x.GuiltBaseID == null).length) {
+                        this.ILG60_03_02_00_00_E25.next(true);
+                        swal('', 'กรุณาเลือกข้อมูล “ฐานความผิดมาตรา”', 'warning')
+                        return;
+                    };
+                    this.onSave();
                 }
-                const arrestIndictment: fromModels.ArrestIndictment[] = this.ArrestIndictment.value.filter(x => x.IsModify != 'd');
-                if (!arrestIndictment.length) {
-                    this.ILG60_03_02_00_00_E25.next(true);
-                    swal('', '“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ', 'warning')
-                    return;
-                }
-                if (arrestIndictment.filter(x => x.GuiltBaseID == null).length) {
-                    this.ILG60_03_02_00_00_E25.next(true);
-                    swal('', 'กรุณาเลือกข้อมูล “ฐานความผิดมาตรา”', 'warning')
-                    return;
-                };
-                this.onSave();
             }
+            // if (status) {
+            // // set action save = false
+            // await this.navService.setOnSave(false);
+            // if (this.arrestFG.invalid) {
+            //     this.isRequired = true;
+            //     if (this.arrestFG.get('ArrestLocale').invalid)
+            //         this.ILG60_03_02_00_00_E18.next(true);
+
+            //     swal('', Message.checkData, 'warning')
+            //     return false;
+            // }
+
+            // const _ArrestDate = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
+            // const notice: fromModels.ArrestNotice[] = this.ArrestNotice.value
+            //     .filter(x => _ArrestDate.valueOf() < (new Date(x.NoticeDate)).valueOf());
+
+            // // ถ้ามีรายการ วันที่จับกุม < วันที่แจ้งความ ให้ออกจาก function
+            // if (notice.length) {
+            //     swal('', '“วันที่จับกุม” ต้องมากกว่าหรือเท่ากับ “วันที่แจ้งความ” ในส่วนใบแจ้งความนำจับ', 'warning')
+            //     return;
+            // }
+
+            // let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
+            // if (staff.length < 1) {
+            //     swal('', 'ต้องมีรายการผู้จับกุมอย่างน้อย 1 รายการ', 'warning')
+            //     return;
+            // }
+            // if (staff.filter(x => x.ContributorID == '6').length !== 1) {
+            //     swal('', 'ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” 1 รายการ', 'warning');
+            //     return;
+            // }
+            // if (staff.filter(x => !x.ContributorID || !x.FullName).length > 0) {
+            //     swal('', 'กรุณาผู้จับกุมให้ครบถ้วน', 'warning');
+            //     return;
+            // }
+            // const lawbreaker: fromModels.ArrestLawbreaker[] = this.ArrestLawbreaker.value.filter(x => x.IsModify != 'd');
+            // const product: fromModels.ArrestProduct[] = this.ArrestProduct.value.filter(x => x.IsModify != 'd');
+            // if (product.filter(x => !x.ProductDesc || !x.Qty || !x.QtyUnit || !x.NetVolume || !x.NetVolumeUnit).length) {
+            //     swal('', 'กรุณาระบุข้อมูลของกลางให้ครบถ้วน', 'warning');
+            //     return;
+            // }
+
+            // if (lawbreaker.length <= 0 && product.length <= 0) {
+            //     this.ILG60_03_02_00_00_E21.next(true);
+            //     this.ILG60_03_03_00_00_E15.next(true);
+            //     swal('', 'ต้องมีรายการ “ผู้ต้องหา” หรือ “ของกลาง” อย่างน้อย 1 รายการ', 'warning');
+            //     return;
+            // }
+            // const arrestIndictment: fromModels.ArrestIndictment[] = this.ArrestIndictment.value.filter(x => x.IsModify != 'd');
+            // if (!arrestIndictment.length) {
+            //     this.ILG60_03_02_00_00_E25.next(true);
+            //     swal('', '“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ', 'warning')
+            //     return;
+            // }
+            // if (arrestIndictment.filter(x => x.GuiltBaseID == null).length) {
+            //     this.ILG60_03_02_00_00_E25.next(true);
+            //     swal('', 'กรุณาเลือกข้อมูล “ฐานความผิดมาตรา”', 'warning')
+            //     return;
+            // };
+            // this.onSave();
+            // }
         });
 
         this.navService.onEdit.takeUntil(this.destroy$).subscribe(async status => {
+
             if (status) {
-                await this.navService.setOnEdit(false);
-                this.onEdit();
+                var pmCheck = this.permissionCheck('IsUpdate')
+                if (await pmCheck != 1) {
+                    this.showEditField = true;
+                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+                    console.log('++IsUpdate != 1 ', '  IsUpdate !!: ', pmCheck)
+                } else if (await pmCheck == 1) {
+                    await this.navService.setOnEdit(false);
+                    console.log('++IsUpdate == 1 ', '  IsUpdate !!: ', pmCheck)
+                    this.onEdit();
+                }
             }
+
+            // if (status) {
+            //     await this.navService.setOnEdit(false);
+            //     this.onEdit();
+            // }
         })
 
         this.navService.onDelete.takeUntil(this.destroy$).subscribe(async status => {
+
             if (status) {
-                await this.navService.setOnDelete(false);
-                this.onDelete();
+                var pmCheck = this.permissionCheck('IsDelete')
+                console.log('pmCheck !: ', await pmCheck)
+                if (await pmCheck != 1) {
+                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+                    console.log('IsCreate != 1 ', '  IsCreate !!: ', pmCheck)
+                } else if (await pmCheck == 1) {
+                    await this.navService.setOnDelete(false);
+                    this.onDelete();
+                }
             }
+            // if (status) {
+            //     await this.navService.setOnDelete(false);
+            //     this.onDelete();
+            // }
         });
 
         this.navService.onCancel.takeUntil(this.destroy$).subscribe(async status => {
@@ -572,11 +719,23 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             }
         })
 
-        this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
-            if (status) {
-                await this.navService.setOnNextPage(false);
-                this.router.navigate(['/lawsuit/manage', 'C']);
+        this.subSetNextPage = this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
+
+            if (this.subSetNextPage) {
+                var pmCheck = this.permissionCheck('IsCreate')
+                console.log('pmCheck !: ', await pmCheck)
+                if (await pmCheck != 1) {
+                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+                    console.log('IsCreate != 1 ', '  IsCreate !!: ', pmCheck)
+                } else if (await pmCheck == 1) {
+                    await this.navService.setOnNextPage(false);
+                    this.router.navigate(['/lawsuit/manage', 'C']);
+                }
             }
+            // if (status) {
+            //     await this.navService.setOnNextPage(false);
+            //     this.router.navigate(['/lawsuit/manage', 'C']);
+            // }
         })
     }
 
@@ -1508,17 +1667,17 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
     async deleteIndicment(i: number) {
         this.deleteFormArray(this.ArrestIndictment, i);
-            // this.ArrestIndictment.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-            // const indictment = sortFormArray(this.ArrestIndictment.value, 'RowId');
-            // this.ArrestIndictment.value.map(() => this.ArrestIndictment.removeAt(0));
-            // indictment.then((_x) => {
-            //     _x.filter(x => x.IsModify != 'd')
-            //         .map((x) => {
-            //             x.RowId = null;
-            //             return x;
-            //         });
-            //     this.setArrestIndictment(_x, null);
-            // })
+        // this.ArrestIndictment.at(i).patchValue({ IsModify: 'd', RowId: 0 });
+        // const indictment = sortFormArray(this.ArrestIndictment.value, 'RowId');
+        // this.ArrestIndictment.value.map(() => this.ArrestIndictment.removeAt(0));
+        // indictment.then((_x) => {
+        //     _x.filter(x => x.IsModify != 'd')
+        //         .map((x) => {
+        //             x.RowId = null;
+        //             return x;
+        //         });
+        //     this.setArrestIndictment(_x, null);
+        // })
     }
 
     searchProduct = (text$: Observable<string>) =>

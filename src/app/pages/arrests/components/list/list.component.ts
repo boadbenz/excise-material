@@ -13,6 +13,7 @@ import 'rxjs/add/operator/takeUntil';
 import swal from 'sweetalert2'
 import { FormGroup } from '@angular/forms';
 
+
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
@@ -33,6 +34,10 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
 
     arrestList = new Array<Arrest>();
     arrest = new Array<Arrest>();
+
+    permisCheck: any
+    perBeforReturn: any
+    private subSetNextPage: any;
 
     @ViewChild('arrestTable') arrestTable: ElementRef;
     @ViewChild('advForm') advForm: FormGroup;
@@ -62,7 +67,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
         // set true
         await this.navService.setSearchBar(true);
         await this.navService.setNewButton(true);
-        
+
         this.advSearch.next(true);
 
         this.sidebarService.setVersion(this.arrestService.version);
@@ -76,14 +81,51 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
                 }
             })
 
-        this.navService.onNextPage
+        this.subSetNextPage = this.navService.onNextPage
             .takeUntil(this.destroy$)
             .subscribe(async status => {
-                if (status) {
-                    await this.navService.setOnNextPage(false);
-                    this.router.navigate(['/arrest/manage', 'C', 'NEW']);
+
+                if (this.subSetNextPage) {
+                    var pmCheck = this.permissionCheck('IsCreate')
+                    if (await pmCheck != 1) {
+                        swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+                    } else if (await pmCheck == 1) {
+                        await this.navService.setOnNextPage(false);
+                        this.router.navigate(['/arrest/manage', 'C', 'NEW']);
+                    }
                 }
+                // if (status) {
+                //     await this.navService.setOnNextPage(false);
+                //     this.router.navigate(['/arrest/manage', 'C', 'NEW']);
+                // }
             })
+    }
+
+    async permissionCheck(subscribe) {
+        var userAccountID = localStorage.getItem('UserAccountID')
+        var programCode = 'ILG60-01-00'
+        const params = {
+            UserAccountID: userAccountID,
+            ProgramCode: programCode
+        };
+        await this.arrestService.PermissionCheck(params).then(pRes => {
+            this.permisCheck = pRes
+
+            if (subscribe == 'IsCreate') {
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsCreate;
+            } else if (subscribe == 'IsDelete') {
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsDelete;
+            } else if (subscribe == 'IsRead') {
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsRead;
+            } else if (subscribe == 'IsUpdate') {
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsUpdate;
+            }
+        }, (error) => { console.error('error : ', error); });
+        return this.perBeforReturn
     }
 
     ngDoCheck(): void {
@@ -139,7 +181,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
         })
 
         this.arrest = rows;
-        this.arrestList =  this.arrest.slice(0, 5);
+        this.arrestList = this.arrest.slice(0, 5);
         // set total record     
         this.paginage.TotalItems = this.arrest.length;
 
@@ -185,5 +227,6 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
         this.advSearch.next(false);
+        this.subSetNextPage.unsubscribe();
     }
 }
