@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { LawsuitService } from "../lawsuit.service";
 import { Lawsuit } from "../models/lawsuit";
 import { Router, ActivatedRoute } from "@angular/router";
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from "@angular/core";
 import { NavigationService } from "../../../shared/header-navigation/navigation.service";
 import { Arrest } from "../../arrests/models/arrest";
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -33,7 +33,7 @@ import { DialogNotComplete } from './dialog-notComplete';
   templateUrl: "./manage.component.html"
 })
 
-export class ManageComponent implements OnInit {
+export class ManageComponent implements OnInit, OnDestroy {
 
   lawsuitDoc: LawsuitDocument[] = [];
   masOfficeList: MasOffice[] = [];
@@ -75,6 +75,8 @@ export class ManageComponent implements OnInit {
   private LawsuitID: any;
   private IndictmentID: string;
   private ArrestCode: string;
+  permisCheck: any
+  perBeforReturn: any
   @ViewChild('printDocModal') printDocModel: ElementRef;
   @ViewChild('indicmetModal') indicmetModal: ElementRef;
 
@@ -153,11 +155,21 @@ export class ManageComponent implements OnInit {
     this.navService.showFieldEdit.subscribe(async p => {
       this.showEditField = p;
     });
+
     this.onDeleteSubscribe = this.navService.onDelete.subscribe(async status => {
       if (status) {
+        var pmCheck = this.permissionCheck('IsDelete')
+        if (await pmCheck != 1) {
+          Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (await pmCheck == 1) {
+          this.onDelete();
+        }
         await this.navService.setOnDelete(false);
-        this.onDelete();
       }
+      // if (status) {
+      //   await this.navService.setOnDelete(false);
+      //   this.onDelete();
+      // }
     })
     this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
       if (status) {
@@ -165,31 +177,62 @@ export class ManageComponent implements OnInit {
         this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
       }
     })
+
     this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
+
       if (status) {
+        var pmCheck = this.permissionCheck('IsUpdate')
+        if (await pmCheck != 1) {
+          Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (await pmCheck == 1) {
+          if (this.findInvalidControls().length > 0 && this.lawsuitForm.controls['IsLawsuitCheck'].value == false) {
+            this.isRequired = true;
+            Swal({
+              text: Message.checkData,
+              type: 'warning',
+            })
+
+            return false;
+          }
+          else if (this.lawsuitForm.controls['IsLawsuitCheck'].value == true &&
+            this.lawsuitForm.controls['ReasonDontLawsuit'].value == "" ||
+            this.lawsuitForm.controls['IsLawsuitCheck'].value == true && this.lawsuitForm.controls['ReasonDontLawsuit'].value == null) {
+            this.isRequired2 = true;
+
+            Swal({
+              text: Message.checkData,
+              type: 'warning',
+            })
+            return false;
+          }
+          this.onSave();
+        }
         await this.navService.setOnSave(false);
-        if (this.findInvalidControls().length > 0 && this.lawsuitForm.controls['IsLawsuitCheck'].value == false) {
-          this.isRequired = true;
-          Swal({
-            text: Message.checkData,
-            type: 'warning',
-          })
-
-          return false;
-        }
-        else if (this.lawsuitForm.controls['IsLawsuitCheck'].value == true &&
-          this.lawsuitForm.controls['ReasonDontLawsuit'].value == "" ||
-          this.lawsuitForm.controls['IsLawsuitCheck'].value == true && this.lawsuitForm.controls['ReasonDontLawsuit'].value == null) {
-          this.isRequired2 = true;
-
-          Swal({
-            text: Message.checkData,
-            type: 'warning',
-          })
-          return false;
-        }
-        this.onSave();
       }
+      // if (status) {
+      // await this.navService.setOnSave(false);
+      // if (this.findInvalidControls().length > 0 && this.lawsuitForm.controls['IsLawsuitCheck'].value == false) {
+      //   this.isRequired = true;
+      //   Swal({
+      //     text: Message.checkData,
+      //     type: 'warning',
+      //   })
+
+      //   return false;
+      // }
+      // else if (this.lawsuitForm.controls['IsLawsuitCheck'].value == true &&
+      //   this.lawsuitForm.controls['ReasonDontLawsuit'].value == "" ||
+      //   this.lawsuitForm.controls['IsLawsuitCheck'].value == true && this.lawsuitForm.controls['ReasonDontLawsuit'].value == null) {
+      //   this.isRequired2 = true;
+
+      //   Swal({
+      //     text: Message.checkData,
+      //     type: 'warning',
+      //   })
+      //   return false;
+      // }
+      // this.onSave();
+      // }
     });
     this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
       if (status) {
@@ -198,20 +241,69 @@ export class ManageComponent implements OnInit {
       }
     });
     this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
+
       if (status) {
+        var pmCheck = this.permissionCheck('IsCreate')
+        if (await pmCheck != 1) {
+          Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (await pmCheck == 1) {
+          this.onNextPage();
+        }
         await this.navService.setOnNextPage(false);
-        this.onNextPage();
       }
+      // if (status) {
+      // await this.navService.setOnNextPage(false);
+      // this.onNextPage();
+      // }
     });
     this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
       if (status) {
+        var pmCheck = this.permissionCheck('IsUpdate')
+        if (await pmCheck != 1) {
+          Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (await pmCheck == 1) {
+          this.onEdit();
+        }
         await this.navService.setOnEdit(false);
-        this.onEdit();
       }
+      // if (status) {
+      //   await this.navService.setOnEdit(false);
+      //   this.onEdit();
+      // }
     });
-
-
   }
+
+  async permissionCheck(subscribe) {
+    var userAccountID = localStorage.getItem('UserAccountID')
+    var programCode = 'ILG60-04-00'
+    const params = {
+      UserAccountID: userAccountID,
+      ProgramCode: programCode
+    };
+    console.log('params : ', params)
+    await this.lawsuitService.PermissionCheck(params).then(pRes => {
+      this.permisCheck = pRes;
+      console.log('this.permisCheck : ', this.permisCheck)
+      if (subscribe == 'IsCreate') {
+        this.perBeforReturn = 0;
+        this.perBeforReturn = this.permisCheck.IsCreate;
+      } else if (subscribe == 'IsDelete') {
+        this.perBeforReturn = 0;
+        this.perBeforReturn = this.permisCheck.IsDelete;
+      } else if (subscribe == 'IsRead') {
+        this.perBeforReturn = 0;
+        this.perBeforReturn = this.permisCheck.IsRead;
+      } else if (subscribe == 'IsUpdate') {
+        this.perBeforReturn = 0;
+        this.perBeforReturn = this.permisCheck.IsUpdate;
+      }
+    }, (error) => { console.error('error : ', error); });
+
+    return this.perBeforReturn
+  }
+
+
+
   public findInvalidControls() {
     const invalid = [];
     const controls = this.lawsuitForm.controls;
@@ -245,10 +337,14 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnDestroy() {
+
     await this.getDataFromListPage.unsubscribe();
     await this.onPrintSubscribe.unsubscribe();
     await this.onSaveSubscribe.unsubscribe();
     await this.onCancelSubscribe.unsubscribe();
+    await this.onDeleteSubscribe.unsubscribe();
+    await this.onNextPageSubscribe.unsubscribe();
+    await this.onEditSubscribe.unsubscribe();
     await this.setShowButton()
   }
   private async onEdit() {

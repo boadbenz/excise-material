@@ -90,15 +90,15 @@ export class ListComponent implements OnInit, OnDestroy {
 
         this.subSetNextPage = this.navservice.onNextPage.subscribe(async status => {
 
-            if (this.subSetNextPage) {
+            if (status) {
                 var pmCheck = this.permissionCheck('IsCreate')
                 console.log('pmCheck !: ', await pmCheck)
                 if (await pmCheck != 1) {
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
                 } else if (await pmCheck == 1) {
-                    await this.navservice.setOnNextPage(false);
                     this._router.navigateByUrl('/notice/manage/C/NEW?from=new');
                 }
+                await this.navservice.setOnNextPage(false);
             }
 
             // if (status) {

@@ -85,14 +85,15 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
             .takeUntil(this.destroy$)
             .subscribe(async status => {
 
-                if (this.subSetNextPage) {
+                if (status) {
                     var pmCheck = this.permissionCheck('IsCreate')
                     if (await pmCheck != 1) {
                         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
                     } else if (await pmCheck == 1) {
-                        await this.navService.setOnNextPage(false);
+
                         this.router.navigate(['/arrest/manage', 'C', 'NEW']);
-                    }
+                    } 
+                    await this.navService.setOnNextPage(false);
                 }
                 // if (status) {
                 //     await this.navService.setOnNextPage(false);
@@ -103,7 +104,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
 
     async permissionCheck(subscribe) {
         var userAccountID = localStorage.getItem('UserAccountID')
-        var programCode = 'ILG60-01-00'
+        var programCode = 'ILG60-03-00'
         const params = {
             UserAccountID: userAccountID,
             ProgramCode: programCode
@@ -125,6 +126,8 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
                 this.perBeforReturn = this.permisCheck.IsUpdate;
             }
         }, (error) => { console.error('error : ', error); });
+        console.log("params : ", params)
+        console.log("this.permisCheck : ", this.permisCheck)
         return this.perBeforReturn
     }
 

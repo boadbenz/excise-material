@@ -89,8 +89,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     perBeforReturn: any
     private subSetNextPage: any;
     // private subSetSavePage: any;
-    // private subSetDeletePage: any;
-    // private subSetEditPage: any;
+    private subSetDeletePage: any;
+    private subSetEditPage: any;
 
     readonly lawbreakerType = LawbreakerTypes;
     readonly entityType = EntityTypes;
@@ -414,6 +414,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         this.destroy$.unsubscribe();
         this.clearForm();
         this.subSetNextPage.unsubscribe();
+        this.subSetDeletePage.unsubscribe();
+        this.subSetEditPage.unsubscribe();
     }
 
     private createForm(): FormGroup {
@@ -471,45 +473,26 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
     async permissionCheck(subscribe) {
         var userAccountID = localStorage.getItem('UserAccountID')
-        var programCode = 'ILG60-01-00'
+        var programCode = 'ILG60-03-00'
         const params = {
             UserAccountID: userAccountID,
             ProgramCode: programCode
         };
-        // console.log('params : ', params)
         await this.s_arrest.PermissionCheck(params).then(pRes => {
-            console.log('ngOnInit PermissionCheck !!: ', pRes);
             this.permisCheck = pRes
-            console.log('ngOnInit this.permisCheck !!: ', this.permisCheck);
 
             if (subscribe == 'IsCreate') {
-                console.log("subscribe : ", subscribe)
-                console.log("subscribe permissionCheck : ", this.permisCheck)
                 this.perBeforReturn = 0;
                 this.perBeforReturn = this.permisCheck.IsCreate;
-                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
-                // return res;
             } else if (subscribe == 'IsDelete') {
-                console.log("subscribe : ", subscribe)
-                console.log("subscribe permissionCheck : ", this.permisCheck)
                 this.perBeforReturn = 0;
                 this.perBeforReturn = this.permisCheck.IsDelete;
-                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
-                // return res;
             } else if (subscribe == 'IsRead') {
-                console.log("subscribe : ", subscribe)
-                console.log("subscribe permissionCheck : ", this.permisCheck)
                 this.perBeforReturn = 0;
                 this.perBeforReturn = this.permisCheck.IsRead;
-                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
-                // return res;
             } else if (subscribe == 'IsUpdate') {
-                console.log("subscribe : ", subscribe)
-                console.log("subscribe permissionCheck : ", this.permisCheck)
                 this.perBeforReturn = 0;
                 this.perBeforReturn = this.permisCheck.IsUpdate;
-                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
-                // return res;
             }
         }, (error) => { console.error('error : ', error); });
         return this.perBeforReturn
@@ -529,7 +512,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
                 } else if (await pmCheck == 1) {
                     // set action save = false
-                    await this.navService.setOnSave(false);
                     if (this.arrestFG.invalid) {
                         this.isRequired = true;
                         if (this.arrestFG.get('ArrestLocale').invalid)
@@ -588,6 +570,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                     };
                     this.onSave();
                 }
+                await this.navService.setOnSave(false);
             }
             // if (status) {
             // // set action save = false
@@ -652,19 +635,17 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             // }
         });
 
-        this.navService.onEdit.takeUntil(this.destroy$).subscribe(async status => {
+        this.subSetEditPage = this.navService.onEdit.takeUntil(this.destroy$).subscribe(async status => {
 
             if (status) {
                 var pmCheck = this.permissionCheck('IsUpdate')
                 if (await pmCheck != 1) {
                     this.showEditField = true;
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                    console.log('++IsUpdate != 1 ', '  IsUpdate !!: ', pmCheck)
                 } else if (await pmCheck == 1) {
-                    await this.navService.setOnEdit(false);
-                    console.log('++IsUpdate == 1 ', '  IsUpdate !!: ', pmCheck)
                     this.onEdit();
                 }
+                await this.navService.setOnEdit(false);
             }
 
             // if (status) {
@@ -673,18 +654,16 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             // }
         })
 
-        this.navService.onDelete.takeUntil(this.destroy$).subscribe(async status => {
+        this.subSetDeletePage = this.navService.onDelete.takeUntil(this.destroy$).subscribe(async status => {
 
             if (status) {
                 var pmCheck = this.permissionCheck('IsDelete')
-                console.log('pmCheck !: ', await pmCheck)
                 if (await pmCheck != 1) {
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                    console.log('IsCreate != 1 ', '  IsCreate !!: ', pmCheck)
                 } else if (await pmCheck == 1) {
-                    await this.navService.setOnDelete(false);
                     this.onDelete();
                 }
+                await this.navService.setOnDelete(false);
             }
             // if (status) {
             //     await this.navService.setOnDelete(false);
@@ -721,16 +700,14 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
         this.subSetNextPage = this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
 
-            if (this.subSetNextPage) {
+            if (status) {
                 var pmCheck = this.permissionCheck('IsCreate')
-                console.log('pmCheck !: ', await pmCheck)
                 if (await pmCheck != 1) {
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                    console.log('IsCreate != 1 ', '  IsCreate !!: ', pmCheck)
                 } else if (await pmCheck == 1) {
-                    await this.navService.setOnNextPage(false);
                     this.router.navigate(['/lawsuit/manage', 'C']);
                 }
+                await this.navService.setOnNextPage(false);
             }
             // if (status) {
             //     await this.navService.setOnNextPage(false);

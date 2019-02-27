@@ -147,20 +147,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
-
-        // console.log("onList")
-        // var userAccountID = localStorage.getItem('UserAccountID')
-        // var programCode = 'ILG60-02-00'
-        // const params = {
-        //     UserAccountID: userAccountID,
-        //     ProgramCode: programCode
-        // };
-        // console.log('params : ', params)
-        // this.noticeService.PermissionCheck(params).then(pRes => {
-        //     console.error('ngOnInit PermissionCheck : ', pRes);
-        //     this.permissionCheck = pRes
-        // }, (error) => { console.error('error : ', error); });
-        //-----------------------------------------------------------------------------------------
         this.months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
         this.activatedRoute.queryParams.subscribe(params => {
             this.actionFrom = params['from'];
@@ -257,15 +243,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async permissionCheck(subscribe) {
-        // var permissionCheck: any = null
-        // console.log("onList")
         var userAccountID = localStorage.getItem('UserAccountID')
-        var programCode = 'ILG60-01-00'
+        var programCode = 'ILG60-02-00'
         const params = {
             UserAccountID: userAccountID,
             ProgramCode: programCode
         };
-        // console.log('params : ', params)
         await this.noticeService.PermissionCheck(params).then(pRes => {
             this.permisCheck = pRes
 
@@ -357,8 +340,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
                 } else if (await pmCheck == 1) {
 
-                    await this.navService.setOnSave(false);
-
                     if (!this.noticeForm.valid) {
                         this.isRequired = true;
                         this.showSwal(Message.checkData, "warning");
@@ -390,8 +371,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     } else if (this.mode === 'R') {
                         this.onReviced();
                     }
-                    console.log('IsCreate else ', '  IsCreate !!: ', pmCheck)
                 }
+                await this.navService.setOnSave(false);
             }
             // if (status) {
 
@@ -438,12 +419,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                 if (await pmCheck != 1) {
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
                 } else if (await pmCheck == 1) {
-                    await this.navService.setOnDelete(false);
 
                     this.deleteNotice.text = Message.confirmAction;
                     this.deleteNotice.show();
                     // this.onDelete();
                 }
+                await this.navService.setOnDelete(false);
             }
 
             // if (status) {

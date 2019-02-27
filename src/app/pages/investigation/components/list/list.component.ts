@@ -65,27 +65,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        // var permissionCheck: any = [{
-        //     IsCreate: 0,
-        //     IsDelete: 0,
-        //     IsRead: 0,
-        //     IsUpdate: 0
-        // }];
-        // var permissionCheck: any = null
-        // // console.log("onList")
-        // var userAccountID = localStorage.getItem('UserAccountID')
-        // var programCode = 'ILG60-01-00'
-        // const params = {
-        //     UserAccountID: userAccountID,
-        //     ProgramCode: programCode
-        // };
-        // // console.log('params : ', params)
-        // this.investgateService.PermissionCheck(params).then(pRes => {
-        //     console.error('ngOnInit PermissionCheck !!: ', pRes);
-        //     permissionCheck = pRes
-        // }, (error) => { console.error('error : ', error); });
-        //-------------------------------------------------------------------
-
+     
         this.advSearch.next(true)
         this.sidebarService.setVersion(this.s_invest.version);
 
@@ -97,18 +77,12 @@ export class ListComponent implements OnInit, OnDestroy {
         })
 
         this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
-
-            console.log("status : ", status)
-            if (this.subSetNextPage) {
+            if (status) {
                 var pmCheck = this.permissionCheck('IsCreate')
-
-                console.log('pmCheck !: ', await pmCheck)
                 if (await pmCheck != 1) {
                     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                    console.log('IsCreate != 1 ', '  IsCreate !!: ', pmCheck)
                 } else if (await pmCheck == 1) {
                     this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
-                    console.log('IsCreate else ', '  IsCreate !!: ', pmCheck)
                 }
             }
         })

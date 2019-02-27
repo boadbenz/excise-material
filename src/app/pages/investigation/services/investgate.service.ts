@@ -24,7 +24,7 @@ export class InvestgateService {
   version = '0.0.0.23'
   private onEnd(): void {
     this.hideLoader();
-  }  
+  }
 
   private showLoader(): void {
     this.loaderService.show();
@@ -48,18 +48,17 @@ export class InvestgateService {
   }
 
 
-async PermissionCheck(params: any): Promise<any> {
-  const paramss = JSON.stringify(params);
-  const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
-  try {
-    const res = await this.httpClient.post<any>(url, paramss, this.httpOptions).toPromise();
-    return res;
-  } catch (error) {
-    return [];
+  async PermissionCheck(params: any): Promise<any> {
+    const paramss = JSON.stringify(params);
+    const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
+    try {
+      const res = await this.httpClient.post<any>(url, paramss, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
   }
-}
 
-  
   InvestigateDetailgetByCon(InvestigateDetailID: string) {
     const params = { InvestigateDetailID };
     const url = `${appConfig.apiReport}/ILG60_00_01_001.aspx`;
