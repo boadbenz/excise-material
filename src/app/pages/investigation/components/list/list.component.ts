@@ -84,6 +84,7 @@ export class ListComponent implements OnInit, OnDestroy {
                 } else if (await pmCheck == 1) {
                     this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
                 }
+                await this.navService.setOnNextPage(false);
             }
         })
     }
