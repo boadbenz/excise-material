@@ -92,9 +92,9 @@ export class UserListComponent implements OnInit, OnDestroy {
   async onAdvSearch(form: any) {
     let request: uacDataModel.UserAccountListgetByConAdvRequest = new uacDataModel.UserAccountListgetByConAdvRequest()
 
-    request.StaffName = form.StaffName;
-    request.OfficeName = form.OfficeName;
-    request.OperationPosName = form.PositionName;
+    request.staffName = form.StaffName;
+    request.officeName = form.OfficeName;
+    request.operationPosName = form.PositionName;
     //console.log(JSON.stringify(request));
     this.userListService.loadUserAccountListgetByConAdv(request).then(result => {
       if (result == "OK") {

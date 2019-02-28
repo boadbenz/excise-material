@@ -102,14 +102,14 @@ export class UserAccountListgetByKeywordRequest {
 }
 
 export class UserAccountListgetByConAdvRequest {
-    staffCode: string = "";
-    userName: string = "";
+    //staffCode: string = "";
+    //userName: string = "";
     staffName: string = "";
     operationPosName: string = "";
-    managementPosName: string = "";
-    representationPosName: string = "";
-    operationDeptName: string = "";
-    underDeptName: string = "";
+    //managementPosName: string = "";
+    //representationPosName: string = "";
+    //operationDeptName: string = "";
+    //underDeptName: string = "";
     officeName: string = "";
 }
 
