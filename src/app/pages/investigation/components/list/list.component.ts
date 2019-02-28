@@ -65,7 +65,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-     
+        localStorage.setItem('programcode','ILG60-01-00');
         this.advSearch.next(true)
         this.sidebarService.setVersion(this.s_invest.version);
 
@@ -78,47 +78,47 @@ export class ListComponent implements OnInit, OnDestroy {
 
         this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
             if (status) {
-                var pmCheck = this.permissionCheck('IsCreate')
-                if (await pmCheck != 1) {
-                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                } else if (await pmCheck == 1) {
+                // var pmCheck = this.permissionCheck('IsCreate') ///*** comment
+                // if (await pmCheck != 1) {
+                //     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+                // } else if (await pmCheck == 1) {
                     this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
-                }
+                // }
                 await this.navService.setOnNextPage(false);
             }
         })
     }
 
-    async permissionCheck(subscribe) {
-        var userAccountID = localStorage.getItem('UserAccountID')
-        var programCode = 'ILG60-01-00'
-        const params = {
-            UserAccountID: userAccountID,
-            ProgramCode: programCode
-        };
-        await this.investgateService.PermissionCheck(params).then(pRes => {
-            this.permisCheck = pRes
+    // async permissionCheck(subscribe) { ///*** comment
+    //     var userAccountID = localStorage.getItem('UserAccountID')
+    //     var programCode = 'ILG60-01-00'
+    //     const params = {
+    //         UserAccountID: userAccountID,
+    //         ProgramCode: programCode
+    //     };
+    //     await this.investgateService.PermissionCheck(params).then(pRes => {
+    //         this.permisCheck = pRes
 
-            if (subscribe == 'IsCreate') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsCreate;
-                // return res;
-            } else if (subscribe == 'IsDelete') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsDelete;
-                // return res;
-            } else if (subscribe == 'IsRead') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsRead;
-                // return res;
-            } else if (subscribe == 'IsUpdate') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsUpdate;
-                // return res;
-            }
-        }, (error) => { console.error('error : ', error); });
-        return this.perBeforReturn
-    }
+    //         if (subscribe == 'IsCreate') {
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsCreate;
+    //             // return res;
+    //         } else if (subscribe == 'IsDelete') {
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsDelete;
+    //             // return res;
+    //         } else if (subscribe == 'IsRead') {
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsRead;
+    //             // return res;
+    //         } else if (subscribe == 'IsUpdate') {
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsUpdate;
+    //             // return res;
+    //         }
+    //     }, (error) => { console.error('error : ', error); });
+    //     return this.perBeforReturn
+    // }
 
     ngOnDestroy(): void {
         this.destroy$.next(true);

@@ -46,6 +46,7 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit() {
+    localStorage.setItem('programcode','ILG60-09-00');
     this.navService.setSearchBar(true);
     this.navService.setPrintButton(false);
     this.navService.setDeleteButton(false);

@@ -56,6 +56,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode','ILG60-03-00');
         // set false
         await this.navService.setEditButton(false);
         await this.navService.setDeleteButton(false);
@@ -85,51 +86,51 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
             .takeUntil(this.destroy$)
             .subscribe(async status => {
 
-                if (status) {
-                    var pmCheck = this.permissionCheck('IsCreate')
-                    if (await pmCheck != 1) {
-                        swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                    } else if (await pmCheck == 1) {
-
-                        this.router.navigate(['/arrest/manage', 'C', 'NEW']);
-                    } 
-                    await this.navService.setOnNextPage(false);
-                }
                 // if (status) {
+                //     var pmCheck = this.permissionCheck('IsCreate')
+                //     if (await pmCheck != 1) {
+                //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+                //     } else if (await pmCheck == 1) {
+
+                //         this.router.navigate(['/arrest/manage', 'C', 'NEW']);
+                //     } 
                 //     await this.navService.setOnNextPage(false);
-                //     this.router.navigate(['/arrest/manage', 'C', 'NEW']);
                 // }
+                if (status) {
+                    await this.navService.setOnNextPage(false);
+                    this.router.navigate(['/arrest/manage', 'C', 'NEW']);
+                }
             })
     }
 
-    async permissionCheck(subscribe) {
-        var userAccountID = localStorage.getItem('UserAccountID')
-        var programCode = 'ILG60-03-00'
-        const params = {
-            UserAccountID: userAccountID,
-            ProgramCode: programCode
-        };
-        await this.arrestService.PermissionCheck(params).then(pRes => {
-            this.permisCheck = pRes
+    // async permissionCheck(subscribe) {
+    //     var userAccountID = localStorage.getItem('UserAccountID')
+    //     var programCode = 'ILG60-03-00'
+    //     const params = {
+    //         UserAccountID: userAccountID,
+    //         ProgramCode: programCode
+    //     };
+    //     await this.arrestService.PermissionCheck(params).then(pRes => {
+    //         this.permisCheck = pRes
 
-            if (subscribe == 'IsCreate') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsCreate;
-            } else if (subscribe == 'IsDelete') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsDelete;
-            } else if (subscribe == 'IsRead') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsRead;
-            } else if (subscribe == 'IsUpdate') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsUpdate;
-            }
-        }, (error) => { console.error('error : ', error); });
-        console.log("params : ", params)
-        console.log("this.permisCheck : ", this.permisCheck)
-        return this.perBeforReturn
-    }
+    //         if (subscribe == 'IsCreate') {
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsCreate;
+    //         } else if (subscribe == 'IsDelete') {
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsDelete;
+    //         } else if (subscribe == 'IsRead') {
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsRead;
+    //         } else if (subscribe == 'IsUpdate') {
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsUpdate;
+    //         }
+    //     }, (error) => { console.error('error : ', error); });
+    //     console.log("params : ", params)
+    //     console.log("this.permisCheck : ", this.permisCheck)
+    //     return this.perBeforReturn
+    // }
 
     ngDoCheck(): void {
         if (this.advSearch.getValue() == false && this.advForm != undefined) {

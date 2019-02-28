@@ -139,6 +139,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode','ILG60-11-00');
         this.preloader.setShowPreloader(true);
         this.active_Route();
         this.navigate_Service();

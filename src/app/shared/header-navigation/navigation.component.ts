@@ -2,6 +2,8 @@ import { Component, OnInit, HostListener, Input, ElementRef, OnDestroy } from '@
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { NavigationService } from './navigation.service';
 import { NgForm } from '@angular/forms';
+import swal from 'sweetalert2';
+import { async } from '@angular/core/testing';
 
 // declare var jQuery: any;
 
@@ -29,6 +31,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
     nextPageTitle: any;
     prevPageTitle: any;
 
+    permisCheck: any
+    perBeforReturn: any
+
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
@@ -50,6 +55,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.permissionCheck('IsCreate');
         this.router.events.subscribe((evt) => {
             if (!(evt instanceof NavigationEnd)) {
                 return;
@@ -79,11 +85,27 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
 
     clickNew() {
-        this.navService.setOnNextPage(true);
+        var pmCheck = this.permissionCheck('IsCreate')
+        if (pmCheck != 1) {
+            console.log('clickNew IsCreate != 1 : ', pmCheck)
+            swal('', 'ผู้ใช้งานไม่มีสิทธิ์สร้างข้อมูล กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (pmCheck == 1) {
+            console.log('clickNew IsCreate == 1 : ', pmCheck)
+            this.navService.setOnNextPage(true);
+        }
+        // this.navService.setOnNextPage(true);
     }
 
     clickNextPage() {
-        this.navService.setOnNextPage(true);
+        var pmCheck = this.permissionCheck('IsCreate')
+        if (pmCheck != 1) {
+            console.log('NextPage IsCreate != 1 : ', pmCheck)
+            swal('', 'ผู้ใช้งานไม่มีสิทธิ์สร้างข้อมูล กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (pmCheck == 1) {
+            console.log('NextPage IsCreate == 1 : ', pmCheck)
+            this.navService.setOnNextPage(true);
+        }
+        // this.navService.setOnNextPage(true);
     }
 
     clickPrevPage() {
@@ -95,16 +117,28 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
 
     clickEdit() {
+        var pmCheck = this.permissionCheck('IsUpdate')
+        if (pmCheck != 1) {
+            swal('', 'ผู้ใช้งานไม่มีสิทธิ์แก้ไขข้อมูล กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (pmCheck == 1) {
+            this.navService.setEditField(false);
+            this.navService.setEditButton(false);
+            this.navService.setPrintButton(false);
+            this.navService.setDeleteButton(false);
+            this.navService.setSaveButton(true);
+            this.navService.setCancelButton(true);
+            this.navService.setOnEdit(true);
+        }
         // // set false
-        this.navService.setEditField(false);
-        this.navService.setEditButton(false);
-        this.navService.setPrintButton(false);
-        this.navService.setDeleteButton(false);
-        // set true
-        this.navService.setSaveButton(true);
-        this.navService.setCancelButton(true);
-        // set event click edit
-        this.navService.setOnEdit(true);
+        // this.navService.setEditField(false);
+        // this.navService.setEditButton(false);
+        // this.navService.setPrintButton(false);
+        // this.navService.setDeleteButton(false);
+        // // set true
+        // this.navService.setSaveButton(true);
+        // this.navService.setCancelButton(true);
+        // // set event click edit
+        // this.navService.setOnEdit(true);
     }
 
     clickCancel() {
@@ -121,16 +155,62 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
 
     clickSave() {
+        var pmCheck = this.permissionCheck('IsUpdate')
+        if (pmCheck != 1) {
+            swal('', 'ผู้ใช้งานไม่มีสิทธิ์บันทึก กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (pmCheck == 1) {
+            this.navService.setOnSave(true);
+        }
         // set event click save
-        this.navService.setOnSave(true);
+        // this.navService.setOnSave(true);
     }
 
     clickDelete() {
-        this.navService.setOnDelete(true);
+        // console.log("Delete header");
+        // var p = localStorage.getItem('programcode')
+        // console.log("programcode : ", p);
+        // this.navService.setOnDelete(true);
+
+        var pmCheck = this.permissionCheck('IsDelete')
+        if (pmCheck != 1) {
+            swal('', 'ผู้ใช้งานไม่มีสิทธิ์ลบข้อมูล กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (pmCheck == 1) {
+            this.navService.setOnDelete(true);
+        }
     }
 
     clickSendIncome() {
         this.navService.setOnSendIncome(true);
+    }
+
+     permissionCheck(subscribe) {
+        var userAccountID = localStorage.getItem('UserAccountID')
+        var programCode = localStorage.getItem('programcode')
+        const params = {
+            UserAccountID: userAccountID,
+            ProgramCode: programCode
+        };
+         this.navService.PermissionCheck(params).then(pRes => {
+            this.permisCheck = pRes;
+            console.log('subscribe : ', subscribe)
+            console.log('params : ', params)
+            console.log('PermisRes : ', this.permisCheck)
+            if (subscribe == 'IsCreate') {
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsCreate;
+            } else if (subscribe == 'IsDelete') {
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsDelete;
+            } else if (subscribe == 'IsRead') {
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsRead;
+            } else if (subscribe == 'IsUpdate') {
+                this.perBeforReturn = 0;
+                this.perBeforReturn = this.permisCheck.IsUpdate;
+            }
+        }, (error) => { console.error('error : ', error); });
+
+        return this.perBeforReturn
     }
 
 }

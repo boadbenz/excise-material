@@ -71,7 +71,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-
+        localStorage.setItem('programcode','ILG60-02-00');
         this.sidebarService.setVersion('0.0.2.39');
         this.paginage.TotalItems = 0;
 
@@ -90,21 +90,21 @@ export class ListComponent implements OnInit, OnDestroy {
 
         this.subSetNextPage = this.navservice.onNextPage.subscribe(async status => {
 
-            if (status) {
-                var pmCheck = this.permissionCheck('IsCreate')
-                console.log('pmCheck !: ', await pmCheck)
-                if (await pmCheck != 1) {
-                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                } else if (await pmCheck == 1) {
-                    this._router.navigateByUrl('/notice/manage/C/NEW?from=new');
-                }
-                await this.navservice.setOnNextPage(false);
-            }
-
             // if (status) {
+            //     var pmCheck = this.permissionCheck('IsCreate')
+            //     console.log('pmCheck !: ', await pmCheck)
+            //     if (await pmCheck != 1) {
+            //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+            //     } else if (await pmCheck == 1) {
+            //         this._router.navigateByUrl('/notice/manage/C/NEW?from=new');
+            //     }
             //     await this.navservice.setOnNextPage(false);
-            //     this._router.navigateByUrl('/notice/manage/C/NEW?from=new');
             // }
+
+            if (status) {
+                await this.navservice.setOnNextPage(false);
+                this._router.navigateByUrl('/notice/manage/C/NEW?from=new');
+            }
         });
 
         this.months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];

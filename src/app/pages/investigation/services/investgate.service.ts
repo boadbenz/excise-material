@@ -48,16 +48,16 @@ export class InvestgateService {
   }
 
 
-  async PermissionCheck(params: any): Promise<any> {
-    const paramss = JSON.stringify(params);
-    const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
-    try {
-      const res = await this.httpClient.post<any>(url, paramss, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      return [];
-    }
-  }
+  // async PermissionCheck(params: any): Promise<any> {  ///*** comment
+  //   const paramss = JSON.stringify(params);
+  //   const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
+  //   try {
+  //     const res = await this.httpClient.post<any>(url, paramss, this.httpOptions).toPromise();
+  //     return res;
+  //   } catch (error) {
+  //     return [];
+  //   }
+  // }
 
   InvestigateDetailgetByCon(InvestigateDetailID: string) {
     const params = { InvestigateDetailID };

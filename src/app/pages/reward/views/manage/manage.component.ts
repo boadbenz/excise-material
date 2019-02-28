@@ -127,6 +127,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    localStorage.setItem('programcode','ILG60-08-00');
     this.sidebarService.setVersion('0.0.1.10');
     this.pageLoad();
   }

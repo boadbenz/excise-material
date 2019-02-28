@@ -50,6 +50,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
+    localStorage.setItem('programcode','ILG60-04-00')
     this.sidebarService.setVersion('0.0.0.45');
     await this.onSearchByKeyword()
     await this.setShowButton();

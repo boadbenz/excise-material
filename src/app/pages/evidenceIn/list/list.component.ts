@@ -56,6 +56,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode','ILG60-10-00');
         // set false
         this.navService.setEditButton(false);
         this.navService.setDeleteButton(false);

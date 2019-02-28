@@ -206,6 +206,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode', 'ILG60-05-00');
         this.preloader.setShowPreloader(true);
         await this.navService.setEditField(true);
 
@@ -224,7 +225,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.getProduct();
 
         this.WarehouseID = "";
-        
+
         //this.DestinationCode = "030700";
         this.DestinationCode = localStorage.getItem("officeCode");
         this.getWarehouse();
@@ -242,7 +243,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ShowReceiveField = true;
         this.IsEvidence = false;
         this.IsEvidenceReceive = false;
-        
+
 
         let date = new Date();
         this.ProveYear = (date.getFullYear() + 543).toString();

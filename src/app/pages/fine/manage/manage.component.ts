@@ -153,6 +153,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    localStorage.setItem('programcode','ILG60-06-00');
     try {
       this.preloader.setShowPreloader(true);
       await this.MasofficeMaingetAll();

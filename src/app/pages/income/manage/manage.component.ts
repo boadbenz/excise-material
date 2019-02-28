@@ -103,6 +103,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode','ILG60-07-00');
         this.preloader.setShowPreloader(true);
         //this.sidebarService.setVersion('Revenue 0.0.0.19');
 

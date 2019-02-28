@@ -88,7 +88,8 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-
+        
+        localStorage.setItem('programcode','ILG60-01-00');
         this.sidebarService.setVersion(this.s_invest.version);
         this.active_Route();
         this.navigate_Service();
@@ -150,53 +151,53 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.navService.setEditField(true);
     }
 
-    async permissionCheck(subscribe) {
-        // var permissionCheck: any = null
-        // console.log("onList")
-        var userAccountID = localStorage.getItem('UserAccountID')
-        var programCode = 'ILG60-01-00'
-        const params = {
-            UserAccountID: userAccountID,
-            ProgramCode: programCode
-        };
-        // console.log('params : ', params)
-        await this.investgateService.PermissionCheck(params).then(pRes => {
-            console.log('ngOnInit PermissionCheck !!: ', pRes);
-            this.permisCheck = pRes
-            console.log('ngOnInit this.permisCheck !!: ', this.permisCheck);
+    // async permissionCheck(subscribe) {  ///*** comment
+    //     // var permissionCheck: any = null
+    //     // console.log("onList")
+    //     var userAccountID = localStorage.getItem('UserAccountID')
+    //     var programCode = 'ILG60-01-00'
+    //     const params = {
+    //         UserAccountID: userAccountID,
+    //         ProgramCode: programCode
+    //     };
+    //     // console.log('params : ', params)
+    //     await this.investgateService.PermissionCheck(params).then(pRes => {
+    //         console.log('ngOnInit PermissionCheck !!: ', pRes);
+    //         this.permisCheck = pRes
+    //         console.log('ngOnInit this.permisCheck !!: ', this.permisCheck);
 
-            if (subscribe == 'IsCreate') {
-                console.log("subscribe : ", subscribe)
-                console.log("subscribe permissionCheck : ", this.permisCheck)
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsCreate;
-                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
-                // return res;
-            } else if (subscribe == 'IsDelete') {
-                console.log("subscribe : ", subscribe)
-                console.log("subscribe permissionCheck : ", this.permisCheck)
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsDelete;
-                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
-                // return res;
-            } else if (subscribe == 'IsRead') {
-                console.log("subscribe : ", subscribe)
-                console.log("subscribe permissionCheck : ", this.permisCheck)
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsRead;
-                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
-                // return res;
-            } else if (subscribe == 'IsUpdate') {
-                console.log("subscribe : ", subscribe)
-                console.log("subscribe permissionCheck : ", this.permisCheck)
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsUpdate;
-                console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
-                // return res;
-            }
-        }, (error) => { console.error('error : ', error); });
-        return this.perBeforReturn
-    }
+    //         if (subscribe == 'IsCreate') {
+    //             console.log("subscribe : ", subscribe)
+    //             console.log("subscribe permissionCheck : ", this.permisCheck)
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsCreate;
+    //             console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
+    //             // return res;
+    //         } else if (subscribe == 'IsDelete') {
+    //             console.log("subscribe : ", subscribe)
+    //             console.log("subscribe permissionCheck : ", this.permisCheck)
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsDelete;
+    //             console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
+    //             // return res;
+    //         } else if (subscribe == 'IsRead') {
+    //             console.log("subscribe : ", subscribe)
+    //             console.log("subscribe permissionCheck : ", this.permisCheck)
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsRead;
+    //             console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
+    //             // return res;
+    //         } else if (subscribe == 'IsUpdate') {
+    //             console.log("subscribe : ", subscribe)
+    //             console.log("subscribe permissionCheck : ", this.permisCheck)
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsUpdate;
+    //             console.log("subscribe this.perBeforReturn : ", this.perBeforReturn)
+    //             // return res;
+    //         }
+    //     }, (error) => { console.error('error : ', error); });
+    //     return this.perBeforReturn
+    // }
 
     private navigate_Service() {
         this.navService.showFieldEdit.takeUntil(this.destroy$).subscribe(p => {
@@ -220,33 +221,24 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
-                var pmCheck = this.permissionCheck('IsUpdate')
-                if (await pmCheck != 1) {
-                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                } else if (await pmCheck == 1) {
+                // var pmCheck = this.permissionCheck('IsUpdate')///*** comment
+                // if (await pmCheck != 1) {
+                //     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+                // } else if (await pmCheck == 1) {
                     this.onSave();
-                }
+                // }
                 await this.navService.setOnSave(false);
             }
-            // if (status && this.permissionCheck != undefined) {
-            //     if (this.permissionCheck.IsUpdate != 1) {
-            //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-            //     } else if (this.permissionCheck.IsUpdate == 1) {
-            //         this.onSave();
-            //     }
-            //     await this.navService.setOnSave(false);
-            // }
-
         });
 
         this.navService.onDelete.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
-                var pmCheck = this.permissionCheck('IsDelete')
-                if (await pmCheck != 1) {
-                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                } else if (await pmCheck == 1) {
+                // var pmCheck = this.permissionCheck('IsDelete') ///*** comment
+                // if (await pmCheck != 1) {
+                //     swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+                // } else if (await pmCheck == 1) {
                     this.onDelete();
-                }
+                // }
                 await this.navService.setOnDelete(false);
             }
             // if (status) {

@@ -348,6 +348,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    localStorage.setItem('programcode','ILG60-08-00');
     this.sidebarService.setVersion('0.0.1.14');
     this.pageLoad();
   }

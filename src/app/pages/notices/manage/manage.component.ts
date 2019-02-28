@@ -147,6 +147,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
 
+        localStorage.setItem('programcode', 'ILG60-02-00');
+
         this.months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
         this.activatedRoute.queryParams.subscribe(params => {
             this.actionFrom = params['from'];
@@ -242,32 +244,32 @@ export class ManageComponent implements OnInit, OnDestroy {
         sessionStorage.setItem("notice_current_page", tmps[0] + "?from=edit");
     }
 
-    async permissionCheck(subscribe) {
-        var userAccountID = localStorage.getItem('UserAccountID')
-        var programCode = 'ILG60-02-00'
-        const params = {
-            UserAccountID: userAccountID,
-            ProgramCode: programCode
-        };
-        await this.noticeService.PermissionCheck(params).then(pRes => {
-            this.permisCheck = pRes
+    // async permissionCheck(subscribe) {
+    //     var userAccountID = localStorage.getItem('UserAccountID')
+    //     var programCode = 'ILG60-02-00'
+    //     const params = {
+    //         UserAccountID: userAccountID,
+    //         ProgramCode: programCode
+    //     };
+    //     await this.noticeService.PermissionCheck(params).then(pRes => {
+    //         this.permisCheck = pRes
 
-            if (subscribe == 'IsCreate') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsCreate;
-            } else if (subscribe == 'IsDelete') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsDelete;
-            } else if (subscribe == 'IsRead') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsRead;
-            } else if (subscribe == 'IsUpdate') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsUpdate;
-            }
-        }, (error) => { console.error('error : ', error); });
-        return this.perBeforReturn
-    }
+    //         if (subscribe == 'IsCreate') {
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsCreate;
+    //         } else if (subscribe == 'IsDelete') {
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsDelete;
+    //         } else if (subscribe == 'IsRead') {
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsRead;
+    //         } else if (subscribe == 'IsUpdate') {
+    //             this.perBeforReturn = 0;
+    //             this.perBeforReturn = this.permisCheck.IsUpdate;
+    //         }
+    //     }, (error) => { console.error('error : ', error); });
+    //     return this.perBeforReturn
+    // }
 
     private active_route() {
         this.activeRoute.params.subscribe(p => {
@@ -334,106 +336,106 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
-            if (status) {
-                var pmCheck = this.permissionCheck('IsUpdate')
-                if (await pmCheck != 1) {
-                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                } else if (await pmCheck == 1) {
-
-                    if (!this.noticeForm.valid) {
-                        this.isRequired = true;
-                        this.showSwal(Message.checkData, "warning");
-                        return false;
-                    }
-
-                    // if (this.noticeCode=="NEW") {
-                    //     this.isRequired = true;
-                    //     this.showSwal("Please check your notice code.", "warning");
-                    //     return false;
-                    // }
-
-                    const sDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDate);
-                    const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate);
-
-                    if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-                        this.showSwal(Message.checkData, "warning");
-                        return;
-                    }
-
-                    this.noticeForm.value.NoticeInformer.map(item => {
-                        item.InformerType = item.InformerType == true ? 1 : 0;
-                    });
-
-                    if (this.mode === 'C') {
-                        await this.getTransactionRunning(this.noticeForm.value.NoticeStaff[0].DepartmentCode || this.noticeForm.value.NoticeStaff[0].OfficeCode);
-                        // this.onCreate();
-
-                    } else if (this.mode === 'R') {
-                        this.onReviced();
-                    }
-                }
-                await this.navService.setOnSave(false);
-            }
             // if (status) {
+            //     var pmCheck = this.permissionCheck('IsUpdate')
+            //     if (await pmCheck != 1) {
+            //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+            //     } else if (await pmCheck == 1) {
 
-            // await this.navService.setOnSave(false);
+            //         if (!this.noticeForm.valid) {
+            //             this.isRequired = true;
+            //             this.showSwal(Message.checkData, "warning");
+            //             return false;
+            //         }
 
-            // if (!this.noticeForm.valid) {
-            //     this.isRequired = true;
-            //     this.showSwal(Message.checkData, "warning");
-            //     return false;
+            //         // if (this.noticeCode=="NEW") {
+            //         //     this.isRequired = true;
+            //         //     this.showSwal("Please check your notice code.", "warning");
+            //         //     return false;
+            //         // }
+
+            //         const sDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDate);
+            //         const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate);
+
+            //         if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+            //             this.showSwal(Message.checkData, "warning");
+            //             return;
+            //         }
+
+            //         this.noticeForm.value.NoticeInformer.map(item => {
+            //             item.InformerType = item.InformerType == true ? 1 : 0;
+            //         });
+
+            //         if (this.mode === 'C') {
+            //             await this.getTransactionRunning(this.noticeForm.value.NoticeStaff[0].DepartmentCode || this.noticeForm.value.NoticeStaff[0].OfficeCode);
+            //             // this.onCreate();
+
+            //         } else if (this.mode === 'R') {
+            //             this.onReviced();
+            //         }
+            //     }
+            //     await this.navService.setOnSave(false);
             // }
+            if (status) {
 
-            // if (this.noticeCode=="NEW") {
-            //     this.isRequired = true;
-            //     this.showSwal("Please check your notice code.", "warning");
-            //     return false;
-            // }
+                await this.navService.setOnSave(false);
 
-            // const sDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDate);
-            // const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate);
+                if (!this.noticeForm.valid) {
+                    this.isRequired = true;
+                    this.showSwal(Message.checkData, "warning");
+                    return false;
+                }
 
-            // if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-            //     this.showSwal(Message.checkData, "warning");
-            //     return;
-            // }
+                if (this.noticeCode == "NEW") {
+                    this.isRequired = true;
+                    this.showSwal("Please check your notice code.", "warning");
+                    return false;
+                }
 
-            // this.noticeForm.value.NoticeInformer.map(item => {
-            //     item.InformerType = item.InformerType == true ? 1 : 0;
-            // });
+                const sDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDate);
+                const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate);
 
-            // if (this.mode === 'C') {
-            //     await this.getTransactionRunning(this.noticeForm.value.NoticeStaff[0].DepartmentCode || this.noticeForm.value.NoticeStaff[0].OfficeCode);
-            //     // this.onCreate();
+                if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
+                    this.showSwal(Message.checkData, "warning");
+                    return;
+                }
 
-            // } else if (this.mode === 'R') {
-            //     this.onReviced();
-            // }
-            // }
+                this.noticeForm.value.NoticeInformer.map(item => {
+                    item.InformerType = item.InformerType == true ? 1 : 0;
+                });
+
+                if (this.mode === 'C') {
+                    await this.getTransactionRunning(this.noticeForm.value.NoticeStaff[0].DepartmentCode || this.noticeForm.value.NoticeStaff[0].OfficeCode);
+                    // this.onCreate();
+
+                } else if (this.mode === 'R') {
+                    this.onReviced();
+                }
+            }
 
         });
 
         this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
-            if (status) {
-                var pmCheck = this.permissionCheck('IsDelete')
-                if (await pmCheck != 1) {
-                    swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-                } else if (await pmCheck == 1) {
-
-                    this.deleteNotice.text = Message.confirmAction;
-                    this.deleteNotice.show();
-                    // this.onDelete();
-                }
-                await this.navService.setOnDelete(false);
-            }
-
             // if (status) {
-            //     await this.navService.setOnDelete(false);
+            //     var pmCheck = this.permissionCheck('IsDelete')
+            //     if (await pmCheck != 1) {
+            //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+            //     } else if (await pmCheck == 1) {
 
-            //     this.deleteNotice.text = Message.confirmAction;
-            //     this.deleteNotice.show();
-            //     // this.onDelete();
+            //         this.deleteNotice.text = Message.confirmAction;
+            //         this.deleteNotice.show();
+            //         // this.onDelete();
+            //     }
+            //     await this.navService.setOnDelete(false);
             // }
+
+            if (status) {
+                await this.navService.setOnDelete(false);
+
+                this.deleteNotice.text = Message.confirmAction;
+                this.deleteNotice.show();
+                // this.onDelete();
+            }
         });
 
         this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {

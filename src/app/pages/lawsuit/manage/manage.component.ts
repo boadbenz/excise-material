@@ -125,6 +125,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    localStorage.setItem('programcode','ILG60-04-00')
     this.sidebarService.setVersion('0.0.0.45');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
