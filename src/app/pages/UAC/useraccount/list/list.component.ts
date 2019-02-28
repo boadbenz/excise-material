@@ -32,7 +32,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('UserAccount List 0.0.0.1');
+    this.sidebarService.setVersion('UserAccount List 0.0.0.2');
 
     // set button false
     await this.navService.setEditButton(false);
