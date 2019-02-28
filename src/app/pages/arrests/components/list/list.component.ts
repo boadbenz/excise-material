@@ -227,7 +227,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
     ngOnDestroy() {
         this.paginage.TotalItems = 0;
         // this.subOnSearch.unsubscribe();
-        // this.subSetNextPage.unsubscribe();
+        this.subSetNextPage.unsubscribe();
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
         this.advSearch.next(false);

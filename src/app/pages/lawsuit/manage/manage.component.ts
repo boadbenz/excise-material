@@ -125,7 +125,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    localStorage.setItem('programcode','ILG60-04-00')
+    localStorage.setItem('programcode', 'ILG60-04-00')
     this.sidebarService.setVersion('0.0.0.45');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
@@ -158,19 +158,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
 
     this.onDeleteSubscribe = this.navService.onDelete.subscribe(async status => {
-      if (status) {
-        var pmCheck = this.permissionCheck('IsDelete')
-        if (await pmCheck != 1) {
-          Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-        } else if (await pmCheck == 1) {
-          this.onDelete();
-        }
-        await this.navService.setOnDelete(false);
-      }
       // if (status) {
+      //   var pmCheck = this.permissionCheck('IsDelete')
+      //   if (await pmCheck != 1) {
+      //     Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+      //   } else if (await pmCheck == 1) {
+      //     this.onDelete();
+      //   }
       //   await this.navService.setOnDelete(false);
-      //   this.onDelete();
       // }
+      if (status) {
+        await this.navService.setOnDelete(false);
+        this.onDelete();
+      }
     })
     this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
       if (status) {
@@ -181,59 +181,59 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
 
-      if (status) {
-        var pmCheck = this.permissionCheck('IsUpdate')
-        if (await pmCheck != 1) {
-          Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-        } else if (await pmCheck == 1) {
-          if (this.findInvalidControls().length > 0 && this.lawsuitForm.controls['IsLawsuitCheck'].value == false) {
-            this.isRequired = true;
-            Swal({
-              text: Message.checkData,
-              type: 'warning',
-            })
-
-            return false;
-          }
-          else if (this.lawsuitForm.controls['IsLawsuitCheck'].value == true &&
-            this.lawsuitForm.controls['ReasonDontLawsuit'].value == "" ||
-            this.lawsuitForm.controls['IsLawsuitCheck'].value == true && this.lawsuitForm.controls['ReasonDontLawsuit'].value == null) {
-            this.isRequired2 = true;
-
-            Swal({
-              text: Message.checkData,
-              type: 'warning',
-            })
-            return false;
-          }
-          this.onSave();
-        }
-        await this.navService.setOnSave(false);
-      }
       // if (status) {
-      // await this.navService.setOnSave(false);
-      // if (this.findInvalidControls().length > 0 && this.lawsuitForm.controls['IsLawsuitCheck'].value == false) {
-      //   this.isRequired = true;
-      //   Swal({
-      //     text: Message.checkData,
-      //     type: 'warning',
-      //   })
+      //   var pmCheck = this.permissionCheck('IsUpdate')
+      //   if (await pmCheck != 1) {
+      //     Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+      //   } else if (await pmCheck == 1) {
+      //     if (this.findInvalidControls().length > 0 && this.lawsuitForm.controls['IsLawsuitCheck'].value == false) {
+      //       this.isRequired = true;
+      //       Swal({
+      //         text: Message.checkData,
+      //         type: 'warning',
+      //       })
 
-      //   return false;
-      // }
-      // else if (this.lawsuitForm.controls['IsLawsuitCheck'].value == true &&
-      //   this.lawsuitForm.controls['ReasonDontLawsuit'].value == "" ||
-      //   this.lawsuitForm.controls['IsLawsuitCheck'].value == true && this.lawsuitForm.controls['ReasonDontLawsuit'].value == null) {
-      //   this.isRequired2 = true;
+      //       return false;
+      //     }
+      //     else if (this.lawsuitForm.controls['IsLawsuitCheck'].value == true &&
+      //       this.lawsuitForm.controls['ReasonDontLawsuit'].value == "" ||
+      //       this.lawsuitForm.controls['IsLawsuitCheck'].value == true && this.lawsuitForm.controls['ReasonDontLawsuit'].value == null) {
+      //       this.isRequired2 = true;
 
-      //   Swal({
-      //     text: Message.checkData,
-      //     type: 'warning',
-      //   })
-      //   return false;
+      //       Swal({
+      //         text: Message.checkData,
+      //         type: 'warning',
+      //       })
+      //       return false;
+      //     }
+      //     this.onSave();
+      //   }
+      //   await this.navService.setOnSave(false);
       // }
-      // this.onSave();
-      // }
+      if (status) {
+        await this.navService.setOnSave(false);
+        if (this.findInvalidControls().length > 0 && this.lawsuitForm.controls['IsLawsuitCheck'].value == false) {
+          this.isRequired = true;
+          Swal({
+            text: Message.checkData,
+            type: 'warning',
+          })
+
+          return false;
+        }
+        else if (this.lawsuitForm.controls['IsLawsuitCheck'].value == true &&
+          this.lawsuitForm.controls['ReasonDontLawsuit'].value == "" ||
+          this.lawsuitForm.controls['IsLawsuitCheck'].value == true && this.lawsuitForm.controls['ReasonDontLawsuit'].value == null) {
+          this.isRequired2 = true;
+
+          Swal({
+            text: Message.checkData,
+            type: 'warning',
+          })
+          return false;
+        }
+        this.onSave();
+      }
     });
     this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
       if (status) {
@@ -243,67 +243,36 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
     this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
 
-      if (status) {
-        var pmCheck = this.permissionCheck('IsCreate')
-        if (await pmCheck != 1) {
-          Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-        } else if (await pmCheck == 1) {
-          this.onNextPage();
-        }
-        await this.navService.setOnNextPage(false);
-      }
       // if (status) {
-      // await this.navService.setOnNextPage(false);
-      // this.onNextPage();
+      //   var pmCheck = this.permissionCheck('IsCreate')
+      //   if (await pmCheck != 1) {
+      //     Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+      //   } else if (await pmCheck == 1) {
+      //     this.onNextPage();
+      //   }
+      //   await this.navService.setOnNextPage(false);
       // }
+      if (status) {
+        await this.navService.setOnNextPage(false);
+        this.onNextPage();
+      }
     });
     this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
-      if (status) {
-        var pmCheck = this.permissionCheck('IsUpdate')
-        if (await pmCheck != 1) {
-          Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-        } else if (await pmCheck == 1) {
-          this.onEdit();
-        }
-        await this.navService.setOnEdit(false);
-      }
       // if (status) {
+      //   var pmCheck = this.permissionCheck('IsUpdate')
+      //   if (await pmCheck != 1) {
+      //     Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+      //   } else if (await pmCheck == 1) {
+      //     this.onEdit();
+      //   }
       //   await this.navService.setOnEdit(false);
-      //   this.onEdit();
       // }
+      if (status) {
+        await this.navService.setOnEdit(false);
+        this.onEdit();
+      }
     });
   }
-
-  async permissionCheck(subscribe) {
-    var userAccountID = localStorage.getItem('UserAccountID')
-    var programCode = 'ILG60-04-00'
-    const params = {
-      UserAccountID: userAccountID,
-      ProgramCode: programCode
-    };
-    console.log('params : ', params)
-    await this.lawsuitService.PermissionCheck(params).then(pRes => {
-      this.permisCheck = pRes;
-      console.log('this.permisCheck : ', this.permisCheck)
-      if (subscribe == 'IsCreate') {
-        this.perBeforReturn = 0;
-        this.perBeforReturn = this.permisCheck.IsCreate;
-      } else if (subscribe == 'IsDelete') {
-        this.perBeforReturn = 0;
-        this.perBeforReturn = this.permisCheck.IsDelete;
-      } else if (subscribe == 'IsRead') {
-        this.perBeforReturn = 0;
-        this.perBeforReturn = this.permisCheck.IsRead;
-      } else if (subscribe == 'IsUpdate') {
-        this.perBeforReturn = 0;
-        this.perBeforReturn = this.permisCheck.IsUpdate;
-      }
-    }, (error) => { console.error('error : ', error); });
-
-    return this.perBeforReturn
-  }
-
-
 
   public findInvalidControls() {
     const invalid = [];
@@ -344,7 +313,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     await this.onSaveSubscribe.unsubscribe();
     await this.onCancelSubscribe.unsubscribe();
     await this.onDeleteSubscribe.unsubscribe();
-    // await this.onNextPageSubscribe.unsubscribe();
+    await this.onNextPageSubscribe.unsubscribe();
     await this.onEditSubscribe.unsubscribe();
     await this.setShowButton()
   }

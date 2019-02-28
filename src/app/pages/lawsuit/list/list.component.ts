@@ -60,7 +60,7 @@ export class ListComponent implements OnInit, OnDestroy {
   async ngOnDestroy() {
     await this.navService.showAdvSearch.next(false);
     await this.subOnSearchByKeyword.unsubscribe();
-    // await this.subSetNextPage.unsubscribe();
+    await this.subSetNextPage.unsubscribe();
   }
 
   private setShowButton(): void {

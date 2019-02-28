@@ -414,9 +414,9 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
         this.clearForm();
-        // this.subSetNextPage.unsubscribe();
-        // this.subSetDeletePage.unsubscribe();
-        // this.subSetEditPage.unsubscribe();
+        this.subSetNextPage.unsubscribe();
+        this.subSetDeletePage.unsubscribe();
+        this.subSetEditPage.unsubscribe();
     }
 
     private createForm(): FormGroup {
