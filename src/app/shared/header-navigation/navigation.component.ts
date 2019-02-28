@@ -86,7 +86,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         formSearch.reset();
     }
 
-   async clickNew() {
+    async clickNew() {
         var pmCheck = this.permissionCheck('IsCreate')
         if (await pmCheck != 1) {
             console.log('clickNew IsCreate != 1 : ', pmCheck)
@@ -98,7 +98,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         // this.navService.setOnNextPage(true);
     }
 
-   async clickNextPage() {
+    async clickNextPage() {
         var pmCheck = this.permissionCheck('IsCreate')
         if (await pmCheck != 1) {
             console.log('NextPage IsCreate != 1 : ', pmCheck)
@@ -118,7 +118,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.navService.setOnPrint(true);
     }
 
-   async clickEdit() {
+    async clickEdit() {
         var pmCheck = this.permissionCheck('IsUpdate')
         if (await pmCheck != 1) {
             console.log('clickEdit IsUpdate != 1 : ', pmCheck)
@@ -158,7 +158,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.navService.setOnCancel(true);
     }
 
-   async clickSave() {
+    async clickSave() {
         var pmCheck = this.permissionCheck('IsUpdate')
         if (await pmCheck != 1) {
             console.log('clickSave IsUpdate != 1 : ', pmCheck)
@@ -171,7 +171,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         // this.navService.setOnSave(true);
     }
 
-   async clickDelete() {
+    async clickDelete() {
         // console.log("Delete header");
         // var p = localStorage.getItem('programcode')
         // console.log("programcode : ", p);
@@ -198,24 +198,22 @@ export class NavigationComponent implements OnInit, OnDestroy {
             UserAccountID: userAccountID,
             ProgramCode: programCode
         };
-       await  this.navService.PermissionCheck(params).then(pRes => {
-            this.permisCheck = pRes;
+        await this.navService.PermissionCheck(params).then(Res => {
+            this.permisCheck = Res;
             console.log('subscribe : ', subscribe)
             console.log('params : ', params)
             console.log('PermisRes : ', this.permisCheck)
             if (subscribe == 'IsCreate') {
-                // this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsCreate;
+                this.perBeforReturn = !this.permisCheck ? this.permisCheck = { "IsCreate": 0 } : this.permisCheck.IsCreate;
+                // this.perBeforReturn = this.permisCheck.IsCreate;
             } else if (subscribe == 'IsDelete') {
-                // this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsDelete;
+                this.perBeforReturn = !this.permisCheck ? this.permisCheck = { "IsDelete": 0 } : this.permisCheck.IsDelete;
             } else if (subscribe == 'IsRead') {
-                // this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsRead;
+                this.perBeforReturn = !this.permisCheck ? this.permisCheck = { "IsRead": 0 } : this.permisCheck.IsRead;
             } else if (subscribe == 'IsUpdate') {
-                // this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsUpdate;
+                this.perBeforReturn = !this.permisCheck ? this.permisCheck = { "IsUpdate": 0 } : this.permisCheck.IsUpdate;
             }
+
         }, (error) => { console.error('error : ', error); });
 
         return this.perBeforReturn
