@@ -344,7 +344,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     await this.onSaveSubscribe.unsubscribe();
     await this.onCancelSubscribe.unsubscribe();
     await this.onDeleteSubscribe.unsubscribe();
-    await this.onNextPageSubscribe.unsubscribe();
+    // await this.onNextPageSubscribe.unsubscribe();
     await this.onEditSubscribe.unsubscribe();
     await this.setShowButton()
   }

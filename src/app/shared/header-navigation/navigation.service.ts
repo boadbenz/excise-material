@@ -39,14 +39,14 @@ export class NavigationService {
 
     private httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
     
-    async PermissionCheck(params: any): Promise<any> {
+     PermissionCheck(params: any): Promise<any> {
         const paramss = JSON.stringify(params);
         const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
         try {
-          const res = await this.httpClient.post<any>(url, paramss, this.httpOptions).toPromise();
+          const res =  this.httpClient.post<any>(url, paramss, this.httpOptions).toPromise();
           return res;
         } catch (error) {
-          return [];
+        //   return [];
         }
       }
 

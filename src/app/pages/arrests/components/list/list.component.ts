@@ -231,6 +231,6 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
         this.advSearch.next(false);
-        this.subSetNextPage.unsubscribe();
+        // this.subSetNextPage.unsubscribe();
     }
 }

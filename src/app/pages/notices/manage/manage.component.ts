@@ -1579,7 +1579,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onSaveSubscribe.unsubscribe();
         this.onDeleSubscribe.unsubscribe();
         this.onPrintSubscribe.unsubscribe();
-        this.onNextPageSubscribe.unsubscribe();
+        // this.onNextPageSubscribe.unsubscribe();
     }
 
     openSuspect(e) {
