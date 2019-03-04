@@ -84,28 +84,19 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
 
     async clickNew() {
-        console.log('clickNew')
+        // console.log('clickNew')
         var pmCheck = this.permissionCheck('IsCreate')
         if (await pmCheck != 1) {
-            console.log('++++ clickNew IsCreate != 1 : ', pmCheck)
+            // console.log('++++ clickNew IsCreate != 1 : ', pmCheck)
             swal('', 'ผู้ใช้งานไม่มีสิทธิ์สร้างข้อมูล กรุณาติดต่อผู้ดูแลระบบ', 'warning');
         } else if (await pmCheck == 1) {
-            console.log('++++ clickNew IsCreate == 1 : ', pmCheck)
+            // console.log('++++ clickNew IsCreate == 1 : ', pmCheck)
             this.navService.setOnNextPage(true);
         }
         // this.navService.setOnNextPage(true);
     }
 
     async clickNextPage() {
-        console.log('clickNextPage')
-        // var pmCheck = this.permissionCheck('IsCreate')
-        // if (await pmCheck != 1) {
-        //     console.log('NextPage IsCreate != 1 : ', pmCheck)
-        //     swal('', 'ผู้ใช้งานไม่มีสิทธิ์สร้างข้อมูล กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-        // } else if (await pmCheck == 1) {
-        //     console.log('NextPage IsCreate == 1 : ', pmCheck)
-        //     this.navService.setOnNextPage(true);
-        // }
         this.navService.setOnNextPage(true);
     }
 
@@ -171,9 +162,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
 
     async clickDelete() {
-        // console.log("Delete header");
-        // var p = localStorage.getItem('programcode')
-        // console.log("programcode : ", p);
         // this.navService.setOnDelete(true);
 
         var pmCheck = this.permissionCheck('IsDelete')
