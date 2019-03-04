@@ -32,6 +32,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    localStorage.setItem('programcode', 'ILG60-12-00');
     this.sidebarService.setVersion('UserAccount List 0.0.0.2');
 
     // set button false

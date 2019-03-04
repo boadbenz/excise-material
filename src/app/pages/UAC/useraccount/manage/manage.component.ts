@@ -102,6 +102,7 @@ export class UserManageComponent implements OnInit {
   }
 
   ngOnInit() {
+    localStorage.setItem('programcode', 'ILG60-12-00');
     this.sidebarService.setVersion('UserAccount Manage 0.0.0.1');
     this.navigate_Service();
     this.programList = JSON.parse(JSON.stringify(this.programListTemplate));

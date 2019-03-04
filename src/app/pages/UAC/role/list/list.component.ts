@@ -32,6 +32,7 @@ export class RoleListComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    localStorage.setItem('programcode', 'ILG60-12-00');
     this.sidebarService.setVersion('Role List 0.0.0.1');
 
     // set button false

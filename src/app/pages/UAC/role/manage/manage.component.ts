@@ -94,6 +94,7 @@ export class RoleManageComponent implements OnInit {
   }
 
   ngOnInit() {
+    localStorage.setItem('programcode', 'ILG60-12-00');
     this.sidebarService.setVersion('Role Manage 0.0.0.1');
 
     this.navigate_Service();
