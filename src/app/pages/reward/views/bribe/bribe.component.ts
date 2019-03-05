@@ -366,7 +366,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       });
   }
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.14');
+    this.sidebarService.setVersion('0.0.1.15');
 
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
