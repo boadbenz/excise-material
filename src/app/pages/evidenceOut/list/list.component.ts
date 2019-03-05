@@ -169,14 +169,19 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     clickView(EvidenceOutID: string, EvidenceOutType: string) {
-        if (this.evitype == "11" && EvidenceOutType == "0") {
-            this._router.navigate(['/evidenceOut/manage', '11I', 'R', EvidenceOutID]);
-        } else if (this.evitype == "11" && EvidenceOutType == "1") {
-            this._router.navigate(['/evidenceOut/manage', "11E", 'R', EvidenceOutID]);
-        } else if (this.evitype == "15" && EvidenceOutType == "6") {
+        if (this.evitype == "11") {
+            this.EvidenceService.EvidenceOutInTypegetByCon(EvidenceOutID).then(async res => {
+                if (res.EvidenceInType == "0") {
+                    this._router.navigate(['/evidenceOut/manage', '11I', 'R', EvidenceOutID]);
+                } else if (res.EvidenceInType == "1") {
+                    this._router.navigate(['/evidenceOut/manage', "11E", 'R', EvidenceOutID]);
+                }
+            });
+        } else if (this.evitype == "15" && EvidenceOutType == "3") {
             this._router.navigate(['/evidenceOut/manage', "15G", 'R', EvidenceOutID]);
-        } else if (this.evitype == "15" && EvidenceOutType == "7") {
+        } else if (this.evitype == "15" && EvidenceOutType == "5") {
             this._router.navigate(['/evidenceOut/manage', "15D", 'R', EvidenceOutID]);
+
         } else {
             this._router.navigate(['/evidenceOut/manage', this.evitype, 'R', EvidenceOutID]);
         }

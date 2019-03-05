@@ -15,6 +15,7 @@ import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 import { IsActivePipeModule } from '../../../shared/pipe/IsActivePipe.module';
+import { EvidenceOutService } from '../../evidenceOut/evidenceOut.service';
 //import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
 
 const routes: Routes = [
@@ -50,7 +51,7 @@ const routes: Routes = [
         IsActivePipeModule
     ],
     declarations: [ManageComponent],
-    providers: [EvidenceService, IncomeService, ProveService, MasterService],
+    providers: [EvidenceService, IncomeService, ProveService, MasterService, EvidenceOutService],
     exports: [MatAutocompleteModule]
 })
 export class ManageModule { }

@@ -45,7 +45,7 @@
 <div *ngIf="evitype == '11E'" class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0">รายละเอียดการคืนของกลาง</h4>
+        <h4 class="card-title m-b-0">รายละเอียดประกอบการคืนของกลาง</h4>
     </div>
     <div class="card-body">
         <div class="row">
@@ -119,7 +119,7 @@
 <div *ngIf="evitype == '11I'" class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0">รายละเอียดการคืนของกลาง</h4>
+        <h4 class="card-title m-b-0">รายละเอียดประกอบการคืนของกลาง</h4>
     </div>
     <div class="card-body">
         <div class="row">
@@ -338,7 +338,7 @@
 <div *ngIf="evitype == '15G'" class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0">รายละเอียดการขอนำของกลางออกจากคลังไปใช้ในกิจกรรมหรือโครงการของทางราชการ</h4>
+        <h4 class="card-title m-b-0">รายละเอียดประกอบการขอนำของกลางออกจากคลังไปใช้ในกิจกรรมหรือโครงการของทางราชการ</h4>
     </div>
     <div class="card-body">
         <div class="row">
@@ -464,7 +464,7 @@
 <div *ngIf="evitype == '15D'" class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0">รายละเอียดการขอนำของกลางออกจากคลังไปบริจาค</h4>
+        <h4 class="card-title m-b-0">รายละเอียดประกอบการขอนำของกลางออกจากคลังไปบริจาค</h4>
     </div>
     <div class="card-body">
         <div class="row">
@@ -608,7 +608,7 @@
 <div *ngIf="evitype == '16'" class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
         <app-card-actions-collapse></app-card-actions-collapse>
-        <h4 class="card-title m-b-0">รายละเอียดการโอนย้ายของกลาง</h4>
+        <h4 class="card-title m-b-0">รายละเอียดประกอบการโอนย้ายของกลาง</h4>
     </div>
     <div class="card-body">
         <div class="row">
@@ -659,13 +659,34 @@
                 <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control" readonly>
             </div>
 
-            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บปลายทาง :</label>
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงานปลายทาง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" [disabled]="showEditField">
+                <input type="text" class="form-control" [(ngModel)]="OfficeDestName" name="OfficeDestName" placeholder="" aria-label="Number"
+                    matInput [matAutocomplete]="auto20" (input)="OfficeDestOnAutoChange($event.target.value)" (focus)="OfficeDestOnAutoFocus($event.target.value)"
+                    [disabled]="showEditField || showEditByEvidencIn" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstOfficeDest()">
+                <mat-autocomplete autoActiveFirstOption #auto20="matAutocomplete">
+                    <mat-option *ngFor="let optionD of StationOptions" [value]="optionD.OfficeName" (click)="OfficeDestOnAutoSelecteWord(optionD)"
+                        (onSelectionChange)="OfficeDestOnAutoSelecteWord(optionD)">
+                        {{ optionD.OfficeName }}
+                    </mat-option>
+                </mat-autocomplete>
             </div>
         </div>
 
         <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บปลายทาง :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" class="form-control" [(ngModel)]="WarehouseDestName" name="WarehouseDestName" placeholder="" matInput
+                    [matAutocomplete]="auto19" (input)="WarehouseDestnAutoChange($event.target.value)" (focus)="WarehouseDestOnAutoFocus($event.target.value)"
+                    [disabled]="showEditField || showEditByEvidencIn" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouseDest()">
+                <mat-autocomplete autoActiveFirstOption #auto19="matAutocomplete">
+                    <mat-option *ngFor="let optionWh of WarehouseDestoptions" [value]="optionWh.WarehouseName" (click)="WarehouseDestOnAutoSelecteWord(optionWh)"
+                        (onSelectionChange)="WarehouseDestOnAutoSelecteWord(optionWh)">
+                        {{ optionWh.WarehouseName }}
+                    </mat-option>
+                </mat-autocomplete>
+            </div>
+
             <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสืออนุมัติ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
@@ -673,7 +694,9 @@
                         required>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">วันที่อนุมัติ :
             </label>
             <div class="form-group input-group col-lg-4 col-md-7">
@@ -685,9 +708,7 @@
                 <input type="text" [(ngModel)]="ApproveTime" name="ApproveTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
                     [ngClass]="{'ng-touched':isRequired}" required>
             </div>
-        </div>
 
-        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
@@ -702,19 +723,21 @@
                     </mat-autocomplete>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control" readonly>
             </div>
-        </div>
 
-        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
             </div>
+        </div>
 
+        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บต้นทาง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto17"
@@ -727,11 +750,9 @@
                     </mat-option>
                 </mat-autocomplete>
             </div>
-        </div>
 
-        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการโอนย้าย :</label>
-            <div class="form-group col-lg-10 col-md-8 col-sm-8">
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField">
             </div>
         </div>
@@ -770,7 +791,7 @@
                             <tr>
                                 <!-- <th *ngIf="evitype == '11I' || evitype == '14'"></th> -->
                                 <th style="text-align: center;width:7%">ลำดับ</th>
-                                <th *ngIf="evitype == '11E'" style="width:10%">เลขหนังสือนำส่ง</th>
+                                <!-- <th *ngIf="evitype == '11E'" style="width:10%">เลขหนังสือนำส่ง</th> -->
                                 <th style="width:14%">เลขทะเบียนบัญชี</th>
                                 <th>ชื่อของกลาง</th>
                                 <th style="width:10%">จำนวน</th>
@@ -804,14 +825,14 @@
                                 <th style="text-align: center">{{i + 1}}</th>
 
                                 <!-- เลขหนังสือนำส่ง -->
-                                <th *ngIf="evitype == '11E'">
+                                <!-- <th *ngIf="evitype == '11E'">
                                     <input type="text" [(ngModel)]="item.DeliveryNo" name="item.DeliveryNo" class="form-control form-control-sm" readonly>
-                                </th>
+                                </th> -->
 
                                 <!-- เลขทะเบียนบัญชี -->
                                 <th>
                                     <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.EvidenceInItemCode"
-                                        name="item.ProductDesc" placeholder="" aria-label="Number" [matAutocomplete]="auto18"
+                                        name="item.EvidenceInItemCode" placeholder="" aria-label="Number" [matAutocomplete]="auto18"
                                         (input)="ProductonAutoChange($event.target.value, item.ProductSeq)" (focus)="ProductonAutoFocus($event.target.value)"
                                         [disabled]="showEditField || evitype == '11E' || evitype == '11I' || mode == 'R'" [ngClass]="{'ng-touched':isRequired}"
                                         required>
@@ -844,7 +865,7 @@
 
                                 <!-- จำนวนคืน, จำนวนจัดเก็บ, จำนวนขาย, จำนวนทำลาย, ชำรุด, จำนวนส่ง -->
                                 <th>
-                                    <input type="text" [(ngModel)]="item.Qty" name="item.Qty" class="form-control form-control-sm" [disabled]="showEditField"
+                                    <input type="text" [(ngModel)]="item.Qty" name="item.Qty" class="form-control form-control-sm" [disabled]="showEditField || showEditByEvidencIn"
                                         [ngClass]="{'ng-touched':isRequired}" required (input)="CalReturn(item.ProductSeq)">
                                 </th>
 
@@ -923,10 +944,13 @@
         </div>
 
         <!-- คืนของกลาง, นำของกลางออกจากคลัง, โอนย้ายของกลาง  -->
-        <div *ngIf="evitype == '11I' || evitype == '11E' || evitype == '15G' || evitype == '15D' || evitype == '16'">
+        <div>
             <div class="row">
                 <label *ngIf="evitype == '11I' || evitype == '11E'" for="" class="col-lg-2 col-md-4 control-label">เลขที่คืน :</label>
                 <label *ngIf="evitype == '15G' || evitype == '15D' || evitype == '16'" for="" class="col-lg-2 col-md-4 control-label">เลขที่นำออก :</label>
+                <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">เลขที่เก็บเข้าพิพิธภัณฑ์ :</label>
+                <label *ngIf="evitype == '13'" for="" class="col-lg-2 col-md-4 control-label">เลขที่ขาย :</label>
+                <label *ngIf="evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">เลขที่ทำลาย :</label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
                         <input type="text" [(ngModel)]="EvidenceOutCode" name="EvidenceOutCode" class="form-control" readonly>
@@ -935,6 +959,9 @@
 
                 <label *ngIf="evitype == '11I' || evitype == '11E'" for="" class="col-lg-2 col-md-4 control-label">วันที่คืน :</label>
                 <label *ngIf="evitype == '15G' || evitype == '15D' || evitype == '16'" for="" class="col-lg-2 col-md-4 control-label">วันที่นำออก :</label>
+                <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">วันที่จัดเก็บ :</label>
+                <label *ngIf="evitype == '13'" for="" class="col-lg-2 col-md-4 control-label">วันที่ขาย :</label>
+                <label *ngIf="evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">วันที่ทำลาย :</label>
                 <div class="form-group input-group col-lg-4 col-md-7">
                     <div style="width:45%">
                         <my-date-picker-th name="EvidenceOutDate" [(ngModel)]="EvidenceOutDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
@@ -949,6 +976,9 @@
             <div class="row">
                 <label *ngIf="evitype == '11I' || evitype == '11E'" for="" class="col-lg-2 col-md-4 control-label">ผู้คืน :</label>
                 <label *ngIf="evitype == '15G' || evitype == '15D' || evitype == '16'" for="" class="col-lg-2 col-md-4 control-label">ผู้นำออก :</label>
+                <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">ผู้จัดเก็บ :</label>
+                <label *ngIf="evitype == '13'" for="" class="col-lg-2 col-md-4 control-label">ประธานขายของกลาง :</label>
+                <label *ngIf="evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">ประธานทำลายของกลาง :</label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
                     <input type="text" class="form-control" [(ngModel)]="StaffEvidenceName" name="StaffEvidenceName" placeholder="" aria-label="Number"
                         matInput [matAutocomplete]="auto11" (input)="StaffEvidenceonAutoChange($event.target.value)" (focus)="StaffEvidenceonAutoFocus($event.target.value)"
@@ -980,7 +1010,7 @@
         </div>
 
 
-        <!-- จัดเก็บเข้าพิพิธภัณฑ์, ขายทอดตลาด, ทำลายของกลาง -->
+        <!-- จัดเก็บเข้าพิพิธภัณฑ์, ขายทอดตลาด, ทำลายของกลาง
         <div *ngIf="evitype == '12' || evitype == '13' || evitype == '14'">
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6">
@@ -1042,7 +1072,7 @@
                     <input type="text" [(ngModel)]="DeptEvidence" name="DeptEvidence" class="form-control" readonly>
                 </div>
             </div>
-        </div>
+        </div> -->
 
     </div>
 </div>
@@ -1128,7 +1158,7 @@
                     </a>
                 </div>
             </div>
-            <h5 class="text-right mt-3 pr-3">ILG60-11-02-01-00</h5>
+            <h5 class="text-right mt-3 pr-3">ILG60-11-02-02-00</h5>
 
             <div class="modal-body font-14">
                 <div class="card">
