@@ -794,7 +794,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     const printDoc = [...printDocRequestBribe, ...printDocRequestReward];
 
     const dialogRef = this.dialog.open(PrintDialogComponent, {
-      backdrop: 'static'
+      backdrop: 'static', size: 'lg'
     });
     dialogRef.componentInstance.data = printDoc;
     dialogRef.result.then(res => {});

@@ -283,7 +283,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-                this.noticeCode = `LS${(new Date).getTime()}`;
+                this.noticeCode = "NEW"//`LS${(new Date).getTime()}`;
                 this.arrestCode = `TN-${(new Date).getTime()}`;
 
                 this.localEditField = false;
@@ -338,7 +338,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
 
             if (status) {
-                console.log('NoticeCode : ',this.noticeCode)
+
+                console.log('NoticeCode : ', this.noticeCode)
                 await this.navService.setOnSave(false);
 
                 if (!this.noticeForm.valid) {
@@ -347,11 +348,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     return false;
                 }
 
-                if (this.noticeCode == "NEW") {
-                    this.isRequired = true;
-                    this.showSwal("Please check your notice code.", "warning");
-                    return false;
-                }
+                //--
 
                 const sDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDate);
                 const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate);
@@ -372,6 +369,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                 } else if (this.mode === 'R') {
                     this.onReviced();
                 }
+
+                if (this.noticeCode == "NEW") {
+                    this.isRequired = true;
+                    this.showSwal("Please check your notice code.", "warning");
+                    return false;
+                }
+
             }
 
         });
@@ -945,6 +949,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async getTransactionRunning(officeCode: any) {
+        console.log('out of if ')
         this.preloader.setShowPreloader(true);
         await this.transactionRunningService.TransactionRunninggetByCon("ops_notice", officeCode).then(async res => {
             if (res.length > 0) {
@@ -954,7 +959,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     var pad = "00000"
                     var ans = pad.substring(0, pad.length - str.length) + str
                     this.noticeCode = "LS" + officeCode + "" + data.RunningYear + ans;
-
+                    console.log("On getTransactionRunning noticeCode: ", this.noticeCode)
                     this.noticeForm.patchValue({
                         NoticeCode: this.noticeCode
                     });
