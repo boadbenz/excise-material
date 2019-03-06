@@ -171,4 +171,16 @@ export class EvidenceOutService {
       return [];
     }
   }
+
+  async EvidenceOutInTypegetByCon(EvidenceInID: string): Promise<any> {
+    const params = { EvidenceInID };
+    const url = `${appConfig.api8778}/EvidenceOutInTypegetByCon`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) {
+      return [];
+    }
+  }
 }

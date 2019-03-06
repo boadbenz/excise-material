@@ -17,6 +17,7 @@ import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import swal from 'sweetalert2';
 import { pagination } from '../../../config/pagination';
 import { async } from '../../../../../node_modules/@types/q';
+import { EvidenceOutService } from '../../evidenceOut/evidenceOut.service';
 
 
 @Component({
@@ -49,8 +50,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     ListDoc = [];
     rawProductOptions = [];
     Productoptions = [];
-    rawProdbyWarehourseOptions = [];
-    ProdbyWarehourseoptions = [];
+    // rawProdbyWarehourseOptions = [];
+    // ProdbyWarehourseoptions = [];
     rawWarehouseOptions = [];
     Warehouseoptions = [];
 
@@ -123,6 +124,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private MasService: MasterService,
         private preloader: PreloaderService,
         private proveService: ProveService,
+        private EvidenceOutService: EvidenceOutService,
         private router: Router
     ) {
         // set false
@@ -160,8 +162,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             await this.getProve();
         } else if (this.evitype == "E") {
             await this.getMasProduct();
-        } else {
-            //await this.getEvidenceInOutgetByWarehouseID();
+        } else if (this.evitype == "G") {
+            await this.getEvidenceInOutgetByWarehouseID();
         }
 
         if (this.mode == "R") {
@@ -259,7 +261,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 let listProd = this.ListEvidenceInItem.filter(f => f.EvidenceInItemCode == "" || f.ProductDesc == ""
                     || f.DeliveryQty.toString() == "" || f.DamageQty.toString() == "" || f.DeliveryQtyUnit == ""
-                    || f.DeliveryNetVolumn.toString() == "" || f.DamageNetVolumn.toString() == "" || f.DeliveryNetVolumnUnit == ""
+                    || (this.evitype != "G" && (f.DeliveryNetVolumn.toString() == "" || f.DamageNetVolumn.toString() == "" || f.DeliveryNetVolumnUnit == ""))
                 );
 
                 if (this.DeliveryNo == "" || this.DeliveryNo == undefined
@@ -497,12 +499,12 @@ export class ManageComponent implements OnInit, OnDestroy {
                 } else {
                     if (sTemp.length > 0) {
                         this.StaffRecvID = sTemp[0].EvidenceInStaffID;
-                        this.oEviInRecvStaff.EvidenceInStaffID =sTemp[0].EvidenceInStaffID;
+                        this.oEviInRecvStaff.EvidenceInStaffID = sTemp[0].EvidenceInStaffID;
                     }
                 }
 
                 var tWarehouse = this.rawWarehouseOptions.filter(f => f.WarehouseID == this.oEvidenceIn.EvidenceInItem[0].EvidenceStockBalance[0].WarehouseID);
-                this.WarehouseName = tWarehouse[0].WarehouseID;
+                this.WarehouseID = tWarehouse[0].WarehouseID;
                 this.WarehouseName = tWarehouse[0].WarehouseName;
 
                 // -------------- Product -------------------------
@@ -565,12 +567,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.EvidenceInCode = "RC" + this.oEviInRecvStaff.OfficeCode + (this.EvidenceInDate.date.year + 543).toString().substring(4, 2) + "00001";
                         this.oEvidenceIn.EvidenceInCode = this.EvidenceInCode;
 
-                        if (this.evitype == "E") {
-                            await this.InsEvidenceInExternal();
-                        }
-                        else if (this.evitype == "G") {
-                            await this.InsEvidenceInGovernment();
-                        }
+                        await this.InsEvidenceInExternal();
+
+                        // if (this.evitype == "E") {
+                        //     await this.InsEvidenceInExternal();
+                        // }
+                        // else if (this.evitype == "G") {
+                        //     await this.InsEvidenceInGovernment();
+                        // }
 
                     }
                 }, (error) => { console.error(error); return false; });
@@ -584,12 +588,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.EvidenceInCode = "RC" + this.oEviInRecvStaff.OfficeCode + (this.EvidenceInDate.date.year + 543).toString().substring(4, 2) + RunningNo;
                         this.oEvidenceIn.EvidenceInCode = this.EvidenceInCode;
 
-                        if (this.evitype == "E") {
-                            await this.InsEvidenceInExternal();
-                        }
-                        else if (this.evitype == "G") {
-                            await this.InsEvidenceInGovernment();
-                        }
+                        await this.InsEvidenceInExternal();
+
+                        // if (this.evitype == "E") {
+                        //     await this.InsEvidenceInExternal();
+                        // }
+                        // else if (this.evitype == "G") {
+                        //     await this.InsEvidenceInGovernment();
+                        // }
                     }
                 }, (error) => { console.error(error); return false; });
             }
@@ -618,6 +624,15 @@ export class ManageComponent implements OnInit, OnDestroy {
                     });
                 }
 
+                // กรณีรับเข้าของกลางที่นำออกไปใช้ในราชการ
+                if(this.evitype == "G"){
+                    await this.EviService.EvidenceInOutItemupdIsReturn(this.ListEvidenceInItem).then(async pRes => {
+                        if (!pRes.IsSuccess) {
+                            isSuccess = pRes.IsSuccess;
+                        }
+                    }, (error) => { console.error(error); });
+                }
+
                 if (isSuccess) {
                     this.ShowAlertSuccess(Message.saveComplete);
                     this.onComplete();
@@ -633,23 +648,74 @@ export class ManageComponent implements OnInit, OnDestroy {
         }, (error) => { console.error(error); return false; });
     }
 
-    InsEvidenceInGovernment() {
+    // async InsEvidenceInGovernment() {
+    //     var isSuccess = true;
 
-    }
+    //     await this.EviService.EvidenceInOutItemupdIsReturn(this.ListEvidenceInItem).then(async pRes => {
+    //         if (!pRes.IsSuccess) {
+    //             isSuccess = pRes.IsSuccess;
+    //         }
+    //     }, (error) => { console.error(error); });
+
+    //     await this.ListEvidenceInItem.map(async f => {
+    //         f.EvidenceStockBalance.map(async m => {
+    //             let stock = {
+    //                 "StockID": m.StockID,
+    //                 "BalanceQty": +m.BalanceQty + +f.ReceiveQty,
+    //             }
+
+    //             await this.EvidenceOutService.EvidenceOutStockBalanceupdByCon(stock).then(async pRes => {
+    //                 if (!pRes.IsSuccess) {
+    //                     isSuccess = pRes.IsSuccess;
+    //                 }
+    //             }, (error) => { console.error(error); });
+    //         })
+
+    //         f.EvidenceStockBalance = [];
+    //     })
+
+    //     await this.EviService.EvidenceIninsAll(this.oEvidenceIn).then(async item => {
+    //         if (item.IsSuccess) {
+    //             this.EvidenceInID = item.EvidenceInID;
+    //             this.oEvidenceIn.EvidenceInID = item.EvidenceInID;
+
+    //             if (this.ListDoc.length > 0) {
+    //                 this.ListDoc.map(async item => {
+    //                     item.ReferenceCode = this.EvidenceInID;
+
+    //                     await this.proveService.MasDocumentMaininsAll(item).then(IsSuccess => {
+    //                         if (!IsSuccess) {
+    //                             isSuccess = IsSuccess;
+    //                             return false;
+    //                         }
+    //                     }, (error) => { isSuccess = false; console.error(error); return false; });
+    //                 });
+    //             }
+
+    //             if (isSuccess) {
+    //                 this.ShowAlertSuccess(Message.saveComplete);
+    //                 this.onComplete();
+    //                 this.WarehouseID = "1";
+    //                 await this.ShowEvidenceIn();
+
+    //                 this.preloader.setShowPreloader(false);
+    //                 this.router.navigate([`/evidenceIn/manage/${this.evitype}/R/${this.EvidenceInID}/${this.ProveID}`]);
+    //             }
+    //         } else {
+    //             this.ShowAlertError(Message.saveFail);
+    //         }
+    //     }, (error) => { console.error(error); return false; });
+    // }
 
     async onUdpEvidenceIn() {
         this.preloader.setShowPreloader(true);
 
         await this.setData();
 
-        if (this.evitype == "E" || this.evitype == "I") {
-            if (this.EvidenceInCode == "Auto Generate") {
-                await this.TransactionRunningForIns();
-            }
-            await this.UpdEvidenceInExternal();
-        } else if (this.evitype == "G") {
-            await this.UpdEvidenceInGovernment()
+        if (this.EvidenceInCode == "Auto Generate") {
+            await this.TransactionRunningForIns();
         }
+        await this.UpdEvidenceInExternal();
     }
 
     async UpdEvidenceInExternal() {
@@ -751,6 +817,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (isSuccess) {
             this.ShowAlertSuccess(Message.saveComplete);
             this.onComplete();
+            await this.ShowEvidenceIn();
             this.preloader.setShowPreloader(false);
         } else {
             this.ShowAlertError(Message.saveFail);
@@ -859,7 +926,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             item.DamageNetVolumnUnit = item.DeliveryNetVolumnUnit;
 
             var tStockID = "";
-            if(item.EvidenceStockBalance.length > 0){
+            if (item.EvidenceStockBalance.length > 0) {
                 tStockID = item.EvidenceStockBalance[0].StockID;
             }
 
@@ -887,7 +954,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             item.EvidenceStockBalance.push(this.oStockBalance);
         });
 
-        await this.generateItemCode();
+        if (this.evitype != "G") {
+            await this.generateItemCode();
+        }
+
 
         this.oEvidenceIn.EvidenceInItem = this.ListEvidenceInItem;
         this.oEvidenceIn.EvidenceInStaff = [];
@@ -1151,7 +1221,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     WarehouseOnAutoSelecteWord(event) {
         this.WarehouseID = event.WarehouseID;
 
-        if(this.evitype == "G"){
+        if (this.evitype == "G") {
             this.getEvidenceInOutgetByWarehouseID();
         }
     }
@@ -1323,6 +1393,12 @@ export class ManageComponent implements OnInit, OnDestroy {
             EvidenceStockBalance: []
         };
         this.ListEvidenceInItem.push(this.oEvidenceInItem);
+
+        if (this.evitype == 'G') {
+            this.ListEvidenceInItem.map(f => {
+                f.EvidenceInItemCode = "";
+            })
+        }
     }
 
     async getMasProduct() {
@@ -1362,13 +1438,14 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         let IsNewItem = this.ListEvidenceInItem[aIndex].IsNewItem;
         let IsDelItem = this.ListEvidenceInItem[aIndex].IsDelItem;
+        let ItemID = this.ListEvidenceInItem[aIndex].EvidenceInItemID;
         let ItemCode = this.ListEvidenceInItem[aIndex].EvidenceInItemCode;
         let EviInID = this.ListEvidenceInItem[aIndex].EvidenceInID;
-        let ItemID = this.ListEvidenceInItem[aIndex].EvidenceInItemID;
 
         this.ListEvidenceInItem[aIndex] = {
             EvidenceInItemID: ItemID,
             EvidenceInItemCode: ItemCode,
+            EvidenceOutItemID: "",
             ProductSeq: aIndex,
             EvidenceInID: EviInID,
             GroupCode: event.GroupCode,
@@ -1404,6 +1481,25 @@ export class ManageComponent implements OnInit, OnDestroy {
             IsNewItem: IsNewItem,
             IsDelItem: IsDelItem,
             EvidenceStockBalance: []
+        }
+
+        if (this.evitype == "G") {
+            this.ListEvidenceInItem[aIndex].EvidenceInItemCode = event.EvidenceInItemCode;
+            this.ListEvidenceInItem[aIndex].DeliveryQty = event.DeliveryQty;
+            this.ListEvidenceInItem[aIndex].DeliveryQtyUnit = event.DeliveryQtyUnit;
+            this.ListEvidenceInItem[aIndex].ReceiveQty = event.DeliveryQty;
+            this.ListEvidenceInItem[aIndex].DamageQtyUnit = event.DeliveryQty;
+            this.ListEvidenceInItem[aIndex].EvidenceOutItemID = event.EvidenceOutItemID;
+
+            this.oStockBalance = {
+                StockID: event.StockID,
+                WarehouseID: this.WarehouseID,
+                EvidenceInItemID: event.EvidenceOutItemID,
+                BalanceQty: event.BalanceQty
+            }
+
+            this.ListEvidenceInItem[aIndex].EvidenceStockBalance = [];
+            this.ListEvidenceInItem[aIndex].EvidenceStockBalance.push(this.oStockBalance);
         }
     }
 
@@ -1511,19 +1607,73 @@ export class ManageComponent implements OnInit, OnDestroy {
         })
     }
 
+
     // **********************************************
     // ------------ Product by Warehourse -----------
     // **********************************************
 
-    async getEvidenceInOutgetByWarehouseID() {
+    getEvidenceInOutgetByWarehouseID() {
         this.preloader.setShowPreloader(true);
-        await this.EviService.getEvidenceInOutgetByWarehouseID(this.WarehouseID).then(async res => {
+        this.EviService.getEvidenceInOutgetByWarehouseID(this.WarehouseID).then(async res => {
             this.preloader.setShowPreloader(false);
             if (res) {
-                this.rawProdbyWarehourseOptions = res;
+                this.rawProductOptions = [];
+
+                res.map(f => {
+                    f.EvidenceInOutItem.map(p => {
+
+                        let lsProd = {
+                            BrandCode: p.BrandCode,
+                            BrandNameEN: p.BrandNameEN,
+                            BrandNameTH: p.BrandNameTH,
+                            CarNo: p.CarNo,
+                            Degree: p.Degree,
+                            DegreeCode: p.DegreeCode,
+                            EvidenceInID: p.EvidenceInID,
+                            EvidenceInItemCode: p.EvidenceInItemCode,
+                            EvidenceInItemID: p.EvidenceInItemID,
+                            EvidenceOutID: p.EvidenceOutID,
+                            EvidenceOutItemID: p.EvidenceOutItemID,
+                            FixNo1: p.FixNo1,
+                            FixNo2: p.FixNo2,
+                            GroupCode: p.GroupCode,
+                            IsDomestic: p.IsDomestic,
+                            ModelCode: p.ModelCode,
+                            ModelName: p.ModelName,
+                            ProductCode: p.ProductCode,
+                            ProductDesc: p.ProductDesc,
+                            Size: p.Size,
+                            SizeUnit: p.SizeUnit,
+                            StockID: p.StockID,
+                            SubBrandCode: p.SubBrandCode,
+                            SubBrandNameEN: p.SubBrandNameEN,
+                            SubBrandNameTH: p.SubBrandNameTH,
+                            DeliveryQty: p.Qty,
+                            DeliveryQtyUnit: p.QtyUnit
+                        };
+
+                        this.rawProductOptions.push(lsProd);
+                    })
+                })
             }
         }, (err: HttpErrorResponse) => {
             this.ShowAlertError("พบปัญหาในการติดต่อ Server");
         });
+    }
+
+    // ******************************************
+    // ------------ EvidenceInItemCode ----------
+    // ******************************************
+    EviItemCodeonAutoChange(value: string, i: number) {
+        if (value == '') {
+            this.Productoptions = [];
+            this.ClearProduct(i);
+        } else {
+            if (this.rawProductOptions.length == 0) {
+                this.getEvidenceInOutgetByWarehouseID();
+            }
+
+            this.Productoptions = this.rawProductOptions.filter(f => f.EvidenceInItemCode.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
+        }
     }
 }

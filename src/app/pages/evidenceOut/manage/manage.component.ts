@@ -22,6 +22,7 @@ import swal from 'sweetalert2';
 import { IncomeService } from '../../income/income.service';
 import { ProveService } from '../../prove/prove.service';
 import { MasterService } from '../../model/master.service';
+import { Evidence_In, EvidenceInStaff, EvidenceStockBalance, EvidenceInItem } from '../../evidenceIn/evidenceIn';
 
 @Component({
     selector: 'app-manage',
@@ -30,7 +31,7 @@ import { MasterService } from '../../model/master.service';
 export class ManageComponent implements OnInit, OnDestroy {
     private sub: any;
     private onSaveSubscribe: any;
-    //private onEditSubscribe: any;
+    private onEditSubscribe: any;
     private onDeleSubscribe: any;
     private onPrintSubscribe: any;
     private onNextPageSubscribe: any;
@@ -40,6 +41,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     modal: any;
     evitype: any;
     showEditField: any;
+    showEditByEvidencIn: any;
     paginage = pagination;
     isRequired: boolean | false;
 
@@ -74,8 +76,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     ArrestCode: string;         // เลขที่ใบงาน
     Lawsuit: string;            // เลขที่คดี, หน่วยงาน
     Remark: string;             // เหตุผลในการนำออก
-    WarehouseID: string;        // รหัสคลังปลายทาง กรณีโอนย้ายของกลาง
-    WarehouseName: string;      // ชื่อคลังปลายทาง กรณีโอนย้ายของกลาง
+    WarehouseID: string;        // รหัสคลังต้นทาง กรณีโอนย้ายของกลาง
+    WarehouseName: string;      // ชื่อคลังต้นทาง กรณีโอนย้ายของกลาง
+    WarehouseDestID: string;        // รหัสคลังปลายทาง กรณีโอนย้ายของกลาง
+    WarehouseDestName: string;      // ชื่อคลังปลายทาง กรณีโอนย้ายของกลาง
+    OfficeDestCode: string;     // รหัสหน่วยงานปลายทาง กรณีโอนย้ายของกลาง
+    OfficeDestName: string;
     ApproveNo: string;          // เลขที่หนังสืออนุมัติ กรณีโอนย้ายของกลาง
     EvidenceOutCode: string;    // เลขที่จำหน่ายของกลาง / เลขที่คืน / เลขที่นำออก
     EvidenceOutDate: any;       // วันที่จำหน่าย
@@ -85,6 +91,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     EvidenceInType: string;     // ประเภทการตรวจรับ
     Textsearch: string;
     EviCode: string;
+    EvidenceInID: string;       // รหัสการตรวจรับของกลาง กรณีโอนย้าย
 
 
     StaffRequestID: string;     // รหัสผู้ขอ / ผู้เสนอ
@@ -98,6 +105,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     rawStaffOptions = [];       // ผู้ขอ / ผู้เสนอ
     rawWarehouseOptions = [];   // Warehouse
     Warehouseoptions = [];
+    rawWarehouseDestOptions = [];
+    WarehouseDestoptions = [];
     ListDoc = [];
     ListEvidenceOutItem = [];   // List Product EvidenceOut
     UnitOption = [];            // unit
@@ -105,6 +114,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     Productoptions = [];
     rawProductList = [];
     ProductList = [];
+    rawStationOptions = [];
+    StationOptions = [];
+
 
     oEviOutStaffRequest: EvidenceOutStaff;
     oEviOutStaffApprove: EvidenceOutStaff;
@@ -113,6 +125,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     oEvidenceOutItem: EvidenceOutItem;
     oEvidenceOut: EvidenceOut;
     oStockBalance: EvidenceOutStockBalance;
+    oEvidenceIn: Evidence_In;
+    oEviInStaff: EvidenceInStaff;
+    oEviInRecvStaff: EvidenceInStaff;
+    oEvidenceInItem: EvidenceInItem;
+    oEvidenceStockBalance: EvidenceStockBalance;
     oDocument: Document;
 
     // ----- Model ------ //
@@ -145,6 +162,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navigate_Service();
         await this.getEvidenceOutStaff();
         await this.getUnit();
+        await this.getStation();
 
         this.EvidenceOutNoDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
         this.ReturnDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
@@ -160,10 +178,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.EvidenceOutCode = "Auto Generate";
         this.WarehouseID = "";
         this.DestinationCode = localStorage.getItem("officeCode");
+        this.showEditByEvidencIn = false;
+
         await this.getWarehouse();
 
-        if (this.mode == "R") {
+        if (this.mode == "R") {          
             await this.ShowEvidenceOut();
+            await this.getProduct();
         } else {
             this.preloader.setShowPreloader(false);
         }
@@ -171,7 +192,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.onCancelSubscribe.unsubscribe();
-        // this.onEditSubscribe.unsubscribe();
+        //this.onEditSubscribe.unsubscribe();
         this.onSaveSubscribe.unsubscribe();
         this.onDeleSubscribe.unsubscribe();
         this.onPrintSubscribe.unsubscribe();
@@ -351,7 +372,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                         if (this.ApproveNo == "" || this.ApproveNo == undefined
                             || this.StaffApproveName == "" || this.StaffApproveName == undefined
                             || this.ApproveDate == null || this.ApproveDate == undefined
-                            || this.ApproveTime == null || this.ApproveTime == undefined) {
+                            || this.ApproveTime == null || this.ApproveTime == undefined
+                            || this.OfficeDestName == "" || this.OfficeDestName == undefined
+                            || this.WarehouseDestName == "" || this.WarehouseDestName == undefined) {
                             flgValidate = true;
                         }
                         break;
@@ -364,7 +387,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     || this.EvidenceOutNoTime == "" || this.EvidenceOutNoTime == undefined
                     || (this.evitype != '11I' && (this.StaffRequestName == "" || this.StaffRequestName == undefined))
                     || this.WarehouseID == "" || this.WarehouseID == "0" || this.WarehouseID == undefined
-                    || flgValidate || listProd.length > 0) {
+                    || flgValidate || listProd.length > 0 || this.ListEvidenceOutItem.length == 0) {
                     this.isRequired = true;
                     this.ShowAlertWarning(Message.checkData);
 
@@ -424,10 +447,22 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
             if (status) {
+                if (this.evitype == "16" && this.oEvidenceIn.IsReceive == "1") {
+                    this.ShowAlertWarning("ไม่อนุญาตให้ทำการลบข้อมูลการโอนย้าย เนื่องจากของกลางถูกรตรวจรับของกลางแล้ว !!!");
+                    return false;
+                }
+
                 await this.navService.setOnDelete(false);
                 this.onDelete();
             }
         });
+
+        // this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
+        //     if (this.evitype == "16" && this.oEvidenceIn.IsReceive == "1") {
+        //         this.ShowAlertWarning("ไม่อนุญาตให้ทำการแก้ไขข้อมูลการโอนย้าย เนื่องจากของกลางถูกรตรวจรับของกลางแล้ว !!!");
+        //         this.onComplete();
+        //     }
+        // })
     }
 
     LoadDataFromLocalStorage() {
@@ -515,34 +550,34 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.DeptEvidence = localStorage.getItem("officeShortName");
         this.DeptCodeEvidence = localStorage.getItem("officeCode");
 
-         // ----- ผู้บริจาค -----
-         /*
-         this.oEviOutStaffReceive = {
-            EvidenceOutStaffID: "",
-            EvidenceOutID: "",
-            StaffCode: localStorage.getItem("staffCode"),
-            TitleName: tempUser[0].TitleName,
-            FirstName: tempUser[0].FirstName,
-            LastName: tempUser[0].LastName,
-            PositionCode: tempUser[0].OperationPosCode,
-            PositionName: localStorage.getItem("operationPosName"),
-            PosLevel: tempUser[0].PosLevel,
-            PosLevelName: tempUser[0].PosLevelName,
-            DepartmentCode: tempUser[0].OperationDeptCode,
-            DepartmentName: tempUser[0].OperationDeptName,
-            DepartmentLevel: tempUser[0].DeptLevel,
-            OfficeCode: localStorage.getItem("officeCode"),
-            OfficeName: tempUser[0].OfficeName,
-            OfficeShortName: localStorage.getItem("officeShortName"),
-            ContributorID: "45",
-            IsActive: "1"
-        }
+        // ----- ผู้บริจาค -----
+        /*
+        this.oEviOutStaffReceive = {
+           EvidenceOutStaffID: "",
+           EvidenceOutID: "",
+           StaffCode: localStorage.getItem("staffCode"),
+           TitleName: tempUser[0].TitleName,
+           FirstName: tempUser[0].FirstName,
+           LastName: tempUser[0].LastName,
+           PositionCode: tempUser[0].OperationPosCode,
+           PositionName: localStorage.getItem("operationPosName"),
+           PosLevel: tempUser[0].PosLevel,
+           PosLevelName: tempUser[0].PosLevelName,
+           DepartmentCode: tempUser[0].OperationDeptCode,
+           DepartmentName: tempUser[0].OperationDeptName,
+           DepartmentLevel: tempUser[0].DeptLevel,
+           OfficeCode: localStorage.getItem("officeCode"),
+           OfficeName: tempUser[0].OfficeName,
+           OfficeShortName: localStorage.getItem("officeShortName"),
+           ContributorID: "45",
+           IsActive: "1"
+       }
 
-        this.StaffReceiverName = localStorage.getItem("fullName");
-        this.PosReceiver = localStorage.getItem("operationPosName");
-        this.DeptReceiver = localStorage.getItem("officeShortName");
-        this.DeptCodeReceiver = localStorage.getItem("officeCode");
-        */      
+       this.StaffReceiverName = localStorage.getItem("fullName");
+       this.PosReceiver = localStorage.getItem("operationPosName");
+       this.DeptReceiver = localStorage.getItem("officeShortName");
+       this.DeptCodeReceiver = localStorage.getItem("officeCode");
+       */
     }
 
     ShowEvidenceOut() {
@@ -564,11 +599,39 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.PayTime = res.PayTime;
                 this.ApproveDate = setDateMyDatepicker(new Date(res.ApproveDate));
                 this.ApproveTime = res.ApproveTime;
+                this.OfficeDestCode = res.OfficeCode;
+                this.WarehouseDestID = res.WarehouseID;
+                this.EvidenceInID = res.EvidenceInID;
                 if (res.ReturnDate == null || res.ReturnDate == '') { this.ReturnDate = ""; } else { this.ReturnDate = setDateMyDatepicker(new Date(res.ReturnDate)) }
                 this.Remark = `${res.Remark == 'null' || res.Remark == null ? '' : res.Remark}`;
-                this.ApproveNo = res.ApproveNo
+                this.ApproveNo = res.ApproveNo;
 
+                let tWarehouse;
 
+                if(this.evitype == "16"){
+                    this.EviService.getByCon(this.EvidenceInID, "").then(async resIn => {
+                        if (resIn != null && resIn.IsSuccess != "False") {
+                            this.oEvidenceIn = resIn[0];
+
+                            var OfficeTemp = this.rawStationOptions.filter(f => f.OfficeCode === this.OfficeDestCode);                            
+                            this.OfficeDestName = OfficeTemp[0].OfficeName;
+                            await this.getWarehouseDest();
+
+                            tWarehouse = this.rawWarehouseDestOptions.filter(f => f.WarehouseID === this.WarehouseDestID);
+                            this.WarehouseDestName = tWarehouse[0].WarehouseName;
+
+                            if(this.oEvidenceIn.IsReceive == "1"){
+                                this.showEditByEvidencIn = true;
+                            } else {
+                                this.showEditByEvidencIn = false;
+                            }
+                        }
+                    }, (err: HttpErrorResponse) => {
+                        this.ShowAlertError("API EvidenceIngetByCon :: " + err.message);
+                    });
+                }
+                
+                
                 var sTemp = res.EvidenceOutStaff.filter(f => f.ContributorID == "39");
                 if (sTemp.length > 0) {
                     this.StaffRequestName = `${sTemp[0].TitleName == 'null' || sTemp[0].TitleName == null ? '' : sTemp[0].TitleName}`
@@ -633,14 +696,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // -------------- Product -------------------------
                 let t = 0;
                 this.oEvidenceOut.EvidenceOutItem.map(item => {
-                    //let oInItem = res.EvidenceOutItem.filter(f => f.EvidenceOutItemID == item.EvidenceOutItemID)[0].EvidenceOutStockBalance[0].EvidenceInItem[0];
-                    //item.EvidenceOutStockBalance = res.EvidenceOutItem.filter(f => f.EvidenceOutItemID == item.EvidenceOutItemID)[0].EvidenceStock;
-                    //item.EvidenceInItemCode = oInItem.EvidenceInItemCode;
+                    let oInItem = res.EvidenceOutItem.filter(f => f.EvidenceOutItemID == item.EvidenceOutItemID)[0].EvidenceOutStockBalance[0].EvidenceOutInItem;
+                    item.EvidenceInItemCode = oInItem.EvidenceInItemCode;
                     item.InitBalanceQty = item.EvidenceOutStockBalance[0].BalanceQty + item.Qty;
                     item.BalanceQtyUnit = item.EvidenceOutStockBalance[0].BalanceQtyUnit;
                     item.BalanceQty = item.EvidenceOutStockBalance[0].BalanceQty;
-                    //item.ProductDesc = oInItem.ProductDesc
-
+                    item.ProductDesc = oInItem.ProductDesc;
+                    item.DeliveryNo = oInItem.DeliveryNo;
                     item.Qty = item.Qty;
                     item.IsNewItem = false;
                     item.IsDelItem = false;
@@ -653,8 +715,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     t += 1;
                 });
 
-                var tWarehouse = this.rawWarehouseOptions.filter(f => f.WarehouseID == this.oEvidenceOut.EvidenceOutItem[0].EvidenceOutStockBalance[0].WarehouseID);
-                this.WarehouseName = tWarehouse[0].WarehouseID;
+                tWarehouse = this.rawWarehouseOptions.filter(f => f.WarehouseID == this.oEvidenceOut.EvidenceOutItem[0].EvidenceOutStockBalance[0].WarehouseID);
                 this.WarehouseName = tWarehouse[0].WarehouseName;
 
                 // -------------- Document -------------------------
@@ -696,6 +757,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(true);
 
         await this.setData();
+
+        if (this.evitype == "16") {
+            this.oEvidenceOut.EvidenceInID = this.EvidenceInID;
+        }
 
         // -----------------------------------------------------------
         //                       Call API Update
@@ -758,12 +823,45 @@ export class ManageComponent implements OnInit, OnDestroy {
         // -----------------------------------------------------------
         //                          Evidenct In
         // -----------------------------------------------------------
+        if (this.evitype == "16") {
+            // New Product
+            await this.EviService.EvidenceInIteminsAll(this.oEvidenceIn.EvidenceInItem.filter(item => item.IsNewItem === true)).then(pRes => {
+                if (!pRes.IsSuccess) {
+                    isSuccess = pRes.IsSuccess;
+                }
+            }, (error) => { console.error(error); });
+
+            // Edit Product
+            await this.EviService.EvidenceInItemupdByCon(this.oEvidenceIn.EvidenceInItem.filter(item => item.IsNewItem === false)).then(pRes => {
+                if (!pRes.IsSuccess) {
+                    isSuccess = pRes.IsSuccess;
+                }
+            }, (error) => { console.error(error); });
+
+
+            // Del Product    
+            await this.EviService.EvidenceInItemupdDelete(this.oEvidenceIn.EvidenceInItem.filter(item => item.IsDelItem === true)).then(pRes => {
+                if (!pRes.IsSuccess) {
+                    isSuccess = pRes.IsSuccess;
+                }
+            }, (error) => { console.error(error); });
+
+            this.oEvidenceIn.EvidenceInItem = [];
+
+            await this.EviService.EvidenceInupdByCon(this.oEvidenceIn).then(async IsSuccess => {
+                if (!IsSuccess) {
+                    isSuccess = IsSuccess;
+                }
+            }, (error) => { isSuccess = false; console.error(error); });
+        }
+
         this.oEvidenceOut.EvidenceOutItem = [];
 
         await this.EvidenceOutService.EvidenceOutupdByCon(this.oEvidenceOut).then(async IsSuccess => {
             if (!IsSuccess) {
                 isSuccess = IsSuccess;
             }
+
         }, (error) => { isSuccess = false; console.error(error); });
 
         // -----------------------------------------------------------
@@ -810,6 +908,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (isSuccess) {
             this.ShowAlertSuccess(Message.saveComplete);
             this.onComplete();
+            await this.ShowEvidenceOut();
             this.preloader.setShowPreloader(false);
         } else {
             this.ShowAlertError(Message.saveFail);
@@ -847,6 +946,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.EvidenceOutService.EvidenceOutupdDelete(this.EvidenceOutID).then(async rt => {
                     if (!rt.IsSuccess) {
                         isSuccess = rt.IsSuccess;
+                    }else {
+                        if(this.evitype == "16"){
+                            this.EviService.EvidenceInupdDelete(this.oEvidenceIn.EvidenceInID).then(async IsSuccess => {
+                                if (!IsSuccess) {
+                                    isSuccess = IsSuccess;
+                                }
+                            }, (error) => { console.error(error); return false; });
+                        }
                     }
                 }, (error) => { console.error(error); });
 
@@ -880,7 +987,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             ApproveTime: this.ApproveTime,
             ReturnDate: this.ConvertDateYYYYmmdd(this.ReturnDate.date),
             Remark: this.Remark,
-            WarehouseID: this.WarehouseID,
+            WarehouseID: this.WarehouseDestID,
+            OfficeCode: this.OfficeDestCode,
             ApproveNo: this.ApproveNo,
             IsActive: "1",
             EvidenceOutItem: [],
@@ -935,9 +1043,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.oEvidenceOut.EvidenceOutStaff.push(this.oEviOutStaffEvidence);
         }
 
-         // ผู้บริจาค
-         if (this.evitype == "15D")
-         {
+        // ผู้บริจาค
+        if (this.evitype == "15D") {
             this.oEviOutStaffReceive = {
                 EvidenceOutStaffID: this.StaffReceiveID,
                 EvidenceOutID: this.EvidenceOutID,
@@ -949,13 +1056,132 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
 
             this.oEvidenceOut.EvidenceOutStaff.push(this.oEviOutStaffReceive);
-         }
+        }
+
+        // Module โอนย้าย
+        if (this.evitype == "16") {
+            // ****************************************************
+            // -------------- Set Data for EvidenceIn -------------
+            // ****************************************************
+            if (this.mode == "C") {
+                this.oEvidenceIn = {
+                    EvidenceInID: "",
+                    EvidenceInCode: "",
+                    ProveID: "",
+                    DeliveryNo: this.EvidenceOutNo,
+                    DeliveryDate: this.ConvertDateYYYYmmddEvidenceIn(this.EvidenceOutNoDate.date),
+                    EvidenceInType: "0",
+                    IsActive: 1,
+                    IsEdit: 1,
+                    EvidenceInStaff: [],
+                    EvidenceInItem: []
+                }
+
+                await this.setStaffOfEvidenceIn();
+
+                for (let i = 0; i < this.ListEvidenceOutItem.length; i++) {
+                    this.oEvidenceStockBalance = {
+                        WarehouseID: this.WarehouseDestID,
+                        EvidenceInItemID: "",
+                        ReceiveQty: this.ListEvidenceOutItem[i].Qty,
+                        ReceiveQtyUnit: this.ListEvidenceOutItem[i].QtyUnit,
+                        // ReceiveSize: "",
+                        // ReceiveSizeUnit: "",
+                        // ReceiveNetVolumn: "",
+                        // ReceiveNetVolumnUnit: "",
+                        BalanceQty: this.ListEvidenceOutItem[i].Qty,
+                        BalanceQtyUnit: this.ListEvidenceOutItem[i].QtyUnit,
+                        // BalanceSize: "",
+                        // BalanceSizeUnit: "",
+                        // BalanceNetVolumn: "",
+                        // BalanceNetVolumnUnit: "",
+                        IsFinish: "2",
+                        IsReceive: "0"
+                    }
+
+                    this.oEvidenceInItem = {
+                        EvidenceInItemID: "",
+                        EvidenceInItemCode: "Auto Generate",
+                        ProductSeq: i,
+                        EvidenceInID: "",
+                        GroupCode: this.ListEvidenceOutItem[i].GroupCode,
+                        IsDomestic: this.ListEvidenceOutItem[i].IsDomestic,
+                        ProductCode: this.ListEvidenceOutItem[i].ProductCode,
+                        BrandCode: this.ListEvidenceOutItem[i].BrandCode,
+                        BrandNameTH: this.ListEvidenceOutItem[i].BrandNameTH,
+                        BrandNameEN: this.ListEvidenceOutItem[i].BrandNameEN,
+                        SubBrandCode: this.ListEvidenceOutItem[i].SubBrandCode,
+                        SubBrandNameTH: this.ListEvidenceOutItem[i].SubBrandNameTH,
+                        SubBrandNameEN: this.ListEvidenceOutItem[i].SubBrandNameEN,
+                        ModelCode: this.ListEvidenceOutItem[i].ModelCode,
+                        ModelName: this.ListEvidenceOutItem[i].ModelName,
+                        FixNo1: this.ListEvidenceOutItem[i].FixNo1,
+                        FixNo2: this.ListEvidenceOutItem[i].FixNo2,
+                        SequenceNo: this.ListEvidenceOutItem[i].SequenceNo,
+                        ProductDesc: this.ListEvidenceOutItem[i].ProductDesc,
+                        DeliveryQty: this.ListEvidenceOutItem[i].Qty,
+                        DeliveryQtyUnit: this.ListEvidenceOutItem[i].QtyUnit,
+                        DeliverySize: this.ListEvidenceOutItem[i].Size,
+                        DeliverySizeUnit: this.ListEvidenceOutItem[i].SizeUnitCode,
+                        DeliveryNetVolumn: this.ListEvidenceOutItem[i].NetVolumeBalance,
+                        DeliveryNetVolumnUnit: this.ListEvidenceOutItem[i].NetVolumeBalanceUnit,
+                        DamageQty: "",
+                        DamageQtyUnit: "",
+                        DamageSize: this.ListEvidenceOutItem[i].Size,
+                        DamageSizeUnit: this.ListEvidenceOutItem[i].SizeUnitCode,
+                        DamageNetVolumn: "",
+                        DamageNetVolumnUnit: "",
+                        IsActive: "1",
+                        EvidenceStockBalance: []
+                    }
+
+                    this.oEvidenceInItem.EvidenceStockBalance.push(this.oEvidenceStockBalance);
+                    this.oEvidenceIn.EvidenceInItem.push(this.oEvidenceInItem);
+                }
+            } else {
+                for (let i = 0; i < this.ListEvidenceOutItem.length; i++) {
+                    this.oEvidenceIn.EvidenceInItem[i].DeliveryQty = this.ListEvidenceOutItem[i].Qty;
+                    this.oEvidenceIn.EvidenceInItem[i].DeliveryQtyUnit = this.ListEvidenceOutItem[i].QtyUnit;
+                    // this.oEvidenceIn.EvidenceInItem[i].DeliveryNetVolumn = this.ListEvidenceOutItem[i].NetVolumeBalance;
+                    // this.oEvidenceIn.EvidenceInItem[i].DeliveryNetVolumnUnit = this.ListEvidenceOutItem[i].NetVolumeBalanceUnit;
+
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].ReceiveQty = this.ListEvidenceOutItem[i].Qty;
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].ReceiveQtyUnit = this.ListEvidenceOutItem[i].QtyUnit;
+                    // this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].ReceiveNetVolumn = this.ListEvidenceOutItem[i].NetVolumeBalance;
+                    // this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].ReceiveNetVolumnUnit = this.ListEvidenceOutItem[i].NetVolumeBalanceUnit;
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].BalanceQty = this.ListEvidenceOutItem[i].Qty;
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].BalanceQtyUnit = this.ListEvidenceOutItem[i].QtyUnit;
+                    // this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].BalanceNetVolumn = this.ListEvidenceOutItem[i].NetVolumeBalance;
+                    // this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].BalanceNetVolumnUnit = this.ListEvidenceOutItem[i].NetVolumeBalanceUnit;
+                    this.oEvidenceIn.EvidenceInItem[i].EvidenceStockBalance[0].WarehouseID = this.WarehouseDestID;
+                    this.oEvidenceIn.EvidenceInItem[i].IsNewItem = this.ListEvidenceOutItem[i].IsNewItem;
+                    this.oEvidenceIn.EvidenceInItem[i].IsDelItem = this.ListEvidenceOutItem[i].IsDelItem;
+                }
+
+                this.oEvidenceIn.EvidenceInStaff.filter(f => f.ContributorID == "13").map(m => {
+                    m.StaffCode = this.oEviOutStaffRequest.StaffCode,
+                        m.TitleName = this.oEviOutStaffRequest.TitleName,
+                        m.FirstName = this.oEviOutStaffRequest.FirstName,
+                        m.LastName = this.oEviOutStaffRequest.LastName,
+                        m.PositionCode = this.oEviOutStaffRequest.PositionCode,
+                        m.PositionName = this.oEviOutStaffRequest.PositionName,
+                        m.PosLevel = this.oEviOutStaffRequest.PosLevel,
+                        m.PosLevelName = this.oEviOutStaffRequest.PosLevelName,
+                        m.DepartmentCode = this.oEviOutStaffRequest.DepartmentCode,
+                        m.DepartmentName = this.oEviOutStaffRequest.DepartmentName,
+                        m.DepartmentLevel = this.oEviOutStaffRequest.DepartmentLevel,
+                        m.OfficeCode = this.oEviOutStaffRequest.OfficeCode,
+                        m.OfficeName = this.oEviOutStaffRequest.OfficeName,
+                        m.OfficeShortName = this.oEviOutStaffRequest.OfficeShortName
+                })
+            }
+        }
     }
 
     async TransactionRunningForIns() {
         await this.RevService.TransactionRunninggetByCon("ops_evidence_out", this.DeptCodeEvidence).then(async item => {
             if (item.length == 0) {
-                this.RevService.TransactionRunninginsAll(this.DeptCodeEvidence, "ops_evidence_in", "RC").then(async res => {
+                this.RevService.TransactionRunninginsAll(this.DeptCodeEvidence, "ops_evidence_out", this.EviCode).then(async res => {
                     if (res.IsSuccess) {
                         this.EvidenceOutCode = this.EviCode + this.oEviOutStaffEvidence.OfficeCode + (this.EvidenceOutDate.date.year + 543).toString().substring(4, 2) + "00001";
                         this.oEvidenceOut.EvidenceOutCode = this.EvidenceOutCode;
@@ -981,8 +1207,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         }, (error) => { console.error(error); return false; });
     }
 
-    InsEvidenceOut() {
+    async InsEvidenceOut() {
         var isSuccess = true;
+
+        if (this.evitype == "16") {
+            await this.InsEvidenceIn();
+
+            this.oEvidenceOut.EvidenceInID = this.EvidenceInID;
+        }
 
         this.EvidenceOutService.EvidenceOutinsAll(this.oEvidenceOut).then(async item => {
             if (item.IsSuccess) {
@@ -1016,6 +1248,20 @@ export class ManageComponent implements OnInit, OnDestroy {
         }, (error) => { console.error(error); return false; });
     }
 
+    async InsEvidenceIn() {
+        var isSuccess = true;
+
+        await this.EviService.EvidenceIninsAll(this.oEvidenceIn).then(async item => {
+            if (item.IsSuccess) {
+                this.oEvidenceIn.EvidenceInID = item.EvidenceInID;
+                this.EvidenceInID = item.EvidenceInID;
+            } else {
+                this.ShowAlertError(Message.saveFail);
+            }
+        }, (error) => { console.error(error); return false; });
+    }
+
+
     onComplete() {
         this.navService.setPrintButton(true);
         this.navService.setDeleteButton(true);
@@ -1027,6 +1273,53 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.showEditField = true;
     }
 
+    setStaffOfEvidenceIn() {
+        this.oEvidenceIn.EvidenceInStaff = [];
+
+        this.oEviInStaff = {
+            EvidenceInStaffID: "",
+            EvidenceInID: "",
+            StaffCode: this.oEviOutStaffRequest.StaffCode,
+            TitleName: this.oEviOutStaffRequest.TitleName,
+            FirstName: this.oEviOutStaffRequest.FirstName,
+            LastName: this.oEviOutStaffRequest.LastName,
+            PositionCode: this.oEviOutStaffRequest.PositionCode,
+            PositionName: this.oEviOutStaffRequest.PositionName,
+            PosLevel: this.oEviOutStaffRequest.PosLevel,
+            PosLevelName: this.oEviOutStaffRequest.PosLevelName,
+            DepartmentCode: this.oEviOutStaffRequest.DepartmentCode,
+            DepartmentName: this.oEviOutStaffRequest.DepartmentName,
+            DepartmentLevel: this.oEviOutStaffRequest.DepartmentLevel,
+            OfficeCode: this.oEviOutStaffRequest.OfficeCode,
+            OfficeName: this.oEviOutStaffRequest.OfficeName,
+            OfficeShortName: this.oEviOutStaffRequest.OfficeShortName,
+            ContributorID: "13",
+            IsActive: "1"
+        }
+        this.oEvidenceIn.EvidenceInStaff.push(this.oEviInStaff);
+
+        this.oEviInRecvStaff = {
+            EvidenceInStaffID: "",
+            EvidenceInID: "",
+            StaffCode: "",
+            TitleName: "",
+            FirstName: "",
+            LastName: "",
+            PositionCode: "",
+            PositionName: "",
+            PosLevel: "",
+            PosLevelName: "",
+            DepartmentCode: "",
+            DepartmentName: "",
+            DepartmentLevel: "",
+            OfficeCode: "",
+            OfficeName: "",
+            OfficeShortName: "",
+            ContributorID: "42",
+            IsActive: "1"
+        }
+        this.oEvidenceIn.EvidenceInStaff.push(this.oEviInRecvStaff);
+    }
 
 
     // **********************************
@@ -1090,6 +1383,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (tDate != undefined) {
             // return setZeroHours(new Date(`${tDate.year}-${tDate.month}-${tDate.day}`));
             return tDate.year + '-' + tDate.month + '-' + tDate.day + ' 00:00:00.0000';
+        }
+
+        return "";
+    }
+
+    ConvertDateYYYYmmddEvidenceIn(_Date: any) {
+        let tDate = _Date;
+
+        if (tDate != undefined) {
+            return setZeroHours(new Date(`${tDate.year}-${tDate.month}-${tDate.day}`));
         }
 
         return "";
@@ -1525,14 +1828,108 @@ export class ManageComponent implements OnInit, OnDestroy {
         await this.getProduct();
     }
 
-    chooseFirstWarehouse(): void {
+    async chooseFirstWarehouse() {
         this.WarehouseID = this.Warehouseoptions[0].WarehouseID;
         this.WarehouseName = this.Warehouseoptions[0].WarehouseName;
+
+        await this.getProduct();
     }
 
 
+    // *****************************************
+    // ------------ คลังจัดเก็บปลายทาง -----------
+    // *****************************************
+    async getWarehouseDest() {
+        this.preloader.setShowPreloader(true);
+
+       await this.MasService.getWarehourse(this.OfficeDestCode).then(res => {
+            if (res) {
+                this.rawWarehouseDestOptions = res;
+
+                this.preloader.setShowPreloader(false);
+            }
+
+        }, (err: HttpErrorResponse) => {
+            //alert(err.message);
+        });
+    }
+
+    WarehouseDestnAutoChange(value: string) {
+        if (value == '') {
+            this.WarehouseDestoptions = [];
+
+            this.WarehouseDestID = "";
+            this.WarehouseDestName = "";
+        } else {
+            this.WarehouseDestoptions = this.rawWarehouseDestOptions.filter(f => f.WarehouseName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    WarehouseDestOnAutoFocus(value: string) {
+        if (value == '') {
+            this.WarehouseDestoptions = [];
+
+            this.WarehouseDestID = "";
+            this.WarehouseDestName = "";
+        }
+    }
+
+    async WarehouseDestOnAutoSelecteWord(event) {
+        this.WarehouseDestID = event.WarehouseID;
+    }
+
+    chooseFirstWarehouseDest(): void {
+        this.WarehouseDestID = this.Warehouseoptions[0].WarehouseID;
+        this.WarehouseDestName = this.Warehouseoptions[0].WarehouseName;
+    }
+
+
+    // ******************************************
+    // ------------ หน่วยงานปลายทาง ------------
+    // ******************************************
+    getStation() {
+        this.MasService.getStation().then(res => {
+            if (res) {
+                this.rawStationOptions = res;
+            }
+
+        }, (err: HttpErrorResponse) => {
+            //alert(err.message);
+        });
+    }
+
+    OfficeDestOnAutoChange(value: string) {
+        if (value == '') {
+            this.StationOptions = [];
+
+            this.OfficeDestCode = "";
+        } else {
+            this.StationOptions = this.rawStationOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    OfficeDestOnAutoFocus(value: string) {
+        if (value == '') {
+            this.StationOptions = [];
+        }
+    }
+
+    async OfficeDestOnAutoSelecteWord(event) {
+        this.OfficeDestCode = event.OfficeCode;
+
+        await this.getWarehouseDest();
+    }
+
+    async chooseFirstOfficeDest() {
+        this.OfficeDestCode = this.StationOptions[0].OfficeCode;
+
+        await this.getWarehouseDest();
+    }
+
+
+
     // **********************************
-    // ----------- Unit ----------
+    // -------------- Unit -------------
     // **********************************
     getUnit() {
         this.EviService.getProveProductUnit('').then(async res => {
@@ -1586,9 +1983,26 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.rawProductOptions.map(f => {
                     f.EvidenceOutInItem.forEach(element => {
                         var item = {
+                            LawsuitNo: f.EvidenceOutProve.EvidenceOutLawsuit.LawsuitNo,
                             DeliveryNo: f.DeliveryNo,
                             EvidenceInItemCode: element.EvidenceInItemCode,
                             ProductDesc: element.ProductDesc,
+                            GroupCode: element.GroupCode,
+                            IsDomestic: element.IsDomestic,
+                            ProductCode: element.ProductCode,
+                            BrandCode: element.BrandCode,
+                            BrandNameTH: element.BrandNameTH,
+                            BrandNameEN: element.BrandNameEN,
+                            SubBrandCode: element.SubBrandCode,
+                            SubBrandNameTH:  element.SubBrandNameTH,
+                            SubBrandNameEN: element.SubBrandNameEN,
+                            ModelCode: element.ModelCode,
+                            ModelName: element.ModelName,
+                            FixNo1: element.FixNo1,
+                            DegreeCode: element.DegreeCode,
+                            Degree: element.Degree,
+                            FixNo2: element.FixNo2,
+                            SequenceNo: element.SequenceNo,
                             ReceiveQty: element.EvidenceOutStockBalance[0].ReceiveQty,
                             ReceiveQtyUnit: element.EvidenceOutStockBalance[0].ReceiveQtyUnit,
                             BalanceQty: element.EvidenceOutStockBalance[0].BalanceQty,
@@ -1646,6 +2060,22 @@ export class ManageComponent implements OnInit, OnDestroy {
             ProductSeq: aIndex,
             EvidenceOutID: EviOutID,
             ProductDesc: event.ProductDesc,
+            GroupCode: event.GroupCode,
+            IsDomestic: event.IsDomestic,
+            ProductCode: event.ProductCode,
+            BrandCode: event.BrandCode,
+            BrandNameTH: event.BrandNameTH,
+            BrandNameEN: event.BrandNameEN,
+            SubBrandCode: event.SubBrandCode,
+            SubBrandNameTH: event.SubBrandNameTH,
+            SubBrandNameEN: event.SubBrandNameEN,
+            ModelCode: event.ModelCode,
+            ModelName: event.ModelName,
+            FixNo1: event.FixNo1,
+            DegreeCode: event.DegreeCode,
+            Degree: event.Degree,
+            FixNo2: event.FixNo2,
+            SequenceNo: event.SequenceNo,
             Size: event.ReceiveSize,
             SizeUnit: event.ReceiveSizeUnit,
             ReceiveQty: event.ReceiveQty,
@@ -1778,21 +2208,21 @@ export class ManageComponent implements OnInit, OnDestroy {
         $("#ProductPopup .close").click();
     }
 
-    clickSearch(){
+    clickSearch() {
         let tempProduct = [];
 
-        if(this.evitype == '11I' && this.Textsearch != ""){
+        if (this.evitype == '11I' && this.Textsearch != "") {
             tempProduct = this.rawProductList.filter(f => f.LawsuitNo.toLowerCase().indexOf(this.Textsearch.toLowerCase()) > -1)
-        } else if(this.evitype == '11E' && this.Textsearch != ""){
+        } else if (this.evitype == '11E' && this.Textsearch != "") {
             tempProduct = this.rawProductList.filter(f => f.DeliveryNo.toLowerCase().indexOf(this.Textsearch.toLowerCase()) > -1)
         } else {
             tempProduct = this.rawProductList;
         }
-        
+
         // set total record
         this.paginage.TotalItems = tempProduct.length;
         this.ProductList = this.rawProductList.slice(0, this.paginage.RowsPerPageOptions[0]);
 
-        
+
     }
 }

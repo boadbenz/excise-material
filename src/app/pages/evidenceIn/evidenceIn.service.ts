@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Evidence_In, EvidenceInItem } from './evidenceIn';
+import { Evidence_In, EvidenceInItem, EvidenceStockBalance } from './evidenceIn';
 import { appConfig } from '../../app.config';
 import { Observable } from "rxjs/Observable";
 
@@ -221,6 +221,26 @@ export class EvidenceService {
   async getEvidenceInOutgetByWarehouseID(WarehouseID: string): Promise<any> {
     const params = { WarehouseID };
     const url = `${appConfig.api8776}/EvidenceInOutgetByWarehouseID`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) { }
+  }
+
+  async EvidenceInOutItemupdIsReturn(EvidenceOutItem: any): Promise<any> {
+    const params =  JSON.stringify(EvidenceOutItem);
+    const url = `${appConfig.api8776}/EvidenceInOutItemupdIsReturn`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) { }
+  }
+
+  async EvidenceInStockBalanceupdByCon(EvidenceStockBalance: any): Promise<any> {
+    const params = { EvidenceStockBalance };
+    const url = `${appConfig.api8776}/EvidenceInStockBalanceupdByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
