@@ -283,7 +283,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
-                this.noticeCode = "NEW";//`LS${(new Date).getTime()}`;
+                this.noticeCode = `LS${(new Date).getTime()}`;
                 this.arrestCode = `TN-${(new Date).getTime()}`;
 
                 this.localEditField = false;
@@ -336,48 +336,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
-            // if (status) {
-            //     var pmCheck = this.permissionCheck('IsUpdate')
-            //     if (await pmCheck != 1) {
-            //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-            //     } else if (await pmCheck == 1) {
 
-            //         if (!this.noticeForm.valid) {
-            //             this.isRequired = true;
-            //             this.showSwal(Message.checkData, "warning");
-            //             return false;
-            //         }
-
-            //         // if (this.noticeCode=="NEW") {
-            //         //     this.isRequired = true;
-            //         //     this.showSwal("Please check your notice code.", "warning");
-            //         //     return false;
-            //         // }
-
-            //         const sDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDate);
-            //         const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate);
-
-            //         if (sDateCompare.valueOf() > eDateCompare.valueOf()) {
-            //             this.showSwal(Message.checkData, "warning");
-            //             return;
-            //         }
-
-            //         this.noticeForm.value.NoticeInformer.map(item => {
-            //             item.InformerType = item.InformerType == true ? 1 : 0;
-            //         });
-
-            //         if (this.mode === 'C') {
-            //             await this.getTransactionRunning(this.noticeForm.value.NoticeStaff[0].DepartmentCode || this.noticeForm.value.NoticeStaff[0].OfficeCode);
-            //             // this.onCreate();
-
-            //         } else if (this.mode === 'R') {
-            //             this.onReviced();
-            //         }
-            //     }
-            //     await this.navService.setOnSave(false);
-            // }
             if (status) {
-
+                console.log('NoticeCode : ',this.noticeCode)
                 await this.navService.setOnSave(false);
 
                 if (!this.noticeForm.valid) {
@@ -416,18 +377,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
-            // if (status) {
-            //     var pmCheck = this.permissionCheck('IsDelete')
-            //     if (await pmCheck != 1) {
-            //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-            //     } else if (await pmCheck == 1) {
-
-            //         this.deleteNotice.text = Message.confirmAction;
-            //         this.deleteNotice.show();
-            //         // this.onDelete();
-            //     }
-            //     await this.navService.setOnDelete(false);
-            // }
 
             if (status) {
                 await this.navService.setOnDelete(false);
