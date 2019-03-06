@@ -210,6 +210,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(true);
         await this.navService.setEditField(true);
 
+        let date = new Date();
+        this.ProveYear = (date.getFullYear() + 543).toString();
+        this.ProveDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.DeliveryDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.DeliverDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.DeliverTime = this.getCurrentTime();
+
         this.active_Route();
         this.navigate_Service();
         this.CreateObject();
@@ -245,10 +252,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.IsEvidenceReceive = false;
 
 
-        let date = new Date();
-        this.ProveYear = (date.getFullYear() + 543).toString();
-        this.ProveDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
-        this.DeliveryDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        
 
         await this.ProveArrestgetByCon();
     }
@@ -365,7 +369,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     // คลิกเลือก “จัดเก็บของกลาง”
                     if (this.IsReceive) {
                         if (this.DeliverNo == ""        // หนังสือนำส่งเลขที่
-                            || this.DeliverDate == null    // วันที่นำส่ง  || this.DeliverTime == "" || this.DeliverTime == undefined
+                            || this.DeliverDate == null || this.DeliverTime == "" || this.DeliverTime == undefined    // วันที่นำส่ง  
                             //|| this.DeliverTo == "" || this.DeliverTo == undefined      // หน่วยงานปลายทาง
                             || this.StaffSendName == ""   // ผู้นำส่ง
                         ) {
@@ -522,8 +526,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 ProveID: "",
                 DeliverNo: this.DeliverNo + "/" + this.DeliverNoYear,
                 DeliverDate: cDateDeliver,
-                // DeliverTime: this.DeliverTime,
-                DeliverTime: "",
+                DeliverTime: this.DeliverTime,
+                //DeliverTime: "",
                 //DeliverTo: this.DeliverTo,
                 DeliverTo: localStorage.getItem("officeShortName"),
                 IsReceive: "1",
@@ -541,6 +545,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     ProveID: this.ProveID,
                     DeliveryNo: this.DeliverNo + "/" + this.DeliverNoYear,
                     DeliveryDate: this.ConvertDateYYYYmmdd(this.DeliverDate.date),
+                    DeliveryTime: this.DeliverTime,
                     EvidenceInType: "0",
                     IsActive: 1,
                     IsEdit: 1,
@@ -645,7 +650,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                 })
             }
         } else {
-            this.DeliverDate = "";
             this.DeliverNo = "";
             this.DeliverTo = "";
             this.DeliverNoYear = "";
@@ -654,6 +658,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.EvidenceInID = "";
 
             this.DeliverDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+            this.DeliverTime = this.getCurrentTime();
 
             let tempUser = this.rawStaffOptions.filter(f => f.StaffCode == localStorage.getItem("staffCode"));
 
@@ -1488,6 +1493,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         item.DeliverNo = `${item.DeliverNo == null ? '' : item.DeliverNo}`;
                         item.DeliverDate = `${item.DeliverDate == null ? '' : item.DeliverDate}`;
                         item.DeliverTo = `${item.DeliverTo == null ? '' : item.DeliverTo}`;
+                        item.DeliverTime = `${item.DeliverTime == null ? '' : item.DeliverTime}`;
                     });
 
                     if (this.oProve.ProveDeliverProduct[0].IsReceive == "1") {
@@ -1525,6 +1531,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                     var DvDate = this.oProve.ProveDeliverProduct[0].DeliverDate.toString().split(" ");
                     this.DeliverDate = setDateMyDatepicker(new Date(DvDate[0]));
+                    this.DeliverTime = this.oProve.ProveDeliverProduct[0].DeliverTime.toString();
                 } else {
                     this.IsEvidence = false;
                     // this.changeDataReceive();
@@ -2437,7 +2444,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     getCurrentTime() {
         let date = new Date();
-        // 
         return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false }) + " น.";
     }
     // ----- End DateTime -----
@@ -2723,7 +2729,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     changeDataReceive() {
-        this.DeliverDate = "";
         this.DeliverNo = "";
         this.StaffSendName = "";
         this.PosStaffSend = "";
@@ -2731,6 +2736,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.DeliverTo = "";
         this.DeliverNoYear = "";
         this.DeliverDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.DeliverTime = this.getCurrentTime();
 
         this.oProveStaffSend = {
             ProveID: this.ProveID,
