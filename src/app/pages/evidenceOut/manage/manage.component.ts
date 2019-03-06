@@ -253,14 +253,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                         case '12':
                             data.urls[1].title = "ค้นหารายการจัดเก็บเข้าพิพิธภัณฑ์";
                             data.urls[2].title = "จัดการข้อมูลรายการจัดเก็บเข้าพิพิธภัณฑ์";
-                            data.codePage = "ILG60-12-04-00-00";
+                            data.codePage = "ILG60-12-02-00-00";
                             this.EvidenceOutType = "4"
                             this.EvidenceInType = "0";
                             this.EviCode = "MU";
                             break;
                         case '13':
-                            data.urls[1].title = "ค้นหารายการขายของกลาง";
-                            data.urls[2].title = "จัดการข้อมูลรายการขายของกลาง";
+                            data.urls[1].title = "ค้นหารายการขายทอดตลาด";
+                            data.urls[2].title = "จัดการข้อมูลรายการขายทอดตลาด";
                             data.codePage = "ILG60-13-02-00-00";
                             this.EvidenceOutType = "2"
                             this.EvidenceInType = "0";
@@ -285,7 +285,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                         case '15D':
                             data.urls[1].title = "ค้นหารายการนำของกลางออกจากคลัง";
                             data.urls[2].title = "จัดการข้อมูลรายการนำของกลางออกจากคลังไปบริจาค";
-                            data.codePage = "ILG60-15-02-00-00";
+                            data.codePage = "ILG60-15-03-00-00";
                             this.EvidenceOutType = "5"
                             this.EvidenceInType = "0";
                             this.EviCode = "DN";

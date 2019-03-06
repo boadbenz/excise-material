@@ -66,7 +66,7 @@ export class ListComponent implements OnInit, OnDestroy {
         // set true
         this.navService.setSearchBar(true);
         this.navService.setNewButton(true);
-        this.sidebarService.setVersion('evidenceIn 0.0.0.13');
+        this.sidebarService.setVersion('evidenceIn 0.0.0.14');
         this.RevenueStatus = "";
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {

@@ -427,11 +427,20 @@
                                         readonly>
                                 </td>
                                 <td>
-                                    <select [(ngModel)]="item.DeliveryQtyUnit" name="item.DeliveryQtyUnit" class="form-control form-control-sm" style="font-size: 14px"
+                                    <!-- <select [(ngModel)]="item.DeliveryQtyUnit" name="item.DeliveryQtyUnit" class="form-control form-control-sm" style="font-size: 14px"
                                         [disabled]="showEditField || evitype != 'E'" [ngClass]="{'ng-touched':isRequired}" required>
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
-                                    </select>
+                                    </select> -->
+                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.DeliveryQtyUnit" name="item.DeliveryQtyUnit"
+                                        placeholder="" aria-label="Number" [matAutocomplete]="auto6" (input)="UnitOnAutoChange($event.target.value, item.ProductSeq)"
+                                        (focus)="UnitOnAutoFocus($event.target.value)" [disabled]="showEditField || evitype != 'E'"
+                                        [ngClass]="{'ng-touched':isRequired}" required>
+                                    <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
+                                        <mat-option *ngFor="let pOption of UnitOption" [value]="pOption.DutyCode" style="font-size: 14px;">
+                                            {{ pOption.DutyCode }}
+                                        </mat-option>
+                                    </mat-autocomplete>
                                 </td>
                                 <td *ngIf="evitype != 'G'">
                                     <input type="text" [(ngModel)]="item.DeliveryNetVolumn" name="item.DeliveryNetVolumn" class="form-control form-control-sm"
@@ -448,11 +457,20 @@
                                         style="font-size: 14px" readonly>
                                 </td>
                                 <td *ngIf="evitype != 'G'">
-                                    <select [(ngModel)]="item.DeliveryNetVolumnUnit" name="item.DeliveryNetVolumnUnit" class="form-control form-control-sm" style="font-size: 14px"
+                                    <!-- <select [(ngModel)]="item.DeliveryNetVolumnUnit" name="item.DeliveryNetVolumnUnit" class="form-control form-control-sm" style="font-size: 14px"
                                         [disabled]="showEditField || evitype != 'E'" [ngClass]="{'ng-touched':isRequired}" required>
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
-                                    </select>
+                                    </select> -->
+                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.DeliveryNetVolumnUnit" name="item.DeliveryNetVolumnUnit"
+                                        placeholder="" aria-label="Number" [matAutocomplete]="auto7" (input)="UnitOnAutoChange($event.target.value, item.ProductSeq)"
+                                        (focus)="UnitOnAutoFocus($event.target.value)" [disabled]="showEditField || evitype != 'E'"
+                                        [ngClass]="{'ng-touched':isRequired}" required>
+                                    <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
+                                        <mat-option *ngFor="let pOption of UnitOption" [value]="pOption.DutyCode" style="font-size: 14px;">
+                                            {{ pOption.DutyCode }}
+                                        </mat-option>
+                                    </mat-autocomplete>
                                 </td>
                                 <td>
                                     <a href="javaScript:void(0);" class="text-warning">
