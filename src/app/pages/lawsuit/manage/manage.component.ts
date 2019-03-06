@@ -125,8 +125,8 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.sidebarService.setVersion('0.0.0.46');
     localStorage.setItem('programcode', 'ILG60-04-00')
-    this.sidebarService.setVersion('0.0.0.45');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -461,16 +461,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                   this.lawsuitService.LawsuitPaymentFineDetailupdDelete(element.PaymentFineID)
                 });
               }
-              this.router.navigate(['/lawsuit/list']);
-            } else {
-              this.router.navigate(['/lawsuit/list']);
             }
             // case 2.1.1
-          } else {
-
-            this.router.navigate(['/lawsuit/list']);
           }
         });
+
         if (IsLawsuitComplete == 1) {
           this.navService.setCancelButton(false);
           this.navService.setSaveButton(false);
@@ -482,8 +477,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           this.navService.setCancelButton(false);
           this.navService.setSaveButton(false);
         }
-      } else {
-        return;
+        return this.router.navigate(['/lawsuit/list']);
       }
     })
   }
@@ -680,7 +674,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               checkComplete: checkComplete
             }
             this.preLoaderService.setShowPreloader(false);
-            this.viewNotComplete(popup)
+            await this.viewNotComplete(popup)
           })
         } else {
           Swal({
@@ -705,7 +699,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               checkComplete: checkComplete
             }
             this.preLoaderService.setShowPreloader(false);
-            this.viewNotComplete(popup)
+            await this.viewNotComplete(popup)
           })
         } else {
           Swal({
@@ -849,7 +843,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               let popup = {
                 checkComplete: checkComplete
               }
-              this.viewNotComplete(popup)
+              await this.viewNotComplete(popup)
               // ให้เด้งป๊อบอัพ
               if (isLaw != 0) {
                 this.setButtonCase()
