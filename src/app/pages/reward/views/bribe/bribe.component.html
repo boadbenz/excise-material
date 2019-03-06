@@ -65,8 +65,8 @@
                   <input *ngIf="mode === 'R' && isEdit === false" style="width:100%;" class="form-control form-control-sm" type="text"
                      disabled [value]="BribeFormGroup.get('RequestDate').value | thaiDate"
                 />
-                  <my-date-picker [hidden]="(mode === 'R' && isEdit === false)" formControlName="RequestDate" placeholder="" locale="th"
-                    [options]="myDatePickerOptions" [disabled]="mode === 'R' && isEdit === false"></my-date-picker>
+                  <my-date-picker-th [hidden]="(mode === 'R' && isEdit === false)" formControlName="RequestDate" placeholder="" locale="th"
+                    [options]="myDatePickerOptions" [disabled]="mode === 'R' && isEdit === false"></my-date-picker-th>
                 </div>
 
                 <label class="text-center" style="white-space: nowrap;">&nbsp;&nbsp;เวลา&nbsp;&nbsp;</label>
@@ -212,8 +212,8 @@
 
                 <div class="form-line input-group input-group-sm">
                   <div style="width:100%">
-                    <my-date-picker formControlName="POADate" placeholder="" locale="th"
-                      [options]="myDatePickerOptions" [disabled]="mode === 'R' && isEdit === false"></my-date-picker>
+                    <my-date-picker-th formControlName="POADate" placeholder="" locale="th"
+                      [options]="myDatePickerOptions" [disabled]="mode === 'R' && isEdit === false"></my-date-picker-th>
                   </div>
                   <label class="text-center">&nbsp;เวลา&nbsp;</label>
                   <div style="width:100%">

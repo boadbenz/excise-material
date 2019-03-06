@@ -348,7 +348,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.14');
+    this.sidebarService.setVersion('0.0.1.15');
     this.pageLoad();
   }
   public changeFullName(text, index) {
