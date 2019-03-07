@@ -277,6 +277,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     || this.EvidenceInTime == "" || this.EvidenceInTime == undefined
                     || this.StaffRecvName == "" || this.StaffRecvName == undefined
                     || this.WarehouseID == "" || this.WarehouseID == undefined || this.WarehouseID == "0"
+                    || (this.evitype == "E" && (this.Remark == "" || this.Remark == undefined))
                     || listProd.length > 0) {
                     this.isRequired = true;
                     this.ShowAlertWarning(Message.checkData);

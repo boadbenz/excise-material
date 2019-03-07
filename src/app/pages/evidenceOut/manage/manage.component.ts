@@ -987,7 +987,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             ApproveTime: this.ApproveTime,
             ReturnDate: this.ConvertDateYYYYmmdd(this.ReturnDate.date),
             Remark: this.Remark,
-            WarehouseID: this.WarehouseDestID,
+            WarehouseID: this.WarehouseID,
             OfficeCode: this.OfficeDestCode,
             ApproveNo: this.ApproveNo,
             IsActive: "1",
@@ -1060,6 +1060,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         // Module โอนย้าย
         if (this.evitype == "16") {
+            this.oEvidenceOut.WarehouseID = this.WarehouseDestID;
+
             // ****************************************************
             // -------------- Set Data for EvidenceIn -------------
             // ****************************************************
