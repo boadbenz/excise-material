@@ -244,33 +244,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         sessionStorage.setItem("notice_current_page", tmps[0] + "?from=edit");
     }
 
-    // async permissionCheck(subscribe) {
-    //     var userAccountID = localStorage.getItem('UserAccountID')
-    //     var programCode = 'ILG60-02-00'
-    //     const params = {
-    //         UserAccountID: userAccountID,
-    //         ProgramCode: programCode
-    //     };
-    //     await this.noticeService.PermissionCheck(params).then(pRes => {
-    //         this.permisCheck = pRes
-
-    //         if (subscribe == 'IsCreate') {
-    //             this.perBeforReturn = 0;
-    //             this.perBeforReturn = this.permisCheck.IsCreate;
-    //         } else if (subscribe == 'IsDelete') {
-    //             this.perBeforReturn = 0;
-    //             this.perBeforReturn = this.permisCheck.IsDelete;
-    //         } else if (subscribe == 'IsRead') {
-    //             this.perBeforReturn = 0;
-    //             this.perBeforReturn = this.permisCheck.IsRead;
-    //         } else if (subscribe == 'IsUpdate') {
-    //             this.perBeforReturn = 0;
-    //             this.perBeforReturn = this.permisCheck.IsUpdate;
-    //         }
-    //     }, (error) => { console.error('error : ', error); });
-    //     return this.perBeforReturn
-    // }
-
     private active_route() {
         this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];

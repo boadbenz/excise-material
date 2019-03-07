@@ -46,18 +46,6 @@ export class ArrestService {
         return Observable.throw(error);
     }
 
-    async PermissionCheck(params: any): Promise<any> {
-        const paramss = JSON.stringify(params);
-        const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
-        try {
-            const res = await this.httpClient.post<any>(url, paramss, this.httpOptions).toPromise();
-            return res;
-        } catch (error) {
-            return [];
-        }
-    }
-
-
     ArrestReportgetByCon(ArrestCode: string) {
         const params = { ArrestCode };
         const url = `${appConfig.apiReport}/ILG60_00_03_001.aspx`;

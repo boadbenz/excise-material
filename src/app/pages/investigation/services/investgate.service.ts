@@ -47,18 +47,6 @@ export class InvestgateService {
     return Observable.throw(error);
   }
 
-
-  // async PermissionCheck(params: any): Promise<any> {  ///*** comment
-  //   const paramss = JSON.stringify(params);
-  //   const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
-  //   try {
-  //     const res = await this.httpClient.post<any>(url, paramss, this.httpOptions).toPromise();
-  //     return res;
-  //   } catch (error) {
-  //     return [];
-  //   }
-  // }
-
   InvestigateDetailgetByCon(InvestigateDetailID: string) {
     const params = { InvestigateDetailID };
     const url = `${appConfig.apiReport}/ILG60_00_01_001.aspx`;

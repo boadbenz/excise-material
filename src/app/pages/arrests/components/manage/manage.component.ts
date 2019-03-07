@@ -469,33 +469,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         });
     }
 
-    // async permissionCheck(subscribe) {
-    //     var userAccountID = localStorage.getItem('UserAccountID')
-    //     var programCode = 'ILG60-03-00'
-    //     const params = {
-    //         UserAccountID: userAccountID,
-    //         ProgramCode: programCode
-    //     };
-    //     await this.s_arrest.PermissionCheck(params).then(pRes => {
-    //         this.permisCheck = pRes
-
-    //         if (subscribe == 'IsCreate') {
-    //             this.perBeforReturn = 0;
-    //             this.perBeforReturn = this.permisCheck.IsCreate;
-    //         } else if (subscribe == 'IsDelete') {
-    //             this.perBeforReturn = 0;
-    //             this.perBeforReturn = this.permisCheck.IsDelete;
-    //         } else if (subscribe == 'IsRead') {
-    //             this.perBeforReturn = 0;
-    //             this.perBeforReturn = this.permisCheck.IsRead;
-    //         } else if (subscribe == 'IsUpdate') {
-    //             this.perBeforReturn = 0;
-    //             this.perBeforReturn = this.permisCheck.IsUpdate;
-    //         }
-    //     }, (error) => { console.error('error : ', error); });
-    //     return this.perBeforReturn
-    // }
-
     private navigate_Service() {
 
         this.navService.showFieldEdit.subscribe(p => {

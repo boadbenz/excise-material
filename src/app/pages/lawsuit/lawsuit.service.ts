@@ -33,17 +33,6 @@ export class LawsuitService {
     return await this.http.get<any>(getUrl).toPromise() || [];
   }
 
-  async PermissionCheck(params: any): Promise<any> {
-    const paramss = JSON.stringify(params);
-    const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
-    try {
-      const res = await this.http.post<any>(url, paramss, this.httpOptions).toPromise();
-      return res;
-    } catch (error) {
-      return [];
-    }
-  }
-
   async getByKeywordOnInt(): Promise<Lawsuit[]> {
     const params = { 'Textsearch': '' };
     const url = `${appConfig.api8777}/LawsuitgetByKeyword`;
