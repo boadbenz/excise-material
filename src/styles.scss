@@ -4,6 +4,7 @@
 .mat-expansion-panel-content {
     font: unset !important;
 }
+
 .swal2-confirm{
     background: #3085d6 !important;
 }
@@ -17,15 +18,15 @@ mat-dialog-container.mat-dialog-container {
     min-width: auto;
     width: auto !important;
 }
-input:read-only,
-textarea:read-only,
-select:disabled {
-    color: black !important; 
-    font-size: .9rem !important
-}
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button{
-    -webkit-appearance: none;
-    margin: 0;
-}
+// input:read-only,
+// textarea:read-only,
+// select:disabled {
+//     color: black !important; 
+//     font-size: .9rem !important
+// }
+// input[type=number]::-webkit-outer-spin-button,
+// input[type=number]::-webkit-inner-spin-button{
+//     -webkit-appearance: none;
+//     margin: 0;
+// }
 
