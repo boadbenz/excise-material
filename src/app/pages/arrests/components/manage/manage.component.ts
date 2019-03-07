@@ -414,9 +414,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
         this.clearForm();
-        this.subSetNextPage.unsubscribe();
-        this.subSetDeletePage.unsubscribe();
-        this.subSetEditPage.unsubscribe();
     }
 
     private createForm(): FormGroup {
@@ -507,72 +504,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
         this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
 
-            // if (status) {
-            //     var pmCheck = this.permissionCheck('IsUpdate')
-            //     if (await pmCheck != 1) {
-            //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-            //     } else if (await pmCheck == 1) {
-            //         // set action save = false
-            //         if (this.arrestFG.invalid) {
-            //             this.isRequired = true;
-            //             if (this.arrestFG.get('ArrestLocale').invalid)
-            //                 this.ILG60_03_02_00_00_E18.next(true);
-
-            //             swal('', Message.checkData, 'warning')
-            //             return false;
-            //         }
-
-            //         const _ArrestDate = getDateMyDatepicker(this.arrestFG.value.ArrestDate);
-            //         const notice: fromModels.ArrestNotice[] = this.ArrestNotice.value
-            //             .filter(x => _ArrestDate.valueOf() < (new Date(x.NoticeDate)).valueOf());
-
-            //         // ถ้ามีรายการ วันที่จับกุม < วันที่แจ้งความ ให้ออกจาก function
-            //         if (notice.length) {
-            //             swal('', '“วันที่จับกุม” ต้องมากกว่าหรือเท่ากับ “วันที่แจ้งความ” ในส่วนใบแจ้งความนำจับ', 'warning')
-            //             return;
-            //         }
-
-            //         let staff: fromModels.ArrestStaff[] = this.ArrestStaff.value.filter(x => x.IsModify != 'd')
-            //         if (staff.length < 1) {
-            //             swal('', 'ต้องมีรายการผู้จับกุมอย่างน้อย 1 รายการ', 'warning')
-            //             return;
-            //         }
-            //         if (staff.filter(x => x.ContributorID == '6').length !== 1) {
-            //             swal('', 'ต้องมีผู้จับกุมที่มีฐานะเป็น “ผู้กล่าวหา” 1 รายการ', 'warning');
-            //             return;
-            //         }
-            //         if (staff.filter(x => !x.ContributorID || !x.FullName).length > 0) {
-            //             swal('', 'กรุณาผู้จับกุมให้ครบถ้วน', 'warning');
-            //             return;
-            //         }
-            //         const lawbreaker: fromModels.ArrestLawbreaker[] = this.ArrestLawbreaker.value.filter(x => x.IsModify != 'd');
-            //         const product: fromModels.ArrestProduct[] = this.ArrestProduct.value.filter(x => x.IsModify != 'd');
-            //         if (product.filter(x => !x.ProductDesc || !x.Qty || !x.QtyUnit || !x.NetVolume || !x.NetVolumeUnit).length) {
-            //             swal('', 'กรุณาระบุข้อมูลของกลางให้ครบถ้วน', 'warning');
-            //             return;
-            //         }
-
-            //         if (lawbreaker.length <= 0 && product.length <= 0) {
-            //             this.ILG60_03_02_00_00_E21.next(true);
-            //             this.ILG60_03_03_00_00_E15.next(true);
-            //             swal('', 'ต้องมีรายการ “ผู้ต้องหา” หรือ “ของกลาง” อย่างน้อย 1 รายการ', 'warning');
-            //             return;
-            //         }
-            //         const arrestIndictment: fromModels.ArrestIndictment[] = this.ArrestIndictment.value.filter(x => x.IsModify != 'd');
-            //         if (!arrestIndictment.length) {
-            //             this.ILG60_03_02_00_00_E25.next(true);
-            //             swal('', '“ฐานความผิดมาตรา” ในส่วนข้อกล่าวหาต้องมีอย่างน้อย 1 รายการ', 'warning')
-            //             return;
-            //         }
-            //         if (arrestIndictment.filter(x => x.GuiltBaseID == null).length) {
-            //             this.ILG60_03_02_00_00_E25.next(true);
-            //             swal('', 'กรุณาเลือกข้อมูล “ฐานความผิดมาตรา”', 'warning')
-            //             return;
-            //         };
-            //         this.onSave();
-            //     }
-            //     await this.navService.setOnSave(false);
-            // }
             if (status) {
                 // set action save = false
                 await this.navService.setOnSave(false);
@@ -636,36 +567,14 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             }
         });
 
-        this.subSetEditPage = this.navService.onEdit.takeUntil(this.destroy$).subscribe(async status => {
-
-            // if (status) {
-            //     var pmCheck = this.permissionCheck('IsUpdate')
-            //     if (await pmCheck != 1) {
-            //         this.showEditField = true;
-            //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-            //     } else if (await pmCheck == 1) {
-            //         this.onEdit();
-            //     }
-            //     await this.navService.setOnEdit(false);
-            // }
-
+        this.navService.onEdit.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnEdit(false);
                 this.onEdit();
             }
         })
 
-        this.subSetDeletePage = this.navService.onDelete.takeUntil(this.destroy$).subscribe(async status => {
-
-            // if (status) {
-            //     var pmCheck = this.permissionCheck('IsDelete')
-            //     if (await pmCheck != 1) {
-            //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-            //     } else if (await pmCheck == 1) {
-            //         this.onDelete();
-            //     }
-            //     await this.navService.setOnDelete(false);
-            // }
+        this.navService.onDelete.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnDelete(false);
                 this.onDelete();
@@ -700,16 +609,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         })
 
         this.subSetNextPage = this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
-
-            // if (status) {
-            //     var pmCheck = this.permissionCheck('IsCreate')
-            //     if (await pmCheck != 1) {
-            //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-            //     } else if (await pmCheck == 1) {
-            //         this.router.navigate(['/lawsuit/manage', 'C']);
-            //     }
-            //     await this.navService.setOnNextPage(false);
-            // }
             if (status) {
                 await this.navService.setOnNextPage(false);
                 this.router.navigate(['/lawsuit/manage', 'C']);

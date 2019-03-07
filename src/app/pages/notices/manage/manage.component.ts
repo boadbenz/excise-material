@@ -338,8 +338,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
 
             if (status) {
-
-                console.log('NoticeCode : ', this.noticeCode)
                 await this.navService.setOnSave(false);
 
                 if (!this.noticeForm.valid) {
@@ -347,8 +345,6 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.showSwal(Message.checkData, "warning");
                     return false;
                 }
-
-                //--
 
                 const sDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDate);
                 const eDateCompare = getDateMyDatepicker(this.noticeForm.value.NoticeDueDate);
@@ -370,11 +366,11 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.onReviced();
                 }
 
-                if (this.noticeCode == "NEW") {
-                    this.isRequired = true;
-                    this.showSwal("Please check your notice code.", "warning");
-                    return false;
-                }
+                // if (this.noticeCode == "NEW") {
+                //     this.isRequired = true;
+                //     this.showSwal("Please check your notice code.", "warning");
+                //     return false;
+                // }
 
             }
 

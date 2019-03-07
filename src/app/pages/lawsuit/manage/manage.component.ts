@@ -107,9 +107,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
   }
-  public onPrint = (content) => {
-    this.modal = this.ngbModel.open(content, { size: 'lg', centered: true });
-  }
+  // public onPrint = (content) => {
+  //   this.modal = this.ngbModel.open(content, { size: 'lg', centered: true });
+  // }
 
   get LawsuitArrestStaff(): FormArray {
     return this.lawsuitArrestForm.get('LawsuitArrestStaff') as FormArray;
@@ -158,15 +158,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
 
     this.onDeleteSubscribe = this.navService.onDelete.subscribe(async status => {
-      // if (status) {
-      //   var pmCheck = this.permissionCheck('IsDelete')
-      //   if (await pmCheck != 1) {
-      //     Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-      //   } else if (await pmCheck == 1) {
-      //     this.onDelete();
-      //   }
-      //   await this.navService.setOnDelete(false);
-      // }
       if (status) {
         await this.navService.setOnDelete(false);
         this.onDelete();
@@ -180,36 +171,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     })
 
     this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
-
-      // if (status) {
-      //   var pmCheck = this.permissionCheck('IsUpdate')
-      //   if (await pmCheck != 1) {
-      //     Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-      //   } else if (await pmCheck == 1) {
-      //     if (this.findInvalidControls().length > 0 && this.lawsuitForm.controls['IsLawsuitCheck'].value == false) {
-      //       this.isRequired = true;
-      //       Swal({
-      //         text: Message.checkData,
-      //         type: 'warning',
-      //       })
-
-      //       return false;
-      //     }
-      //     else if (this.lawsuitForm.controls['IsLawsuitCheck'].value == true &&
-      //       this.lawsuitForm.controls['ReasonDontLawsuit'].value == "" ||
-      //       this.lawsuitForm.controls['IsLawsuitCheck'].value == true && this.lawsuitForm.controls['ReasonDontLawsuit'].value == null) {
-      //       this.isRequired2 = true;
-
-      //       Swal({
-      //         text: Message.checkData,
-      //         type: 'warning',
-      //       })
-      //       return false;
-      //     }
-      //     this.onSave();
-      //   }
-      //   await this.navService.setOnSave(false);
-      // }
       if (status) {
         await this.navService.setOnSave(false);
         if (this.findInvalidControls().length > 0 && this.lawsuitForm.controls['IsLawsuitCheck'].value == false) {
@@ -242,31 +203,12 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
     });
     this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
-
-      // if (status) {
-      //   var pmCheck = this.permissionCheck('IsCreate')
-      //   if (await pmCheck != 1) {
-      //     Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-      //   } else if (await pmCheck == 1) {
-      //     this.onNextPage();
-      //   }
-      //   await this.navService.setOnNextPage(false);
-      // }
       if (status) {
         await this.navService.setOnNextPage(false);
         this.onNextPage();
       }
     });
     this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
-      // if (status) {
-      //   var pmCheck = this.permissionCheck('IsUpdate')
-      //   if (await pmCheck != 1) {
-      //     Swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-      //   } else if (await pmCheck == 1) {
-      //     this.onEdit();
-      //   }
-      //   await this.navService.setOnEdit(false);
-      // }
       if (status) {
         await this.navService.setOnEdit(false);
         this.onEdit();
@@ -307,14 +249,10 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy() {
-
     await this.getDataFromListPage.unsubscribe();
     await this.onPrintSubscribe.unsubscribe();
     await this.onSaveSubscribe.unsubscribe();
     await this.onCancelSubscribe.unsubscribe();
-    await this.onDeleteSubscribe.unsubscribe();
-    await this.onNextPageSubscribe.unsubscribe();
-    await this.onEditSubscribe.unsubscribe();
     await this.setShowButton()
   }
   private async onEdit() {

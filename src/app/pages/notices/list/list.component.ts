@@ -89,18 +89,6 @@ export class ListComponent implements OnInit, OnDestroy {
         });
 
         this.subSetNextPage = this.navservice.onNextPage.subscribe(async status => {
-
-            // if (status) {
-            //     var pmCheck = this.permissionCheck('IsCreate')
-            //     console.log('pmCheck !: ', await pmCheck)
-            //     if (await pmCheck != 1) {
-            //         swal('', 'ผู้ใช้งานไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแลระบบ', 'warning');
-            //     } else if (await pmCheck == 1) {
-            //         this._router.navigateByUrl('/notice/manage/C/NEW?from=new');
-            //     }
-            //     await this.navservice.setOnNextPage(false);
-            // }
-
             if (status) {
                 await this.navservice.setOnNextPage(false);
                 this._router.navigateByUrl('/notice/manage/C/NEW?from=new');
@@ -111,33 +99,6 @@ export class ListComponent implements OnInit, OnDestroy {
         this.monthsTh = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
 
         // this.preLoaderService.setShowPreloader(false);
-    }
-
-    async permissionCheck(subscribe) {
-        var userAccountID = localStorage.getItem('UserAccountID')
-        var programCode = 'ILG60-02-00'
-        const params = {
-            UserAccountID: userAccountID,
-            ProgramCode: programCode
-        };
-        await this.noticeService.PermissionCheck(params).then(pRes => {
-            this.permisCheck = pRes
-
-            if (subscribe == 'IsCreate') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsCreate;
-            } else if (subscribe == 'IsDelete') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsDelete;
-            } else if (subscribe == 'IsRead') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsRead;
-            } else if (subscribe == 'IsUpdate') {
-                this.perBeforReturn = 0;
-                this.perBeforReturn = this.permisCheck.IsUpdate;
-            }
-        }, (error) => { console.error('error : ', error); });
-        return this.perBeforReturn
     }
 
     ngOnDestroy(): void {
