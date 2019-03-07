@@ -46,6 +46,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     StaffSendoptions = [];
     StaffRecvoptions = [];
     ListEvidenceInItem = [];
+    rawUnitOptions = [];
     UnitOption = [];
     ListDoc = [];
     rawProductOptions = [];
@@ -54,7 +55,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     // ProdbyWarehourseoptions = [];
     rawWarehouseOptions = [];
     Warehouseoptions = [];
-
+    
 
     oEviInSendStaff: EvidenceInStaff;
     oEviInRecvStaff: EvidenceInStaff;
@@ -195,6 +196,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.navService.setEditButton(false);
                     this.navService.setDeleteButton(false);
                     this.navService.setEditField(false);
+                    this.navService.setNextPageButton(false);
                     // set true
                     this.navService.setSaveButton(true);
                     this.navService.setCancelButton(true);
@@ -204,6 +206,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                     // set false
                     this.navService.setSaveButton(false);
                     this.navService.setCancelButton(false);
+                    this.navService.setNextPageButton(false);
                     // set true
                     this.navService.setPrintButton(true);
                     this.navService.setEditButton(true);
@@ -1238,9 +1241,23 @@ export class ManageComponent implements OnInit, OnDestroy {
     getUnit() {
         this.EviService.getProveProductUnit('').then(async res => {
             if (res) {
-                this.UnitOption = res;
+                this.rawUnitOptions = res;
             }
         }, (err: HttpErrorResponse) => { });
+    }
+
+    UnitOnAutoChange(value: string) {
+        if (value == '') {
+            this.UnitOption = [];
+        } else {
+            this.UnitOption = this.rawUnitOptions.filter(f => f.DutyCode.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        }
+    }
+
+    UnitOnAutoFocus(value: string) {
+        if (value == '') {
+            this.UnitOption = [];
+        }
     }
 
 

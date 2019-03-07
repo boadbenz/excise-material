@@ -12,6 +12,11 @@ mat-dialog-container.mat-dialog-container {
     padding: unset;
 }
 
+.cdk-overlay-pane {
+    /* Do you changes here */
+    min-width: auto;
+    width: auto !important;
+}
 input:read-only,
 textarea:read-only,
 select:disabled {
