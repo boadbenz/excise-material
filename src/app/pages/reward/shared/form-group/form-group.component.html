@@ -27,8 +27,8 @@
                 <div class="form-group input-group form-line">
                   <div style="width:45%">
                     <ng-container *ngIf="c?.inputType === 'date';else text">
-                      <my-date-picker [formControlName]="c?.field" placeholder="" locale="th"
-                        [options]="myDatePickerOptions" [disabled]="c?.isDisabled"></my-date-picker>
+                      <my-date-picker-th [formControlName]="c?.field" placeholder="" locale="th"
+                        [options]="myDatePickerOptions" [disabled]="c?.isDisabled"></my-date-picker-th>
                     </ng-container>
                     <ng-template #text>
                       <input type="{{c?.inputType || 'text'}}" [min]="c?.minDate || ''" [max]="c?.maxDate || ''"
@@ -41,8 +41,8 @@
                   </div>
                   <div style="width:45%">
                     <ng-container *ngIf="c?.inputType2 === 'date';else text">
-                      <my-date-picker [formControlName]="c?.field2" placeholder="" locale="th"
-                        [options]="myDatePickerOptions"></my-date-picker>
+                      <my-date-picker-th [formControlName]="c?.field2" placeholder="" locale="th"
+                        [options]="myDatePickerOptions"></my-date-picker-th>
                     </ng-container>
                     <ng-template #text>
                       <input type="{{c?.inputType2 || 'text'}}" [min]="c?.minDate || ''" [max]="c?.maxDate || ''"
@@ -56,8 +56,8 @@
             <ng-template #notMulti>
               <div class="col-sm-8">
                 <ng-container *ngIf="c?.inputType === 'date';else text">
-                  <my-date-picker [formControlName]="c?.field" placeholder="" locale="th"
-                    [options]="myDatePickerOptions" [disabled]="c?.isDisabled"></my-date-picker>
+                  <my-date-picker-th [formControlName]="c?.field" placeholder="" locale="th"
+                    [options]="myDatePickerOptions" [disabled]="c?.isDisabled"></my-date-picker-th>
                 </ng-container>
                 <ng-template #text>
                   <input type="{{c?.inputType ? c?.inputType : 'text'}}" [min]="c?.minDate || ''"

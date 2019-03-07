@@ -39,8 +39,8 @@ export class ListComponent extends ListConfig implements OnInit {
   }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.1.9');
     localStorage.setItem('programcode','ILG60-08-01');
-    this.sidebarService.setVersion('0.0.1.8');
     this.setShowButton();
     // this.fetchData('');
   }
@@ -52,7 +52,12 @@ export class ListComponent extends ListConfig implements OnInit {
     this.requestListService
       .RequestListgetByKeyword({ Textsearch: Textsearch })
       .subscribe((res: IRequestList[]) => {
-        this.gridData = this.newData(res);
+        if (res.length > 0 ) {
+          this.gridData = this.newData(res);
+        } else {
+          this.gridData = [];
+          swal('', 'ไม่พบข้อมูล', 'warning');
+        }
       });
   }
   private setShowButton() {
