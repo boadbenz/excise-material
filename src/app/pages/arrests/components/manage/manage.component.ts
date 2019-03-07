@@ -173,7 +173,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         return form.controls.ArrestNoticeStaff.controls;
     }
 
-    @ViewChild('printDocModal') printDocModel: ElementRef;
+    @ViewChild('printDocModalArrests') printDocModel: ElementRef;
 
     constructor(
         private fb: FormBuilder,
@@ -577,11 +577,12 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         this.navService.onPrint.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnPrint(false);
-                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+                // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true }); //this.modal =
+                this.openModal(this.printDocModel)
             }
         })
 
-        this.subSetNextPage = this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
+        this.navService.onNextPage.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
                 this.router.navigate(['/lawsuit/manage', 'C']);

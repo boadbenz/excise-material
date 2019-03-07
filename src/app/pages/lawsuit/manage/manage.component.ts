@@ -77,7 +77,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   private ArrestCode: string;
   permisCheck: any
   perBeforReturn: any
-  @ViewChild('printDocModal') printDocModel: ElementRef;
+  @ViewChild('printDocModalLaw') printDocModel: ElementRef;
   @ViewChild('indicmetModal') indicmetModal: ElementRef;
 
   MasStaff = new Array<MasStaff>();
@@ -107,9 +107,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
   }
-  // public onPrint = (content) => {
-  //   this.modal = this.ngbModel.open(content, { size: 'lg', centered: true });
-  // }
+  public onPrint = (content) => {
+    this.modal = this.ngbModel.open(content, { size: 'lg', centered: true });
+  }
 
   get LawsuitArrestStaff(): FormArray {
     return this.lawsuitArrestForm.get('LawsuitArrestStaff') as FormArray;
@@ -166,7 +166,8 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
       if (status) {
         await this.navService.setOnPrint(false);
-        this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+        // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+        this.onPrint(this.printDocModel);
       }
     })
 

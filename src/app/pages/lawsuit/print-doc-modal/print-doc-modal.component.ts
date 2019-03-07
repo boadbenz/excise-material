@@ -48,6 +48,7 @@ export class PrintLawsuitModalComponent implements OnInit {
   // private lawsuitService: LawsuitService
 
   async ngOnInit() {
+    console.log('********OnPintLawsuit***********')
     this.preLoaderService.setShowPreloader(true);
     this.FG = this.fb.group({
       PrintDoc: this.fb.array([
@@ -69,7 +70,7 @@ export class PrintLawsuitModalComponent implements OnInit {
         DocTypeName: new FormControl('แบบฟอร์ม')
       })
     )
-    this.lawsuitService.LawsuitArrestgetByCon(this.indictmentID).then(x => {
+  await  this.lawsuitService.LawsuitArrestgetByCon(this.indictmentID).then(x => {
       x.filter(y => y.IsActive == 1)
         .map(y => {
           console.log("X : ",x)
