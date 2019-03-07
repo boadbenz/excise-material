@@ -85,12 +85,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     runningOfficeCode = localStorage.getItem('officeCode');
     runningPrefix = 'TN';
 
-    permisCheck: any
-    perBeforReturn: any
-    private subSetNextPage: any;
-    // private subSetSavePage: any;
-    private subSetDeletePage: any;
-    private subSetEditPage: any;
 
     readonly lawbreakerType = LawbreakerTypes;
     readonly entityType = EntityTypes;
@@ -470,13 +464,11 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     private navigate_Service() {
-
         this.navService.showFieldEdit.subscribe(p => {
             this.showEditField = p.valueOf();
         });
 
         this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
-
             if (status) {
                 // set action save = false
                 await this.navService.setOnSave(false);
@@ -577,8 +569,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         this.navService.onPrint.takeUntil(this.destroy$).subscribe(async status => {
             if (status) {
                 await this.navService.setOnPrint(false);
-                // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true }); //this.modal =
-                this.openModal(this.printDocModel)
+                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
             }
         })
 

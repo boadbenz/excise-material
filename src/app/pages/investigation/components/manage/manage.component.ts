@@ -18,7 +18,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import swal from 'sweetalert2'
 import { sortFormArray } from 'app/pages/arrests/arrest.helper';
-import { InvestgateService } from '../../services/investgate.service'
 
 
 @Component({
@@ -29,6 +28,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     card1 = true;
     card2 = true;
+
     private destroy$: Subject<boolean> = new Subject<boolean>();
 
     private obInvest: Observable<fromModels.InvestigateModel>;
@@ -48,9 +48,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     showEditField: any;
     isRequired: boolean;
     investigateForm: FormGroup;
-
-    permisCheck: any
-    perBeforReturn: any
 
     myDatePickerOptions = MyDatePickerOptions;
 
@@ -74,8 +71,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         private ngbModel: NgbModal,
         private sidebarService: SidebarService,
         private s_invest: fromService.InvestgateService,
-        private store: Store<fromStore.AppState>,
-        private investgateService: InvestgateService
+        private store: Store<fromStore.AppState>
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -88,13 +84,11 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-
         localStorage.setItem('programcode', 'ILG60-01-00');
         this.sidebarService.setVersion(this.s_invest.version);
         this.active_Route();
         this.navigate_Service();
         this.createForm();
-
     }
 
     ngAfterViewInit(): void {
@@ -179,7 +173,6 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.navService.onDelete.takeUntil(this.destroy$).subscribe(async status => {
-          
             if (status) {
                 await this.navService.setOnDelete(false);
                 this.onDelete();

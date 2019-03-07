@@ -44,7 +44,6 @@ import { MasDutyUnitModel } from '../../../models/mas-duty-unit.model';
 import { async } from 'q';
 import { TransactionRunningService } from 'app/services/transaction-running.service';
 import { SwalComponent, BeforeOpenEvent } from '@toverux/ngx-sweetalert2';
-import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-manage',
@@ -65,9 +64,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
     private onShowEditFieldSubscribe: any;
-
-    permisCheck: any
-    perBeforReturn: any
 
     actionFrom: string;
     months: any[];
@@ -144,11 +140,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(false);
         this.navService.setInnerTextNextPageButton('งานจับกุม');
     }
-
+    
     async ngOnInit() {
-
         localStorage.setItem('programcode', 'ILG60-02-00');
-
         this.months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
         this.activatedRoute.queryParams.subscribe(params => {
             this.actionFrom = params['from'];

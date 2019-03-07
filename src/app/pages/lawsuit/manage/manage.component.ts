@@ -75,8 +75,6 @@ export class ManageComponent implements OnInit, OnDestroy {
   private LawsuitID: any;
   private IndictmentID: string;
   private ArrestCode: string;
-  permisCheck: any
-  perBeforReturn: any
   @ViewChild('printDocModalLaw') printDocModel: ElementRef;
   @ViewChild('indicmetModal') indicmetModal: ElementRef;
 
@@ -156,7 +154,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.navService.showFieldEdit.subscribe(async p => {
       this.showEditField = p;
     });
-
     this.onDeleteSubscribe = this.navService.onDelete.subscribe(async status => {
       if (status) {
         await this.navService.setOnDelete(false);
@@ -166,11 +163,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
       if (status) {
         await this.navService.setOnPrint(false);
-        // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
-        this.onPrint(this.printDocModel);
+        this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
       }
     })
-
     this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
       if (status) {
         await this.navService.setOnSave(false);

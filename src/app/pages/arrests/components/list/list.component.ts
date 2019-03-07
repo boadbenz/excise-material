@@ -13,7 +13,6 @@ import 'rxjs/add/operator/takeUntil';
 import swal from 'sweetalert2'
 import { FormGroup } from '@angular/forms';
 
-
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
@@ -35,10 +34,6 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
     arrestList = new Array<Arrest>();
     arrest = new Array<Arrest>();
 
-    permisCheck: any
-    perBeforReturn: any
-    private subSetNextPage: any;
-
     @ViewChild('arrestTable') arrestTable: ElementRef;
     @ViewChild('advForm') advForm: FormGroup;
 
@@ -56,7 +51,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     async ngOnInit() {
-        localStorage.setItem('programcode','ILG60-03-00');
+        localStorage.setItem('programcode', 'ILG60-03-00');
         // set false
         await this.navService.setEditButton(false);
         await this.navService.setDeleteButton(false);
@@ -82,7 +77,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
                 }
             })
 
-         this.navService.onNextPage
+        this.navService.onNextPage
             .takeUntil(this.destroy$)
             .subscribe(async status => {
                 if (status) {

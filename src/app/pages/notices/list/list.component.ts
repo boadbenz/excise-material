@@ -11,7 +11,6 @@ import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import { SwalComponent } from '@toverux/ngx-sweetalert2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import swal from 'sweetalert2';
 
 @Component({
     selector: 'app-list',
@@ -20,10 +19,6 @@ import swal from 'sweetalert2';
 export class ListComponent implements OnInit, OnDestroy {
 
     @ViewChild('alertSwal') private alertSwal: SwalComponent;
-
-    permisCheck: any
-    perBeforReturn: any
-    PerStatus: any = false;
 
     months: any[];
     monthsTh: any[];
@@ -71,7 +66,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        localStorage.setItem('programcode','ILG60-02-00');
+        localStorage.setItem('programcode', 'ILG60-02-00');
         this.sidebarService.setVersion('0.0.2.39');
         this.paginage.TotalItems = 0;
 

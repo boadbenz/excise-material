@@ -12,10 +12,6 @@ import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
 import { compareDate, getDateMyDatepicker, toLocalShort, convertDateForSave, MyDatePickerOptions, setZeroHours } from 'app/config/dateFormat';
 import { Subject } from 'rxjs/Subject';
 import swal from 'sweetalert2';
-import { InvestgateService } from '../../services/investgate.service'
-import { error } from 'util';
-import { async } from '@angular/core/testing';
-
 
 @Component({
     selector: 'app-list',
@@ -27,10 +23,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
     private destroy$: Subject<boolean> = new Subject<boolean>();
 
-    private subSetNextPage: any;
-
-    permisCheck: any
-    perBeforReturn: any
     _dateStartFrom: any;
     _dateStartTo: any;
     DateStartTo: any;
@@ -48,8 +40,7 @@ export class ListComponent implements OnInit, OnDestroy {
         private s_invest: fromServices.InvestgateService,
         private router: Router,
         private sidebarService: SidebarService,
-        private preLoader: PreloaderService,
-        private investgateService: InvestgateService
+        private preLoader: PreloaderService
     ) {
         // set false
         this.navService.setEditButton(false);
@@ -76,7 +67,7 @@ export class ListComponent implements OnInit, OnDestroy {
             }
         })
 
-        this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
+        this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
                 this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
@@ -88,7 +79,6 @@ export class ListComponent implements OnInit, OnDestroy {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
         this.paginage.TotalItems = 0;
-        // this.subSetNextPage.unsubscribe();
     }
 
     onSearch(form: any) {
