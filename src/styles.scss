@@ -29,4 +29,32 @@ mat-dialog-container.mat-dialog-container {
 //     -webkit-appearance: none;
 //     margin: 0;
 // }
+//**************************************************
 
+// @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+// .mat-expansion-panel-content {
+//     font: unset !important;
+// }
+// .swal2-confirm{
+//     background: #3085d6 !important;
+// }
+
+// mat-dialog-container.mat-dialog-container {
+//     padding: unset;
+// }
+
+// input:read-only,
+// textarea:read-only,
+// select:disabled {
+//     color: black !important; 
+//     font-size: .9rem !important
+// }
+// input[type=number]::-webkit-outer-spin-button,
+// input[type=number]::-webkit-inner-spin-button{
+//     -webkit-appearance: none;
+//     margin: 0;
+// }
+// .cdk-global-overlay-wrapper, .cdk-overlay-container {
+//   z-index: 99999 !important;
+// }

@@ -33,7 +33,7 @@ import { DialogNotComplete } from './dialog-notComplete';
   templateUrl: "./manage.component.html"
 })
 
-export class ManageComponent implements OnInit, OnDestroy {
+export class ManageComponent implements OnInit {
 
   lawsuitDoc: LawsuitDocument[] = [];
   masOfficeList: MasOffice[] = [];
@@ -244,12 +244,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     );
   }
 
-  async ngOnDestroy() {
-    await this.getDataFromListPage.unsubscribe();
-    await this.onPrintSubscribe.unsubscribe();
-    await this.onSaveSubscribe.unsubscribe();
-    await this.onCancelSubscribe.unsubscribe();
-    await this.setShowButton()
+   ngOnDestroy() {
+     this.getDataFromListPage.unsubscribe();
+     this.onPrintSubscribe.unsubscribe();
+     this.onSaveSubscribe.unsubscribe();
+     this.onCancelSubscribe.unsubscribe();
+     this.setShowButton()
   }
   private async onEdit() {
     this.navService.setNextPageButton(false);
