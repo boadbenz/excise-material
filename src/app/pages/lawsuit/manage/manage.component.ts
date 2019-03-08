@@ -123,7 +123,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.47');
+    this.sidebarService.setVersion('0.0.0.48');
     localStorage.setItem('programcode', 'ILG60-04-00')
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
@@ -609,7 +609,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               checkComplete: checkComplete
             }
             this.preLoaderService.setShowPreloader(false);
-            await this.viewNotComplete(popup)
+            this.viewNotComplete(popup)
           })
         } else {
           Swal({
@@ -634,7 +634,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               checkComplete: checkComplete
             }
             this.preLoaderService.setShowPreloader(false);
-            await this.viewNotComplete(popup)
+            this.viewNotComplete(popup)
           })
         } else {
           Swal({
@@ -778,7 +778,7 @@ export class ManageComponent implements OnInit, OnDestroy {
               let popup = {
                 checkComplete: checkComplete
               }
-              await this.viewNotComplete(popup)
+              this.viewNotComplete(popup)
               // ให้เด้งป๊อบอัพ
               if (isLaw != 0) {
                 this.setButtonCase()
