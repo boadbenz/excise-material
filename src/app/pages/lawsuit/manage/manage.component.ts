@@ -123,7 +123,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.46');
+    this.sidebarService.setVersion('0.0.0.47');
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
@@ -463,6 +463,7 @@ export class ManageComponent implements OnInit {
     this.navService.setDeleteButton(true);
     this.navService.setSaveButton(false);
     this.navService.setCancelButton(false);
+    console.log('งานพิสูจน์')
     if (this.prove == 1) {
       this.navService.setNextPageButton(true);
       this.navService.setInnerTextNextPageButton('งานพิสูจน์')
@@ -1038,8 +1039,13 @@ export class ManageComponent implements OnInit {
               if (item.LawsuitType == 1) { countType++; }
             })
             if (countType > 0) {
-              this.navService.setNextPageButton(true);
-              this.navService.setInnerTextNextPageButton('เปรียบเทียบปรับ')
+              if (this.prove == 1) {
+                this.navService.setNextPageButton(true);
+                this.navService.setInnerTextNextPageButton('งานพิสูจน์')
+              } else if (this.prove == 0) {
+                this.navService.setNextPageButton(true);
+                this.navService.setInnerTextNextPageButton('งานเปรียบเทียบ')
+              }
             } else {
               this.navService.setNextPageButton(false);
             }
@@ -1509,7 +1515,7 @@ export class ManageComponent implements OnInit {
     ///####use this value to get api
     // /item.controls['IndictmentDetailID'].value
     const dialogRef = this.dialog.open(DialogJudgment, {
-      width: '90%',
+      width: '1250px',
       // maxWidth: 'none',
       // height: '750px',
       // maxHeight: 'none',
