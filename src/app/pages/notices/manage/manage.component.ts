@@ -148,7 +148,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.40');
+        this.sidebarService.setVersion('0.0.2.41');
 
         this.navigate_service();
         this.active_route();
@@ -275,7 +275,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private navigate_service() {
         this.onShowEditFieldSubscribe = this.navService.showFieldEdit.subscribe(async p => {
             if(this.noticeForm&&this.noticeForm.value.IsArrest==1){
-                this.showSwal("ไม่สามารถแก้ไขข้อมูลได้", "warning");
+                // this.showSwal("ไม่สามารถแก้ไขข้อมูลได้", "warning");
                 p = true;
                 
                 // await this.navService.setEditField(true);
@@ -1574,5 +1574,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         sessionStorage.removeItem("notice_form_data");
         await this.navService.setOnCancel(false);
         this.router.navigate(['/notice/list']);
+    }
+
+    async onCancelConfirmClick(){
+        // sessionStorage.removeItem("notice_form_data");
+        // await this.navService.setOnCancel(false);
+        // this.router.navigate(['/notice/list']);
+        this.onComplete();
     }
 }
