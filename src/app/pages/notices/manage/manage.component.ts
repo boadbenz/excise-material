@@ -263,7 +263,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(true);
                 this.navService.setDeleteButton(true);
                 this.navService.setEditField(true);
-                this.navService.setNextPageButton(true);
+                this.navService.setNextPageButton(false);
 
                 this.noticeCode = p['code'];
 
@@ -282,7 +282,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.navService.setEditButton(true);
                 await this.navService.setPrintButton(true);
                 await this.navService.setDeleteButton(false);
-                await this.navService.setNextPageButton(true);
+                await this.navService.setNextPageButton(false);
                 // // set false
                 await this.navService.setSaveButton(false);
                 await this.navService.setCancelButton(true);
