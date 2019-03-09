@@ -149,7 +149,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.41');
+        this.sidebarService.setVersion('0.0.2.42');
 
         this.navigate_service();
         this.active_route();
@@ -246,7 +246,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(false);
                 this.navService.setDeleteButton(false);
                 this.navService.setEditField(false);
-                this.navService.setNextPageButton(false);
+                this.navService.setNextPageButton(true);
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
@@ -264,7 +264,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(true);
                 this.navService.setDeleteButton(true);
                 this.navService.setEditField(true);
-                this.navService.setNextPageButton(false);
+                this.navService.setNextPageButton(true);
 
                 this.noticeCode = p['code'];
 
@@ -288,6 +288,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.navService.setSaveButton(false);
                 await this.navService.setCancelButton(true);
             }
+            await this.navService.setNextPageButton(false);
             this.showEditField = p;
         });
 
