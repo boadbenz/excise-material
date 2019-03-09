@@ -5,8 +5,8 @@
     font: unset !important;
 }
 
-.swal2-confirm{
-    background: #3085d6 !important;
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
+  z-index: 99999 !important;
 }
 
 mat-dialog-container.mat-dialog-container {
@@ -18,6 +18,8 @@ mat-dialog-container.mat-dialog-container {
     min-width: auto;
     width: auto !important;
 }
+
+
 // input:read-only,
 // textarea:read-only,
 // select:disabled {
