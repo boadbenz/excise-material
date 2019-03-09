@@ -412,7 +412,7 @@
                         <th>เลขประจำตัว</th>
                         <th>ชื่อ</th>
                         <th>จำนวนครั้งการกระทำผิด</th>
-                        <th></th>
+                        <!-- <th></th> -->
                         <th></th>
                     </tr>
                 </thead>
@@ -432,11 +432,11 @@
                             </span> -->
                         </td>
                         <td>{{item.get('MistreatNo').value}}</td>
-                        <td class="text-center">
+                        <!-- <td class="text-center">
                             <a href="javaScript:void(0);" class="text-secondary" *ngIf="!showEditField" (click)="onViewSuspect(item.get('SuspectID').value)">
                                 <i class="fa fa-eye fa-lg"></i>
                             </a>
-                        </td>
+                        </td> -->
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="beforeDeleteSuspect(item.get('SuspectID').value, i)">
                                 <i class="fa fa-trash-o fa-lg"></i>
@@ -607,5 +607,5 @@
   confirmButtonColor= '#3085d6'
   cancelButtonColor="#d33"
   confirmButtonText="Confirm!"
-  (confirm)="onCancelEdit()">
+  (confirm)="onCancelConfirmClick()">
 </swal>
