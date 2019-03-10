@@ -142,14 +142,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
     
     async ngOnInit() {
+        sessionStorage.removeItem("notice_form_data")
+        this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
         localStorage.setItem('programcode', 'ILG60-02-00');
-        this.months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
         this.activatedRoute.queryParams.subscribe(params => {
             this.actionFrom = params['from'];
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.42');
+        this.sidebarService.setVersion('0.0.2.43');
 
         this.navigate_service();
         this.active_route();
@@ -294,10 +295,10 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
             if (status) {
-                if (this.mode === "R") {
+                if(this.mode==="R"){
                     this.cancelEdit.text = Message.confirmAction;
                     this.cancelEdit.show();
-                } else {
+                }else{
                     this.onCancelEdit();
                 }
             }
@@ -1582,6 +1583,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         // sessionStorage.removeItem("notice_form_data");
         // await this.navService.setOnCancel(false);
         // this.router.navigate(['/notice/list']);
-        this.onComplete();
+        // sessionStorage.removeItem("notice_form_data");
+        if(this.mode==="R"){
+            // this.onComplete();
+            window.location.reload(true);
+        }else{
+            this.onCancelEdit();
+        }
     }
 }
