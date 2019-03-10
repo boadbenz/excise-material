@@ -149,7 +149,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.43');
+        this.sidebarService.setVersion('0.0.2.44');
 
         this.navigate_service();
         this.active_route();
@@ -246,7 +246,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.navService.setEditButton(false);
                 this.navService.setDeleteButton(false);
                 this.navService.setEditField(false);
-                this.navService.setNextPageButton(true);
+                this.navService.setNextPageButton(false);
                 // set true
                 this.navService.setSaveButton(true);
                 this.navService.setCancelButton(true);
@@ -276,7 +276,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private navigate_service() {
         this.onShowEditFieldSubscribe = this.navService.showFieldEdit.subscribe(async p => {
             if(this.noticeForm&&this.noticeForm.value.IsArrest==1){
-                // this.showSwal("ไม่สามารถแก้ไขข้อมูลได้", "warning");
+                this.showSwal("ไม่สามารถแก้ไขข้อมูลได้", "warning");
                 p = true;
                 
                 // await this.navService.setEditField(true);
@@ -572,8 +572,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if(res.IsArrest==1){
             this.navService.setDeleteButton(false);
-            this.navService.setEditButton(false);
-            this.navService.setCancelButton(true);
+            // this.navService.setEditButton(false);
+            // this.navService.setCancelButton(true);
         }
 
         const staff = res.NoticeStaff.filter(item => item.IsActive == 1);

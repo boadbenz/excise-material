@@ -66,7 +66,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.2.43');
+        this.sidebarService.setVersion('0.0.2.44');
         this.paginage.TotalItems = 0;
 
         sessionStorage.removeItem("notice_form_data");
