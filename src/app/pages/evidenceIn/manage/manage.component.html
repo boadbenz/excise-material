@@ -236,7 +236,9 @@
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="" aria-label="Number"
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                    <!-- <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="" aria-label="Number"
                         matInput [matAutocomplete]="auto2" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
                         [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
@@ -244,7 +246,7 @@
                             (click)="StaffSendonAutoSelecteWord(sOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(sOption)">
                             {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
                         </mat-option>
-                    </mat-autocomplete>
+                    </mat-autocomplete> -->
                 </div>
             </div>
         </div>
@@ -253,22 +255,24 @@
             </label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" [(ngModel)]="PosStaffSend" name="PosStaffSend" class="form-control" readonly>
+                    <input type="text" [(ngModel)]="PosStaffSend" name="PosStaffSend" class="form-control" 
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
             </label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptStaffSend" name="DeptStaffSend" class="form-control" readonly>
+                <input type="text" [(ngModel)]="DeptStaffSend" name="DeptStaffSend" class="form-control" 
+                    [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
             </div>
         </div>
 
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำส่ง :</label>
             <div class="form-group col-lg-10 col-md-12">
-                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
             </div>
         </div>
     </div>
@@ -337,7 +341,7 @@
             <label *ngIf="evitype == 'G'" for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :
             </label>
             <div *ngIf="evitype == 'G'" class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto8"
+                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto8"
                     (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
                     [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
                 <mat-autocomplete autoActiveFirstOption #auto8="matAutocomplete">
@@ -390,10 +394,10 @@
                             <tr *ngFor="let item of ListEvidenceInItem | IsActivePipe ; let i=index;">
                                 <td style="text-align:center;">{{i + 1}}</td>
                                 <td>
-                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.EvidenceInItemCode" name="item.EvidenceInItemCode"
-                                        placeholder="" aria-label="Number" [matAutocomplete]="auto5" (input)="EviItemCodeonAutoChange($event.target.value, item.ProductSeq)"
-                                        (focus)="ProductonAutoFocus($event.target.value)" [disabled]="showEditField || evitype != 'G'"
-                                        [ngClass]="{'ng-touched':isRequired}" required>
+                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.EvidenceInItemCode"
+                                        name="item.EvidenceInItemCode" placeholder="" aria-label="Number" [matAutocomplete]="auto5"
+                                        (input)="EviItemCodeonAutoChange($event.target.value, item.ProductSeq)" (focus)="ProductonAutoFocus($event.target.value)"
+                                        [disabled]="showEditField || evitype != 'G'" [ngClass]="{'ng-touched':isRequired}" required>
                                     <mat-autocomplete autoActiveFirstOption #auto5="matAutocomplete">
                                         <mat-option *ngFor="let pOption of Productoptions" [value]="pOption.EvidenceInItemCode" (click)="ProductonAutoSelecteWord(pOption, item.ProductSeq)"
                                             style="font-size: 14px;" (onSelectionChange)="ProductonAutoSelecteWord(pOption, item.ProductSeq)">
@@ -433,10 +437,10 @@
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select> -->
-                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.DeliveryQtyUnit" name="item.DeliveryQtyUnit"
-                                        placeholder="" aria-label="Number" [matAutocomplete]="auto6" (input)="UnitOnAutoChange($event.target.value, item.ProductSeq)"
-                                        (focus)="UnitOnAutoFocus($event.target.value)" [disabled]="showEditField || evitype != 'E'"
-                                        [ngClass]="{'ng-touched':isRequired}" required>
+                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.DeliveryQtyUnit"
+                                        name="item.DeliveryQtyUnit" placeholder="" aria-label="Number" [matAutocomplete]="auto6"
+                                        (input)="UnitOnAutoChange($event.target.value, item.ProductSeq)" (focus)="UnitOnAutoFocus($event.target.value)"
+                                        [disabled]="showEditField || evitype != 'E'" [ngClass]="{'ng-touched':isRequired}" required>
                                     <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
                                         <mat-option *ngFor="let pOption of UnitOption" [value]="pOption.DutyCode" style="font-size: 14px;">
                                             {{ pOption.DutyCode }}
@@ -463,10 +467,10 @@
                                         <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
                                         </option>
                                     </select> -->
-                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.DeliveryNetVolumnUnit" name="item.DeliveryNetVolumnUnit"
-                                        placeholder="" aria-label="Number" [matAutocomplete]="auto7" (input)="UnitOnAutoChange($event.target.value, item.ProductSeq)"
-                                        (focus)="UnitOnAutoFocus($event.target.value)" [disabled]="showEditField || evitype != 'E'"
-                                        [ngClass]="{'ng-touched':isRequired}" required>
+                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.DeliveryNetVolumnUnit"
+                                        name="item.DeliveryNetVolumnUnit" placeholder="" aria-label="Number" [matAutocomplete]="auto7"
+                                        (input)="UnitOnAutoChange($event.target.value, item.ProductSeq)" (focus)="UnitOnAutoFocus($event.target.value)"
+                                        [disabled]="showEditField || evitype != 'E'" [ngClass]="{'ng-touched':isRequired}" required>
                                     <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
                                         <mat-option *ngFor="let pOption of UnitOption" [value]="pOption.DutyCode" style="font-size: 14px;">
                                             {{ pOption.DutyCode }}

@@ -23,6 +23,7 @@ import { IncomeService } from '../../income/income.service';
 import { ProveService } from '../../prove/prove.service';
 import { MasterService } from '../../model/master.service';
 import { Evidence_In, EvidenceInStaff, EvidenceStockBalance, EvidenceInItem } from '../../evidenceIn/evidenceIn';
+declare var $: any;
 
 @Component({
     selector: 'app-manage',
@@ -353,7 +354,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                         if (this.StaffApproveName == "" || this.StaffApproveName == undefined
                             || this.ApproveDate == null || this.ApproveDate == undefined
                             || this.ApproveTime == null || this.ApproveTime == undefined
-                            || this.ReturnDate == null || this.ReturnDate == undefined) {
+                            || this.ReturnDate == null || this.ReturnDate == undefined
+                            || this.Remark == null || this.Remark == undefined
+                        ) {
                             flgValidate = true;
                         }
                         break;
@@ -362,7 +365,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                         if (this.StaffReceiverName == "" || this.StaffReceiverName == undefined
                             || this.StaffApproveName == "" || this.StaffApproveName == undefined
                             || this.ApproveDate == null || this.ApproveDate == undefined
-                            || this.ApproveTime == null || this.ApproveTime == undefined) {
+                            || this.ApproveTime == null || this.ApproveTime == undefined
+                            || this.Remark == null || this.Remark == undefined
+                        ) {
                             flgValidate = true;
                         }
                         break;
@@ -373,7 +378,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                             || this.ApproveDate == null || this.ApproveDate == undefined
                             || this.ApproveTime == null || this.ApproveTime == undefined
                             || this.OfficeDestName == "" || this.OfficeDestName == undefined
-                            || this.WarehouseDestName == "" || this.WarehouseDestName == undefined) {
+                            || this.WarehouseDestName == "" || this.WarehouseDestName == undefined
+                            || this.Remark == null || this.Remark == undefined) {
                             flgValidate = true;
                         }
                         break;
@@ -417,6 +423,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }).then((result) => {
                     if (result.value) {
                         if (this.mode === 'C') {
+                            if(this.evitype.length == 3){
+                                this.evitype = this.evitype.substring(0, 2);
+                            }
+
                             this.router.navigate([`/evidenceOut/list/${this.evitype}`]);
                         } else if (this.mode === 'R') {
                             // set false
@@ -1817,16 +1827,16 @@ export class ManageComponent implements OnInit, OnDestroy {
     WarehouseOnAutoFocus(value: string) {
         if (value == '') {
             this.Warehouseoptions = [];
+            this.rawProductList = [];
 
             this.WarehouseID = "";
             this.WarehouseName = "";
         }
     }
 
-    async WarehouseOnAutoSelecteWord(event) {
+    WarehouseOnAutoSelecteWord(event) {
         this.WarehouseID = event.WarehouseID;
-
-        await this.getProduct();
+        this.getProduct();
     }
 
     async chooseFirstWarehouse() {
@@ -1974,13 +1984,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ListEvidenceOutItem.push(this.oEvidenceOutItem);
     }
 
-    async getProduct() {
+    getProduct() {
         this.preloader.setShowPreloader(true);
-        await this.EvidenceOutService.getProduct(this.WarehouseID, this.EvidenceInType).then(async res => {
-            if (res) {
-                this.rawProductOptions = res;
-                this.rawProductList = [];
+        this.rawProductList = [];
 
+        this.EvidenceOutService.getProduct(this.WarehouseID, this.EvidenceInType).then(async res => {
+            this.rawProductList = [];
+
+            if (res.length > 0) {
+                this.rawProductOptions = res;
+                
                 this.rawProductOptions.map(f => {
                     f.EvidenceOutInItem.forEach(element => {
                         var item = {
@@ -2225,5 +2238,13 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.ProductList = this.rawProductList.slice(0, this.paginage.RowsPerPageOptions[0]);
 
 
+    }
+
+    VaridatePopup(){
+        if(this.WarehouseID == undefined || this.WarehouseID == ""){
+            this.ShowAlertWarning("กรุณาเลือกคลังจัดเก็บ");
+        } else {
+            $("#ProductPopup").modal('show')
+        }
     }
 }
