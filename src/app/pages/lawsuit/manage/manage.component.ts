@@ -463,7 +463,7 @@ export class ManageComponent implements OnInit {
     this.navService.setDeleteButton(true);
     this.navService.setSaveButton(false);
     this.navService.setCancelButton(false);
-    console.log('งานพิสูจน์')
+    console.log(this.prove)
     if (this.prove == 1) {
       this.navService.setNextPageButton(true);
       this.navService.setInnerTextNextPageButton('งานพิสูจน์')
@@ -1033,11 +1033,12 @@ export class ManageComponent implements OnInit {
           }
           let IsProve = res[0]['LawsuitArrestIndicment'][0].IsProve;
           this.prove = IsProve
-          if (IsProve == 0 && res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'] != 0) {
+          if (res[0]['LawsuitArrestIndicment'][0]['Lawsuit'][0]['IsLawsuit'] != 0) {
             var countType = 0;
             await res[0]['LawsuitArrestIndicment'][0]['LawsuitArrestIndicmentDetail'].forEach(item => {
               if (item.LawsuitType == 1) { countType++; }
             })
+            
             if (countType > 0) {
               if (this.prove == 1) {
                 this.navService.setNextPageButton(true);
