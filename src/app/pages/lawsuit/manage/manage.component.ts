@@ -123,7 +123,7 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.49');
+    this.sidebarService.setVersion('0.0.0.50');
     localStorage.setItem('programcode', 'ILG60-04-00')
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
@@ -189,7 +189,7 @@ export class ManageComponent implements OnInit {
           })
           return false;
         }
-        this.onSave();
+        this.onSaveLawsuit();
       }
     });
     this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
@@ -488,7 +488,7 @@ export class ManageComponent implements OnInit {
     this.navService.setCancelButton(false);
     this.navService.setNextPageButton(false);
   }
-  private async onSave() {
+  private async onSaveLawsuit() {
     this.preLoaderService.setShowPreloader(true);
     let IsLawsuitComplete = this.lawsuitList[0]['IsLawsuitComplete'];
     if (IsLawsuitComplete == 1 || IsLawsuitComplete == 0 && Number(this.LawsuitID) > 0) {
