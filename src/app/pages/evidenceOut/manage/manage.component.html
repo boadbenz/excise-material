@@ -105,8 +105,7 @@
                     (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
                     [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
                 <mat-autocomplete autoActiveFirstOption #auto13="matAutocomplete">
-                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
-                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)">
                         {{ optionWh.WarehouseName }}
                     </mat-option>
                 </mat-autocomplete>
@@ -205,8 +204,7 @@
                     (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
                     [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
                 <mat-autocomplete autoActiveFirstOption #auto8="matAutocomplete">
-                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
-                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)">
                         {{ optionWh.WarehouseName }}
                     </mat-option>
                 </mat-autocomplete>
@@ -324,8 +322,8 @@
                     (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
                     [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
                 <mat-autocomplete autoActiveFirstOption #auto14="matAutocomplete">
-                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
-                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)">
+                        <!-- (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)" -->
                         {{ optionWh.WarehouseName }}
                     </mat-option>
                 </mat-autocomplete>
@@ -445,8 +443,7 @@
                     (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
                     [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
                 <mat-autocomplete autoActiveFirstOption #auto15="matAutocomplete">
-                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
-                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)">
                         {{ optionWh.WarehouseName }}
                     </mat-option>
                 </mat-autocomplete>
@@ -454,7 +451,8 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำออก :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField">
+                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField"
+                    [ngClass]="{'ng-touched':isRequired}" required>
             </div>
         </div>
     </div>
@@ -589,8 +587,7 @@
                     (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
                     [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
                 <mat-autocomplete autoActiveFirstOption #auto16="matAutocomplete">
-                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
-                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)">
                         {{ optionWh.WarehouseName }}
                     </mat-option>
                 </mat-autocomplete>
@@ -598,7 +595,8 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำบริจาค :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField">
+                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField"
+                    [ngClass]="{'ng-touched':isRequired}" required>
             </div>
         </div>
     </div>
@@ -744,8 +742,7 @@
                     (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
                     [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
                 <mat-autocomplete autoActiveFirstOption #auto17="matAutocomplete">
-                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
-                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)">
                         {{ optionWh.WarehouseName }}
                     </mat-option>
                 </mat-autocomplete>
@@ -753,7 +750,8 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการโอนย้าย :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField">
+                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField"
+                    [ngClass]="{'ng-touched':isRequired}" required>
             </div>
         </div>
     </div>
@@ -778,8 +776,10 @@
             <div *ngIf="evitype != '11E' && evitype != '11I'" class="col-lg-2 col-md-3 col-sm-4">
                 <button class="btn btn-block btn-themecolor" (click)="AddProduct()" [disabled]="showEditField">เพิ่มของกลาง</button>
             </div>
-            <div *ngIf="evitype == '11I' || evitype == '11E'" class="col-lg-2 col-md-3 col-sm-4" data-toggle="modal" data-target="#ProductPopup">
-                <button class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มของกลาง</button>
+
+            <!--  data-target="#ProductPopup" -->
+            <div *ngIf="evitype == '11I' || evitype == '11E'" class="col-lg-2 col-md-3 col-sm-4" data-toggle="modal">    
+                <button class="btn btn-block btn-themecolor" [disabled]="showEditField"  (click)="VaridatePopup()">เพิ่มของกลาง</button>
             </div>
         </div>
 
@@ -833,7 +833,7 @@
                                 <th>
                                     <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.EvidenceInItemCode"
                                         name="item.EvidenceInItemCode" placeholder="" aria-label="Number" [matAutocomplete]="auto18"
-                                        (input)="ProductonAutoChange($event.target.value, item.ProductSeq)" (focus)="ProductonAutoFocus($event.target.value)"
+                                        (input)="ProductonAutoChange($event.target.value, item.ProductSeq)"
                                         [disabled]="showEditField || evitype == '11E' || evitype == '11I' || mode == 'R'" [ngClass]="{'ng-touched':isRequired}"
                                         required>
                                     <mat-autocomplete autoActiveFirstOption #auto18="matAutocomplete">

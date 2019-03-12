@@ -272,6 +272,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                     || (this.evitype == "E" && (this.DeliveryTime == "" || this.DeliveryTime == undefined))
                     || (this.evitype == "E" && (this.ReturnDate == null || this.ReturnDate == undefined))
                     || this.StaffSendName == "" || this.StaffSendName == undefined
+                    || (this.evitype == "E" && 
+                            (this.PosStaffSend == "" || this.PosStaffSend == undefined || this.DeptStaffSend == "" || this.DeptStaffSend == undefined))
                     || this.EvidenceInCode == "" || this.EvidenceInCode == undefined
                     || this.EvidenceInDate == null || this.EvidenceInDate == undefined
                     || this.EvidenceInTime == "" || this.EvidenceInTime == undefined
@@ -453,6 +455,20 @@ export class ManageComponent implements OnInit, OnDestroy {
     ShowEvidenceIn() {
         this.EviService.getByCon(this.EvidenceInID, this.ProveID).then(async res => {
             if (res != null && res.IsSuccess != "False") {
+                if(res[0].IsReceive == "0"){
+                    this.navService.setPrintButton(false);
+                    this.navService.setEditButton(false);
+                    this.navService.setDeleteButton(false);
+                    this.navService.setSaveButton(true);
+                    this.navService.setCancelButton(true);
+                } else {
+                    this.navService.setPrintButton(true);
+                    this.navService.setEditButton(true);
+                    this.navService.setDeleteButton(true);
+                    this.navService.setSaveButton(false);
+                    this.navService.setCancelButton(false);
+                }
+
                 this.ListEvidenceInItem = [];
                 this.oEvidenceIn = res[0];
                 this.ListEvidenceInItem = this.oEvidenceIn.EvidenceInItem;
@@ -967,9 +983,24 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.oEvidenceIn.EvidenceInStaff = [];
 
         // ผู้นำส่ง
-        if (this.oEviInSendStaff != null && this.oEviInSendStaff != undefined) {
+        if(this.evitype != "E"){
+            if (this.oEviInSendStaff != null && this.oEviInSendStaff != undefined) {
+                this.oEvidenceIn.EvidenceInStaff.push(this.oEviInSendStaff);
+            }
+        } else {
+            this.oEviInSendStaff = {
+                EvidenceInStaffID: this.StaffSendID,
+                EvidenceInID: this.EvidenceInID,
+                FirstName: this.StaffSendName,
+                PositionName: this.PosStaffSend,
+                OfficeName: this.DeptStaffSend,
+                ContributorID: "13",
+                IsActive: "1"
+            }
+
             this.oEvidenceIn.EvidenceInStaff.push(this.oEviInSendStaff);
         }
+        
 
         // ผู้รับของกลาง
         if (this.oEviInRecvStaff != null && this.oEviInRecvStaff != undefined) {
