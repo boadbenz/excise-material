@@ -60,7 +60,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(true);
         this.navService.setNewButton(true);
 
-        this.sidebarService.setVersion('Revenue 0.0.0.29');
+        this.sidebarService.setVersion('Revenue 0.0.0.30');
         this.RevenueStatus = "";
         //this.advSearch.next(true);
         //this.preloader.setShowPreloader(true);
@@ -182,13 +182,13 @@ export class ListComponent implements OnInit, OnDestroy {
             }
 
             if (item.RevenueStatus == "1") {
-                item.RevenueStatus = "นำส่งเงินรายได้"
+                item.RevenueStatusStr = "นำส่งเงินรายได้"
             }
             else if (item.RevenueStatus == "2") {
-                item.RevenueStatus = "รับรายการนำส่งเงิน"
+                item.RevenueStatusStr = "รับรายการนำส่งเงิน"
             }
             else{
-                item.RevenueStatus = "";
+                item.RevenueStatusStr = "";
             }
         })
 
