@@ -105,10 +105,10 @@ export class ListComponent implements OnInit {
 
   public onSearch(text: string): void {
     const param = {
-      Textsearch: text || ''
+      TextSearch: text || ''
     };
     this.preloaderService.setShowPreloader(true);
-    this.apiServer.post('/XCS60/AdjustListgetByKeyword', param)
+    this.apiServer.post('/XCS60/AdjustCompareListgetByKeyword', param)
         .subscribe(response => this.adjustListByKeywordDone(response), error => this.adjustListByKeywordError(error));
   }
 
@@ -160,7 +160,7 @@ export class ListComponent implements OnInit {
     };
 
     this.preloaderService.setShowPreloader(true);
-    this.apiServer.post('/XCS60/AdjustListgetByConAdv', param)
+    this.apiServer.post('/XCS60/AdjustCompareListgetgetByConAdv', param)
         .subscribe(response => this.adjustListgetByConAdvDone(response), error => this.adjustListgetByConAdvError(error));
   }
 
