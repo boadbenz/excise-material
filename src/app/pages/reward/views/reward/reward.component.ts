@@ -60,7 +60,7 @@ import { variable } from '@angular/compiler/src/output/output_ast';
   styleUrls: ['./reward.component.scss']
 })
 export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
-  public PosLeveltemp: any[];
+  public PosLeveltemp: any[] = [];
   public ILG60_08_04_00_00_E12_DATA: IRewardBinding[] = [];
   public listData: any[] = [];
   public DataSelect: any[] = [];
@@ -654,14 +654,13 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           .toPromise();
 
         // 1.1.9 NEW
-        // nonRequestRewardStaff.forEach(element => {
-        //   this.mainMasterService.SecondPartLevelCode(element.PosLevel).then(res => {
-        //     console.log('++++res', res)// , this.PosLeveltemp.push(res)
-        //   }) 
-        // });
+        nonRequestRewardStaff.forEach(element => {
+          this.mainMasterService.SecondPartLevelCode(element.PosLevel).then(res => { 
+            this.PosLeveltemp.push(res[0].SecondPart)  , console.log('++++res', res) 
+          }) 
+        });
         // console.log('++++++nonRequestRewardStaff : ', nonRequestRewardStaff)
-        // console.log('++++this.PosLeveltemp', this.PosLeveltemp)
-
+        console.log('++++this.PosLeveltemp', this.PosLeveltemp)
         const datatable_nonRequestRewardStaff = nonRequestRewardStaff.map(
           m => ({
             ...m,

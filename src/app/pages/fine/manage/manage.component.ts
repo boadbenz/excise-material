@@ -630,7 +630,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (status && this.isFinishLoad) {
         await this.navService.setOnPrint(false);
         // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
-        this.buttonPrint();
+        localStorage.programcode == "ILG60-06-00"? this.buttonPrint() : false
       }
     })
   }

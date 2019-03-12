@@ -180,7 +180,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.navService.onPrint.takeUntil(this.destroy$).subscribe(async status => {
-            if (status) {
+            if (status && localStorage.programcode == "ILG60-01-00" ) {
                 await this.navService.setOnPrint(false);
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
             }
