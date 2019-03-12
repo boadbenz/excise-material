@@ -66,7 +66,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.2.45');
+        this.sidebarService.setVersion('0.0.2.46');
         localStorage.setItem('programcode', 'ILG60-02-00');
         this.paginage.TotalItems = 0;
 
