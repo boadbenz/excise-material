@@ -70,6 +70,7 @@ export class ListComponent implements OnInit, OnDestroy {
         localStorage.setItem('programcode', 'ILG60-02-00');
         this.paginage.TotalItems = 0;
 
+        this.navservice.setCancelButton(false);
         sessionStorage.removeItem("notice_form_data");
         let currentdate = new Date();
         this.myDatePickerOptions.disableSince = { year: currentdate.getFullYear(), month: currentdate.getMonth() + 1, day: currentdate.getDate() + 1 };
