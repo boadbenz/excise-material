@@ -1273,7 +1273,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     }));
     const printDoc = [...printDoc1, ...printDoc2, ...printDoc3, ...printDoc4, ...printDoc5];
 
-    const dialogRef = this.dialog.open(PrintDialogComponent, {
+    const dialogRef = this.dialog.open(PrintDialogComponent, { size: 'lg',
       backdrop: 'static'
     });
     dialogRef.componentInstance.data = printDoc;

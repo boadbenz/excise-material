@@ -1010,7 +1010,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
     //   DocType: 'แบบฟอร์ม', RequestBribeID: `${m.RequestBribeID}`, checked: false, TypeName: "RB"
     // }));
 
-    const dialogRef = this.dialog.open(PrintDialogComponent, {
+    const dialogRef = this.dialog.open(PrintDialogComponent, {size: 'lg',
       backdrop: 'static'
     });
     dialogRef.componentInstance.data = printDoc;
