@@ -131,7 +131,6 @@ export class ManageComponent implements OnInit {
     await this.createForm();
     await this.createLawsuitForm();
     await this.tools_bar(this.LawsuitID)
-
     await this.ArrestgetByCon(this.IndictmentID, this.LawsuitID);
     this.preLoaderService.setShowPreloader(false);
   }
@@ -189,7 +188,8 @@ export class ManageComponent implements OnInit {
           })
           return false;
         }
-        this.onSaveLawsuit();
+        console.log(localStorage.programcode)
+        localStorage.programcode == "ILG60-04-00" ? this.onSaveLawsuit() : false
       }
     });
     this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
