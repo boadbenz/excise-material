@@ -90,7 +90,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         } else if (await pmCheck == 1) {
             this.navService.setOnNextPage(true);
         }
-        // this.navService.setOnNextPage(true);
+        // this.navService.setOnNextPage(true); //Old
     }
 
     async clickNextPage() {
@@ -108,10 +108,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
     async clickEdit() {
         var pmCheck = this.permissionCheck('IsUpdate')
         if (await pmCheck != 1) {
-            // console.log('clickEdit IsUpdate != 1 : ', pmCheck)
             swal('', 'ผู้ใช้งานไม่มีสิทธิ์แก้ไขข้อมูล กรุณาติดต่อผู้ดูแลระบบ', 'warning');
         } else if (await pmCheck == 1) {
-            // console.log('clickEdit IsUpdate == 1 : ', pmCheck)
             this.navService.setEditField(false);
             this.navService.setEditButton(false);
             this.navService.setPrintButton(false);
@@ -120,7 +118,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
             this.navService.setCancelButton(true);
             this.navService.setOnEdit(true);
         }
-        // // set false
+        // // set false //Old
         // this.navService.setEditField(false);
         // this.navService.setEditButton(false);
         // this.navService.setPrintButton(false);
@@ -148,25 +146,21 @@ export class NavigationComponent implements OnInit, OnDestroy {
     async clickSave() {
         var pmCheck = this.permissionCheck('IsUpdate')
         if (await pmCheck != 1) {
-            // console.log('clickSave IsUpdate != 1 : ', pmCheck)
             swal('', 'ผู้ใช้งานไม่มีสิทธิ์บันทึก กรุณาติดต่อผู้ดูแลระบบ', 'warning');
         } else if (await pmCheck == 1) {
-            // console.log('clickSave IsUpdate == 1 : ', pmCheck)
             this.navService.setOnSave(true);
         }
         // set event click save
-        // this.navService.setOnSave(true);
+        // this.navService.setOnSave(true); //Old
     }
 
     async clickDelete() {
-        // this.navService.setOnDelete(true);
+        // this.navService.setOnDelete(true); //Old
 
         var pmCheck = this.permissionCheck('IsDelete')
         if (await pmCheck != 1) {
-            // console.log('clickDelete IsDelete != 1 : ', pmCheck)
             swal('', 'ผู้ใช้งานไม่มีสิทธิ์ลบข้อมูล กรุณาติดต่อผู้ดูแลระบบ', 'warning');
         } else if (await pmCheck == 1) {
-            // console.log('clickDelete IsDelete == 1 : ', pmCheck)
             this.navService.setOnDelete(true);
         }
     }
