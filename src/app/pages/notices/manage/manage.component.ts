@@ -143,6 +143,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode','ILG60-02-00');
         sessionStorage.removeItem("notice_form_data")
         this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
         this.activatedRoute.queryParams.subscribe(params => {
@@ -379,21 +380,23 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
-            if (status) {
+            if (status && localStorage.programcode == "ILG60-02-00") {
                 this.preloader.setShowPreloader(true);
                 await this.navService.setOnPrint(false);
-                this.noticeService.print(this.noticeCode).subscribe((res)=>{
-                    this.preloader.setShowPreloader(false);
 
-                    const file = new Blob([res], {type: 'application/pdf'});
-                    const fileURL = URL.createObjectURL(file);
+                this.modal = this.ngbModel.open(this.printDocModel,{size:'lg',centered: true})
+                // this.noticeService.print(this.noticeCode).subscribe((res)=>{
+                //     this.preloader.setShowPreloader(false);
 
-                    // let a = document.createElement("a");
-                    // a.href = fileURL;
-                    // a.target = "_blank";
-                    // a.click();
-                    window.open(fileURL, "_blank");
-                });
+                //     const file = new Blob([res], {type: 'application/pdf'});
+                //     const fileURL = URL.createObjectURL(file);
+
+                //     // let a = document.createElement("a");
+                //     // a.href = fileURL;
+                //     // a.target = "_blank";
+                //     // a.click();
+                //     window.open(fileURL, "_blank");
+                // });
             }
         })
 
