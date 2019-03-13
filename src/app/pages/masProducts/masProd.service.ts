@@ -14,8 +14,8 @@ export class MasProdService {
       })
   };
 
-  DutyGroupgetAll(Textsearch: string) {
-    const params = Textsearch;
+  DutyGroupgetAll() {
+    const params = '';
     const url = `${appConfig.api7777}/DutyGroupgetAll`;
     return this.http.post<any>(url, params, this.httpOptions);
   }

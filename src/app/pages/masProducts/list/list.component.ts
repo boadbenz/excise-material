@@ -20,6 +20,8 @@ export class ListComponent implements OnInit {
   advSearch: any;
   paginage = pagination;
   ListMasProd: any;
+  DutyGroup: any;
+  BrandMain: any;
   constructor(private navService: NavigationService,
     private preLoaderService: PreloaderService,
     private masProdService: MasProdService,
@@ -29,6 +31,7 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     localStorage.setItem('programcode', 'ILG60-99-01');
+    this.OnPageload();
     // set false
     this.navService.setEditButton(false);
     this.navService.setDeleteButton(false);
@@ -41,19 +44,28 @@ export class ListComponent implements OnInit {
     this.navService.setNewButton(true);
 
     this.navigate_service();
-    this.OnPageload();
+
 
   }
 
   async OnPageload() {
-    await this.preLoaderService.setShowPreloader(true);
-    // await this.masProdService.DutyGroupgetAll(Textsearch).subscribe(list => {});
+     this.preLoaderService.setShowPreloader(true);
+    await this.masProdService.DutyGroupgetAll().subscribe(list => { this.DutyGroup = list });
+
+    // console.log('DutyGroup : ',this.DutyGroup)
     // await this.masProdService.MasProductgetByCon(Textsearch).subscribe(list => {});
-    // await this.masProdService.BrandSecondgetAll().subscribe(list => {});
-    // await this.masProdService.BrandMaingetAll().subscribe(list => {});
+    await this.masProdService.BrandSecondgetAll().subscribe(list => {console.log('BrandSecondgetAll : ',list)});
+    await this.masProdService.BrandMaingetAll().subscribe(list => {
+      this.BrandMain = list,console.log('BrandMaingetAll : ',list)
+    });
     // await this.masProdService.DutyUnitgetAll().subscribe(list => {});
     // await this.masProdService.SizePackagegetAll().subscribe(list => {});
-    await this.preLoaderService.setShowPreloader(false);
+     this.preLoaderService.setShowPreloader(false);
+  }
+
+  getValueByIndex($event) {
+    console.log('$event : ', $event)
+
   }
 
   private navigate_service() {
@@ -81,20 +93,20 @@ export class ListComponent implements OnInit {
   clickView(code: string) {
     this.router.navigate([`/masProducts/manage/R/${code}`]);
   }
-  
+
   async onSearch(Textsearch) {
     this.preLoaderService.setShowPreloader(true);
 
-    await this.masProdService.DutyGroupgetAll(Textsearch).subscribe(list => {
-      this.onSearchComplete(list)
+    // await this.masProdService.DutyGroupgetAll().subscribe(list => {
+    //   this.onSearchComplete(list)
 
-      this.preLoaderService.setShowPreloader(false);
-    }, (err: HttpErrorResponse) => {
-      // this.ShowAlertNoRecord();
-      //alert(Message.noRecord);
-      this.ListMasProd = [];
-      this.preLoaderService.setShowPreloader(false);
-    });
+    //   this.preLoaderService.setShowPreloader(false);
+    // }, (err: HttpErrorResponse) => {
+    //   // this.ShowAlertNoRecord();
+    //   //alert(Message.noRecord);
+    //   this.ListMasProd = [];
+    //   this.preLoaderService.setShowPreloader(false);
+    // });
 
   }
 

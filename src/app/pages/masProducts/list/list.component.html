@@ -13,9 +13,9 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
-                                <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm">
-                                    <option value="" selected disabled></option>
-                                    <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
+                                <select [(ngModel)]="GroupName" (ngModelChange)="getValueByIndex($event)" name="GroupName"  class="form-control form-control-sm">
+                                    <!-- <option value="" selected disabled></option> -->
+                                    <option *ngFor="let item of DutyGroup; let i = index" [ngValue]="item" >{{i+1}}. {{item.GroupName}}</option>
                                 </select>
                             </div>
                         </div>
