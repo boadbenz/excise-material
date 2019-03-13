@@ -193,9 +193,9 @@
           <th class="footable-sortable" style="width:7%">มูลค่าภาษี</th>
           <th class="footable-sortable" style="width:7%">ค่าปรับสุทธิ</th>
           <th class="footable-sortable" style="width:7%">ยอดชำระ</th>
-          <th class="footable-sortable" style="width:7%">สินบน(20)</th>
-          <th class="footable-sortable" style="width:7%">รางวัล(20)</th>
-          <th class="footable-sortable" style="width:7%">ส่งคลัง(60)</th>
+          <th class="footable-sortable" style="width:7%">สินบน({{ sumAllCompare && sumAllCompare.sum3 ? 20 : 0 }}%)</th>
+          <th class="footable-sortable" style="width:7%">รางวัล({{ sumAllCompare && sumAllCompare.sum3 ? 20 : 0 }}%)</th>
+          <th class="footable-sortable" style="width:7%">ส่งคลัง({{ sumAllCompare && sumAllCompare.sum3 ? 60 : 0 }}%)</th>
           <!--<th class="footable-sortable" style="width:7%">รวม</th>-->
         </tr>
         </thead>
