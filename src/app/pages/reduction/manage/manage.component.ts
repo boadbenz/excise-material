@@ -43,7 +43,52 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     LocationlawName: '',
     FaultSubject: '',
     FaultNo: '',
-    Penalty: ''
+    Penalty: '',
+    CompareDate: ['', ''],
+    AdjustArrestStaff: [
+      {
+        ArrestCode: '',
+        ContributorID: '',
+        DepartmentCode: '',
+        DepartmentLevel: '',
+        DepartmentName: '',
+        FirstName: '',
+        IsActive: '',
+        LastName: '',
+        OfficeCode: '',
+        OfficeName: '',
+        OfficeShortName: '',
+        PosLevel: '',
+        PosLevelName: '',
+        PositionCode: '',
+        PositionName: '',
+        StaffCode: '',
+        StaffID: '',
+        TitleName: '',
+      }
+    ],
+    AdjustCompareStaff: [
+      {
+        CompareID: null,
+        ContributorID: null,
+        DepartmentCode: null,
+        DepartmentLevel: null,
+        DepartmentName: null,
+        FirstName: '',
+        IsActive: 0,
+        LastName: '',
+        OfficeCode: '',
+        OfficeName: '',
+        OfficeShortName: '',
+        PosLevel: '',
+        PosLevelName: '',
+        PositionCode: '',
+        PositionName: '',
+        StaffCode: '',
+        StaffID: 0,
+        TitleName: '',
+      }
+    ]
   };
 
   fileItem = [{
@@ -119,9 +164,9 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     });
 
     this._adjustArrestgetByCon(this.compareID);
-    this._adjustReceiptgetByCon(this.compareID);
-    this._adjustDetailgetByCon(this.compareID);
-    this._masDocumentMailgetAll(this.compareID);
+    // this._adjustReceiptgetByCon(this.compareID);
+    // this._adjustDetailgetByCon(this.compareID);
+    // this._masDocumentMailgetAll(this.compareID);
 
     console.log("adjustDetailgetByCon : ",this.adjustDetailData)
     console.log("adjustReceiptgetByCon : ", this.tableData)
@@ -172,37 +217,54 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private _adjustArrestgetByCon(compareID) {
-    this.apiServer.post('/XCS60/AdjustArrestgetByCon', { CompareID: compareID })
-      .subscribe(response => {
-        if (response.length > 0) {
-          this.detailData = Object.assign(this.listData, response[0]);
-        } else {
-          this.detailData = Object.assign(this.listData, response);
-        }
+    this.apiServer.post('/XCS60/AdjustComparegetByCon', {CompareID: compareID})
+        .subscribe(response => {
+          if (response.length > 0) {
+            this.detailData = Object.assign(this.listData, response[0]);
+          } else {
+            this.detailData = Object.assign(this.listData, response);
+          }
 
-        this.fullName =
-          this.detailData.TitleName +
-          this.detailData.FirstName +
-          ' ' +
-          this.detailData.LastName;
-      }, error => console.log(error));
+          console.log(this.detailData);
+          if (this.detailData.AdjustArrestStaff.length > 0) {
+            this.detailData.CompareName = this.detailData.AdjustArrestStaff[0].TitleName
+                                        + this.detailData.AdjustArrestStaff[0].FirstName
+                                        + ' '
+                                        + this.detailData.AdjustArrestStaff[0].LastName;
+          } else {
+            this.detailData.CompareName = '';
+            this.detailData.ComparePositionName = '';
+          }
+
+          if (this.detailData.IsOutside === 1) {
+            this.detailData.CompareCode = 'น' + this.detailData.CompareCode;
+          }
+
+          if (this.detailData.CompareDate) {
+            this.detailData.CompareDate = this.detailData.CompareDate.split(' ');
+          } else {
+            this.detailData.CompareDate = ['', ''];
+          }
+
+          this.tableData = this.detailData.AdjustCompareReceipt;
+        }, error => console.log(error));
   }
 
-  private _adjustReceiptgetByCon(compareID) {
-    this.apiServer.post('/XCS60/AdjustReceiptgetByCon', { CompareID: compareID })
-      .subscribe(response => {
-        this.tableData = response;
-      }, error => {
-        console.log(error);
-      }
-      );
-  }
+  // private _adjustReceiptgetByCon(compareID) {
+  //   this.apiServer.post('/XCS60/AdjustReceiptgetByCon', {CompareID: compareID})
+  //       .subscribe(response => {
+  //         this.tableData = response;
+  //       }, error => {
+  //         console.log(error);
+  //       }
+  //   );
+  // }
 
 
-  private _adjustDetailgetByCon(compareID) {
-    this.apiServer.post('/XCS60/AdjustDetailgetByCon', { CompareID: compareID })
-      .subscribe(response => this.adjustDetailData = response, error => console.log(error));
-  }
+  // private  _adjustDetailgetByCon(compareID) {
+  //   this.apiServer.post('/XCS60/AdjustCompareDetailgetByCon', {CompareID: compareID})
+  //       .subscribe(response => this.adjustDetailData =  response, error => console.log(error));
+  // }
 
   private _masDocumentMailgetAll(compareID) {
     this.apiServer.post('/XCS60/MasDocumentMaingetAll', {DocumentType: 10, ReferenceCode: compareID})
@@ -212,12 +274,12 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
                   , error => console.log(error));
   }
 
-  viewData(CompareID: string, CompareDetailID: string) {
-    this.router.navigate(['/reduction/manage', 'V', CompareID, CompareDetailID]);
+  viewData(CompareID: string = '', CompareDetailID: string = '') {
+    this.router.navigate(['/reduction/manage', 'V', this.compareID, CompareDetailID]);
   }
 
   editData(CompareID: string, CompareDetailID: string) {
-    this.router.navigate(['/reduction/manage', 'E', CompareID, CompareDetailID]);
+    this.router.navigate(['/reduction/manage', 'E', this.compareID, CompareDetailID]);
   }
 
   attachFile(file) {

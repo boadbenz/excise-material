@@ -22,9 +22,9 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">วันที่จับกุม : </label>
             <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.OccurrenceDate" name="LawsuitDate" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.ArrestDate" name="LawsuitDate" disabled>
               <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="detailData.OccurrenceTime" name="LawsuitTime" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.ArrestTime" name="LawsuitTime" disabled>
             </div>
           </div>
         </div>
@@ -43,7 +43,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">ตำแหน่ง : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.ComparePositionName" name="PositionlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.AdjustArrestStaff[0].PositionName" name="PositionlawName" disabled>
             </div>
           </div>
         </div>
@@ -54,7 +54,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">หน่วยงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.CompareOfficeShortName" name="DepartmentlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.AdjustCompareStaff[0].OfficeName" name="DepartmentlawName" disabled>
             </div>
           </div>
         </div>
@@ -81,9 +81,9 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">วันที่รับคดี : </label>
             <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.OccurrenceDate" name="LawsuitDate" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitDate" name="LawsuitDate" disabled>
               <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="detailData.OccurrenceTime" name="LawsuitTime" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.LawsuitTime" name="LawsuitTime" disabled>
             </div>
           </div>
         </div>
@@ -94,7 +94,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">ฐานความผิดมาตรา : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.Behaviour" name="FaultNo" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.SubSectionType" name="FaultNo" disabled>
             </div>
           </div>
         </div>
@@ -102,7 +102,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">ฐานความผิด : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.Testimony" name="FaultSubject" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.GuiltBaseName" name="FaultSubject" disabled>
             </div>
           </div>
         </div>
@@ -113,7 +113,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">บทกำหนดโทษ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.Prompt" name="FaultNo" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.SectionNo" name="FaultNo" disabled>
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">อัตราโทษ : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.IsMatchNotice" name="Penalty" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.PenaltyDesc" name="Penalty" disabled>
             </div>
           </div>
         </div>
@@ -140,9 +140,9 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">วันที่เปรียบเทียบ : </label>
             <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.CompareDate" name="LawsuitDate" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareDate[0]" name="LawsuitDate" disabled>
               <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="detailData.CompareTime" name="LawsuitTime" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.CompareDate[1]" name="LawsuitTime" disabled>
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@
           <div class="form-group row">
             <label class="col-form-label text-right col-md-4">ตำแหน่ง : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.ComparePositionName" name="PositionlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.AdjustArrestStaff[0].PositionName" name="PositionlawName" disabled>
             </div>
           </div>
         </div>
@@ -172,7 +172,7 @@
           <div class="form-group row">
             <label class="col-form-label text-left col-md-4">หน่วยงาน : </label>
             <div class="col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="detailData.CompareOfficeShortName" name="DepartmentlawName" disabled>
+              <input class="form-control" type="text" [(ngModel)]="detailData.AdjustCompareStaff[0].OfficeName" name="DepartmentlawName" disabled>
             </div>
           </div>
         </div>
@@ -193,9 +193,9 @@
       </button>
     </div>
     <!-- ปรับเพิ่ม-ลด dialog -->
-    <ng-template #reductionList let-c="close" let-d="dismiss">
+    <!-- <ng-template #reductionList let-c="close" let-d="dismiss">
       <app-reduction-model-list [listData]="adjustDetailData" [id]="compareID" (d)="dialog.dismiss()" (result)="result($event)"></app-reduction-model-list>
-    </ng-template>
+    </ng-template> -->
     <!-- print dialog -->
     <ng-template #printList let-c="close" let-d="dismiss">
       <app-print-document [listData]="documentMailgetAll" [id]="compareID" (d)="print_dialog.dismiss()" (result)="printResult($event)"></app-print-document>
@@ -223,16 +223,16 @@
             <td>{{item.LawbreakerName}}</td>
             <td>{{ i == 0 ? tableData[i].TotalFine : tableData[i-1].TotalFine}}</td>
             <td>{{item.TotalFine}}</td>
-            <td>{{item.PaymentDate}}</td>
+            <td>{{item.ReceiptDate}}</td>
             <td>{{item.ReceiptChanel}}</td>
             <td>{{item.ReceiptBookNo}}</td>
             <td>{{item.ReceiptNo}}</td>
-            <td>{{item.IsLawsuitComplete}}</td>
+            <td>{{item.RevenueStatus === 1 ? 'นำส่งแล้ว' : 'ยังไม่ส่ง'}}</td>
             <td>
-              <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.CompareID, item.CompareDetailID)">
+              <a href="javaScript:void(0);" class="text-secondary" (click)="viewData()">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
-              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="editData(item.CompareID, item.CompareDetailID)" [hidden]="showField">
+              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="editData()" [hidden]="showField || item.RevenueStatus === 1">
                 <i class="ti-pencil-alt btn-action"></i>
               </a>
             </td>
