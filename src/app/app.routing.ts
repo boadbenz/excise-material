@@ -78,6 +78,13 @@ export const routes: Routes = [
             { path: 'manage', loadChildren: './pages/report/manage/manage.module#ManageModule' }
         ]
     }, 
+    {
+        path: 'masProducts', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masProducts/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/masProducts/manage/manage.module#ManageModule' }
+        ]
+    },
     // {
     //     path: 'reward', component: LayoutComponent,
     //     children: [

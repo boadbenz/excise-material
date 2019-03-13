@@ -228,6 +228,25 @@
                         <span class="hide-menu">รายงานส่วนคดี</span>
                     </a>
                 </li>
+                <!-- <li>
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/masProducts/list">              
+                        <strong>12</strong>
+                        <span class="hide-menu">สินค้า</span>
+                    </a>
+                </li> -->
+                <li>
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"> 
+                        <strong>12</strong>
+                        <span class="hide-menu">ข้อมูลหลัก</span>
+                    </a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li>
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/masProducts/list">
+                                <span>12.1 ของกลาง</span>
+                            </a>
+                        </li>                            
+                    </ul>
+                </li>
                 <a href="javascript:void(0)" class="dropdown-item" [routerLink]="['/logout']">
                     <i class="fa fa-power-off"></i>
                     <span class="hide-menu">Logout</span>
