@@ -29,9 +29,11 @@ export class ListComponent implements OnInit {
     this.advSearch = this.navService.showAdvSearch;
   }
 
-  ngOnInit() {
+ async ngOnInit() {
+    
     localStorage.setItem('programcode', 'ILG60-99-01');
-    this.OnPageload();
+    
+    
     // set false
     this.navService.setEditButton(false);
     this.navService.setDeleteButton(false);
@@ -43,28 +45,38 @@ export class ListComponent implements OnInit {
     this.navService.setSearchBar(true);
     this.navService.setNewButton(true);
 
-    this.navigate_service();
-
-
+    this.preLoaderService.setShowPreloader(true);
+    await this.OnPageload();
+    await this.navigate_service();
+    this.preLoaderService.setShowPreloader(false);
   }
 
   async OnPageload() {
-     this.preLoaderService.setShowPreloader(true);
-    await this.masProdService.DutyGroupgetAll().subscribe(list => { this.DutyGroup = list });
+    this.preLoaderService.setShowPreloader(true);
+    await this.masProdService.DutyGroupgetAll().subscribe(list => { 
+      this.DutyGroup = list 
+      this.preLoaderService.setShowPreloader(false);
+    });
 
     // console.log('DutyGroup : ',this.DutyGroup)
     // await this.masProdService.MasProductgetByCon(Textsearch).subscribe(list => {});
-    await this.masProdService.BrandSecondgetAll().subscribe(list => {console.log('BrandSecondgetAll : ',list)});
     await this.masProdService.BrandMaingetAll().subscribe(list => {
       this.BrandMain = list,console.log('BrandMaingetAll : ',list)
+      this.preLoaderService.setShowPreloader(false);
     });
+    await this.masProdService.BrandSecondgetAll().subscribe(list => {
+      console.log('BrandSecondgetAll : ',list)
+      this.preLoaderService.setShowPreloader(false);
+    });
+
     // await this.masProdService.DutyUnitgetAll().subscribe(list => {});
     // await this.masProdService.SizePackagegetAll().subscribe(list => {});
-     this.preLoaderService.setShowPreloader(false);
   }
 
   getValueByIndex($event) {
-    console.log('$event : ', $event)
+    console.log('$event : ', $event.GroupCode)
+
+
 
   }
 
