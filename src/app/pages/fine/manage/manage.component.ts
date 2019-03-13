@@ -43,6 +43,11 @@ export class ManageComponent implements OnInit, OnDestroy {
   IsOutside: number;
   OnSubscribe: any = {};
   compareForm: FormGroup;
+  multiReward: any = {
+    BribeMoney: 0.2,
+    RewardMoney: 0.2,
+    TreasuryMoney: 0.6
+  };
   compareDocument: any = {
     DocumentID: '',
     DocumentName: '',
@@ -131,7 +136,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.50');
+    this.sidebarService.setVersion('0.0.0.51');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -157,6 +162,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       await this.getRouteParams();
       await this.subscribeHeaderBtn();
       await this.CompareArrestgetByIndictmentID();
+      await this.getMultiplyReward();
       this.accused.CompareDate = this.compareDate;
       console.log(this.accused);
       this.preloader.setShowPreloader(false);
@@ -216,6 +222,30 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.navService.setNextPageButton(false);
     for (const k of Object.keys(this.OnSubscribe)) {
       this.OnSubscribe[k].unsubscribe();
+    }
+  }
+  async getMultiplyReward() {
+    try {
+      const resp: any = await this.CompareNoticegetByArrestCode();
+      if (resp && resp.length > 0) {
+        this.multiReward = {
+          BribeMoney: 0.2,
+          RewardMoney: 0.2,
+          TreasuryMoney: 0.6
+        };
+      } else {
+        this.multiReward = {
+          BribeMoney: 0,
+          RewardMoney: 0.2,
+          TreasuryMoney: 0.8
+        };
+      }
+    } catch (err) {
+      this.multiReward = {
+        BribeMoney: 0,
+        RewardMoney: 0.2,
+        TreasuryMoney: 0.8
+      };
     }
   }
   setAutocompleteStyle() {
@@ -1278,9 +1308,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
             console.log(p);
             detail.all = this.roundDigit((detail.multi * detail.FineAmount));
-            detail.BribeMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.2);
-            detail.RewardMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.2);
-            detail.TreasuryMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.6);
+            detail.BribeMoney = this.roundDigit((detail.multi * detail.FineAmount) * this.multiReward.BribeMoney);
+            detail.RewardMoney = this.roundDigit((detail.multi * detail.FineAmount) *  this.multiReward.RewardMoney);
+            detail.TreasuryMoney = this.roundDigit((detail.multi * detail.FineAmount) *  this.multiReward.TreasuryMoney);
             sum = (+sum) + (+detail.all);
             sum1 = (+sum1) + (+detail.BribeMoney);
             sum2 = (+sum2) + (+detail.RewardMoney);
@@ -1373,9 +1403,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
           console.log(detail);
           detail.all = this.roundDigit((detail.multi * detail.FineAmount));
-          detail.BribeMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.2);
-          detail.RewardMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.2);
-          detail.TreasuryMoney = this.roundDigit((detail.multi * detail.FineAmount) * 0.6);
+          detail.BribeMoney = this.roundDigit((detail.multi * detail.FineAmount) * this.multiReward.BribeMoney);
+          detail.RewardMoney = this.roundDigit((detail.multi * detail.FineAmount) * this.multiReward.RewardMoney);
+          detail.TreasuryMoney = this.roundDigit((detail.multi * detail.FineAmount) * this.multiReward.TreasuryMoney);
           sum = (+sum) + (+detail.all);
           sum1 = (+sum1) + (+detail.BribeMoney);
           sum2 = (+sum2) + (+detail.RewardMoney);
@@ -2347,9 +2377,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
       }
       if (cmp.isNo2) {
-        this.ListCompareDetail[i].BribeMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
-        this.ListCompareDetail[i].RewardMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
-        this.ListCompareDetail[i].TreasuryMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.6);
+        this.ListCompareDetail[i].BribeMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * this.multiReward.BribeMoney);
+        this.ListCompareDetail[i].RewardMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * this.multiReward.RewardMoney);
+        this.ListCompareDetail[i].TreasuryMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * this.multiReward.TreasuryMoney);
         this.DataToSave.userData[cmp.userNo].payment = cmp['userNo' + cmp.userNo + ':' + i];
         sum = (+sum) + (+cmp['userNo' + cmp.userNo + ':' + i]);
         sum1 = (+sum1) + (+cmp.BribeMoney);
@@ -2386,9 +2416,9 @@ export class ManageComponent implements OnInit, OnDestroy {
           sum2 = 0;
           sum3 = 0;
         } else {
-          this.ListCompareDetail[i].BribeMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
-          this.ListCompareDetail[i].RewardMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.2);
-          this.ListCompareDetail[i].TreasuryMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * 0.6);
+          this.ListCompareDetail[i].BribeMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * this.multiReward.BribeMoney);
+          this.ListCompareDetail[i].RewardMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * this.multiReward.RewardMoney);
+          this.ListCompareDetail[i].TreasuryMoney = this.roundDigit(cmp['userNo' + cmp.userNo + ':' + i] * this.multiReward.TreasuryMoney);
           sum = (+sum) + (+cmp['userNo' + cmp.userNo + ':' + i]);
           sum1 = (+sum1) + (+this.ListCompareDetail[i].BribeMoney);
           sum2 = (+sum2) + (+this.ListCompareDetail[i].RewardMoney);
