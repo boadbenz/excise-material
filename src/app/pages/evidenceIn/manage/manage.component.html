@@ -233,24 +233,31 @@
                 </div>
             </div>
 
-            <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :</label>
-            <div class="col-lg-4 col-md-7">
-                <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName"
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptStaffSend" name="DeptStaffSend" class="form-control" 
                         [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                    <!-- <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="" aria-label="Number"
-                        matInput [matAutocomplete]="auto2" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
-                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                    <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
-                        <mat-option *ngFor="let sOption of StaffSendoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                            (click)="StaffSendonAutoSelecteWord(sOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(sOption)">
-                            {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
-                        </mat-option>
-                    </mat-autocomplete> -->
                 </div>
-            </div>
         </div>
         <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName"
+                            [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        <!-- <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="" aria-label="Number"
+                            matInput [matAutocomplete]="auto2" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
+                            [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
+                            <mat-option *ngFor="let sOption of StaffSendoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                (click)="StaffSendonAutoSelecteWord(sOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(sOption)">
+                                {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                            </mat-option>
+                        </mat-autocomplete> -->
+                    </div>
+                </div>
+
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
             </label>
             <div class="col-lg-4 col-md-7 col-sm-8">
@@ -258,13 +265,6 @@
                     <input type="text" [(ngModel)]="PosStaffSend" name="PosStaffSend" class="form-control" 
                         [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
-            </div>
-
-            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
-            </label>
-            <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptStaffSend" name="DeptStaffSend" class="form-control" 
-                    [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
             </div>
         </div>
 
