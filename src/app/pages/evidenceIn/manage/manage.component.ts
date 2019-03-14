@@ -1230,7 +1230,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.rawWarehouseOptions = res;
 
                 if (this.rawWarehouseOptions.length == 0) {
-                    this.ShowAlertWarning("ไม่พบคลัดจัดเก็บของหน่วยงาน " + localStorage.getItem("officeShortName"));
+                    this.ShowAlertWarning("ไม่พบคลังจัดเก็บของหน่วยงาน " + localStorage.getItem("officeShortName"));
                 }
 
                 this.preloader.setShowPreloader(false);

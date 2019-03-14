@@ -24,7 +24,7 @@
 
                     <label for="" class="col-lg-2 col-sm-3 control-label">วันที่รับ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
-                        <div class="form-group input-group form-line">
+                        <div class="input-group form-line">
                             <div style="width:45%">
                                 <my-date-picker-th name="EvidenceInDateStart" [options]="myDatePickerOptions" (dateChanged)="onSRecvDateChange($event)" [(ngModel)]="EvidenceInDateStart"></my-date-picker-th>
                             </div>
@@ -63,7 +63,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
-                                <select ngModel name="EvidenceInType" class="form-control form-control-sm" [disabled]="showEditField">
+                                <select ngModel name="EvidenceInType" class="form-control" [disabled]="showEditField">
                                     <option value="">ไม่เลือกประเภทรายการรับ</option>
                                     <option value="0">ตรวจรับของกลางจากหน่วยงานภายใน</option>
                                     <option value="1">ตรวจรับของกลางจากหน่วยงานภายนอก</option>
@@ -85,7 +85,7 @@
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-3 control-label">วันที่นำส่ง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
-                        <div class="form-group input-group form-line">
+                        <div class="input-group form-line">
                             <div style="width:45%">
                                 <my-date-picker-th name="DeliveryDateStart" [options]="myDatePickerOptions" (dateChanged)="onSSendDateChange($event)" [(ngModel)]="DeliveryDateStart"></my-date-picker-th>
                             </div>
