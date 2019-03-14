@@ -66,7 +66,7 @@ export class ListComponent implements OnInit {
         this.navService.setSearchBar(true);
         this.navService.setNewButton(false);
 
-        this.sidebarService.setVersion('Prove 0.0.0.31');
+        this.sidebarService.setVersion('Prove 0.0.0.32');
 
         //this.advSearch.next(true);
         this.DeliveryDateTo = null;
