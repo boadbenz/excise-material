@@ -20,11 +20,11 @@ export const routes: Routes = [
         ]
     }, {
         // canActivate: [AuthGuard],
-        path: 'arrest', component: LayoutComponent,
+        path: 'arrest', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/arrests/arrest.module#ArrestModule'
     }, {
         // canActivate: [AuthGuard],
-        path: 'suppression/investigation', component: LayoutComponent,
+        path: 'suppression/investigation', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/investigation/investigation.module#InvestigationModule'
     }, {
         path: 'prove', component: LayoutComponent, canActivate: [AuthGuard],
