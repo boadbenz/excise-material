@@ -139,7 +139,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.51');
+    this.sidebarService.setVersion('0.0.0.52');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
