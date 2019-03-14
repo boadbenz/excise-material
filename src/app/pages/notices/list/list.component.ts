@@ -40,6 +40,35 @@ export class ListComponent implements OnInit, OnDestroy {
         height: '30px'
     };
 
+    dutyGroupNameOptions = [
+        { value: '0000', label: 'เทส' },
+        { value: '8001', label: 'ยาสูบ' },
+        { value: '9001', label: 'ไพ่' },
+        { value: '0201', label: 'เครื่องดื่ม' },
+        { value: '0301', label: 'เครื่องปรับอากาศ' },
+        { value: '0302', label: 'โคมไฟฟ้าและโคมระย้า' },
+        { value: '0601', label: 'เรือ' },
+        { value: '0701', label: 'ผลิตภัณฑ์เครื่องหอมและเครื่องสำอาง' },
+        { value: '0801', label: 'พรมและสิ่งทอปูพื้น' },
+        { value: '0802', label: 'รถจักรยานยนต์' },
+        { value: '0803', label: 'หินอ่อนและหินแกรนิต' },
+        { value: '0804', label: 'แบตเตอรี่' },
+        { value: '0901', label: 'ไนท์คลับและดิสโกเธค' },
+        { value: '0902', label: 'สถานอาบน้ำหรืออบตัวและนวด' },
+        { value: '1001', label: 'สนามแข่งม้า' },
+        { value: '1002', label: 'สลากกินแบ่ง' },
+        { value: '1101', label: 'สนามกอล์ฟ' },
+        { value: '1201', label: 'โทรคมนาคม' },
+        { value: '0501', label: 'รถยนต์' },
+        { value: '7001', label: 'เบียร์' },
+        { value: '7002', label: 'สุรา' },
+        { value: '0101', label: 'น้ำมันและผลิตภัณฑ์น้ำมัน' },
+        { value: '0202', label: 'เครื่องขายเครื่องดื่ม' },
+        { value: '0401', label: 'แก้วและเครื่องแก้ว' },
+        { value: '0805', label: 'สารทำลายชั้นบรรยากาศโอโซน' }
+    ];
+    dutyGroupCode = '0000';
+
     private subOnsearchByKeyword: any;
     private subSetNextPage: any;
 
@@ -153,6 +182,12 @@ export class ListComponent implements OnInit, OnDestroy {
         await this.noticeService.getByConAdv(form.value).then(list => this.onSearchComplete(list));
 
         this.preLoaderService.setShowPreloader(false);
+    }
+
+    onKDutyGroup(){
+        let index = this.dutyGroupNameOptions.map(m => m.value).indexOf(this.dutyGroupCode);
+        index = (index + 1) % this.dutyGroupNameOptions.length;
+        this.dutyGroupCode = this.dutyGroupNameOptions[index].value;
     }
 
     onSearchComplete(list) {

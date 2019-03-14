@@ -50,6 +50,19 @@
                             <input type="text" name="SuspectName" ngModel class="form-control form-control-sm">
                         </div>
                     </div>
+                    <label for="" class="col-lg-2 col-sm-3">สินค้า :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <select name="dutyGroupCode"
+                                (keypress)="onKDutyGroup()"
+                                [(ngModel)]="dutyGroupCode"
+                                class="form-control form-control-sm">
+                                <option *ngFor="let g of dutyGroupNameOptions" [value]="g.value">
+                                {{ g.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row form-group">

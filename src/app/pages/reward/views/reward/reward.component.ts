@@ -249,11 +249,11 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         this.aggregate.SecondPart.sum = sumSecondPart;
 
         const sumFirst =
-          selectedValue.filter(f => f.check === true).map(m => m.FirstMoney)
+          selectedValue.filter(f => f.check === true).map(m => parseFloat(m.FirstMoney))
             .length > 0
             ? selectedValue
               .filter(f => f.check === true)
-              .map(m => m.FirstMoney)
+              .map(m => parseFloat(m.FirstMoney))
               .reduce((a, b) => (a += b))
             : 0;
 
@@ -261,22 +261,22 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         this.aggregate.FirstMoney.sum = sumFirst;
 
         const sumSecond =
-          selectedValue.filter(f => f.check === true).map(m => m.SecondMoney)
+          selectedValue.filter(f => f.check === true).map(m => parseFloat(m.SecondMoney))
             .length > 0
             ? selectedValue
               .filter(f => f.check === true)
-              .map(m => m.SecondMoney)
+              .map(m => parseFloat(m.SecondMoney))
               .reduce((a, b) => (a += b))
             : 0;
 
         this.aggregate.SecondMoney.sum = Number(sumSecond.toFixed(2));
 
         const sumTotal =
-          selectedValue.filter(f => f.check === true).map(m => m.ToTalMoney)
+          selectedValue.filter(f => f.check === true).map(m => parseFloat(m.ToTalMoney))
             .length > 0
             ? selectedValue
               .filter(f => f.check === true)
-              .map(m => m.ToTalMoney)
+              .map(m => parseFloat(m.ToTalMoney))
               .reduce((a, b) => (a += b))
             : 0;
 
@@ -581,7 +581,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           .subscribe((staff: MasStaffModel[]) => {
             this.staffAll = staff;
             this.Staff_StaffCode_List = staff.map(m => ({
-              text: `${m.TitleName}${m.FirstName} ${m.LastName}`,
+              // text: `${m.TitleName}${m.FirstName} ${m.LastName}`,
+              text: `${m.FirstName} ${m.LastName}`, //g
               value: m.StaffCode
             }));
             this.StaffList = staff.map(
@@ -656,7 +657,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         // 1.1.9 NEW
         nonRequestRewardStaff.forEach(element => {
           this.mainMasterService.SecondPartLevelCode(element.PosLevel).then(res => { 
-            this.PosLeveltemp.push(res[0].SecondPart)  , console.log('++++res', res) 
+            const secondPart = res.length > 0 ? res[0].SecondPart : 0;
+            this.PosLeveltemp.push(secondPart)  //g
           }) 
         });
         // console.log('++++++nonRequestRewardStaff : ', nonRequestRewardStaff)
@@ -666,12 +668,13 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             ...m,
             sort: 3,
             check: true,
-            FullName: `${m.TitleName}${m.FirstName}${m.LastName}`,
+            // FullName: `${m.TitleName}${m.FirstName}${m.LastName}`,
+            FullName: `${m.FirstName} ${m.LastName}`, //g
             PositionName: `${m.PositionName || ''}`,
             PosLevelName: `${m.PosLevelName || ''}`,
             ContributorName: this.ConvertContributorName(m.ContributorID),
             FirstPart:
-              m.ContributorID === '6' || m.ContributorID === '7' ? 1 : null,
+              parseInt(m.ContributorID) == 6 || parseInt(m.ContributorID) == 7 ? 1 : null,
             SecondPart: null,
 
             FirstMoney: 0,
@@ -681,7 +684,6 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             ToTalMoney: 0
           })
         );
-
         // const control_nonRequestRewardStaff: FormArray = <FormArray>(
         //   this.nonRequestRewardStaffForm
         // );
@@ -740,7 +742,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               MoneySort1: [this.aggregate.BribeMoney.sum],
               ToTalMoney: [this.aggregate.BribeMoney.sum]
             });
-            this.RequestRewardStaff.push(newGroup);
+            // this.RequestRewardStaff.push(newGroup); //g
           });
         // this.ILG60_08_04_00_00_E08_DATA$.next({
         //   methodName: 'RequestBribeRewardgetByIndictmentID',
@@ -818,8 +820,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               ...m,
               check: true,
               sort: 2,
-              FullName: `${m.TitleName || ''}${m.FirstName || ''}${m.LastName ||
-                ''}`,
+              // FullName: `${m.TitleName || ''}${m.FirstName || ''}${m.LastName || ''}`,
+              FullName: `${m.FirstName || ''}${m.LastName || ''}`, //g
               ContributorName: m.ContributorName
             })
           );
