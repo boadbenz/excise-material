@@ -35,7 +35,7 @@ export class MasProdService {
   BrandMaingetAll() {
     const params = '';
     const url = `${appConfig.api7777}/BrandMaingetAll`;
-    return this.http.post<any>(url, params, this.httpOptions);
+    return this.http.post<BrandMainset>(url, params, this.httpOptions);
   }
 
   DutyUnitgetAll() {
@@ -52,3 +52,12 @@ export class MasProdService {
 
 }
 
+export interface BrandMainset {
+  ID?: string;
+  DutyCode?: string;
+  BrandMainCode?: string;
+  BrandMainThai?: string;
+  BrandMainENG?: string;
+  GroupID?: string;
+  IsActive?: string;
+}
