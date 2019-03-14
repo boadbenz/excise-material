@@ -10,6 +10,7 @@ import { ReductionApiService } from '../reduction.api.service';
 })
 export class ManageDetailComponent implements OnInit, OnDestroy {
 
+  public mode = 'A';
   public adjustArrest = {
     ArrestCode: '',
     ArrestDate: '',
@@ -97,6 +98,14 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   public CompareReceipt: any = [];
 
+  public EditApproveCaseComparison: number[] = [];
+  public EditApproveCaseComparisonData: any[] = [];
+  public EditApproveCaseComparisonPopUp: any = {
+    fullName: '',
+    PaymentFineDate: ['', ''],
+    FineType: '1'
+  }
+
   adjustFine = [];
 
   adjustReceipt = [];
@@ -131,6 +140,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   public async ngOnInit() {
 
+    this.mode = this.activeRoute.snapshot.paramMap.get('mode');
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
       this.navService.setSendIncomeButton(true);
@@ -335,6 +345,65 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   public editData() {
     this.viewMode = false;
+  }
+
+  public async ViewApproveData(CompareDetailID: any) {
+    this.viewMode = true;
+    console.log(CompareDetailID);
+    await this.GetEditApproveCaseComparisonData(CompareDetailID);
+  }
+
+  public async EditApproveData(CompareDetailID: any) {
+    this.viewMode = false;
+    await this.GetEditApproveCaseComparisonData(CompareDetailID);
+  }
+
+  public async GetEditApproveCaseComparisonData(CompareDetailID: any) {
+    if (this.EditApproveCaseComparison.indexOf(CompareDetailID) === (-1)) {
+      this.EditApproveCaseComparison.push(CompareDetailID);
+
+      const response = await this.apiService.post('/XCS60/AdjustCompareDetailgetByCon', {
+        CompareDetailID: CompareDetailID
+      }).toPromise();
+
+      this.EditApproveCaseComparisonData[CompareDetailID] = response;
+
+      if (this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineDate != null) {
+        this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineDate =
+        (this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineDate.split(' '));
+      } else {
+        this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineDate = ['', ''];
+      }
+
+      if (this.EditApproveCaseComparisonData[CompareDetailID].FineType === 1) {
+        this.EditApproveCaseComparisonData[CompareDetailID].FineType = '1';
+      } else if (this.EditApproveCaseComparisonData[CompareDetailID].FineType === 2) {
+        this.EditApproveCaseComparisonData[CompareDetailID].FineType = '2';
+      } else if (this.EditApproveCaseComparisonData[CompareDetailID].FineType === 3) {
+        this.EditApproveCaseComparisonData[CompareDetailID].FineType = '3';
+      } else if (this.EditApproveCaseComparisonData[CompareDetailID].FineType === 4) {
+        this.EditApproveCaseComparisonData[CompareDetailID].FineType = '4';
+      }
+
+      this.EditApproveCaseComparisonData[CompareDetailID].fullName =
+      (this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareLawbreaker[0].LawbreakerTitleName || '') +
+      (this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareLawbreaker[0].LawbreakerFirstName || '') + ' ' +
+      (this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareLawbreaker[0].LawbreakerLastName || '');
+
+      this.EditApproveCaseComparisonPopUp = this.EditApproveCaseComparisonData[CompareDetailID];
+      console.log(this.EditApproveCaseComparisonData);
+      console.log(this.EditApproveCaseComparisonPopUp);
+    } else {
+      console.log('has data alredy');
+      this.EditApproveCaseComparisonPopUp = this.EditApproveCaseComparisonData[CompareDetailID];
+      this.EditApproveCaseComparisonPopUp.FineType = 2;
+      console.log(this.EditApproveCaseComparisonData);
+      console.log(this.EditApproveCaseComparisonPopUp);
+    }
+  }
+
+  public checkPopUp(): any {
+    console.log(this.EditApproveCaseComparisonPopUp);
   }
 
   public attachFile(file) {
