@@ -429,7 +429,7 @@
                     <span *ngIf="receipt.IsOutside" style="padding: 0.5rem;">น.</span>
                   </div>
                   <div class="row col-md-10">
-                      <input class="form-control" type="text" [(ngModel)]="receipt.CompareNo" name="CompareNo"
+                      <input class="form-control" type="number" [(ngModel)]="receipt.CompareNo" name="CompareNo"
                       [disabled]="showEditField || receipt.isHaveData">
                   </div>
             </div> <span style="font-size: 1.5rem">/</span>
