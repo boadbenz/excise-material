@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MasProdService } from '../masProd.service';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 const routes: Routes = [
@@ -33,9 +34,11 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         CardActionsModule,
         PaginationTableModule,
-        MyDatePickerTHModule
+        MyDatePickerTHModule,
+        MatAutocompleteModule
     ],
     declarations: [ListComponent],
-    providers: [MasProdService]
+    providers: [MasProdService],
+    exports: [MatAutocompleteModule]
 })
 export class ListModule { }

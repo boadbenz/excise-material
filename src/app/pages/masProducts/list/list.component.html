@@ -22,7 +22,25 @@
                         </div>
                     </div>
                     <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อหลัก :</label>
-                    <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="col-lg-4 col-md-7 col-sm-8">
+                        <div class="form-group ">
+                            <input type="text" class="form-control form-control-sm" 
+                                [(ngModel)]="xxx" name="xxx" placeholder="พิมพ์ข้อความ"
+                                aria-label="Number" 
+                                matInput [matAutocomplete]="auto" 
+                                [ngClass]="{'ng-touched':isRequired}"
+                                (focus)="onAutoFocus($event.target.value)" 
+                                (input)="onAutoChange($event.target.value)"
+                                [disabled]="showEditField"
+                                required>
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                <mat-option *ngFor="let item of options" [value]="item.BrandMainENG" (click)="onAutoSelecteWord(item)" (onSelectionChange)="onAutoSelecteWord(item)">
+                                    {{ item.BrandMainENG }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+                    <!-- <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
                                 <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm">
@@ -31,7 +49,7 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อรอง :</label>

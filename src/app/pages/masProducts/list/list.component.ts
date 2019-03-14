@@ -25,6 +25,8 @@ export class ListComponent implements OnInit {
   afBrandMain: any;
   BrandSecond: any;
   afBrandSecond: any;
+
+  options = [];
   constructor(private navService: NavigationService,
     private preLoaderService: PreloaderService,
     private masProdService: MasProdService,
@@ -32,11 +34,11 @@ export class ListComponent implements OnInit {
     this.advSearch = this.navService.showAdvSearch;
   }
 
- async ngOnInit() {
-    
+  async ngOnInit() {
+
     localStorage.setItem('programcode', 'ILG60-99-01');
-    
-    
+
+
     // set false
     this.navService.setEditButton(false);
     this.navService.setDeleteButton(false);
@@ -56,19 +58,19 @@ export class ListComponent implements OnInit {
 
   async OnPageload() {
     this.preLoaderService.setShowPreloader(true);
-    await this.masProdService.DutyGroupgetAll().subscribe(list => { 
-      this.DutyGroup = list 
+    await this.masProdService.DutyGroupgetAll().subscribe(list => {
+      this.DutyGroup = list
       this.preLoaderService.setShowPreloader(false);
     });
 
     // console.log('DutyGroup : ',this.DutyGroup)
     // await this.masProdService.MasProductgetByCon(Textsearch).subscribe(list => {});
     await this.masProdService.BrandMaingetAll().subscribe(list => {
-      this.BrandMain = list,console.log('BrandMaingetAll : ',list)
+      this.BrandMain = list, console.log('BrandMaingetAll : ', list)
       this.preLoaderService.setShowPreloader(false);
     });
     await this.masProdService.BrandSecondgetAll().subscribe(list => {
-      console.log('BrandSecondgetAll : ',list)
+      console.log('BrandSecondgetAll : ', list)
       this.preLoaderService.setShowPreloader(false);
     });
 
@@ -78,14 +80,31 @@ export class ListComponent implements OnInit {
 
   getValueByIndex($event) {
     console.log('$event : ', $event.GroupCode)
-    this.setGroup('7002');
+    this.setGroup('0501');
   }
 
-   setGroup(GroupCode: string){
+  setGroup(GroupCode: string) {
     this.afBrandMain = this.BrandMain.filter(f => f.GroupID == GroupCode);
     // this.afBrandSecond = this.BrandSecond.filter(f => f.GroupID == GroupCode);
-    console.log('afBrandMain : ',this.afBrandMain)
-    console.log('afBrandSecond : ',this.afBrandSecond)
+    console.log('afBrandMain : ', this.afBrandMain)
+    console.log('afBrandSecond : ', this.afBrandSecond)
+  }
+  onAutoChange(value: string) {
+    console.log('onAutoChange : ', value)
+    if (value == '') {
+      this.options = [];
+    } else {
+      this.options = this.afBrandMain;
+    }
+  }
+  onAutoSelecteWord(event) {
+    console.log('onAutoSelecteWord : ', event)
+  }
+  onAutoFocus(value: string) {
+    console.log('onAutoFocus : ', value)
+    if (value == '') {
+        this.options = [];
+    }
   }
 
   private navigate_service() {
