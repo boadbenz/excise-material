@@ -159,7 +159,10 @@
             </div>
 
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">ทะเบียนตรวจพิสูจน์ :</label>
+                <div class="col-lg-2 col-md-4" style="padding-right:0">
+                    <label for="" class="control-label" style="float: left;">ทะเบียนตรวจพิสูจน์ : </label>
+                    <div style="float: right;">น.</div>
+                </div>
                 <div class="form-group input-group  col-lg-4 col-md-7">
                     <span style="margin-right: 5px" *ngIf="IsOutside==true">น.</span>
                     <input type="text" [(ngModel)]="DeliveryDocNo" name="DeliveryDocNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
@@ -427,9 +430,12 @@
             </div>
 
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">หนังสือนำส่งเลขที่ :</label>
+                <div class="col-lg-2 col-md-4" style="padding-right:0">
+                    <label for="" class="control-label" style="float: left;">หนังสือนำส่งเลขที่ : </label>
+                    <div style="float: right;">กค.</div>
+                </div>
+
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <span style="margin-right: 5px">กค.</span>
                     <input type="text" [(ngModel)]="DeliverNo" name="DeliverNo" class="form-control" [disabled]="showEditField || ShowReceiveField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                     <label class="col-form-label" style="padding: 0 5px 0 5px;">/</label>
