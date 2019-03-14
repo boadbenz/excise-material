@@ -2,16 +2,20 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { IncomeService } from '../evidenceIn.service';
+import { EvidenceService } from '../evidenceIn.service';
+import { IncomeService } from '../../income/income.service';
+import { ProveService } from '../../prove/prove.service';
+import { MasterService } from '../../model/master.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
+import { IsActivePipeModule } from '../../../shared/pipe/IsActivePipe.module';
+//import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
 
 const routes: Routes = [
     {
@@ -37,18 +41,16 @@ const routes: Routes = [
         HttpModule,
         HttpClientModule,
         FormsModule,
-        ReactiveFormsModule,
         RouterModule.forChild(routes),
         CardActionsModule,
         PrintDocModalModule,
         MyDatePickerTHModule,
         MatAutocompleteModule,
-        PaginationTableModule
+        PaginationTableModule,
+        IsActivePipeModule
     ],
-    declarations: [
-        ManageComponent
-    ],
-    providers: [IncomeService],
+    declarations: [ManageComponent],
+    providers: [EvidenceService, IncomeService, ProveService, MasterService],
     exports: [MatAutocompleteModule]
 })
 export class ManageModule { }

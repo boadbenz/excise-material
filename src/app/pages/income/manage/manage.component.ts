@@ -129,6 +129,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             await this.ShowRevenue();
         } else {
             this.preloader.setShowPreloader(false);
+            this.LoadDataFromLocalStorage();
         }
 
         this.paginage.TotalItems = this.ListRevenueDetail.length;
@@ -136,6 +137,75 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         this.CheckCompareReceive();
 
+    }
+
+    LoadDataFromLocalStorage() {
+        this.oRevenue.StationCode = localStorage.getItem("officeCode");
+        this.oRevenue.StationName = localStorage.getItem("officeShortName");
+        this.RevenueStation = localStorage.getItem("officeShortName");
+
+        let tempUser = this.rawStaffSendOptions.filter(f => f.StaffCode == localStorage.getItem("staffCode"));
+
+
+        // ----- ผู้นำส่ง -----
+        this.oRevenueSendStaff = {
+            StaffID: "",
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-07",
+            RevenueID: "",
+            StaffCode: tempUser[0].StaffCode,
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "20",
+            IsActive: "1"
+        }
+
+        this.StaffSendName = localStorage.getItem("fullName");
+        this.PosSend = localStorage.getItem("operationPosName");
+        this.DeptSend = localStorage.getItem("officeShortName");
+
+
+        // ----- ลงชื่อ -----
+        this.oRevenueStaff = {
+            StaffID: "",
+            ProgramCode: "XCS-60",
+            ProcessCode: "XCS-60-07",
+            RevenueID: "",
+            StaffCode: tempUser[0].StaffCode,
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "36",
+            IsActive: "1"
+        }
+
+        this.StaffName = localStorage.getItem("fullName");
+        this.PosStaff = localStorage.getItem("operationPosName");
+        this.DeptStaff = localStorage.getItem("officeShortName");
+        this.StaffDeptCode = localStorage.getItem("officeCode"),
+
+            this.ShowRevenueCompare();
     }
 
     private active_Route() {
@@ -214,7 +284,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 if (+this.MistreatNo < 1) {
                     this.ShowAlertWarning("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
-                   // alert("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
+                    // alert("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
 
                     return false;
                 }
@@ -269,14 +339,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                             this.navService.setEditButton(true);
                             this.navService.setDeleteButton(true);
                             this.navService.setEditField(true);
-    
+
                             this.ShowRevenue();
                         }
                     }
-                    else{
+                    else {
                         this.navService.setSaveButton(true);
                         this.navService.setCancelButton(true);
-    
+
                         this.navService.setPrintButton(false);
                         this.navService.setEditButton(false);
                         this.navService.setDeleteButton(false);
@@ -308,32 +378,30 @@ export class ManageComponent implements OnInit, OnDestroy {
         }).then((result) => {
             if (result.value) {
                 if (this.RevenueStatus == 1) {
-                    if (confirm(Message.confirmAction)) {
-                        this.IncService.RevenueupdDelete(this.RevenueID).then(async IsSuccess => {
-                            if (IsSuccess) {
-                                var isSuccess = true;
-                                this.ListRevenueDetail.filter(item => (item.IsCheck === true))
-                                    .map(async item => {
-                                        await this.IncService.RevenueCompareDetailReceiptupdDelete(item.CompareReceiptID.toString()).then(async item => {
-                                            if (!item.IsSuccess) {
-                                                isSuccess = item.IsSuccess;
-                                                return false;
-                                            }
-                                        }, (error) => { console.error(error); return false; });
-                                    });
-        
-                                if (isSuccess) {
-                                    this.oRevenue = {};
-                                    this.ShowAlertSuccess(Message.saveComplete);
-                                   // alert(Message.saveComplete);
-                                    this.router.navigate(['/income/list']);
-                                }
-                            } else {
-                                this.ShowAlertError(Message.saveFail);
-                                //alert(Message.saveFail);
+                    this.IncService.RevenueupdDelete(this.RevenueID).then(async IsSuccess => {
+                        if (IsSuccess) {
+                            var isSuccess = true;
+                            this.ListRevenueDetail.filter(item => (item.IsCheck === true))
+                                .map(async item => {
+                                    await this.IncService.RevenueCompareDetailReceiptupdDelete(item.CompareReceiptID.toString()).then(async item => {
+                                        if (!item.IsSuccess) {
+                                            isSuccess = item.IsSuccess;
+                                            return false;
+                                        }
+                                    }, (error) => { console.error(error); return false; });
+                                });
+
+                            if (isSuccess) {
+                                this.oRevenue = {};
+                                this.ShowAlertSuccess(Message.saveComplete);
+                                // alert(Message.saveComplete);
+                                this.router.navigate(['/income/list']);
                             }
-                        }, (error) => { console.error(error); return false; });
-                    }
+                        } else {
+                            this.ShowAlertError(Message.saveFail);
+                            //alert(Message.saveFail);
+                        }
+                    }, (error) => { console.error(error); return false; });
                 }
                 else if (this.RevenueStatus == 2) {
                     this.ShowAlertWarning(Message.cannotDelete);
@@ -419,15 +487,16 @@ export class ManageComponent implements OnInit, OnDestroy {
                                                             RevenueID: this.oRevenue.RevenueID,
                                                             CompareReceiptID: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
                                                             CompareID: item[j].CompareID,
-                                                            CompareCode: item[j].CompareCode,
+                                                            CompareCode: `${item[j].IsOutside == '1' ? 'น ' + item[j].CompareCode : item[j].CompareCode}`,
+                                                            CompareCodeTemp: `${res[j].IsOutside == '1' ? 'น ' + res[j].CompareCode : res[j].CompareCode}`,
                                                             LawBreaker: `${item[j].RevenueCompareDetail[i].LawbreakerTitleName == 'null' || item[j].RevenueCompareDetail[i].LawbreakerTitleName == null ? '' : item[j].RevenueCompareDetail[i].LawbreakerTitleName}` + item[j].RevenueCompareDetail[i].LawbreakerFirstName,
                                                             SurnameLawBreaker: item[j].RevenueCompareDetail[i].LawbreakerLastName,
                                                             StaffReceip: item[j].RevenueCompareStaff[i].TitleName + item[j].RevenueCompareStaff[i].FirstName + " " + item[j].RevenueCompareStaff[i].LastName,
                                                             PaymentDate: toLocalShort(item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
                                                             TotalFine: +`${item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
-                                                            BribeMoney: +`${item[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : item[0].RevenueCompareDetail[i].BribeMoney}`,
-                                                            TreasuryMoney: +`${item[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : item[0].RevenueCompareDetail[i].TreasuryMoney}`,
-                                                            RewardMoney: +`${item[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : item[0].RevenueCompareDetail[i].RewardMoney}`,
+                                                            BribeMoney: +`${item[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : item[j].RevenueCompareDetail[i].BribeMoney}`,
+                                                            TreasuryMoney: +`${item[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : item[j].RevenueCompareDetail[i].TreasuryMoney}`,
+                                                            RewardMoney: +`${item[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : item[j].RevenueCompareDetail[i].RewardMoney}`,
                                                             IsCheck: true,
                                                             IsNewItem: false,
                                                             IsDelItem: false
@@ -443,6 +512,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                                 }
                             }
 
+
                             this.preloader.setShowPreloader(false);
                         }, (err: HttpErrorResponse) => {
                             this.ShowAlertError(err.message);
@@ -450,32 +520,32 @@ export class ManageComponent implements OnInit, OnDestroy {
                         });
                     }
 
+                    // var rIndex = 1;
+
+                    // for (var a = 0; a < this.ListRevenueDetail.length; a++) {
+                    //     if (a != 0) {
+                    //         if (this.ListRevenueDetail[a - 1].CompareCode == this.ListRevenueDetail[a].CompareCode) {
+                    //             //this.ListRevenueDetailPaging[a].CompareCode = "";
+                    //             this.ListRevenueDetail[a].RevenueIndex = "";
+                    //         }
+                    //         else {
+                    //             rIndex += 1;
+                    //             this.ListRevenueDetail[a].RevenueIndex = rIndex;
+                    //         }
+                    //     }
+                    //     else {
+                    //         this.ListRevenueDetail[a].RevenueIndex = 1;
+                    //     }
+                    // }
+
+                    // this.ListRevenueDetail.filter(item => item.RevenueIndex == "").map(async p => {
+                    //     p.CompareCode = "";
+                    //     p.LawBreaker = p.LawBreaker.Replace("null", "");
+                    // });
+
                     // set total record
                     this.paginage.TotalItems = this.ListRevenueDetail.length;
                     this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
-
-                    var rIndex = 1;
-
-                    for(var a = 0; a < this.ListRevenueDetailPaging.length; a++){
-                        if(a != 0) {
-                            if(this.ListRevenueDetailPaging[a-1].CompareCode == this.ListRevenueDetailPaging[a].CompareCode){
-                                this.ListRevenueDetailPaging[a].CompareCode = "";
-                                this.ListRevenueDetailPaging[a].RevenueIndex = "";
-                            }
-                            else{
-                                rIndex += 1;
-                                this.ListRevenueDetailPaging[a].RevenueIndex = rIndex;
-                            }  
-                        }
-                        else{
-                            this.ListRevenueDetailPaging[a].RevenueIndex = 1;
-                        }
-
-                        //    this.ListRevenueDetailPaging[a].TotalFine = this.ListRevenueDetailPaging[a].TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
-                        //    this.ListRevenueDetailPaging[a].BribeMoney = this.ListRevenueDetailPaging[a].BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                        //    this.ListRevenueDetailPaging[a].TreasuryMoney = this.ListRevenueDetailPaging[a].TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                        //    this.ListRevenueDetailPaging[a].RewardMoney = this.ListRevenueDetailPaging[a].RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                    }
 
                     this.checkIfAllChbSelected();
                 }
@@ -521,14 +591,16 @@ export class ManageComponent implements OnInit, OnDestroy {
                                                 RevenueID: "",
                                                 CompareReceiptID: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
                                                 CompareID: res[j].CompareID,
-                                                CompareCode: res[j].CompareCode,
-                                                LawBreaker: res[j].RevenueCompareDetail[i].LawbreakerTitleName + res[j].RevenueCompareDetail[i].LawbreakerFirstName + " " + res[j].RevenueCompareDetail[i].LawbreakerLastName,
+                                                CompareCode: `${res[j].IsOutside == '1' ? 'น ' + res[j].CompareCode : res[j].CompareCode}`,
+                                                CompareCodeTemp: `${res[j].IsOutside == '1' ? 'น ' + res[j].CompareCode : res[j].CompareCode}`,
+                                                LawBreaker: `${res[j].RevenueCompareDetail[i].LawbreakerTitleName == 'null' || res[j].RevenueCompareDetail[i].LawbreakerTitleName == null ? '' : res[j].RevenueCompareDetail[i].LawbreakerTitleName}` + res[j].RevenueCompareDetail[i].LawbreakerFirstName,
+                                                SurnameLawBreaker: res[j].RevenueCompareDetail[i].LawbreakerLastName,
                                                 StaffReceip: res[j].RevenueCompareStaff[i].TitleName + res[j].RevenueCompareStaff[i].FirstName + " " + res[j].RevenueCompareStaff[i].LastName,
                                                 PaymentDate: toLocalShort(res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
                                                 TotalFine: +`${res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
-                                                BribeMoney: +`${res[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : res[0].RevenueCompareDetail[i].BribeMoney}`,
-                                                TreasuryMoney: +`${res[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : res[0].RevenueCompareDetail[i].TreasuryMoney}`,
-                                                RewardMoney: +`${res[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : res[0].RevenueCompareDetail[i].RewardMoney}`,
+                                                BribeMoney: +`${res[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : res[j].RevenueCompareDetail[i].BribeMoney}`,
+                                                TreasuryMoney: +`${res[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : res[j].RevenueCompareDetail[i].TreasuryMoney}`,
+                                                RewardMoney: +`${res[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : res[j].RevenueCompareDetail[i].RewardMoney}`,
                                                 IsCheck: false,
                                                 IsNewItem: true,
                                                 IsDelItem: false
@@ -543,16 +615,41 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                     }
 
+                    // if (this.mode == 'C') {
+                    //     var rIndex = 1;
+
+                    //     for (var a = 0; a < this.ListRevenueDetail.length; a++) {
+                    //         if (a != 0) {
+                    //             if (this.ListRevenueDetail[a - 1].CompareCode == this.ListRevenueDetail[a].CompareCode) {
+                    //                 //this.ListRevenueDetailPaging[a].CompareCode = "";
+                    //                 this.ListRevenueDetail[a].RevenueIndex = "";
+                    //             }
+                    //             else {
+                    //                 rIndex += 1;
+                    //                 this.ListRevenueDetail[a].RevenueIndex = rIndex;
+                    //             }
+                    //         }
+                    //         else {
+                    //             this.ListRevenueDetail[a].RevenueIndex = 1;
+                    //         }
+                    //     }
+
+                    //     this.ListRevenueDetail.filter(item => item.RevenueIndex == "").map(async p => {
+                    //         p.CompareCode = "";
+                    //         p.LawBreaker = p.LawBreaker.Replace("null", "");
+                    //     });
+                    // }
+
+
                     // set total record
                     this.paginage.TotalItems = this.ListRevenueDetail.length;
                     this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
+
                 }
                 else {
                     this.ListRevenueDetail = [];
                     this.ListRevenueDetailPaging = [];
                 }
-
-
             }, (err: HttpErrorResponse) => {
                 this.ShowAlertError("API RevenueComparegetByCon :: " + err.message);
                 //alert(err.message);
@@ -1030,7 +1127,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         let date = new Date();
         // 
         // return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
-        return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        //return date.getHours() + ":" + date.getMinutes();
+        return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false });
     }
 
     selectedChkAll() {
@@ -1061,17 +1159,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                 RewardMoney += item.RewardMoney;
                 TreasuryMoney += item.TreasuryMoney;
 
-                MistreatNoList.push(item.CompareCode);
+                MistreatNoList.push(item.CompareCodeTemp);
             });
 
         var MistreatNoUnique = Array.from(new Set(MistreatNoList));
 
         this.MistreatNo = MistreatNoUnique.length;
         // this.CompareFine = (BribeMoney + RewardMoney + TreasuryMoney).toLocaleString("en");
-        this.CompareFine = CompareFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
-        this.BribeMoney = BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
-        this.RewardMoney = RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
-        this.TreasuryMoney = TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
+        this.CompareFine = CompareFine.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        this.BribeMoney = BribeMoney.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        this.RewardMoney = RewardMoney.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        this.TreasuryMoney = TreasuryMoney.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     onComplete() {
@@ -1103,33 +1201,30 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    ShowAlertWarning(alertText: string)
-    {
+    ShowAlertWarning(alertText: string) {
         swal({
             title: '',
             text: alertText,
             type: 'warning',
-            confirmButtonText : 'ตกลง'
+            confirmButtonText: 'ตกลง'
         });
     }
 
-    ShowAlertSuccess(alertText: string)
-    {
+    ShowAlertSuccess(alertText: string) {
         swal({
             title: '',
             text: alertText,
             type: 'success',
-            confirmButtonText : 'ตกลง'
+            confirmButtonText: 'ตกลง'
         });
     }
 
-    ShowAlertError(alertText: string)
-    {
+    ShowAlertError(alertText: string) {
         swal({
             title: '',
             text: alertText,
             type: 'error',
-            confirmButtonText : 'ตกลง'
+            confirmButtonText: 'ตกลง'
         });
     }
 }

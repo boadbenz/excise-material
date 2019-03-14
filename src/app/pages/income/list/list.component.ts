@@ -44,6 +44,10 @@ export class ListComponent implements OnInit, OnDestroy {
         private incomeService: IncomeService,
         private preloader: PreloaderService
     ) {
+        this.advSearch = this.navService.showAdvSearch;
+    }
+
+    async ngOnInit() {
         // set false
         this.navService.setEditButton(false);
         this.navService.setDeleteButton(false);
@@ -54,11 +58,8 @@ export class ListComponent implements OnInit, OnDestroy {
         // set true
         this.navService.setSearchBar(true);
         this.navService.setNewButton(true);
-        this.advSearch = this.navService.showAdvSearch;
-    }
 
-    async ngOnInit() {
-        this.sidebarService.setVersion('Revenue 0.0.0.24');
+        this.sidebarService.setVersion('Revenue 0.0.0.28');
         this.RevenueStatus = "";
         //this.advSearch.next(true);
         //this.preloader.setShowPreloader(true);

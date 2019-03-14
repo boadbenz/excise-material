@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ManageComponent } from './manage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { IncomeService } from '../evidenceOut.service';
+import { EvidenceOutService } from '../evidenceOut.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,6 +12,10 @@ import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
+import { IsActivePipeModule } from '../../../shared/pipe/IsActivePipe.module';
+import { MasterService } from '../../model/master.service';
+import { IncomeService } from '../../income/income.service';
+import { ProveService } from '../../prove/prove.service';
 
 const routes: Routes = [
     {
@@ -43,12 +47,13 @@ const routes: Routes = [
         PrintDocModalModule,
         MyDatePickerTHModule,
         MatAutocompleteModule,
-        PaginationTableModule
+        PaginationTableModule,
+        IsActivePipeModule
     ],
     declarations: [
         ManageComponent
     ],
-    providers: [IncomeService],
+    providers: [EvidenceOutService, IncomeService, ProveService, MasterService],
     exports: [MatAutocompleteModule]
 })
 export class ManageModule { }

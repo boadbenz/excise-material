@@ -1,15 +1,9 @@
 import { RewardHelper } from '../../reward.helper';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { MasDocumentModel } from 'app/models/mas-document.model';
-import { IRequestBribe } from '../../interfaces/RequestBribe.interface';
-import { MasOfficeModel } from 'app/models/mas-office.model';
-import { IRequestCommand } from '../../interfaces/RequestCommand';
-import { MasStaffModel } from 'app/models';
-import { IILG60_08_03_00_00_E08_DATA } from './ILG60-08-03-00-00-E08/CONFIG';
 export class BribeConfig extends RewardHelper {
   public formGroup: FormGroup;
-  public OfficeCode = '102546';
+  public OfficeCode = localStorage.getItem('officeCode');
   public RequestBribeRewardID: number;
 
   public mode: string;

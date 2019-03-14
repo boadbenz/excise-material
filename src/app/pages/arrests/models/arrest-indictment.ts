@@ -96,4 +96,5 @@ export class ArrestIndictmentProduct {
 
     IsChecked: boolean;
     IsModify: string;
+    RowId: number;
 }

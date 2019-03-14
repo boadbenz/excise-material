@@ -8,6 +8,7 @@ import { appConfig } from "app/app.config";
 import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ManageComponent } from '../manage/manage.component';
 
 @Component({
     selector: 'app-printdoc-modal',
@@ -34,7 +35,9 @@ export class PrintDocModalComponent implements OnInit {
         private fb: FormBuilder,
         private _router: Router,
         private preloader: PreloaderService,
-        private http: HttpClient
+        private http: HttpClient,
+        private manageComponent: ManageComponent,
+        private httpClient: HttpClient
     ) { }
 
 
@@ -54,18 +57,18 @@ export class PrintDocModalComponent implements OnInit {
         // this.fineService.getByCon(this.condtion).then(async res => {
         //     this.getLawbreakerByArrest(res[0].ArrestCode);
         // });
-      }
+    }
 
-      getLawbreakerByArrest(ArrestCode: string) {
+    getLawbreakerByArrest(ArrestCode: string) {
         ArrestCode = "050100020";
         this.fineService.getByArrestCon(ArrestCode).then(async res => {
             this.TitleName = res.ArrestLawbreaker[0].LawbreakerTitleName;
             this.FirstName = res.ArrestLawbreaker[0].LawbreakerFirstName;
             this.LastName = res.ArrestLawbreaker[0].LawbreakerLastName;
         })
-      }
+    }
 
-      getCompareDoc() {
+    getCompareDoc() {
         debugger
         //this.pCompareID
         this.fineService.getByDoc("050100020").then(async res => {
@@ -73,39 +76,86 @@ export class PrintDocModalComponent implements OnInit {
             this.FirstName = res.ArrestLawbreaker[0].LawbreakerFirstName;
             this.LastName = res.ArrestLawbreaker[0].LawbreakerLastName;
         })
-      }
+    }
 
 
-      setCompareCondition() {
+    setCompareCondition() {
         this.condtion = {};
-    
+
         this.condtion = {
-          CompareID: "22", //this.pCompareID
-          CompareDetailID: "",
-          CompareDetailReceiptID: "",
-          FineType: "",
-          CompareFineID: "",
-          ReceiptFineType: "",
-          StaffID: "",
-          ProgramCode: "",
-          ProcessCode: ""
+            CompareID: "22", //this.pCompareID
+            CompareDetailID: "",
+            CompareDetailReceiptID: "",
+            FineType: "",
+            CompareFineID: "",
+            ReceiptFineType: "",
+            StaffID: "",
+            ProgramCode: "",
+            ProcessCode: ""
         }
-      }
+    }
 
     async onPrint(form: any) {
+        if (this.check.checkbox1) {
+            var mCompareID = this.manageComponent.params.CompareID;
+            var mIndictmentID = this.manageComponent.params.IndictmentID;
+            console.log("Chk1")
+            // console.log("mCompareID : ", mCompareID)
+            // console.log("mIndictmentID : ", mIndictmentID)
+            this.preloader.setShowPreloader(true);
+            await this.ReportForm1(mCompareID, mIndictmentID)
+                .subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+        }
+        if (this.check.checkbox2) {
+            console.log("Chk2")
+            var mCompareID = this.manageComponent.params.CompareID;
+            var mIndictmentID = this.manageComponent.params.IndictmentID;
+            console.log("Chk1")
+            // console.log("mCompareID : ", mCompareID)
+            // console.log("mIndictmentID : ", mIndictmentID)
+            this.preloader.setShowPreloader(true);
+            await this.ReportForm2(mCompareID, mIndictmentID)
+                .subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+        }
+        if (this.check.checkbox3) {
+            console.log("Chk3")
+            var mCompareID = this.manageComponent.params.CompareID;
+            var mIndictmentID = this.manageComponent.params.IndictmentID;
+            console.log("Chk1")
+            // console.log("mCompareID : ", mCompareID)
+            // console.log("mIndictmentID : ", mIndictmentID)
+            this.preloader.setShowPreloader(true);
+            await this.ReportForm3(mCompareID, mIndictmentID, this.ArrestCode)
+                .subscribe(x => {
+                    const file = new Blob([x], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.preloader.setShowPreloader(false);
+                })
+        }
         // let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
         // if (_print.length) {
-        if (this.check.checkbox3) {
-            this.preloader.setShowPreloader(true);
-            await this.ReportForm252(this.ArrestCode)
-                .subscribe(x => {
-                const file = new Blob([x], {type: 'application/pdf'});
-                const fileURL = URL.createObjectURL(file);
-                window.open(fileURL);
-                this.preloader.setShowPreloader(false);
-            })
-        }
-        
+        // if (this.check.checkbox3) {
+        //     this.preloader.setShowPreloader(true);
+        //     await this.ReportForm252(this.ArrestCode)
+        //         .subscribe(x => {
+        //         const file = new Blob([x], {type: 'application/pdf'});
+        //         const fileURL = URL.createObjectURL(file);
+        //         window.open(fileURL);
+        //         this.preloader.setShowPreloader(false);
+        //     })
+        // }
+
         // this._router.navigate([`/fine/list`]);
     }
     private httpOptions = {
@@ -124,10 +174,64 @@ export class PrintDocModalComponent implements OnInit {
     private onEnd(): void {
         this.preloader.setShowPreloader(false);
     }
-    ReportForm252(ArrestCode: string) {
-        const params = { ArrestCode: ArrestCode };
-        const url = `${appConfig.apiReport}/ReportForm252.aspx`;
-        
+    // ReportForm252(ArrestCode: string) {
+    //     const params = { ArrestCode: ArrestCode };
+    //     const url = `${appConfig.apiReport}/ILG60_00_04_002.aspx`;
+
+    //     return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+    //         .catch(this.onCatch)
+    //         .do((res: Response) => {
+    //             this.onSuccess(res);
+    //         }, (error: any) => {
+    //             this.onError(error);
+    //         })
+    //         .map(x => x)
+    //         .finally(() => this.onEnd());
+    // }
+
+
+    ReportForm1(mCompareID: string, mIndictmentID: string) {
+        const params = {
+            CompareID: mCompareID,
+            IndictmentID: mIndictmentID
+        };
+        const url = `${appConfig.apiReport}/ILG60_00_06_001.aspx`;
+
+        return this.httpClient.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .catch(this.onCatch)
+            .do((res: Response) => {
+                this.onSuccess(res);
+            }, (error: any) => {
+                this.onError(error);
+            })
+            .map(x => x)
+            .finally(() => this.onEnd());
+    }
+    ReportForm2(mCompareID: string, mIndictmentID: string) {
+        const params = {
+            CompareID: mCompareID,
+            IndictmentID: mIndictmentID
+        };
+        const url = `${appConfig.apiReport}/ILL_P031.aspx`;
+
+        return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+            .catch(this.onCatch)
+            .do((res: Response) => {
+                this.onSuccess(res);
+            }, (error: any) => {
+                this.onError(error);
+            })
+            .map(x => x)
+            .finally(() => this.onEnd());
+    }
+    ReportForm3(mCompareID: string, mIndictmentID: string, ArrestCode: string) {
+        const params = {
+            CompareID: mCompareID,
+            IndictmentID: mIndictmentID,
+            ArrestCode: ArrestCode
+        };
+        const url = `${appConfig.apiReport}/ILG60_00_06_003.aspx`;
+
         return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
             .catch(this.onCatch)
             .do((res: Response) => {

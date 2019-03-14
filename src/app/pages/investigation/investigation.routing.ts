@@ -8,7 +8,7 @@ export const routes: Routes = [
         data: {
           urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาข้อมูลสืบสวน' }],
           codePage: 'ILG60-01-01-00-00',
-          nextPage: { title: 'รายงานสืบสวน', url: '/investigation/manage' }
+          nextPage: { title: 'รายงานสืบสวน', url: '/suppression/investigation/manage' }
         },
         component: fromComponents.ListComponent
     },
@@ -17,7 +17,7 @@ export const routes: Routes = [
         data: {
             urls: [
                 { title: 'หน้าหลัก', url: '/' },
-                { title: 'ค้นหางานการสืบสวน', url: '/investigation/list' },
+                { title: 'ค้นหางานการสืบสวน', url: '/suppression/investigation/list' },
                 { title: 'จัดการงานสืบสวน' }
             ],
             codePage: 'ILG60-01-02-00-00'
@@ -29,8 +29,8 @@ export const routes: Routes = [
         data: {
           urls: [
             { title: 'หน้าหลัก', url: '/' },
-            { title: 'ค้นหางานการสืบสวน', url: '/investigation/list' },
-            { title: 'จัดการงานสืบสวน', url: '/investigation/manage/C/NEW' },
+            { title: 'ค้นหางานการสืบสวน', url: '/suppression/investigation/list' },
+            { title: 'จัดการงานสืบสวน', url: '/suppression/investigation/manage/C/NEW' },
             { title: 'จัดการข้อมูลรายละเอียดรายงานการสืบสวน' }
           ],
           codePage: 'ILG60-01-03-00-00'
@@ -42,8 +42,8 @@ export const routes: Routes = [
         data: {
           urls: [
             { title: 'หน้าหลัก', url: '/' },
-            { title: 'ค้นหางานการสืบสวน', url: '/investigation/list' },
-            { title: 'จัดการงานสืบสวน', url: '/investigation/manage/C/NEW' },
+            { title: 'ค้นหางานการสืบสวน', url: '/suppression/investigation/list' },
+            { title: 'จัดการงานสืบสวน', url: '/suppression/investigation/manage/C/NEW' },
             { title: 'จัดการข้อมูลรายละเอียดรายงานการสืบสวน' },
             { title: 'จัดการข้อมูลผู้ต้องหา' }
           ],
@@ -56,8 +56,8 @@ export const routes: Routes = [
         data: {
           urls: [
             { title: 'หน้าหลัก', url: '/' },
-            { title: 'ค้นหางานการสืบสวน', url: '/investigation/list' },
-            { title: 'จัดการงานสืบสวน', url: '/investigation/manage/C/NEW' },
+            { title: 'ค้นหางานการสืบสวน', url: '/suppression/investigation/list' },
+            { title: 'จัดการงานสืบสวน', url: '/suppression/investigation/manage/C/NEW' },
             { title: 'จัดการข้อมูลรายละเอียดรายงานการสืบสวน' },
             { title: 'จัดการข้อมูลผู้ต้องสงสัย' }
           ],

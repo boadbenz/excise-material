@@ -1,23 +1,23 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-import { IncomeService } from '../evidenceIn.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Revenue, RevenueDetail } from '../revenue';
-import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { EvidenceService } from '../evidenceIn.service';
+import { IncomeService } from '../../income/income.service';
+import { ProveService } from '../../prove/prove.service';
+import { MasterService } from '../../model/master.service';
+import { Evidence_In, Document, EvidenceInStaff, EvidenceInItem, EvidenceStockBalance } from '../evidenceIn';
+import { MatAutocomplete } from '@angular/material';
 import * as formatDate from '../../../config/dateFormat';
 import { Message } from '../../../config/message';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Staff } from '../staff';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
-import { MatAutocomplete } from '@angular/material';
-import { del } from '../../../../../node_modules/@types/selenium-webdriver/http';
-import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
-import { async } from '../../../../../node_modules/@angular/core/testing';
 import { toLocalShort, compareDate, setZeroHours, setDateMyDatepicker, getDateMyDatepicker } from '../../../config/dateFormat';
-import { pagination } from '../../../config/pagination';
-import { SidebarService } from '../../../shared/sidebar/sidebar.component';
+import { IMyDateModel, IMyOptions } from 'mydatepicker-th';
 import swal from 'sweetalert2';
+import { pagination } from '../../../config/pagination';
+import { async } from '../../../../../node_modules/@types/q';
+
 
 @Component({
     selector: 'app-manage',
@@ -34,57 +34,75 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     mode: string;
     modal: any;
+    ProveID: any;
     evitype: any;
-
-
-
-
-
     showEditField: any;
     selectAllChb: any;
+
     paginage = pagination;
 
-    RevenueID: string;
-    RevenueCode: string;    // เลขที่นำส่งเงิน
-    RevenueNo: string;  // เลขที่หนังสือนำส่ง
-    RevenueNoYear: string;  // ปีเลขที่หนังสือนำส่ง
-    InformTo: string;       // เรียน
+    rawStaffSendOptions = [];
+    StaffSendoptions = [];
+    StaffRecvoptions = [];
+    ListEvidenceInItem = [];
+    UnitOption = [];
+    ListDoc = [];
+    rawProductOptions = [];
+    Productoptions = [];
+    rawProdbyWarehourseOptions = [];
+    ProdbyWarehourseoptions = [];
+
+    oEviInSendStaff: EvidenceInStaff;
+    oEviInRecvStaff: EvidenceInStaff;
+    oEvidenceIn: Evidence_In;
+    oDocument: Document;
+    oEvidenceInItem: EvidenceInItem;
+    oStockBalance: EvidenceStockBalance;
+
+    EvidenceInID: string;   // รหัสรับของกลาง
+    EvidenceInCode: string; // เลขที่รับของกลาง
     StaffSendID: string;    // รหัสผู้นำส่ง
     StaffSendName: string;  // ชื่อผู้นำส่ง
-    PosSend: string;        // ตำแหน่งผู้นำส่ง
-    DeptSend: string;       // แผนกผู้นำส่ง
-    StaffID: string;        // รหัสผู้จัดทำ
-    StaffName: string;      // ชื่อผู้จัดทำ
-    PosStaff: string;        // ตำแหน่งผู้จัดทำ
-    DeptStaff: string;       // แผนกผู้จัดทำ
-    StaffDeptCode: string;   // รหัสแผนกผู้จัดทำ
-    RevenueStation: string;   // เขียนที่
-    CompareFine: string = "0";      // ยอดนำส่งรวม
-    MistreatNo: number = 0;     // จำนวนคดี
-    BribeMoney: string = "0";     // เงินสินบนรวม
-    RewardMoney: string = "0";    // เงินรางวัลรวม
-    TreasuryMoney: string = "0";  // เงินส่งคลัง
-    RevenueDate: any;       // วันที่นำส่ง
-    RevenueTime: string;    // เวลาที่นำส่ง
-    RevenueStatus: number;  // สถานะนำส่ง
+    PosStaffSend: string;   // ตำแหน่งผู้นำส่ง
+    DeptStaffSend: string;  // แผนกผู้นำส่ง
+    StaffRecvID: string;    // รหัสผู้นำส่ง
+    StaffRecvName: string;  // ชื่อผู้รับของกลาง
+    PosStaffRecv: string;   // ตำแหน่งผู้รับของกลาง
+    DeptStaffRecv: string;  // แผนกผู้รับของกลาง
+    DeptStaffRecvCode: string;  // รหัสแผนกผู้รับของกลาง
+    DeliveryDate: any;      // วันที่นำส่ง
+    DeliveryTime: any;      // เวลาที่นำส่ง
+    ReturnDate: any;        // วันที่รับคืน
+    EvidenceInDate: any;    // วันที่รับของกลาง
+    EvidenceInTime: any;    // เวลาที่รับของกลาง
+    DeliveryNo: string;     // เลขที่นำส่ง
+    Remark: string;         // เหตุผลในการนำส่ง
+    EvidenceInType: string; // ประเภทการรับของกลาง
+    WarehouseID: string;    // รหัสคลังจัดเก็บ
+    OldWarehouseID: string; // รหัสคลัดจัดเก็บเดิม
 
 
-
-    StaffSendoptions = [];
-    rawStaffSendOptions = [];
-    Staffoptions = [];
-    rawOptions = [];
-    InformTooptions = [];
-    options = [];
-    ListRevenueDetail = [];
-    ListRevenueDetailPaging = [];
-    ListChK = [];
-    RevenueDetailForUDP = [];
-
-    oRevenue: Revenue;
-    oRevenueDetail: RevenueDetail;
-    oRevenueSendStaff: Staff;
-    oRevenueStaff: Staff;
+    // -------- ตรวจรัยจากหน่วยงานภายใน -------
+    ArrestCode: string;     // เลขที่ใบงาน
+    OccurrenceDate: string; // วันที่จับกุม
+    OccurrenceTime: string; // เวลาที่จับกุม
+    Accuser: string;        // ผู้กล่าวหา
+    AccuserPositionName: string;    // ตำแหน่งผู้กล่าวหา
+    AccuserOfficeShortName: string; // หน่วยงานผู้กล่าวหา
+    AccuserStation: string; // สถานที่จับกุม
+    LawsuitNo: string;      // เลขที่คดีรับคำกล่าวโทษ
+    LawsuitDate: string;    // วันที่รับคดี
+    LawsuitTime: string;    // เวลาที่รับคดี
+    SubSectionType: string;    // ฐานความผิดมาตรา
+    GuiltBaseName: string;  // ฐานความผิด
+    SectionNo: string;      // บทกำหนดโทษ
+    PenaltyDesc: string;    // อัตราโทษ
+    DeliverNo: string;      // เลขที่หนังสือนำส่ง
+    DeliverDate: string;    // วันที่นำส่ง
+    DeliverTime: string;    // เวลาที่นำส่ง
+    Receiveuser: string;    // ผู้นำส่ง
+    ReceiverPositionName: string;   // ตำแหน่งผู้นำส่ง
+    ReceiverOfficeShortName: string;    // หน่วยงานผู้นำส่ง
 
     isRequired: boolean | false;
 
@@ -94,13 +112,14 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     constructor(
         private activeRoute: ActivatedRoute,
-        private formBuilder: FormBuilder,
         private ngbModel: NgbModal,
         private navService: NavigationService,
-        private IncService: IncomeService,
+        private EviService: EvidenceService,
+        private RevService: IncomeService,
+        private MasService: MasterService,
         private preloader: PreloaderService,
-        private router: Router,
-        private sidebarService: SidebarService
+        private proveService: ProveService,
+        private router: Router
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -109,84 +128,105 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-       // this.preloader.setShowPreloader(true);
-        this.sidebarService.setVersion('EvidenceIn 0.0.0.2');
+        this.preloader.setShowPreloader(true);
 
         this.active_Route();
         this.navigate_Service();
+        this.getUnit();
+        await this.getEvidenceInStaff();
 
-        /*this.RevenueStatus = 0;
-        this.RevenueNo = "";
-        this.RevenueStation == "";
-        this.StaffSendName == "";
-        this.StaffName == "";
-        this.InformTo = "";
-        this.StaffID = "";
-        this.StaffSendID = "";
-        this.RevenueTime = this.getCurrentTime();
-        this.RevenueDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
-        this.RevenueCode = "Auto Generate";
+        this.DeliveryDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.ReturnDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+        this.EvidenceInDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
 
-        await this.CreateObject();
-        await this.getReveneueStaff();
-        await this.getStation();
+        this.DeliveryTime = this.getCurrentTime();
+        this.EvidenceInTime = this.getCurrentTime();
+        this.EvidenceInCode = "Auto Generate";
+        this.WarehouseID = "1";
 
-        if (this.mode === 'R') {
-            await this.ShowRevenue();
+        if (this.evitype == "I") {
+            await this.getProve();
+        } else if (this.evitype == "E") {
+            await this.getMasProduct();
+        } else {
+            //await this.getEvidenceInOutgetByWarehouseID();
+        }
+
+        if (this.mode == "R") {
+            await this.ShowEvidenceIn();
         } else {
             this.preloader.setShowPreloader(false);
         }
-
-        this.paginage.TotalItems = this.ListRevenueDetail.length;
-        this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
-
-        this.CheckCompareReceive();
-*/
     }
 
     ngOnDestroy(): void {
-        // this.onCancelSubscribe.unsubscribe();
-        // this.onEditSubscribe.unsubscribe();
-        // this.onSaveSubscribe.unsubscribe();
-        // this.onDeleSubscribe.unsubscribe();
+        this.onCancelSubscribe.unsubscribe();
+        this.onSaveSubscribe.unsubscribe();
+        this.onDeleSubscribe.unsubscribe();
         this.onPrintSubscribe.unsubscribe();
+        this.onEditSubscribe.unsubscribe();
     }
 
-   
+
     private active_Route() {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
             this.evitype = p['type'];
+            this.ProveID = p['proveid'];
 
-            if (p['mode'] === 'C') {
-                // set false
-                this.navService.setPrintButton(false);
-                this.navService.setEditButton(false);
-                this.navService.setDeleteButton(false);
-                this.navService.setEditField(false);
-                // set true
-                this.navService.setSaveButton(true);
-                this.navService.setCancelButton(true);
-            } else if (p['mode'] === 'R') {
-                // set false
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
-                // set true
-                this.navService.setPrintButton(true);
-                this.navService.setEditButton(true);
-                this.navService.setDeleteButton(true);
-                this.navService.setEditField(true);
+            switch (this.mode) {
+                case 'C':
+                    // set false
+                    this.navService.setPrintButton(false);
+                    this.navService.setEditButton(false);
+                    this.navService.setDeleteButton(false);
+                    this.navService.setEditField(false);
+                    // set true
+                    this.navService.setSaveButton(true);
+                    this.navService.setCancelButton(true);
+                    break;
 
-                // if (p['code']) {
-                //     this.RevenueID = p['code'];
-                // }
+                case 'R':
+                    // set false
+                    this.navService.setSaveButton(false);
+                    this.navService.setCancelButton(false);
+                    // set true
+                    this.navService.setPrintButton(true);
+                    this.navService.setEditButton(true);
+                    this.navService.setDeleteButton(true);
+                    this.navService.setEditField(true);
+
+                    if (p['code']) {
+                        this.EvidenceInID = p['code'];
+                    }
+                    break;
             }
+
+            this.activeRoute.data.subscribe(
+                (data) => {
+                    switch (this.evitype) {
+                        case 'I':
+                            data.urls[2].title = "จัดการข้อมูลรายการตรวจรับของกลางจากหน่วยงานภายใน";
+                            this.EvidenceInType = "0";
+                            break;
+                        case 'E':
+                            data.urls[2].title = "จัดการข้อมูลรายการตรวจรับของกลางจากหน่วยงานภายนอก";
+                            this.EvidenceInType = "1";
+                            break;
+                        case 'G':
+                            data.urls[2].title = "จัดการข้อมูลรายการตรวจรับของกลางที่นำออกจากคลังไปใช้ในราชการ";
+                            this.EvidenceInType = "2";
+                            break;
+                    }
+
+                }
+            );
         });
     }
 
-     private navigate_Service() {
+    private navigate_Service() {
 
-        this.navService.showFieldEdit.subscribe(p => {
+        this.navService.showFieldEdit.subscribe(async p => {
             this.showEditField = p;
         });
 
@@ -195,65 +235,57 @@ export class ManageComponent implements OnInit, OnDestroy {
                 await this.navService.setOnPrint(false);
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
             }
-        })
-
-        /*this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
-            if (this.RevenueStatus == 2) {
-                //alert("ไม่สามารถแก้ไขรายการได้");
-                this.ShowAlertWarning("ไม่สามารถแก้ไขรายการได้");
-                this.navService.setSaveButton(false);
-                this.navService.setCancelButton(false);
-                // set true
-                this.navService.setPrintButton(true);
-                this.navService.setEditButton(true);
-                this.navService.setDeleteButton(true);
-                this.navService.setEditField(true);
-            }
         });
 
         this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
-            //alert(status);
             if (status) {
-                debugger
                 // set action save = false
                 await this.navService.setOnSave(false);
 
-                if (this.RevenueNo == "" || this.RevenueStation == "" || this.RevenueStation == undefined
+                let listProd = this.ListEvidenceInItem.filter(f => f.EvidenceInItemCode == "" || f.ProductDesc == ""
+                     || f.DeliveryQty.toString() == "" || f.DamageQty.toString() == "" || f.DeliveryQtyUnit == ""
+                     || f.DeliveryNetVolumn.toString() == "" || f.DamageNetVolumn.toString() == "" || f.DeliveryNetVolumnUnit == ""
+                );
+
+                if (this.DeliveryNo == "" || this.DeliveryNo == undefined
+                    || this.DeliveryDate == null || this.DeliveryDate == undefined
+                    || (this.evitype == "E" && (this.DeliveryTime == "" || this.DeliveryTime == undefined))
+                    || (this.evitype == "E" && (this.ReturnDate == null || this.ReturnDate == undefined))
                     || this.StaffSendName == "" || this.StaffSendName == undefined
-                    || this.StaffName == "" || this.StaffName == undefined
-                    || this.PosSend == "" || this.PosSend == undefined
-                    || this.DeptSend == "" || this.DeptSend == undefined
-                    || this.PosStaff == "" || this.PosStaff == undefined
-                    || this.DeptStaff == "" || this.DeptStaff == undefined
-                    || this.RevenueDate == null) {
+                    || this.EvidenceInCode == "" || this.EvidenceInCode == undefined
+                    || this.EvidenceInDate == null || this.EvidenceInDate == undefined
+                    || this.EvidenceInTime == "" || this.EvidenceInTime == undefined
+                    || this.StaffRecvName == "" || this.StaffRecvName == undefined
+                    || listProd.length > 0) {
                     this.isRequired = true;
                     this.ShowAlertWarning(Message.checkData);
-                    //alert(Message.checkData);
-
-                    return false;
-                }
-
-                if (+this.MistreatNo < 1) {
-                    this.ShowAlertWarning("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
-                   // alert("กรุณำเลือกรายการที่ต้องการนำส่งเงิน");
 
                     return false;
                 }
 
                 if (this.mode === 'C') {
-                    //alert("mode C");
-                    await this.onInsRevenue();
+                    await this.onInsEvidenceIn();
                 } else if (this.mode === 'R') {
-                    //alert("mode U");
-                    await this.onUdpRevenue();
-                }
-            }
-        });
+                    if (this.OldWarehouseID == this.WarehouseID) {
+                        await this.onUdpEvidenceIn();
+                    } else {
+                        swal({
+                            title: '',
+                            text: "ยืนยันที่จัดเปลี่ยนคลังจัดเก็บของกลาง ใช่หรือไม่?",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'ยืนยัน',
+                            cancelButtonText: 'ยกเลิก'
+                        }).then((result) => {
+                            if (result.value) {
+                                this.onUdpEvidenceIn();
+                            }
+                        })
+                    }
 
-        this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnDelete(false);
-                this.onDelete();
+                }
             }
         });
 
@@ -273,7 +305,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 }).then((result) => {
                     if (result.value) {
                         if (this.mode === 'C') {
-                            this.router.navigate(['/income/list']);
+                            this.router.navigate(['/evidenceIn/list']);
                         } else if (this.mode === 'R') {
                             // set false
                             this.navService.setSaveButton(false);
@@ -283,14 +315,14 @@ export class ManageComponent implements OnInit, OnDestroy {
                             this.navService.setEditButton(true);
                             this.navService.setDeleteButton(true);
                             this.navService.setEditField(true);
-    
-                            this.ShowRevenue();
+
+                            this.ShowEvidenceIn();
                         }
                     }
-                    else{
+                    else {
                         this.navService.setSaveButton(true);
                         this.navService.setCancelButton(true);
-    
+
                         this.navService.setPrintButton(false);
                         this.navService.setEditButton(false);
                         this.navService.setDeleteButton(false);
@@ -298,515 +330,636 @@ export class ManageComponent implements OnInit, OnDestroy {
                     }
                 })
             }
-        })
-        */
-    }
+        });
 
-   
-/*
-    onDelete() {
-        swal({
-            title: '',
-            text: Message.confirmAction,
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'ยืนยัน',
-            cancelButtonText: 'ยกเลิก'
-        }).then((result) => {
-            if (result.value) {
-                if (this.RevenueStatus == 1) {
-                    if (confirm(Message.confirmAction)) {
-                        this.IncService.RevenueupdDelete(this.RevenueID).then(async IsSuccess => {
-                            if (IsSuccess) {
-                                var isSuccess = true;
-                                this.ListRevenueDetail.filter(item => (item.IsCheck === true))
-                                    .map(async item => {
-                                        await this.IncService.RevenueCompareDetailReceiptupdDelete(item.CompareReceiptID.toString()).then(async item => {
-                                            if (!item.IsSuccess) {
-                                                isSuccess = item.IsSuccess;
-                                                return false;
-                                            }
-                                        }, (error) => { console.error(error); return false; });
-                                    });
-        
-                                if (isSuccess) {
-                                    this.oRevenue = {};
-                                    this.ShowAlertSuccess(Message.saveComplete);
-                                   // alert(Message.saveComplete);
-                                    this.router.navigate(['/income/list']);
-                                }
-                            } else {
-                                this.ShowAlertError(Message.saveFail);
-                                //alert(Message.saveFail);
-                            }
-                        }, (error) => { console.error(error); return false; });
-                    }
-                }
-                else if (this.RevenueStatus == 2) {
-                    this.ShowAlertWarning(Message.cannotDelete);
-                    //alert(Message.cannotDelete);
-                }
+        this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
+            if (status) {
+                await this.navService.setOnDelete(false);
+                this.onDelete();
+            }
+        });
+
+        this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
+            if(this.oEvidenceIn.IsEdit == 0){
+                this.ShowAlertWarning("ไม่อนุญาตให้ทำการแก้ไขข้อมูลการจัดเก็บ !!!");
+                this.onComplete();
             }
         })
     }
 
-    ShowRevenue() {
-        this.IncService.getByCon(this.RevenueID).then(async res => {
-            if (res.length > 0 && res != null) {
-                // if (res[0].RevenueDetail.length > 0) {
-                //     this.ReceiptBookNo = res[0].RevenueDetail[0].ReceiptBookNo;
-                // }
-                // else {
-                //     this.ReceiptBookNo = "";
-                // }
-                this.ListRevenueDetail = [];
-                this.oRevenue.RevenueID = res[0].RevenueID;
-                this.oRevenue.RevenueCode = res[0].RevenueCode;
-                this.oRevenue.StationCode = res[0].StationCode;
-                this.oRevenue.StationName = res[0].StationName;
+    LoadDataFromLocalStorage() {
+        let tempUser = this.rawStaffSendOptions.filter(f => f.StaffCode == localStorage.getItem("staffCode"));
 
-                this.RevenueCode = res[0].RevenueCode;
-                this.RevenueStation = res[0].StationName;
+        // ----- ผู้นำส่ง -----
+        this.oEviInSendStaff = {
+            EvidenceInStaffID: "",
+            EvidenceInID: "",
+            StaffCode: localStorage.getItem("staffCode"),
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "13",
+            IsActive: "1"
+        }
 
-                var RN = res[0].RevenueNo.split('/');
+        this.StaffSendName = localStorage.getItem("fullName");
+        this.PosStaffSend = localStorage.getItem("operationPosName");
+        this.DeptStaffSend = localStorage.getItem("officeShortName");
 
-                if (RN.length > 1) {
-                    this.RevenueNo = RN[0];
-                    this.RevenueNoYear = RN[1];
+
+        // ----- ผู้ตรวจรับของกลาง -----
+        this.oEviInRecvStaff = {
+            EvidenceInStaffID: "",
+            EvidenceInID: "",
+            StaffCode: localStorage.getItem("staffCode"),
+            TitleName: tempUser[0].TitleName,
+            FirstName: tempUser[0].FirstName,
+            LastName: tempUser[0].LastName,
+            PositionCode: tempUser[0].OperationPosCode,
+            PositionName: localStorage.getItem("operationPosName"),
+            PosLevel: tempUser[0].PosLevel,
+            PosLevelName: tempUser[0].PosLevelName,
+            DepartmentCode: tempUser[0].OperationDeptCode,
+            DepartmentName: tempUser[0].OperationDeptName,
+            DepartmentLevel: tempUser[0].DeptLevel,
+            OfficeCode: localStorage.getItem("officeCode"),
+            OfficeName: tempUser[0].OfficeName,
+            OfficeShortName: localStorage.getItem("officeShortName"),
+            ContributorID: "42",
+            IsActive: "1"
+        }
+
+        this.StaffRecvName = localStorage.getItem("fullName");
+        this.PosStaffRecv = localStorage.getItem("operationPosName");
+        this.DeptStaffRecv = localStorage.getItem("officeShortName");
+        this.DeptStaffRecvCode = localStorage.getItem("officeCode");
+    }
+
+    async getProve() {
+        await this.EviService.EvidenceInArrestgetByProveID(this.ProveID).then(async res => {
+            if (res.length > 0) {
+                this.ArrestCode = res[0].ArrestCode;
+
+                let temp = res[0].OccurrenceDate.toString().split(" ");
+                this.OccurrenceDate = setDateMyDatepicker(new Date(temp[0]));
+                this.OccurrenceTime = res[0].OccurrenceTime;
+                this.Accuser = res[0].AccuserTitleName + res[0].AccuserFirstName + " " + res[0].AccuserLastName;
+                this.AccuserPositionName = res[0].AccuserPositionName;
+                this.AccuserOfficeShortName = res[0].AccuserOfficeShortName;
+                this.AccuserStation = res[0].SubDistrict + " " + res[0].District + " " + res[0].Province;
+
+                if (res[0].LawsuitIsOutside == "0") {
+                    this.LawsuitNo = res[0].LawsuitNo;
+                } else {
+                    this.LawsuitNo = "น. " + res[0].LawsuitNo;
                 }
 
-                //this.RevenueNo = res[0].RevenueNo;
-                this.InformTo = res[0].InformTo;
-                this.RevenueStatus = res[0].RevenueStatus;
+                temp = res[0].LawsuitDate.toString().split(" ");
+                this.LawsuitDate = setDateMyDatepicker(new Date(temp[0]));
+                this.LawsuitTime = res[0].LawsuitTime;
+                this.SubSectionType = res[0].SubSectionType;
+                this.GuiltBaseName = res[0].GuiltBaseName;
+                this.SectionNo = res[0].SectionNo;
+                this.PenaltyDesc = res[0].PenaltyDesc;
+                this.DeliverNo = res[0].DeliverNo;
 
-                var RDate = res[0].RevenueDate.toString().split(" ");
-                this.RevenueDate = setDateMyDatepicker(new Date(RDate[0]));
-                this.RevenueTime = res[0].RevenueTime;
-
-                var SStaff = res[0].RevenueStaff.filter(f => f.ContributorID == "20");
-                if (SStaff.length > 0) {
-                    this.StaffSendName = SStaff[0].TitleName + SStaff[0].FirstName + ' ' + SStaff[0].LastName;
-                    this.PosSend = SStaff[0].PositionName;
-                    this.DeptSend = SStaff[0].OfficeName;
-                    this.StaffSendID = SStaff[0].StaffID;
-                    this.oRevenueSendStaff = SStaff[0];
-                }
-
-                var Staff = res[0].RevenueStaff.filter(f => f.ContributorID == "36");
-                if (Staff.length) {
-                    this.StaffName = Staff[0].TitleName + Staff[0].FirstName + ' ' + Staff[0].LastName;
-                    this.PosStaff = Staff[0].PositionName;
-                    this.DeptStaff = Staff[0].OfficeName;
-                    this.StaffID = Staff[0].StaffID;
-                    this.StaffDeptCode = Staff[0].OfficeCode;
-                    this.oRevenueStaff = Staff[0];
-                }
-
-                await this.ShowRevenueCompare();
-
-                debugger
-                this.preloader.setShowPreloader(true);
-                if (res[0].RevenueDetail.length > 0) {
-                    for (var a = 0; a < res[0].RevenueDetail.length; a += 1) {
-                        await this.IncService.RevenueComparegetByCompareReceiptID(res[0].RevenueDetail[a].CompareReceiptID).then(async item => {
-                            this.preloader.setShowPreloader(false);
-                            if (item.length > 0) {
-                                for (var j = 0; j < item.length; j += 1) {
-                                    if (item[j].RevenueCompareDetail.length > 0) {
-                                        for (var i = 0; i < item[j].RevenueCompareDetail.length; i += 1) {
-                                            try {
-                                                if (item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length > 0) {
-                                                    for (var k = 0; k < item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length; k += 1) {
-                                                        this.oRevenueDetail = {
-                                                            RevenueIndex: "1",
-                                                            RevenueDetailID: res[0].RevenueDetail[a].RevenueDetailID,
-                                                            ReceiptBookNo: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptBookNo,
-                                                            ReceiptNo: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptNo,
-                                                            RevenueStatus: "1",
-                                                            RevenueID: this.oRevenue.RevenueID,
-                                                            CompareReceiptID: item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
-                                                            CompareID: item[j].CompareID,
-                                                            CompareCode: item[j].CompareCode,
-                                                            LawBreaker: `${item[j].RevenueCompareDetail[i].LawbreakerTitleName == 'null' || item[j].RevenueCompareDetail[i].LawbreakerTitleName == null ? '' : item[j].RevenueCompareDetail[i].LawbreakerTitleName}` + item[j].RevenueCompareDetail[i].LawbreakerFirstName,
-                                                            SurnameLawBreaker: item[j].RevenueCompareDetail[i].LawbreakerLastName,
-                                                            StaffReceip: item[j].RevenueCompareStaff[i].TitleName + item[j].RevenueCompareStaff[i].FirstName + " " + item[j].RevenueCompareStaff[i].LastName,
-                                                            PaymentDate: toLocalShort(item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
-                                                            TotalFine: +`${item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : item[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
-                                                            BribeMoney: +`${item[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : item[0].RevenueCompareDetail[i].BribeMoney}`,
-                                                            TreasuryMoney: +`${item[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : item[0].RevenueCompareDetail[i].TreasuryMoney}`,
-                                                            RewardMoney: +`${item[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : item[0].RevenueCompareDetail[i].RewardMoney}`,
-                                                            IsCheck: true,
-                                                            IsNewItem: false,
-                                                            IsDelItem: false
-                                                        }
-
-                                                        this.ListRevenueDetail.push(this.oRevenueDetail);
-                                                    }
-                                                }
-                                            } catch{ }
-                                        }
-                                    }
-
-                                }
-                            }
-
-                            this.preloader.setShowPreloader(false);
-                        }, (err: HttpErrorResponse) => {
-                            this.ShowAlertError(err.message);
-                            //alert(err.message);
-                        });
-                    }
-
-                    // set total record
-                    this.paginage.TotalItems = this.ListRevenueDetail.length;
-                    this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
-
-                    var rIndex = 1;
-
-                    for(var a = 0; a < this.ListRevenueDetailPaging.length; a++){
-                        if(a != 0) {
-                            if(this.ListRevenueDetailPaging[a-1].CompareCode == this.ListRevenueDetailPaging[a].CompareCode){
-                                this.ListRevenueDetailPaging[a].CompareCode = "";
-                                this.ListRevenueDetailPaging[a].RevenueIndex = "";
-                            }
-                            else{
-                                rIndex += 1;
-                                this.ListRevenueDetailPaging[a].RevenueIndex = rIndex;
-                            }  
-                        }
-                        else{
-                            this.ListRevenueDetailPaging[a].RevenueIndex = 1;
-                        }
-
-                        //    this.ListRevenueDetailPaging[a].TotalFine = this.ListRevenueDetailPaging[a].TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
-                        //    this.ListRevenueDetailPaging[a].BribeMoney = this.ListRevenueDetailPaging[a].BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                        //    this.ListRevenueDetailPaging[a].TreasuryMoney = this.ListRevenueDetailPaging[a].TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                        //    this.ListRevenueDetailPaging[a].RewardMoney = this.ListRevenueDetailPaging[a].RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})
-                    }
-
-                    this.checkIfAllChbSelected();
-                }
-            } else {
-                this.ShowAlertError("พบปัญหาในการติดต่อ Server");
-                //alert("พบปัญหาในการติดต่อ Server");
-                this.preloader.setShowPreloader(false);
-                this.router.navigate(['/income/list']);
+                temp = res[0].DeliverDate.toString().split(" ");
+                this.DeliverDate = setDateMyDatepicker(new Date(temp[0]));
+                this.DeliverTime = res[0].DeliverTime;
+                this.Receiveuser = res[0].ReceiverTitleName + res[0].ReceiverFirstName + " " + res[0].ReceiverLastName;
+                this.ReceiverPositionName = res[0].ReceiverPositionName;
+                this.ReceiverOfficeShortName = res[0].ReceiverOfficeShortName;
             }
+            this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {
-            this.ShowAlertError("API RevenuegetByCon :: " + err.message);
-            //alert(err.message);
+            this.ShowAlertError("พบปัญหาในการติดต่อ Server");
         });
     }
 
-    async ShowRevenueCompare() {
-        if (this.RevenueDate != null && this.RevenueDate != "") {
-            this.preloader.setShowPreloader(true);
-            let DRate, cDateRevenue;
-            DRate = this.RevenueDate.date;
+    ShowEvidenceIn() {
+        this.EviService.getByCon(this.EvidenceInID, this.ProveID).then(async res => {
+            debugger
+            if (res != null && res.IsSuccess != "False") {
+                this.ListEvidenceInItem = [];
+                this.oEvidenceIn = res
+                this.ListEvidenceInItem = res.EvidenceInItem;
 
-            if (DRate != undefined) {
-                cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
-            }
+                this.DeliveryNo = res.DeliveryNo
+                this.DeliveryDate = setDateMyDatepicker(new Date(res.DeliveryDate));
+                if (res.ReturnDate == null || res.ReturnDate == '') { this.ReturnDate = ""; } else { this.ReturnDate = setDateMyDatepicker(new Date(res.ReturnDate)) }
+                
+                this.DeliveryTime = res.DeliveryTime;
+                this.Remark = res.Remark;
 
-            await this.IncService.RevenueComparegetByCon(setZeroHours(cDateRevenue), this.StaffDeptCode).then(async res => {
+                var sTemp = res.EvidenceInStaff.filter(f => f.ContributorID == "13");
+                if (sTemp.length > 0) {
+                    this.StaffSendName = `${sTemp[0].TitleName == 'null' || sTemp[0].TitleName == null ? '' : sTemp[0].TitleName}`
+                        + `${sTemp[0].FirstName == 'null' || sTemp[0].FirstName == null ? '' : sTemp[0].FirstName}` + ' '
+                        + `${sTemp[0].LastName == 'null' || sTemp[0].LastName == null ? '' : sTemp[0].LastName}`;
+                    this.PosStaffSend = sTemp[0].PositionName;
+                    this.DeptStaffSend = sTemp[0].OfficeName;
+                    this.StaffSendID = sTemp[0].EvidenceInStaffID;
+                    this.oEviInSendStaff = sTemp[0];
+                }
+
+                if (res.EvidenceInCode) {
+                    this.EvidenceInCode = res.EvidenceInCode;
+                } else {
+                    this.EvidenceInCode = "Auto Generate";
+                }
+
+                if (res.EvidenceInDate) {
+                    this.EvidenceInDate = setDateMyDatepicker(new Date(res.EvidenceInDate));
+                    this.EvidenceInTime = res.EvidenceInTime;
+                } else {
+                    this.EvidenceInDate = setDateMyDatepicker(new Date(this.getCurrentDate()));
+                    this.EvidenceInTime = this.getCurrentTime();
+                }
+
+                
+
+                sTemp = res.EvidenceInStaff.filter(f => f.ContributorID == "42");
+                if (sTemp.length > 0) {
+                    this.StaffRecvName = `${sTemp[0].TitleName == 'null' || sTemp[0].TitleName == null ? '' : sTemp[0].TitleName}`
+                        + `${sTemp[0].FirstName == 'null' || sTemp[0].FirstName == null ? '' : sTemp[0].FirstName}` + ' '
+                        + `${sTemp[0].LastName == 'null' || sTemp[0].LastName == null ? '' : sTemp[0].LastName}`;
+                    this.PosStaffRecv = sTemp[0].PositionName;
+                    this.DeptStaffRecv = sTemp[0].OfficeName;
+                    this.StaffRecvID = sTemp[0].EvidenceInStaffID;
+                    this.oEviInRecvStaff = sTemp[0];
+                }
+
+                // -------------- Product -------------------------
+                let t = 0;
+                this.oEvidenceIn.EvidenceInItem.map(item => {
+                    item.ReceiveQty = item.EvidenceStockBalance[0].ReceiveQty;
+                    item.ReceiveNetVolumn = item.EvidenceStockBalance[0].ReceiveNetVolumn;
+                    item.IsNewItem = false;
+                    item.IsDelItem = false;
+                    item.ProductSeq = t;
+
+                    if (item.EvidenceStockBalance.length > 0) {
+                        this.WarehouseID = item.EvidenceStockBalance[0].WarehouseID;
+                        this.OldWarehouseID = item.EvidenceStockBalance[0].WarehouseID;
+                    }
+
+                    t += 1;
+                });
+
+                // -------------- Document -------------------------
+
+                this.ListDoc = [];
+
+                this.proveService.MasDocumentMaingetAll(this.oEvidenceIn.EvidenceInID, "9").then(async doc => {
+                    if (doc.length > 0) {
+                        this.ListDoc = doc;
+
+                        for (var i = 0; i < this.ListDoc.length; i += 1) {
+                            this.ListDoc[i].DocumentSeq = i;
+                            this.ListDoc[i].IsNewItem = false;
+                            this.ListDoc[i].IsDelItem = false;
+                        }
+                    }
+                }, (err: HttpErrorResponse) => {
+                    this.ShowAlertError(err.message);
+                });
+
                 this.preloader.setShowPreloader(false);
-                this.ListRevenueDetail = [];
-                this.ListRevenueDetailPaging = [];
+            } else {
+                this.ShowAlertError("พบปัญหาที่ API EvidenceIngetByCon");
+                this.preloader.setShowPreloader(false);
+                this.router.navigate(['/evidenceIn/list']);
+            }
+        }, (err: HttpErrorResponse) => {
+            this.ShowAlertError("API EvidenceIngetByCon :: " + err.message);
+        });
+    }
 
-                if (res.length > 0) {
-                    for (var j = 0; j < res.length; j += 1) {
-                        if (res[j].RevenueCompareDetail.length > 0) {
-                            for (var i = 0; i < res[j].RevenueCompareDetail.length; i += 1) {
-                                try {
-                                    if (res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length > 0) {
-                                        for (var k = 0; k < res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt.length; k += 1) {
-                                            this.oRevenueDetail = {
-                                                RevenueDetailID: "",
-                                                ReceiptBookNo: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptBookNo,
-                                                ReceiptNo: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].ReceiptNo,
-                                                RevenueStatus: "1",
-                                                RevenueID: "",
-                                                CompareReceiptID: res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].CompareReceiptID,
-                                                CompareID: res[j].CompareID,
-                                                CompareCode: res[j].CompareCode,
-                                                LawBreaker: res[j].RevenueCompareDetail[i].LawbreakerTitleName + res[j].RevenueCompareDetail[i].LawbreakerFirstName + " " + res[j].RevenueCompareDetail[i].LawbreakerLastName,
-                                                StaffReceip: res[j].RevenueCompareStaff[i].TitleName + res[j].RevenueCompareStaff[i].FirstName + " " + res[j].RevenueCompareStaff[i].LastName,
-                                                PaymentDate: toLocalShort(res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].PaymentDate),
-                                                TotalFine: +`${res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k] == null ? 0 : res[j].RevenueCompareDetail[i].RevenueCompareDetailReceipt[k].TotalFine}`,
-                                                BribeMoney: +`${res[j].RevenueCompareDetail[i].BribeMoney == null ? 0 : res[0].RevenueCompareDetail[i].BribeMoney}`,
-                                                TreasuryMoney: +`${res[j].RevenueCompareDetail[i].TreasuryMoney == null ? 0 : res[0].RevenueCompareDetail[i].TreasuryMoney}`,
-                                                RewardMoney: +`${res[j].RevenueCompareDetail[i].RewardMoney == null ? 0 : res[0].RevenueCompareDetail[i].RewardMoney}`,
-                                                IsCheck: false,
-                                                IsNewItem: true,
-                                                IsDelItem: false
-                                            }
+    async onInsEvidenceIn() {
+        this.preloader.setShowPreloader(true);
+        await this.setData();
+        await this.TransactionRunningForIns();
+    }
 
-                                            this.ListRevenueDetail.push(this.oRevenueDetail);
-                                        }
-                                    }
-                                } catch{ }
-                            }
+    async TransactionRunningForIns() {
+        await this.RevService.TransactionRunninggetByCon("ops_evidence_in", this.DeptStaffRecvCode).then(async item => {
+            if (item.length == 0) {
+                this.RevService.TransactionRunninginsAll(this.DeptStaffRecvCode, "ops_evidence_in", "RC").then(async res => {
+                    if (res.IsSuccess) {
+                        this.EvidenceInCode = "RC" + this.oEviInRecvStaff.OfficeCode + (this.EvidenceInDate.date.year + 543).toString().substring(4, 2) + "00001";
+                        this.oEvidenceIn.EvidenceInCode = this.EvidenceInCode;
+
+                        if (this.evitype == "E") {
+                            await this.InsEvidenceInExternal();
+                        }
+                        else if (this.evitype == "G") {
+                            await this.InsEvidenceInGovernment();
                         }
 
                     }
-
-                    // set total record
-                    this.paginage.TotalItems = this.ListRevenueDetail.length;
-                    this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
-                }
-                else {
-                    this.ListRevenueDetail = [];
-                    this.ListRevenueDetailPaging = [];
-                }
-
-
-            }, (err: HttpErrorResponse) => {
-                this.ShowAlertError("API RevenueComparegetByCon :: " + err.message);
-                //alert(err.message);
-            });
-        }
-        else {
-            this.ShowAlertWarning("กรุณาระบุวันที่นำส่ง");
-            //alert("กรุณาระบุวันที่นำส่ง");
-            this.ListRevenueDetailPaging = [];
-        }
-    }
-
-
-    CreateObject() {
-        this.oRevenue = {
-            RevenueID: "",
-            RevenueCode: "",
-            RevenueNo: "",
-            RevenueDate: "",
-            StationCode: "",
-            StationName: "",
-            InformTo: "",
-            ISACTIVE: 1,
-            RevenueOneStaff: "",
-            RevenueDetail: [],
-            RevenueStaff: []
-        }
-    }
-
-    async onInsRevenue() {
-        this.preloader.setShowPreloader(true);
-
-        let DRate, cDateRevenue;
-        DRate = this.RevenueDate.date;
-
-        if (DRate != undefined) {
-            cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
-        }
-
-        debugger
-        this.oRevenue.RevenueID = "";
-        this.oRevenue.RevenueNo = this.RevenueNo + "/" + this.RevenueNoYear;
-        this.oRevenue.RevenueDate = setZeroHours(cDateRevenue);
-        this.oRevenue.RevenueTime = this.RevenueTime;
-        this.oRevenue.InformTo = this.InformTo;
-        this.RevenueStatus = 1;
-        this.oRevenue.RevenueStatus = "1";
-        this.oRevenue.ResultCount = this.MistreatNo.toString();
-
-        this.oRevenue.RevenueStaff = [];
-
-        if (this.oRevenueSendStaff != null && this.oRevenueSendStaff != undefined) {
-            this.oRevenue.RevenueStaff.push(this.oRevenueSendStaff);
-        }
-
-        if (this.oRevenueStaff != null && this.oRevenueStaff != undefined) {
-            this.oRevenue.RevenueStaff.push(this.oRevenueStaff);
-        }
-
-        this.oRevenue.RevenueDetail = this.ListRevenueDetailPaging.filter(item => item.IsCheck === true);
-
-        await this.IncService.TransactionRunninggetByCon("ops_revenue", this.StaffDeptCode).then(async item => {
-            if (item.length == 0) {
-                this.IncService.TransactionRunninginsAll(this.StaffDeptCode, "ops_revenue", "LC").then(async res => {
-                    if (res.IsSuccess) {
-                        this.RevenueCode = "LC" + this.oRevenueStaff.OfficeCode + (this.RevenueDate.date.year + 543).toString().substring(4, 2) + "00001";
-                        this.oRevenue.RevenueCode = this.RevenueCode;
-
-                        this.InsRevenue();
-                    }
-
-                    this.preloader.setShowPreloader(false);
                 }, (error) => { console.error(error); return false; });
             }
             else {
-                await this.IncService.TransactionRunningupdByCon(item[0].RunningID).then(async res => {
+                await this.RevService.TransactionRunningupdByCon(item[0].RunningID).then(async res => {
                     if (res.IsSuccess) {
                         var pad = "00000"
                         var RunningNo = pad.substring(0, pad.length - item[0].RunningNo.toString().length) + (+item[0].RunningNo + 1);
 
-                        this.RevenueCode = "LC" + this.oRevenueStaff.OfficeCode + (this.RevenueDate.date.year + 543).toString().substring(4, 2) + RunningNo;
-                        this.oRevenue.RevenueCode = this.RevenueCode;
+                        this.EvidenceInCode = "RC" + this.oEviInRecvStaff.OfficeCode + (this.EvidenceInDate.date.year + 543).toString().substring(4, 2) + RunningNo;
+                        this.oEvidenceIn.EvidenceInCode = this.EvidenceInCode;
 
-                        this.InsRevenue();
+                        if (this.evitype == "E") {
+                            await this.InsEvidenceInExternal();
+                        }
+                        else if (this.evitype == "G") {
+                            await this.InsEvidenceInGovernment();
+                        }
                     }
                 }, (error) => { console.error(error); return false; });
             }
 
-
-
-
         }, (error) => { console.error(error); return false; });
     }
 
-    async onUdpRevenue() {
+    InsEvidenceInExternal() {
+        var isSuccess = true;
+
+        this.EviService.EvidenceIninsAll(this.oEvidenceIn).then(async item => {
+            if (item.IsSuccess) {
+                this.EvidenceInID = item.EvidenceInID;
+                this.oEvidenceIn.EvidenceInID = item.EvidenceInID;
+
+                if (this.ListDoc.length > 0) {
+                    this.ListDoc.map(async item => {
+                        item.ReferenceCode = this.EvidenceInID;
+
+                        await this.proveService.MasDocumentMaininsAll(item).then(IsSuccess => {
+                            if (!IsSuccess) {
+                                isSuccess = IsSuccess;
+                                return false;
+                            }
+                        }, (error) => { isSuccess = false; console.error(error); return false; });
+                    });
+                }
+
+                if (isSuccess) {
+                    this.ShowAlertSuccess(Message.saveComplete);
+                    this.onComplete();
+                    this.WarehouseID = "1";
+                    await this.ShowEvidenceIn();
+
+                    this.preloader.setShowPreloader(false);
+                    this.router.navigate([`/evidenceIn/manage/${this.evitype}/R/${this.EvidenceInID}/${this.ProveID}`]);
+                }
+            } else {
+                this.ShowAlertError(Message.saveFail);
+            }
+        }, (error) => { console.error(error); return false; });
+    }
+
+    InsEvidenceInGovernment() {
+
+    }
+
+    async onUdpEvidenceIn() {
         this.preloader.setShowPreloader(true);
 
-        let DRate, cDateRevenue;
-        DRate = this.RevenueDate.date;
 
-        if (DRate != undefined) {
-            cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
+        if (this.WarehouseID == this.OldWarehouseID) {
+            await this.setData();
+
+            if (this.evitype == "E" || this.evitype == "I") {
+                if (this.EvidenceInCode == "Auto Generate") {
+                    await this.TransactionRunningForIns();
+                }
+                await this.UpdEvidenceInExternal();
+            } else if (this.evitype == "G") {
+                await this.UpdEvidenceInGovernment()
+            }
         }
+        else {
+            this.EviService.EvidenceInupdDelete(this.EvidenceInID).then(async IsSuccess => {
+                if (IsSuccess) {
+                    this.ListEvidenceInItem.map(f => {
+                        f.IsNewItem = true;
+                    });
 
-        this.oRevenue.RevenueNo = this.RevenueNo + "/" + this.RevenueNoYear;
-        this.oRevenue.RevenueDate = setZeroHours(cDateRevenue);
-        this.oRevenue.RevenueTime = this.RevenueTime;
-        this.oRevenue.RevenueCode = this.RevenueCode;
-        this.oRevenue.InformTo = this.InformTo;
-        this.oRevenue.RevenueStatus = this.RevenueStatus.toString();
-        this.oRevenue.ResultCount = this.MistreatNo.toString();
-
-        this.oRevenue.RevenueStaff = [];
-
-        if (this.oRevenueSendStaff != null && this.oRevenueSendStaff != undefined) {
-            this.oRevenue.RevenueStaff.push(this.oRevenueSendStaff);
+                    await this.setData();
+                    await this.TransactionRunningForIns();
+                } else {
+                    this.ShowAlertError(Message.saveFail);
+                }
+            }, (error) => { console.error(error); return false; });
         }
+    }
 
-        if (this.oRevenueStaff != null && this.oRevenueStaff != undefined) {
-            this.oRevenue.RevenueStaff.push(this.oRevenueStaff);
-        }
-
-        this.RevenueDetailForUDP = this.ListRevenueDetail;
-        this.oRevenue.RevenueDetail = [];
-        debugger
-
+    async UpdEvidenceInExternal() {
         // -----------------------------------------------------------
         //                       Call API Update
         // -----------------------------------------------------------
 
         let isSuccess: boolean = true;
 
-        await this.IncService.RevenueUdp(this.oRevenue).then(async IsSuccess => {
+        // -----------------------------------------------------------
+        //                          Product
+        // -----------------------------------------------------------
+        if (this.ListEvidenceInItem.length > 0) {
+            this.ListEvidenceInItem.map(async item => {
+                item.EvidenceInID = this.oEvidenceIn.EvidenceInID;
+            });
+
+            // New Product
+            await this.EviService.EvidenceInIteminsAll(this.ListEvidenceInItem.filter(item => item.IsNewItem === true)).then(pRes => {
+                if (!pRes.IsSuccess) {
+                    isSuccess = pRes.IsSuccess;
+                }
+            }, (error) => { console.error(error); });
+
+            // Edit Product
+            await this.EviService.EvidenceInItemupdByCon(this.ListEvidenceInItem.filter(item => item.IsNewItem === false)).then(pRes => {
+                if (!pRes.IsSuccess) {
+                    isSuccess = pRes.IsSuccess;
+                }
+            }, (error) => { console.error(error); });
+
+
+            // Del Product    
+            await this.EviService.EvidenceInItemupdDelete(this.ListEvidenceInItem.filter(item => item.IsDelItem === true)).then(pRes => {
+                if (!pRes.IsSuccess) {
+                    isSuccess = pRes.IsSuccess;
+                }
+            }, (error) => { console.error(error); });
+
+
+            this.ListEvidenceInItem.map(async item => {
+                item.IsNewItem = false;
+            });
+        }
+
+
+        // -----------------------------------------------------------
+        //                          Evidenct In
+        // -----------------------------------------------------------
+        this.oEvidenceIn.EvidenceInItem = [];
+
+        await this.EviService.EvidenceInupdByCon(this.oEvidenceIn).then(async IsSuccess => {
             if (!IsSuccess) {
                 isSuccess = IsSuccess;
-                return false;
             }
-        }, (error) => { isSuccess = false; console.error(error); return false; });
+        }, (error) => { isSuccess = false; console.error(error); });
 
-        if (!isSuccess) return false;
-
-        if (this.RevenueDetailForUDP.length > 0) {
-            // New Product
-            this.RevenueDetailForUDP.filter(item => (item.IsNewItem === true && item.IsCheck === true))
+        // -----------------------------------------------------------
+        //                   Document
+        // -----------------------------------------------------------
+        if (this.ListDoc.length > 0) {
+            // New Document
+            this.ListDoc.filter(item => item.IsNewItem === true)
                 .map(async item => {
+                    item.ReferenceCode = this.oEvidenceIn.EvidenceInID;
                     item.IsNewItem = false;
-                    item.RevenueID = this.RevenueID;
 
-                    await this.IncService.RevenueDetailinsAll(item).then(async IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        } else {
-                            await this.IncService.RevenueCompareDetailReceiptupdByCon(item.CompareReceiptID.toString()).then(async item => {
-                                if (!IsSuccess) {
-                                    isSuccess = IsSuccess;
-                                    return false;
-                                }
-                            }, (error) => { isSuccess = false; console.error(error); return false; });
+                    await this.proveService.MasDocumentMaininsAll(item).then(pRes => {
+                        if (!pRes.IsSuccess) {
+                            isSuccess = pRes.IsSuccess;
                         }
-                    }, (error) => { isSuccess = false; console.error(error); return false; });
+                    }, (error) => { console.error(error); });
                 });
 
-            if (!isSuccess) return false;
 
-
-            // Delete Product
-            this.RevenueDetailForUDP.filter(item => item.IsCheck === false)
+            // Edit Document
+            this.ListDoc.filter(item => item.IsNewItem === false)
                 .map(async item => {
-                    item.IsNewItem = true;
-                    item.IsDelItem = false;
-                    await this.IncService.RevenueDetailupdDelete(item.RevenueDetailID).then(async IsSuccess => {
-                        if (!IsSuccess) {
-                            isSuccess = IsSuccess;
-                            return false;
-                        } else {
-                            await this.IncService.RevenueCompareDetailReceiptupdDelete(item.CompareReceiptID.toString()).then(async item => {
-                                if (!IsSuccess) {
-                                    isSuccess = IsSuccess;
-                                    return false;
-                                }
-                            }, (error) => { isSuccess = false; console.error(error); return false; });
+                    item.ReferenceCode = this.oEvidenceIn.EvidenceInID;
+                    await this.proveService.MasDocumentMainupdByCon(item).then(pRes => {
+                        if (!pRes.IsSuccess) {
+                            isSuccess = pRes.IsSuccess;
                         }
-                    }, (error) => { isSuccess = false; console.error(error); return false; });
+                    }, (error) => { console.error(error); });
                 });
 
-            if (!isSuccess) return false;
+            // Del Document    
+            this.ListDoc.filter(item => item.IsDelItem === true)
+                .map(async item => {
 
+                    await this.proveService.MasDocumentMainupdDelete(item.DocumentID).then(pRes => {
+                        if (!pRes.IsSuccess) {
+                            isSuccess = pRes.IsSuccess;
+                        }
+                    }, (error) => { console.error(error); });
+                });
         }
 
         if (isSuccess) {
-            //alert("Update");
             this.ShowAlertSuccess(Message.saveComplete);
-            //alert(Message.saveComplete);
             this.onComplete();
             this.preloader.setShowPreloader(false);
         } else {
             this.ShowAlertError(Message.saveFail);
-            //alert(Message.saveFail);
             this.preloader.setShowPreloader(false);
         }
     }
 
-    InsRevenue() {
-        this.IncService.RevenueinsAll(this.oRevenue).then(async item => {
-            if (item.IsSuccess) {
-                this.RevenueID = item.RevenueID;
-                var isSuccess = true;
-                this.oRevenue.RevenueDetail.map(async item => {
-                    await this.IncService.RevenueCompareDetailReceiptupdByCon(item.CompareReceiptID.toString()).then(async item => {
-                        if (!item.IsSuccess) {
-                            isSuccess = item.IsSuccess;
-                            return false;
-                        }
+    async UpdEvidenceInGovernment() {
 
-                        this.preloader.setShowPreloader(false);
-                    }, (error) => { console.error(error); return false; });
-                });
-
-                if (isSuccess) {
-                    //alert("Insert");
-                    this.ShowAlertSuccess(Message.saveComplete);
-                    //alert(Message.saveComplete);
-                    this.oRevenue = {};
-                    this.onComplete();
-                    debugger
-                    //this.router.navigate(['/income/manage']);
-                    this.router.navigate([`/income/manage/R/${this.RevenueID}`]);
-                }
-            } else {
-                this.ShowAlertError(Message.saveFail);
-                //alert(Message.saveFail);
-            }
-        }, (error) => { console.error(error); return false; });
     }
 
-    // ----- ผู้นำส่ง ---
-    async getReveneueStaff() {
-        await this.IncService.StaffgetByKeyword().then(async res => {
+    onDelete() {
+        if(this.oEvidenceIn.IsEdit != 0){
+            swal({
+                title: '',
+                text: Message.confirmAction,
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.value) {
+                    if(this.evitype == "E"){
+                        this.EviService.EvidenceInupdDelete(this.EvidenceInID).then(async IsSuccess => {
+                            if (IsSuccess) {
+                                this.oEvidenceIn = {};
+                                this.ShowAlertSuccess(Message.saveComplete);
+                                this.router.navigate(['/evidenceIn/list']);
+                            } else {
+                                this.ShowAlertError(Message.saveFail);
+                            }
+                        }, (error) => { console.error(error); return false; });
+                    } else {
+                        this.oEvidenceIn.EvidenceInCode = null;
+                        this.oEvidenceIn.EvidenceInDate = null;
+                        this.oEvidenceIn.EvidenceInTime = null;
+                        this.oEvidenceIn.IsReceive = "0";
+                        this.oEvidenceIn.ReturnDate = null;
+                        this.oEvidenceIn.Remark = null;
+
+                        this.ClearStaffRecvData();
+                        this.oEvidenceIn.EvidenceInStaff = [];
+                        this.oEvidenceIn.EvidenceInStaff.push(this.oEviInSendStaff);
+                        this.oEvidenceIn.EvidenceInStaff.push(this.oEviInRecvStaff);
+
+                        this.oEvidenceIn.EvidenceInItem.map(f => {
+                            f.DamageQty = "0";
+                            f.DamageNetVolumn = "0";
+
+                            f.EvidenceStockBalance.map(item => {
+                                item.ReceiveQty = f.DeliveryQty;
+                                item.ReceiveNetVolumn = f.DeliveryNetVolumn;
+                                item.BalanceQty = f.DeliveryQty;
+                                item.BalanceNetVolumn = f.DeliveryNetVolumn;
+                            })
+                        })
+
+                        this.EviService.EvidenceInupdByCon(this.oEvidenceIn).then(async IsSuccess => {
+                            if (IsSuccess) {
+                                await this.EviService.EvidenceInItemupdByCon(this.ListEvidenceInItem.filter(item => item.IsNewItem === false)).then(pRes => {
+                                    if (pRes.IsSuccess) {
+                                        this.oEvidenceIn = {};
+                                        this.ShowAlertSuccess(Message.saveComplete);
+                                        this.router.navigate(['/evidenceIn/list']);
+                                    }
+                                }, (error) => { console.error(error); });
+                            } else {
+                                this.ShowAlertError(Message.saveFail);
+                            }
+                        }, (error) => { console.error(error); });
+                    }
+                }
+            })
+        } else {
+            this.ShowAlertWarning("ไม่อนุญาตให้ทำการลบข้อมูลการจัดเก็บ !!!");
+        }
+    }
+
+    async setData() {
+        this.oEvidenceIn = {
+            ProveID: this.ProveID,
+            EvidenceInID: this.EvidenceInID,
+            EvidenceInCode: this.EvidenceInCode,
+            EvidenceInDate: this.ConvertDateYYYYmmdd(this.EvidenceInDate.date),
+            EvidenceInTime: this.EvidenceInTime,
+            IsReceive: "1",
+            DeliveryNo: this.DeliveryNo,
+            DeliveryDate: this.ConvertDateYYYYmmdd(this.DeliveryDate.date),
+            DeliveryTime: this.DeliveryTime,
+            EvidenceInType: this.EvidenceInType,
+            Remark: this.Remark,
+            ReturnDate: this.ConvertDateYYYYmmdd(this.ReturnDate.date),
+            IsActive: 1,
+            IsEdit: 1
+        };
+
+
+        this.ListEvidenceInItem.map(async item => {
+            item.DamageQtyUnit = item.DeliveryQtyUnit;
+            item.DamageNetVolumnUnit = item.DeliveryNetVolumnUnit;
+            
+
+            this.oStockBalance = {
+                StockID: item.EvidenceStockBalance[0].StockID,
+                WarehouseID: this.WarehouseID,
+                EvidenceInItemID: item.EvidenceInItemID,
+                ReceiveQty: item.ReceiveQty,
+                ReceiveQtyUnit: item.DeliveryQtyUnit,
+                ReceiveSize: item.DeliverySize,
+                ReceiveSizeUnit: item.DeliverySizeUnit,
+                ReceiveNetVolumn: item.ReceiveNetVolumn,
+                ReceiveNetVolumnUnit: item.DeliveryQtyUnit,
+                BalanceQty: item.ReceiveQty,
+                BalanceQtyUnit: item.DeliveryQtyUnit,
+                BalanceSize: item.DeliverySize,
+                BalanceSizeUnit: item.DeliverySizeUnit,
+                BalanceNetVolumn: item.ReceiveNetVolumn,
+                BalanceNetVolumnUnit: item.ReceiveNetVolumn,
+                IsFinish: "2",
+                IsReceive: "1"
+            }
+
+            item.EvidenceStockBalance = [];
+            item.EvidenceStockBalance.push(this.oStockBalance);
+        });
+
+        await this.generateItemCode();
+
+        this.oEvidenceIn.EvidenceInItem = this.ListEvidenceInItem;
+        this.oEvidenceIn.EvidenceInStaff = [];
+
+        // ผู้นำส่ง
+        if (this.oEviInSendStaff != null && this.oEviInSendStaff != undefined) {
+            this.oEvidenceIn.EvidenceInStaff.push(this.oEviInSendStaff);
+        }
+
+        // ผู้รับของกลาง
+        if (this.oEviInRecvStaff != null && this.oEviInRecvStaff != undefined) {
+            this.oEvidenceIn.EvidenceInStaff.push(this.oEviInRecvStaff);
+        }
+    }
+
+    async generateItemCode() {
+        for (let i = 0; i < this.ListEvidenceInItem.length; i++) {
+            if (this.ListEvidenceInItem[i].IsNewItem == true) {
+                await this.EviService.TransactionRunningItemgetByCon("IN", this.ListEvidenceInItem[i].GroupCode, this.WarehouseID).then(async item => {
+                    let date = new Date();
+
+                    if (item.length == 0) {
+                        await this.EviService.TransactionRunningIteminsAll((date.getFullYear() + 543).toString().substring(2), date.getMonth(), "IN", this.ListEvidenceInItem[i].GroupCode,
+                            this.WarehouseID, "00001").then(res => {
+                                if (res.IsSuccess) {
+                                    this.ListEvidenceInItem[i].EvidenceInItemCode = "IN" + ("000".substring(0, 3 - this.WarehouseID.length) + this.WarehouseID)
+                                        + ("0000".substring(0, 4 - this.ListEvidenceInItem[i].GroupCode.length) + this.ListEvidenceInItem[i].GroupCode) + (date.getFullYear() + 543).toString().substring(2) + "00001";
+                                }
+                            }, (error) => { console.error(error); return false; });
+                    }
+                    else {
+                        await this.EviService.TransactionRunningItemupdByCon(item[0].RunningID).then(async res => {
+                            if (res.IsSuccess) {
+                                var pad = "00000"
+                                var RunningNo = pad.substring(0, pad.length - item[0].RunningNo.toString().length) + (+item[0].RunningNo + 1);
+
+                                this.ListEvidenceInItem[i].EvidenceInItemCode = item[0].RunningPrefix + ("000".substring(0, 3 - item[0].RunningWarehouseID.toString().length) + item[0].RunningWarehouseID)
+                                    + ("0000".substring(0, 4 - item[0].RunningGroupCode.toString().length) + item[0].RunningGroupCode) + item[0].RunningYear + RunningNo;
+                            }
+                        }, (error) => { console.error(error); return false; });
+                    }
+                }, (error) => { console.error(error); return false; });
+            }
+        }
+    }
+
+    onComplete() {
+        this.navService.setPrintButton(true);
+        this.navService.setDeleteButton(true);
+        this.navService.setEditButton(true);
+        this.navService.setSearchBar(false);
+        this.navService.setCancelButton(false);
+        this.navService.setSaveButton(false);
+
+        this.showEditField = true;
+    }
+
+
+    // **********************************
+    // -------------- ผู้นำส่ง -------------
+    // **********************************
+    async getEvidenceInStaff() {
+        await this.EviService.StaffgetByKeyword().then(async res => {
             if (res) {
                 this.rawStaffSendOptions = res;
+                this.LoadDataFromLocalStorage();
             }
         }, (err: HttpErrorResponse) => {
             this.ShowAlertError("พบปัญหาในการติดต่อ Server");
-            //alert("พบปัญหาในการติดต่อ Server");
         });
     }
 
@@ -817,7 +970,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.StaffSendoptions = [];
         } else {
             if (this.rawStaffSendOptions.length == 0) {
-                this.getReveneueStaff();
+                this.getEvidenceInStaff();
             }
 
             this.StaffSendoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
@@ -832,11 +985,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     StaffSendonAutoSelecteWord(event) {
-        this.oRevenueSendStaff = {
-            StaffID: this.StaffSendID,
-            ProgramCode: "XCS-60",
-            ProcessCode: "XCS-60-07",
-            RevenueID: this.RevenueID,
+        this.oEviInSendStaff = {
+            EvidenceInStaffID: this.StaffSendID,
+            EvidenceInID: this.EvidenceInID,
             StaffCode: event.StaffCode,
             TitleName: event.TitleName,
             FirstName: event.FirstName,
@@ -851,23 +1002,22 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: event.OfficeCode,
             OfficeName: event.OfficeName,
             OfficeShortName: event.OfficeShortName,
-            ContributorID: "20",
+            ContributorID: "13",
             IsActive: "1"
         }
 
-        this.PosSend = event.OperationPosName;
-        this.DeptSend = event.OfficeName;
+        this.PosStaffSend = event.OperationPosName;
+        this.DeptStaffSend = event.OfficeName;
+        this.DeptStaffRecvCode = event.officeCode;
     }
 
     ClearStaffSendData() {
-        this.PosSend = "";
-        this.DeptSend = "";
+        this.PosStaffSend = "";
+        this.DeptStaffSend = "";
 
-        this.oRevenueSendStaff = {
-            ProgramCode: "XCS-60",
-            ProcessCode: "XCS-60-05",
-            StaffID: this.StaffSendID,
-            RevenueID: this.RevenueID,
+        this.oEviInSendStaff = {
+            EvidenceInStaffID: this.StaffSendID,
+            EvidenceInID: this.EvidenceInID,
             StaffCode: "",
             TitleName: "",
             FirstName: "",
@@ -882,42 +1032,40 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: "",
             OfficeName: "",
             OfficeShortName: "",
-            ContributorID: "20",
+            ContributorID: "13",
             IsActive: "1"
         }
     }
-    // ----- End ผู้นำส่ง ---
 
 
-    // ----- ผู้จัดทำ ---
-    StaffonAutoChange(value: string) {
-        this.ClearStaffData();
+    // **********************************
+    // ----------- ผู้รับของกลาง ----------
+    // **********************************
+    StaffRecvonAutoChange(value: string) {
+        this.ClearStaffRecvData();
 
         if (value == '') {
-            this.Staffoptions = [];
-            this.ListRevenueDetailPaging = [];
+            this.StaffRecvoptions = [];
         } else {
             if (this.rawStaffSendOptions.length == 0) {
-                this.getReveneueStaff();
+                this.getEvidenceInStaff();
             }
-            this.Staffoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
+
+            this.StaffRecvoptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
         }
     }
 
-    StaffonAutoFocus(value: string) {
+    StaffRecvonAutoFocus(value: string) {
         if (value == '') {
-            this.Staffoptions = [];
-            this.ListRevenueDetailPaging = [];
-            this.ClearStaffData();
+            this.StaffRecvoptions = [];
+            this.ClearStaffRecvData();
         }
     }
 
-    StaffonAutoSelecteWord(event) {
-        this.oRevenueStaff = {
-            StaffID: this.StaffID,
-            ProgramCode: "XCS-60",
-            ProcessCode: "XCS-60-07",
-            RevenueID: this.RevenueID,
+    StaffRecvonAutoSelecteWord(event) {
+        this.oEviInRecvStaff = {
+            EvidenceInStaffID: this.StaffRecvID,
+            EvidenceInID: this.EvidenceInID,
             StaffCode: event.StaffCode,
             TitleName: event.TitleName,
             FirstName: event.FirstName,
@@ -932,26 +1080,21 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: event.OfficeCode,
             OfficeName: event.OfficeName,
             OfficeShortName: event.OfficeShortName,
-            ContributorID: "36",
+            ContributorID: "42",
             IsActive: "1"
         }
 
-        this.PosStaff = event.OperationPosName;
-        this.DeptStaff = event.OfficeName;
-        this.StaffDeptCode = event.OfficeCode;
-
-        this.ShowRevenueCompare();
+        this.PosStaffRecv = event.OperationPosName;
+        this.DeptStaffRecv = event.OfficeName;
     }
 
-    ClearStaffData() {
-        this.PosStaff = "";
-        this.DeptStaff = "";
+    ClearStaffRecvData() {
+        this.PosStaffRecv = "";
+        this.DeptStaffRecv = "";
 
-        this.oRevenueStaff = {
-            ProgramCode: "XCS-60",
-            ProcessCode: "XCS-60-05",
-            StaffID: this.StaffID,
-            RevenueID: this.RevenueID,
+        this.oEviInRecvStaff = {
+            EvidenceInStaffID: this.StaffRecvID,
+            EvidenceInID: this.EvidenceInID,
             StaffCode: "",
             TitleName: "",
             FirstName: "",
@@ -966,70 +1109,58 @@ export class ManageComponent implements OnInit, OnDestroy {
             OfficeCode: "",
             OfficeName: "",
             OfficeShortName: "",
-            ContributorID: "36",
+            ContributorID: "42",
             IsActive: "1"
         }
     }
-    // ----- End ผู้จัดทำ ---
-
-    // ----- เรียน ---
-    InformToonAutoChange(value: string) {
-        if (value == '') {
-            this.InformTooptions = [];
-        } else {
-            if (this.rawStaffSendOptions.length == 0) {
-                this.getReveneueStaff();
-            }
-            this.InformTooptions = this.rawStaffSendOptions.filter(f => f.FirstName.toLowerCase().indexOf(value.toLowerCase()) > -1 || f.LastName.toLowerCase().indexOf(value.toLowerCase()) > -1);
-        }
-    }
-
-    InformToonAutoFocus(value: string) {
-        if (value == '') {
-            this.InformTooptions = [];
-        }
-    }
-
-    // ----- End เรียน ---
 
 
-    // --- เขียนที่ ---
-    async getStation() {
-        // this.preloader.setShowPreloader(true);
-        await this.IncService.getDepartment().then(async res => {
+    // **********************************
+    // ----------- Unit ----------
+    // **********************************
+    getUnit() {
+        this.EviService.getProveProductUnit('').then(async res => {
             if (res) {
-                this.rawOptions = res;
+                this.UnitOption = res;
             }
+        }, (err: HttpErrorResponse) => { });
+    }
 
-        }, (err: HttpErrorResponse) => {
-            this.ShowAlertError("พบปัญหาในการติดต่อ Server");
-            //alert("พบปัญหาในการติดต่อ Server");
+
+    // **********************************
+    // -------------- Alert -------------
+    // **********************************
+    ShowAlertWarning(alertText: string) {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'warning',
+            confirmButtonText: 'ตกลง'
         });
-        // this.preloader.setShowPreloader(false);
     }
 
-    onAutoChange(value: string) {
-        if (value == '') {
-            this.options = [];
-            this.oRevenue.StationCode = "";
-            this.oRevenue.StationName = "";
-        } else {
-            this.options = this.rawOptions.filter(f => f.OfficeName.toLowerCase().indexOf(value.toLowerCase()) > -1);
-        }
+    ShowAlertSuccess(alertText: string) {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'success',
+            confirmButtonText: 'ตกลง'
+        });
     }
 
-    onAutoFocus(value: string) {
-        if (value == '') {
-            this.options = [];
-        }
+    ShowAlertError(alertText: string) {
+        swal({
+            title: '',
+            text: alertText,
+            type: 'error',
+            confirmButtonText: 'ตกลง'
+        });
     }
 
-    onAutoSelecteWord(event) {
-        this.oRevenue.StationCode = event.OfficeCode;
-        this.oRevenue.StationName = event.OfficeName;
-    }
-    // ----- End เขียนที่ ---
 
+    // ***********************************************
+    // ------------ DateTime & All Function ----------
+    // ***********************************************
     getCurrentDate() {
         let date = new Date();
         return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().substring(0, 10);
@@ -1037,108 +1168,317 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     getCurrentTime() {
         let date = new Date();
-        // 
-        // return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
-        return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        return date.getHours() + ":" + date.getMinutes();
     }
 
-    selectedChkAll() {
-        for (var i = 0; i < this.ListRevenueDetail.length; i++) {
-            this.ListRevenueDetail[i].IsCheck = this.selectAllChb;
-        }
-
-        this.RevenueSummary();
-    }
-
-    checkIfAllChbSelected() {
-        this.selectAllChb = this.ListRevenueDetail.every(function (item: any) {
-            return item.IsCheck == true;
-        });
-
-
-        this.RevenueSummary();
-    }
-
-    RevenueSummary() {
-        debugger
-        let CompareFine: number = 0, BribeMoney: number = 0, RewardMoney: number = 0, TreasuryMoney: number = 0;
-        let MistreatNoList = [];
-        this.ListRevenueDetail.filter(item => item.IsCheck === true)
-            .map(async item => {
-                CompareFine += item.TotalFine;
-                BribeMoney += item.BribeMoney;
-                RewardMoney += item.RewardMoney;
-                TreasuryMoney += item.TreasuryMoney;
-
-                MistreatNoList.push(item.CompareCode);
-            });
-
-        var MistreatNoUnique = Array.from(new Set(MistreatNoList));
-
-        this.MistreatNo = MistreatNoUnique.length;
-        // this.CompareFine = (BribeMoney + RewardMoney + TreasuryMoney).toLocaleString("en");
-        this.CompareFine = CompareFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
-        this.BribeMoney = BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
-        this.RewardMoney = RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
-        this.TreasuryMoney = TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
-    }
-
-    onComplete() {
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
-        this.navService.setEditButton(true);
-        this.navService.setSearchBar(false);
-        this.navService.setCancelButton(false);
-        this.navService.setSaveButton(false);
-
-        this.showEditField = true;
-    }
-
-    async pageChanges(event) {
-        this.ListRevenueDetailPaging = await this.ListRevenueDetail.slice(event.startIndex - 1, event.endIndex);
-        this.CheckCompareReceive();
-    }
-
-    CheckCompareReceive() {
-        this.ListChK = [];
-
-        for (var i = 0; i < this.ListRevenueDetailPaging.length; i += 1) {
-            if (this.ListRevenueDetailPaging[i].IsCheck) {
-                this.ListChK.push(true);
-            }
-            else {
-                this.ListChK.push(false);
+    getIndexOf(arr, val, prop) {
+        var l = arr.length,
+            k = 0;
+        for (k = 0; k < l; k = k + 1) {
+            if (arr[k][prop] == val) {
+                return k;
             }
         }
+        return -1;
     }
 
-    ShowAlertWarning(alertText: string)
-    {
+    ConvertDateYYYYmmdd(_Date: any) {
+        let tDate = _Date;
+
+        if (tDate != undefined) {
+            return setZeroHours(new Date(`${tDate.year}-${tDate.month}-${tDate.day}`));
+        }
+
+        return "";
+    }
+
+
+    // **********************************
+    // ------------ Document -----------
+    // **********************************
+    AddDocument() {
+        this.oDocument = {};
+        this.oDocument.ReferenceCode = this.EvidenceInID;
+        this.oDocument.DocumentSeq = this.ListDoc.length;
+        this.oDocument.DocumentType = "9";
+        this.oDocument.IsNewItem = true;
+        this.oDocument.IsDelItem = false;
+
+        this.ListDoc.push(this.oDocument);
+    }
+
+    changeComunicateFile(e: any, i: number) {
+        let reader = new FileReader();
+        let file = e.target.files[0];
+        let fileName: string = file.name;
+        let fileType: string = file.type;
+
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            let dataSource = reader.result.split(',')[1];
+            if (dataSource && dataSource !== undefined) {
+                this.ListDoc[i].FilePath = e.target.value;
+                this.ListDoc[i].DataSource = "";
+                this.ListDoc[i].DocumentType = 9;
+                this.ListDoc[i].DocumentName = fileName;
+                this.ListDoc[i].IsActive = 1;
+            }
+        };
+    }
+
+
+    DelDocument(i: number) {
         swal({
             title: '',
-            text: alertText,
+            text: Message.confirmDeleteDoc,
             type: 'warning',
-            confirmButtonText : 'ตกลง'
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.value) {
+                var aIndex;
+                aIndex = this.getIndexOf(this.ListDoc, i, "DocumentSeq");
+
+                if (aIndex != -1) {
+                    if (this.ListDoc[aIndex].IsNewItem == false) {
+                        this.ListDoc[aIndex].IsDelItem = true;
+                    }
+                    else {
+                        this.ListDoc.splice(aIndex, 1);
+                    }
+                }
+            }
+        })
+    }
+
+
+    // **********************************
+    // ------------ Product -----------
+    // **********************************
+    AddProduct() {
+        this.oEvidenceInItem = {
+            EvidenceInItemCode: "Auto Generate",
+            ProductSeq: this.ListEvidenceInItem.length,
+            EvidenceInID: "",
+            ProductDesc: "",
+            DeliveryQty: "",
+            DeliveryQtyUnit: "",
+            DeliveryNetVolumn: "",
+            DamageQty: "",
+            DamageQtyUnit: "",
+            DamageNetVolumn: "",
+            Remark: "",
+            IsNewItem: true,
+            IsDelItem: false,
+            EvidenceStockBalance: []
+        };
+        this.ListEvidenceInItem.push(this.oEvidenceInItem);
+    }
+
+    async getMasProduct() {
+        await this.MasService.getProduct().then(async res => {
+            if (res) {
+                this.rawProductOptions = res;
+            }
+
+            this.preloader.setShowPreloader(false);
+        }, (err: HttpErrorResponse) => {
+            this.ShowAlertError("พบปัญหาในการติดต่อ Server");
         });
     }
 
-    ShowAlertSuccess(alertText: string)
-    {
-        swal({
-            title: '',
-            text: alertText,
-            type: 'success',
-            confirmButtonText : 'ตกลง'
-        });
+    ProductonAutoChange(value: string, i: number) {
+        if (value == '') {
+            this.Productoptions = [];
+            this.ClearProduct(i);
+        } else {
+            if (this.rawProductOptions.length == 0) {
+                this.getMasProduct();
+            }
+
+            this.Productoptions = this.rawProductOptions.filter(f => f.ProductDesc.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
+        }
     }
 
-    ShowAlertError(alertText: string)
-    {
+    ProductonAutoFocus(value: string) {
+        if (value == '') {
+            this.Productoptions = [];
+        }
+    }
+
+    ProductonAutoSelecteWord(event, i) {
+        var aIndex;
+        aIndex = this.getIndexOf(this.ListEvidenceInItem, i, "ProductSeq");
+
+        let IsNewItem = this.ListEvidenceInItem[aIndex].IsNewItem;
+        let IsDelItem = this.ListEvidenceInItem[aIndex].IsDelItem;
+        let ItemCode = this.ListEvidenceInItem[aIndex].EvidenceInItemCode;
+        let EviInID = this.ListEvidenceInItem[aIndex].EvidenceInID;
+        let ItemID = this.ListEvidenceInItem[aIndex].EvidenceInItemID;
+
+        this.ListEvidenceInItem[aIndex] = {
+            EvidenceInItemID: ItemID,
+            EvidenceInItemCode: ItemCode,
+            ProductSeq: aIndex,
+            EvidenceInID: EviInID,
+            GroupCode: event.GroupCode,
+            IsDomestic: event.IsDomestic,
+            ProductCode: event.ProductCode,
+            BrandCode: event.BrandCode,
+            BrandNameTH: event.BrandNameTH,
+            BrandNameEN: event.BrandNameEN,
+            SubBrandCode: event.SubBrandCode,
+            SubBrandNameTH: event.SubBrandNameTH,
+            SubBrandNameEN: event.SubBrandNameEN,
+            ModelCode: event.ModelCode,
+            ModelName: event.ModelName,
+            FixNo1: event.FixNo1,
+            FixNo2: event.FixNo2,
+            SequenceNo: event.SequenceNo,
+            ProductDesc: event.ProductDesc,
+            DeliveryQty: "",
+            DeliveryQtyUnit: "",
+            DeliverySize: event.size,
+            DeliverySizeUnit: event.SizeUnitCode,
+            DeliveryNetVolumn: "",
+            DeliveryNetVolumnUnit: "",
+            DamageQty: "",
+            DamageQtyUnit: "",
+            DamageSize: event.size,
+            DamageSizeUnit: event.SizeUnitCode,
+            DamageNetVolumn: "",
+            DamageNetVolumnUnit: "",
+            ReceiveQty: "",
+            ReceiveNetVolumn: "",
+            IsActive: "",
+            IsNewItem: IsNewItem,
+            IsDelItem: IsDelItem,
+            EvidenceStockBalance: []
+        }
+    }
+
+    ClearProduct(i: number) {
+        var aIndex;
+        aIndex = this.getIndexOf(this.ListEvidenceInItem, i, "ProductSeq");
+
+        let IsNewItem = this.ListEvidenceInItem[aIndex].IsNewItem;
+        let IsDelItem = this.ListEvidenceInItem[aIndex].IsDelItem;
+        let ItemCode = this.ListEvidenceInItem[aIndex].EvidenceInItemCode;
+        let EviInID = this.ListEvidenceInItem[aIndex].EvidenceInID;
+        let ItemID = this.ListEvidenceInItem[aIndex].EvidenceInItemID;
+
+        this.ListEvidenceInItem[aIndex] = {
+            EvidenceInItemID: ItemID,
+            EvidenceInItemCode: ItemCode,
+            ProductSeq: aIndex,
+            EvidenceInID: EviInID,
+            GroupCode: "",
+            IsDomestic: "",
+            ProductCode: "",
+            BrandCode: "",
+            BrandNameTH: "",
+            BrandNameEN: "",
+            SubBrandCode: "",
+            SubBrandNameTH: "",
+            SubBrandNameEN: "",
+            ModelCode: "",
+            ModelName: "",
+            FixNo1: "",
+            FixNo2: "",
+            SequenceNo: "",
+            ProductDesc: "",
+            DeliveryQty: "",
+            DeliveryQtyUnit: "",
+            DeliverySize: "",
+            DeliverySizeUnit: "",
+            DeliveryNetVolumn: "",
+            DeliveryNetVolumnUnit: "",
+            DamageQty: "",
+            DamageQtyUnit: "",
+            DamageSize: "",
+            DamageSizeUnit: "",
+            DamageNetVolumn: "",
+            DamageNetVolumnUnit: "",
+            ReceiveQty: "",
+            ReceiveNetVolumn: "",
+            IsActive: "",
+            IsNewItem: IsNewItem,
+            IsDelItem: IsDelItem,
+            EvidenceStockBalance: []
+        }
+    }
+
+    CalReceive(i: number) {
+        var aIndex;
+        aIndex = this.getIndexOf(this.ListEvidenceInItem, i, "ProductSeq");
+
+        this.ListEvidenceInItem[aIndex].ReceiveQty = +`${this.ListEvidenceInItem[aIndex].DeliveryQty == "" ? "0" : this.ListEvidenceInItem[aIndex].DeliveryQty}` - +`${this.ListEvidenceInItem[aIndex].DamageQty == "" ? "0" : this.ListEvidenceInItem[aIndex].DamageQty}`;
+
+        if (this.ListEvidenceInItem[aIndex].ReceiveQty < 0) {
+            this.ShowAlertWarning("จำนวนชำรุดต้องไม่มากกว่าจำนวนส่ง !!!");
+            this.ListEvidenceInItem[aIndex].DamageQty = this.ListEvidenceInItem[aIndex].DeliveryQty;
+            this.ListEvidenceInItem[aIndex].ReceiveQty = 0;
+        }
+    }
+
+    CalReceiveNetVolumn(i: number) {
+        var aIndex;
+        aIndex = this.getIndexOf(this.ListEvidenceInItem, i, "ProductSeq");
+
+        this.ListEvidenceInItem[aIndex].ReceiveNetVolumn = +`${this.ListEvidenceInItem[aIndex].DeliveryNetVolumn == "" ? "0" : this.ListEvidenceInItem[aIndex].DeliveryNetVolumn}` - +`${this.ListEvidenceInItem[aIndex].DamageNetVolumn == "" ? "0" : this.ListEvidenceInItem[aIndex].DamageNetVolumn}`;
+
+        if (this.ListEvidenceInItem[aIndex].ReceiveNetVolumn < 0) {
+            this.ShowAlertWarning("ปริมาณชำรุดต้องไม่มากกว่าปริมาณส่ง !!!");
+            this.ListEvidenceInItem[aIndex].DamageNetVolumn = this.ListEvidenceInItem[aIndex].DeliveryNetVolumn;
+            this.ListEvidenceInItem[aIndex].ReceiveNetVolumn = 0;
+        }
+    }
+
+    DelProduct(i: number) {
         swal({
             title: '',
-            text: alertText,
-            type: 'error',
-            confirmButtonText : 'ตกลง'
+            text: Message.confirmDeleteProduct,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.value) {
+                var aIndex;
+                aIndex = this.getIndexOf(this.ListEvidenceInItem, i, "ProductSeq");
+
+                if (aIndex != -1) {
+                    if (this.ListEvidenceInItem[aIndex].IsNewItem == false) {
+                        this.ListEvidenceInItem[aIndex].IsDelItem = true;
+                    }
+                    else {
+                        this.ListEvidenceInItem.splice(aIndex, 1);
+                    }
+                }
+            }
+        })
+    }
+
+    // **********************************************
+    // ------------ Product by Warehourse -----------
+    // **********************************************
+
+    TestSearchWarehourse() {
+        this.getEvidenceInOutgetByWarehouseID();
+    }
+
+    async getEvidenceInOutgetByWarehouseID() {
+        await this.EviService.getEvidenceInOutgetByWarehouseID(this.WarehouseID).then(async res => {
+            if (res) {
+                this.rawProdbyWarehourseOptions = res;
+            }
+        }, (err: HttpErrorResponse) => {
+            this.ShowAlertError("พบปัญหาในการติดต่อ Server");
         });
-    }*/
+    }
 }

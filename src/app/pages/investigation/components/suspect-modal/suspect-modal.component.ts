@@ -33,6 +33,7 @@ export class SuspectModalComponent implements OnInit {
 
     advSearch: boolean;
     suspect = new Array<fromModels.InvestigateMasSuspectModel>();
+    suspectList = new Array<fromModels.InvestigateMasSuspectModel>();
 
     card1 = true;
 
@@ -120,6 +121,7 @@ export class SuspectModalComponent implements OnInit {
             })
 
         this.suspect = law;
+        this.suspectList = this.suspect.slice(0, 5);
         // set total record
         this.paginage.TotalItems = law.length;
     }
@@ -267,8 +269,8 @@ export class SuspectModalComponent implements OnInit {
     }
 
     async pageChanges(event: any) {
-        const list = await this.suspect.slice(event.startIndex - 1, event.endIndex);
-        this.setItemFormArray(list, 'Suspect');
+        this.suspectList = await this.suspect.slice(event.startIndex - 1, event.endIndex);
+        this.setItemFormArray(this.suspectList, 'Suspect');
     }
 
     closeLawbreakerDetail() {

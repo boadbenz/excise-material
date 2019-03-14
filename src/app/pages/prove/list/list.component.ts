@@ -50,6 +50,11 @@ export class ListComponent implements OnInit {
         private sidebarService: SidebarService,
         private preLoaderService: PreloaderService
     ) {
+
+        this.advSearch = this.navService.showAdvSearch;
+    }
+
+    async ngOnInit() {
         // set false
         this.navService.setEditButton(false);
         this.navService.setDeleteButton(false);
@@ -60,11 +65,8 @@ export class ListComponent implements OnInit {
         // set true
         this.navService.setSearchBar(true);
         this.navService.setNewButton(false);
-        this.advSearch = this.navService.showAdvSearch;
-    }
 
-    async ngOnInit() {
-        this.sidebarService.setVersion('Prove 0.0.0.23');
+        this.sidebarService.setVersion('Prove 0.0.0.28');
 
         //this.advSearch.next(true);
         this.DeliveryDateTo = null;
@@ -84,20 +86,20 @@ export class ListComponent implements OnInit {
                 if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
                 else { this.onSearch(Textsearch); }
             }
-        }) 
+        })
     }
 
     ngOnDestroy(): void {
+        //this.subOnSearch.next(true);
         this.subOnSearch.unsubscribe();
     }
 
-    ShowAlertNoRecord()
-    {
+    ShowAlertNoRecord() {
         swal({
             title: '',
             text: Message.noRecord,
             type: 'warning',
-            confirmButtonText : 'ตกลง'
+            confirmButtonText: 'ตกลง'
         });
     }
 
@@ -114,10 +116,10 @@ export class ListComponent implements OnInit {
             this.ListProve = [];
             this.preLoaderService.setShowPreloader(false);
         });
-       
+
     }
 
-    async onAdvSearch(form: any) { 
+    async onAdvSearch(form: any) {
         let sDate, eDate, sDateDelivery, eDateDelivery, sDateProve, eDateProve;
 
         if (form.value.DeliveryDateFrom) {
@@ -191,14 +193,14 @@ export class ListComponent implements OnInit {
         await list.map((item) => {
             var vProveStaff, vProveStaffScience;
 
-            if(item.DeliveryDate){
+            if (item.DeliveryDate) {
                 item.DeliveryDate = toLocalShort(item.DeliveryDate);
             }
-           
-            if(item.ProveDate){
+
+            if (item.ProveDate) {
                 item.ProveDate = toLocalShort(item.ProveDate);
             }
-            
+
 
             vProveStaff = item.ProveStaff.filter(item => item.ContributorID === 14);
             vProveStaffScience = item.ProveStaff.filter(item => item.ContributorID === 15);
@@ -207,17 +209,17 @@ export class ListComponent implements OnInit {
             item.ProveOneStaffScience = "";
             item.ProveOneDeptScience = "";
 
-            if(vProveStaff.length > 0){
-                item.ProveOneStaff = `${vProveStaff[0].TitleName == 'null' || vProveStaff[0].TitleName == null ? '' : vProveStaff[0].TitleName}` 
-                                   + `${vProveStaff[0].FirstName == 'null' || vProveStaff[0].FirstName == null ? '' : vProveStaff[0].FirstName}` + " " 
-                                   + `${vProveStaff[0].LastName == 'null' || vProveStaff[0].LastName == null ? '' : vProveStaff[0].LastName}`;
+            if (vProveStaff.length > 0) {
+                item.ProveOneStaff = `${vProveStaff[0].TitleName == 'null' || vProveStaff[0].TitleName == null ? '' : vProveStaff[0].TitleName}`
+                    + `${vProveStaff[0].FirstName == 'null' || vProveStaff[0].FirstName == null ? '' : vProveStaff[0].FirstName}` + " "
+                    + `${vProveStaff[0].LastName == 'null' || vProveStaff[0].LastName == null ? '' : vProveStaff[0].LastName}`;
             }
 
-            if(vProveStaffScience.length > 0){
-                item.ProveOneStaffScience = `${vProveStaffScience[0].TitleName == 'null' || vProveStaffScience[0].TitleName == null ? '' : vProveStaffScience[0].TitleName}` 
-                                          + `${vProveStaffScience[0].FirstName == 'null' || vProveStaffScience[0].FirstName == null? '' : vProveStaffScience[0].FirstName}` + " " 
-                                          + `${vProveStaffScience[0].LastName == 'null' || vProveStaffScience[0].LastName == null ? '' : vProveStaffScience[0].LastName}`;
-                item.ProveOneDeptScience =  vProveStaffScience[0].OfficeShortName;
+            if (vProveStaffScience.length > 0) {
+                item.ProveOneStaffScience = `${vProveStaffScience[0].TitleName == 'null' || vProveStaffScience[0].TitleName == null ? '' : vProveStaffScience[0].TitleName}`
+                    + `${vProveStaffScience[0].FirstName == 'null' || vProveStaffScience[0].FirstName == null ? '' : vProveStaffScience[0].FirstName}` + " "
+                    + `${vProveStaffScience[0].LastName == 'null' || vProveStaffScience[0].LastName == null ? '' : vProveStaffScience[0].LastName}`;
+                item.ProveOneDeptScience = vProveStaffScience[0].OfficeShortName;
             }
         })
 
@@ -239,13 +241,13 @@ export class ListComponent implements OnInit {
     clickView(LawsuitID: string, ArrestCode: string, IndictmentID: string, GuiltBaseID: string, ProveID: string) {
         //this._router.navigate([`/prove/manage/R/${LawsuitID}/${ArrestCode}/${IndictmentID}/${GuiltBaseID}/${ProveID}`]);
         debugger
-        if(ProveID == "" || ProveID == undefined)
-        {
+        console.log("ProveID : ",ProveID)
+        console.log("IndictmentID : ",IndictmentID)
+        if (ProveID == "" || ProveID == undefined) {
             ProveID = "0";
             this._router.navigate([`/prove/manage/C/${ProveID}/${IndictmentID}`]);
         }
-        else
-        {
+        else {
             this._router.navigate([`/prove/manage/R/${ProveID}/${IndictmentID}`]);
         }
     }
@@ -270,7 +272,7 @@ export class ListComponent implements OnInit {
             const sdate = `${this._dateDeliveryStartFrom.year}-${this._dateDeliveryStartFrom.month}-${this._dateDeliveryStartFrom.day}`;
             const edate = `${this._dateDeliveryStartTo.year}-${this._dateDeliveryStartTo.month}-${this._dateDeliveryStartTo.day}`;
 
-            if (!compareDate(new Date(sdate) , new Date(edate))) {
+            if (!compareDate(new Date(sdate), new Date(edate))) {
                 swal('', Message.checkDate, 'warning');
                 //alert(Message.checkDate)
                 setTimeout(() => {

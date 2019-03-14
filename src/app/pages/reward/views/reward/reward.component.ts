@@ -59,6 +59,7 @@ import swal from 'sweetalert2';
 export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   public ILG60_08_04_00_00_E12_DATA: IRewardBinding[] = [];
   public listData: any[] = [];
+  public DataSelect: any[] = [];
   public RewardFormGroup: FormGroup;
   public MasOfficeMainList: any[];
   public checkList: boolean[];
@@ -128,8 +129,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         term.length < 1
           ? []
           : this.MasOfficeMainList.filter(
-              v => v.toLowerCase().indexOf(term.toLowerCase()) > -1
-            ).slice(0, 10)
+            v => v.toLowerCase().indexOf(term.toLowerCase()) > -1
+          ).slice(0, 10)
       )
     );
   searchTitleName = (text$: Observable<string>) =>
@@ -140,8 +141,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         term.length < 1
           ? []
           : this.TitleList.filter(
-              v => v.toLowerCase().indexOf(term.toLowerCase()) > -1
-            ).slice(0, 10)
+            v => v.toLowerCase().indexOf(term.toLowerCase()) > -1
+          ).slice(0, 10)
       )
     ); // ยศ	Column	Key Press	ILG60-08-04-00-00-E15
   searchFullName = (text$: Observable<string>) =>
@@ -152,10 +153,10 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         term.length < 1
           ? []
           : this.Staff_StaffCode_List.filter(
-              v => v.text.toLowerCase().indexOf(term.toLowerCase()) > -1
-            )
-              .slice(0, 10)
-              .map(m => m.text)
+            v => v.text.toLowerCase().indexOf(term.toLowerCase()) > -1
+          )
+            .slice(0, 10)
+            .map(m => m.text)
       )
     ); // ชื่อ-สกุล	Column	Key Press	ILG60-08-04-00-00-E16
 
@@ -223,9 +224,9 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           selectedValue.filter(f => f.check === true).map(m => m.FirstPart)
             .length > 0
             ? selectedValue
-                .filter(f => f.check === true)
-                .map(m => m.FirstPart)
-                .reduce((a, b) => (a += b))
+              .filter(f => f.check === true)
+              .map(m => m.FirstPart)
+              .reduce((a, b) => (a += b))
             : 0;
 
         // tslint:disable-next-line:max-line-length
@@ -234,9 +235,9 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           selectedValue.filter(f => f.check === true).map(m => m.SecondPart)
             .length > 0
             ? selectedValue
-                .filter(f => f.check === true)
-                .map(m => m.SecondPart)
-                .reduce((a, b) => (a += b))
+              .filter(f => f.check === true)
+              .map(m => m.SecondPart)
+              .reduce((a, b) => (a += b))
             : 0;
 
         // tslint:disable-next-line:max-line-length
@@ -246,9 +247,9 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           selectedValue.filter(f => f.check === true).map(m => m.FirstMoney)
             .length > 0
             ? selectedValue
-                .filter(f => f.check === true)
-                .map(m => m.FirstMoney)
-                .reduce((a, b) => (a += b))
+              .filter(f => f.check === true)
+              .map(m => m.FirstMoney)
+              .reduce((a, b) => (a += b))
             : 0;
 
         // tslint:disable-next-line:max-line-length
@@ -258,9 +259,9 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           selectedValue.filter(f => f.check === true).map(m => m.SecondMoney)
             .length > 0
             ? selectedValue
-                .filter(f => f.check === true)
-                .map(m => m.SecondMoney)
-                .reduce((a, b) => (a += b))
+              .filter(f => f.check === true)
+              .map(m => m.SecondMoney)
+              .reduce((a, b) => (a += b))
             : 0;
 
         this.aggregate.SecondMoney.sum = Number(sumSecond.toFixed(2));
@@ -269,9 +270,9 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           selectedValue.filter(f => f.check === true).map(m => m.ToTalMoney)
             .length > 0
             ? selectedValue
-                .filter(f => f.check === true)
-                .map(m => m.ToTalMoney)
-                .reduce((a, b) => (a += b))
+              .filter(f => f.check === true)
+              .map(m => m.ToTalMoney)
+              .reduce((a, b) => (a += b))
             : 0;
 
         this.aggregate.ToTalMoney.sum = sumTotal;
@@ -347,7 +348,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.10');
+    this.sidebarService.setVersion('0.0.1.15');
     this.pageLoad();
   }
   public changeFullName(text, index) {
@@ -494,7 +495,11 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     };
   }
   private buttonPrevPage() {
-    this._location.back();
+    this.router.navigate([
+      '/reward/manage/',
+      localStorage.getItem('IndictmentID'),
+      localStorage.getItem('ArrestCode'),
+    ]);
   }
   public checkboxHandle(PaymentFineID, i, checked) {
     if (checked) {
@@ -518,17 +523,17 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   public checkboxCal() {
     // this.aggregate.BribeMoney.sum =
     this.aggregate.BribeMoney.sum = Number(
-      this.listData
+      this.DataSelect
         .map((m, index) => (this.checkList[index] ? m.BribeMoney : 0))
         .reduce((a, b) => (a += b))
     );
     this.aggregate.PaymentFine.sum = Number(
-      this.listData
+      this.DataSelect
         .map((m, index) => (this.checkList[index] ? m.PaymentFine : 0))
         .reduce((a, b) => (a += b))
     );
     this.aggregate.RewardMoney.sum = Number(
-      this.listData
+      this.DataSelect
         .map((m, index) => (this.checkList[index] ? m.RewardMoney : 0))
         .reduce((a, b) => (a += b))
     );
@@ -591,9 +596,12 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           .toPromise();
 
         if (RequestCompare.length > 0) {
-          const RequestCompareMapName = `เลขคดีเปรียบเทียบที่ / ${
-            RequestCompare[0].CompareCode
-          }`;
+          const RequestCompareMapName = {
+            text: `เลขคดีเปรียบเทียบที่ / ${
+              RequestCompare[0].CompareCode
+              }`,
+            value: RequestCompare[0].CompareCode
+          };
           this.ReferenceNoList.push(RequestCompareMapName);
           this.RewardFormGroup.get('RequestRewardCode').patchValue(
             'Auto Generate'
@@ -610,27 +618,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             RewardMoney: `${m.PaymentFine * 0.2 || 0}`
           }));
           this.listData = mapData;
-          this.checkList = mapData.map(m => true);
-          this.aggregate.BribeMoney.sum = Number(
-            mapData.map(m => m.BribeMoney).reduce((a, b) => (a += b))
-          );
-          this.aggregate.PaymentFine.sum = Number(
-            mapData.map(m => m.PaymentFine).reduce((a, b) => (a += b))
-          );
-          this.aggregate.RewardMoney.sum = Number(
-            mapData.map(m => m.RewardMoney).reduce((a, b) => (a += b))
-          );
-          mapData.forEach(f => {
-            const data = {
-              RequestRewardDetailID: '',
-              RequestRewardID: '',
-              PaymentFineID: `${f.PaymentFineID || ''}`,
-              IsActive: '1'
-            };
-            this.RequestRewardDetail.push(this.fb.group(data));
-          });
-          // this.checkAll = this.checkChecked(this.checkList);
-          this.checkboxCal();
+
         }
 
         // this.ILG60_08_04_00_00_E08_DATA$.next({
@@ -780,10 +768,16 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
           switch (dataRequestReward.FineType) {
             case 0:
-              newMapName = `${dataRequestReward.ReferenceNo}`;
+              newMapName = {
+                text: `${dataRequestReward.ReferenceNo}`,
+                value: dataRequestReward.ReferenceNo
+              }
               break;
             case 1:
-              newMapName = `${dataRequestReward.ReferenceNo}`;
+              newMapName = {
+                text: `${dataRequestReward.ReferenceNo}`,
+                value: dataRequestReward.ReferenceNo
+              }
               break;
           }
           this.ReferenceNoList.push(newMapName);
@@ -799,16 +793,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             RewardMoney: `${m.PaymentFine * 0.2 || 0}`
           }));
           this.listData = mapData;
-          this.checkList = mapData.map(m => true);
-          this.aggregate.BribeMoney.sum = Number(
-            mapData.map(m => m.BribeMoney).reduce((a, b) => (a += b))
-          );
-          this.aggregate.PaymentFine.sum = Number(
-            mapData.map(m => m.PaymentFine).reduce((a, b) => (a += b))
-          );
-          this.aggregate.RewardMoney.sum = Number(
-            mapData.map(m => m.RewardMoney).reduce((a, b) => (a += b))
-          );
+
           const datatable_RequestReward = dataRequestReward.RequestRewardStaff.map(
             m => ({
               ...m,
@@ -994,7 +979,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             m08['RequestRewardDetail'] = this.RequestRewardDetail.value;
             m08['FirstMoneyPerPart'] =
               this.SumFirstMoneyPerPart() > 0 &&
-              this.SumFirstMoneyPerPart() !== Infinity
+                this.SumFirstMoneyPerPart() !== Infinity
                 ? `${this.SumFirstMoneyPerPart() || 0}`
                 : '0';
             m08['FirstMoneyTotal'] = `${this.aggregate.FirstMoney.sum || 0}`;
@@ -1002,7 +987,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             m08['FirstRemainder'] = `${this.FirstRemainder() || 0}`;
             m08['SecondMoneyPerPart'] =
               this.SumSecondMoneyPerPart() > 0 &&
-              this.SumSecondMoneyPerPart() !== Infinity
+                this.SumSecondMoneyPerPart() !== Infinity
                 ? `${this.SumSecondMoneyPerPart() || 0}`
                 : '0';
             m08['SecondMoneyTotal'] = `${this.aggregate.SecondMoney.sum || 0}`;
@@ -1030,7 +1015,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                       DocumentType: `9`,
                       ReferenceCode: `${
                         RequestRewardinsAllRespone.RequestRewardID
-                      }`,
+                        }`,
                       DocumentID: '',
                       DataSource: `${element.DataSource}`,
                       FilePath: `${element.FilePath}`,
@@ -1083,7 +1068,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             UpdModel['RequestRewardDetail'] = this.RequestRewardDetail.value;
             UpdModel['FirstMoneyPerPart'] =
               this.SumFirstMoneyPerPart() > 0 &&
-              this.SumFirstMoneyPerPart() !== Infinity
+                this.SumFirstMoneyPerPart() !== Infinity
                 ? `${this.SumFirstMoneyPerPart() || 0}`
                 : '0';
             UpdModel['FirstMoneyTotal'] = `${this.aggregate.FirstMoney.sum ||
@@ -1092,7 +1077,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             UpdModel['FirstRemainder'] = `${this.FirstRemainder() || 0}`;
             UpdModel['SecondMoneyPerPart'] =
               this.SumSecondMoneyPerPart() > 0 &&
-              this.SumSecondMoneyPerPart() !== Infinity
+                this.SumSecondMoneyPerPart() !== Infinity
                 ? `${this.SumSecondMoneyPerPart() || 0}`
                 : '0';
             UpdModel['SecondMoneyTotal'] = `${this.aggregate.SecondMoney.sum ||
@@ -1173,7 +1158,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             // 2.2.8 'WAIT'
             break;
         }
-        swal('บันทึกสำเร็จ', 'success');
+        swal('', 'บันทึกสำเร็จ', 'success');
         // location.reload();
         // this.pageLoad();
         this.isEdit = false;
@@ -1182,11 +1167,38 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           this.RequestRewardID$.getValue()
         ]);
       } catch (error) {
-        swal('บันทึกไม่สำเร็จ', 'error');
+        swal('', 'บันทึกไม่สำเร็จ', 'error');
       }
     } else {
-      swal('กรุณากรอกให้ครบถ้วน', 'warning');
+      swal('', 'กรุณาตรวจสอบและระบุข้อมูลให้ครบถ้วน', 'warning');
     }
+  }
+  public selectChange(event) {
+    const ReferenceNo = event.target.value;
+    // console.log('event', ReferenceNo);
+
+    this.DataSelect = this.listData;
+    this.checkList = this.DataSelect.map(m => true);
+    this.aggregate.BribeMoney.sum = Number(
+      this.DataSelect.map(m => m.BribeMoney).reduce((a, b) => (a += b))
+    );
+    this.aggregate.PaymentFine.sum = Number(
+      this.DataSelect.map(m => m.PaymentFine).reduce((a, b) => (a += b))
+    );
+    this.aggregate.RewardMoney.sum = Number(
+      this.DataSelect.map(m => m.RewardMoney).reduce((a, b) => (a += b))
+    );
+    this.DataSelect.forEach(f => {
+      const data = {
+        RequestRewardDetailID: '',
+        RequestRewardID: '',
+        PaymentFineID: `${f.PaymentFineID || ''}`,
+        IsActive: '1'
+      };
+      this.RequestRewardDetail.push(this.fb.group(data));
+    });
+    // this.checkAll = this.checkChecked(this.checkList);
+    this.checkboxCal();
   }
   public async buttonPrint() {
     // ILG60-08-02-00-00-E05
@@ -1228,7 +1240,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       backdrop: 'static'
     });
     dialogRef.componentInstance.data = printDoc;
-    dialogRef.result.then(r => {});
+    dialogRef.result.then(r => { });
     // 2 END
   }
 
@@ -1236,14 +1248,19 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     // 1 START
     // if (confirm('ยืนยันการทำรายการหรือไม่')) {
     // 1.1
-    switch (this.mode) {
-      case 'C':
-        this._location.back();
-        break;
-      case 'R':
-        this.pageLoad();
-        break;
-    }
+    this.router.navigate([
+      '/reward/manage/',
+      localStorage.getItem('IndictmentID'),
+      localStorage.getItem('ArrestCode'),
+    ]);
+    // switch (this.mode) {
+    //   case 'C':
+    //     this._location.back();
+    //     break;
+    //   case 'R':
+    //     this.pageLoad();
+    //     break;
+    // }
     // }
     // 2 END
   }
@@ -1256,9 +1273,14 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       .toPromise();
 
     if (delResp.IsSuccess) {
-      swal('ลบข้อมูลสำเร็จ', 'success');
+      swal('', 'ลบข้อมูลสำเร็จ', 'success');
+      this.router.navigate([
+        '/reward/manage/',
+        localStorage.getItem('IndictmentID'),
+        localStorage.getItem('ArrestCode'),
+      ]);
     } else {
-      swal('ลบข้อมูลไม่สำเร็จ', 'error');
+      swal('', 'ลบข้อมูลไม่สำเร็จ', 'error');
     }
     // }
   }

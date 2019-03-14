@@ -12,7 +12,6 @@ import { LawsuitService } from '../../model/lawsuit.service';
 import { MasterService }  from '../../model/master.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
-import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MyDatePickerModule } from 'mydatepicker';
 
@@ -49,7 +48,7 @@ const routes: Routes = [
       LawsuitService,
       MasterService
   ],
-  declarations: [ManageComponent,IsActivePipe],
+  declarations: [ManageComponent],
   exports: [MatAutocompleteModule]
 })
 export class ManageModule { }

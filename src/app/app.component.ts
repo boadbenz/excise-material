@@ -16,6 +16,9 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit() {
+    if (window.performance.navigation.type != 1) {
+      localStorage.clear();
+    }
   }
   myControl = new FormControl();
   options: string[] = ['One', 'Two', 'Three'];

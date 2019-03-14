@@ -18,7 +18,7 @@ const routes: Routes = [
             { title: 'การจัดการสิทธิเข้าถึงข้อมูลระบบผู้กระทำผิด' }],
             pageType: 'list',
             // nextPage: { title: 'แจ้งความ', url: '' },
-            codePage: 'ILG60-10-01-00-00'
+            codePage: 'ILG60-11-02-00-00'
         },
         component: ManageComponent
     }

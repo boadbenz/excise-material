@@ -56,5 +56,8 @@ export class ArrestProductDetail {
     IndictmentDetailID?: number;
     ProductDesc?: string;
     IsActive?: number;
+
     IsChecked: boolean;
+    IsModify: string;
+    RowId: number;
 }
