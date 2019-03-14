@@ -72,14 +72,16 @@
             </div>
 
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :
-                </label>
+                <div class="col-lg-2 col-md-4" style="padding-right:0">
+                    <label for="" class="control-label">เลขที่หนังสือนำส่ง :</label>
+                    <div style="float: right;">กค.</div>
+                </div>
+
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <span style="margin-right: 5px">กค.</span>
-                    <input type="text" [(ngModel)]="RevenueNo" name="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField || ShowReceiveField"
-                            [ngClass]="{'ng-touched':isRequired}" required>
+                    <input type="number" [(ngModel)]="RevenueNo" name="RevenueNo" class="form-control form-control-sm" [disabled]="showEditField || ShowReceiveField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
                     <label class="col-form-label" style="padding: 0 5px 0 5px;">/</label>
-                    <input type="text" [(ngModel)]="RevenueNoYear" name="RevenueNoYear" class="form-control form-control-sm" [disabled]="showEditField || ShowReceiveField"
+                    <input type="number" [(ngModel)]="RevenueNoYear" name="RevenueNoYear" class="form-control form-control-sm" [disabled]="showEditField || ShowReceiveField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
                 <!-- <div class="col-lg-4 col-md-7 col-sm-8">
@@ -92,9 +94,9 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">เรียน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="InformTo" name="InformTo" 
-                        aria-label="Number" matInput [matAutocomplete]="auto4" (input)="InformToonAutoChange($event.target.value)"
-                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                    <input type="text" class="form-control form-control-sm" [(ngModel)]="InformTo" name="InformTo" aria-label="Number" matInput
+                        [matAutocomplete]="auto4" (input)="InformToonAutoChange($event.target.value)" [disabled]="showEditField"
+                        [ngClass]="{'ng-touched':isRequired}" required>
                     <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
                         <mat-option *ngFor="let infOption of InformTooptions" [value]="infOption.TitleName + infOption.FirstName + ' ' + infOption.LastName">
                             {{ infOption.TitleName }}{{ infOption.FirstName }} {{ infOption.LastName }}
@@ -257,13 +259,18 @@
                                         <th style="text-align: center">{{ i + 1 }}</th>
                                         <th>{{ item.CompareCode }}</th>
                                         <th style="text-align: center;">{{ item.ReceiptNo }}</th>
-                                        <th>{{ item.LawBreaker }} <br> {{ item.SurnameLawBreaker}}</th>
+                                        <th>{{ item.LawBreaker }}
+                                            <br> {{ item.SurnameLawBreaker}}</th>
                                         <!-- <th>{{ item.StaffReceip }}</th> -->
                                         <th>{{ item.PaymentDate }}</th>
-                                        <th>{{ item.TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</th>
-                                        <th>{{ item.BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</th>
-                                        <th>{{ item.RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</th>
-                                        <th>{{ item.TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</th>
+                                        <th>{{ item.TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits:
+                                            2}) }}</th>
+                                        <th>{{ item.BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits:
+                                            2}) }}</th>
+                                        <th>{{ item.RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits:
+                                            2}) }}</th>
+                                        <th>{{ item.TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits:
+                                            2}) }}</th>
                                     </tr>
                                     <tr>
                                         <td></td>

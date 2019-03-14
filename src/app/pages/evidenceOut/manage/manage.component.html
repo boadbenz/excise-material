@@ -271,11 +271,16 @@
                 <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control" readonly>
             </div>
 
-            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
-            <div class="col-lg-4 col-md-7 col-sm-8">
-                <div class="form-group ">
-                    <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
+            <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :
+            </label>
+            <div class="form-group input-group col-lg-4 col-md-7">
+                <div style="width:45%">
+                    <my-date-picker-th name="ApproveDate" [(ngModel)]="ApproveDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
+                        required></my-date-picker-th>
                 </div>
+                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                <input type="text" [(ngModel)]="ApproveTime" name="ApproveTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
+                    [ngClass]="{'ng-touched':isRequired}" required>
             </div>
         </div>
 
@@ -305,16 +310,11 @@
             </div>
         </div>
         <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :
-            </label>
-            <div class="form-group input-group col-lg-4 col-md-7">
-                <div style="width:45%">
-                    <my-date-picker-th name="ApproveDate" [(ngModel)]="ApproveDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
-                        required></my-date-picker-th>
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
                 </div>
-                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                <input type="text" [(ngModel)]="ApproveTime" name="ApproveTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
@@ -676,6 +676,18 @@
         </div>
 
         <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บต้นทาง :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto17"
+                    (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
+                    [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
+                <mat-autocomplete autoActiveFirstOption #auto17="matAutocomplete">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)">
+                        {{ optionWh.WarehouseName }}
+                    </mat-option>
+                </mat-autocomplete>
+            </div>
+
             <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บปลายทาง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" class="form-control" [(ngModel)]="WarehouseDestName" name="WarehouseDestName" placeholder="" matInput
@@ -688,7 +700,9 @@
                     </mat-option>
                 </mat-autocomplete>
             </div>
+        </div>
 
+        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสืออนุมัติ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
@@ -696,9 +710,7 @@
                         required>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">วันที่อนุมัติ :
             </label>
             <div class="form-group input-group col-lg-4 col-md-7">
@@ -709,11 +721,6 @@
                 <label for="" class="">&nbsp; เวลา : &nbsp;</label>
                 <input type="text" [(ngModel)]="ApproveTime" name="ApproveTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
                     [ngClass]="{'ng-touched':isRequired}" required>
-            </div>
-
-            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
-            <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
             </div>
         </div>
 
@@ -740,16 +747,9 @@
         </div>
 
         <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บต้นทาง :</label>
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto17"
-                    (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
-                    [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
-                <mat-autocomplete autoActiveFirstOption #auto17="matAutocomplete">
-                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)">
-                        {{ optionWh.WarehouseName }}
-                    </mat-option>
-                </mat-autocomplete>
+                <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการโอนย้าย :</label>
