@@ -1314,10 +1314,14 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             const lastDoc = this.ArrestStaff.at(lastIndex).value;
             if (lastDoc.ContributorID) {
                 item.RowId = lastDoc.RowId + 1;
+                item.ContributorID = lastIndex == 0 ? '6' : '7';
+                item.ContributorCode = lastIndex == 0 ? '6' : '7'; 
                 this.ArrestStaff.push(this.fb.group(item));
             }
         } else {
             item.RowId = 1;
+            item.ContributorID = '6';
+                item.ContributorCode = '6'; 
             this.ArrestStaff.push(this.fb.group(item));
         }
         this.sortFormArray(this.ArrestStaff);
