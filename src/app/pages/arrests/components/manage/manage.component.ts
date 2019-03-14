@@ -167,7 +167,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         return form.controls.ArrestNoticeStaff.controls;
     }
 
-    @ViewChild('printDocModal') printDocModel: ElementRef;
+    @ViewChild('printDocModalArrests') printDocModel: ElementRef;
 
     constructor(
         private fb: FormBuilder,
@@ -212,6 +212,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     ILG60_03_02_00_00_E28 = this.manageConfig.ILG60_03_02_00_00_E28;
 
     async ngOnInit() {
+        localStorage.setItem('programcode', 'ILG60-03-00');
         this.sidebarService.setVersion(this.s_arrest.version);
         this.active_route();
         this.arrestFG = this.createForm();
@@ -566,7 +567,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         })
 
         this.navService.onPrint.takeUntil(this.destroy$).subscribe(async status => {
-            if (status) {
+            if (status && localStorage.programcode == "ILG60-03-00") {
                 await this.navService.setOnPrint(false);
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
             }
@@ -1305,24 +1306,25 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     addStaff() {
-        const lastIndex = this.ArrestStaff.length - 1;
+        const lastIndex = this.ArrestStaff.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new ArrestStaff();
         item.ArrestCode = this.arrestCode;
         item.IsModify = 'c'
-        if (lastIndex < 0) {
-            item.RowId = 1;
-            this.ArrestStaff.push(this.fb.group(item));
-            return;
-        }
+        
+        item.ContributorID = lastIndex >= 0 ? '7' : '6';
+        item.ContributorCode = lastIndex >= 0 ? '7' : '6';
 
-        const lastDoc = this.ArrestStaff.at(lastIndex).value;
-        if (lastDoc.ContributorID) {
-            item.RowId = lastDoc.RowId + 1;
-            this.ArrestStaff.push(this.fb.group(item));
-        } else if (lastDoc.IsModify == 'd') {
-            item.RowId = 1;
+        if (lastIndex >= 0) {
+            const lastDoc = this.ArrestStaff.at(lastIndex).value;
+            if (lastDoc.ContributorID) {
+                item.RowId = lastDoc.RowId + 1;
+                this.ArrestStaff.push(this.fb.group(item));
+            }
+        } else {
+            item.RowId = 1; 
             this.ArrestStaff.push(this.fb.group(item));
         }
+        this.sortFormArray(this.ArrestStaff);
     }
 
     addProduct() {
@@ -1335,13 +1337,6 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         item.GroupCode = '1';
         item.IsDomestic = '1';
 
-        // if (lastIndex < 0) {
-        //     item.RowId = 1;
-        //     this.ArrestProduct.push(this.fb.group(item));
-        //     return;
-        // }
-
-
         if (lastIndex >= 0) {
             const lastDoc = this.ArrestProduct.at(lastIndex).value;
             if (lastDoc.ProductDesc) {
@@ -1352,8 +1347,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             item.RowId = 1;
             this.ArrestProduct.push(this.fb.group(item));
         }
-        let sort = sortFormArray(this.ArrestProduct.value, 'RowId');
-        sort.then(x => this.setItemFormArray(x, 'ArrestProduct'))
+        this.sortFormArray(this.ArrestProduct);
     }
 
     addArrestLawbreaker(lawbreaker: fromModels.ArrestLawbreaker) {
@@ -1363,60 +1357,63 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         // lawbreaker.IsChecked = Acceptability.INACCEPTABLE;
         lawbreaker = removeObjectItem(lawbreaker, 'ResultCount') as fromModels.ArrestLawbreaker;
         this.ArrestLawbreaker.push(this.fb.group(lawbreaker))
-        let sort = sortFormArray(this.ArrestLawbreaker.value, 'RowId');
-        sort.then(x => this.setItemFormArray(x, 'ArrestLawbreaker'))
-            .catch((error) => this.catchError(error));
+        this.sortFormArray(this.ArrestLawbreaker);
     }
 
     addIndictment() {
-        const lastIndex = this.ArrestIndictment.length - 1;
+        const lastIndex = this.ArrestIndictment.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new fromModels.ArrestIndictment();
         item.ArrestCode = this.arrestCode;
         item.IsModify = 'c';
         item.RowId = null;
-        if (lastIndex < 0) {
-            this.setArrestIndictment([item], null);
-            return;
-        }
 
-        const lastDoc = this.ArrestIndictment.at(lastIndex).value;
-        if (lastDoc.GuiltBaseID || lastDoc.IsModify == 'd') {
+        if (lastIndex >= 0) {
+            const lastDoc = this.ArrestIndictment.at(lastIndex).value;
+            if (lastDoc.GuiltBaseID || lastDoc.IsModify == 'd') {
+                this.setArrestIndictment([item], null);
+            }
+        } else {
             this.setArrestIndictment([item], null);
         }
+        this.sortFormArray(this.ArrestIndictment);
     }
 
     addDocument() {
-        const lastIndex = this.ArrestDocument.length - 1;
+        const lastIndex = this.ArrestDocument.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new ArrestDocument();
         item.DocumentType = '3';
         item.ReferenceCode = this.arrestCode;
         item.IsModify = 'c';
-        if (lastIndex < 0) {
-            item.RowId = 1;
-            this.ArrestDocument.push(this.fb.group(item));
-            return;
-        }
 
-        const lastItem = this.ArrestDocument.at(lastIndex).value;
-        if (lastItem.DataSource && lastItem.FilePath) {
-            item.RowId = lastItem.RowId + 1;
-            this.ArrestDocument.push(this.fb.group(item));
-        } else if (lastItem.IsModify == 'd') {
+        if (lastIndex >= 0) {
+            const lastItem = this.ArrestDocument.at(lastIndex).value;
+            if (lastItem.DataSource && lastItem.FilePath) {
+                item.RowId = lastItem.RowId + 1;
+                this.ArrestDocument.push(this.fb.group(item));
+            }
+        } else {
             item.RowId = 1;
             this.ArrestDocument.push(this.fb.group(item));
         }
+        this.sortFormArray(this.ArrestDocument);
     }
 
-    private deleteFormArray(o: FormArray, i: number, controls: string) {
-        o.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        let sort = sortFormArray(o.value, 'RowId');
-        o.value.map(() => o.removeAt(0));
-        sort.then(x => this.setItemFormArray(x, controls))
-            .catch((error) => this.catchError(error));
+    private sortFormArray(o: FormArray) {
+        let sort = sortingArray(o.value, 'RowId');
+        sort.forEach(($, i1) => o.at(i1).patchValue($));
+    }
+
+    private deleteFormArray(o: FormArray, i: number) {
+        const arr = o.value.filter($ => $.IsModify == 'd');
+        const RowId = arr.length
+            ? arr.reduce((max, p) => p.RowId > max ? p.RowId : max, arr[0].RowId) + 1
+            : IntialLastRowID;
+        o.at(i).patchValue({ IsModify: 'd', RowId: RowId });
+        sortingArray(o.value, 'RowId').forEach(($, i1) => o.at(i1).patchValue($));
     }
 
     deleteStaff(i: number) {
-        this.deleteFormArray(this.ArrestStaff, i, 'ArrestStaff');
+        this.deleteFormArray(this.ArrestStaff, i);
     }
 
     deleteProduct(i: number) {
@@ -1497,33 +1494,35 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     }
 
     deleteLawbreaker(i: number) {
-        this.deleteFormArray(this.ArrestLawbreaker, i, 'ArrestLawbreaker');
+        this.deleteFormArray(this.ArrestLawbreaker, i);
     }
 
     deleteDocument(i: number) {
-        this.deleteFormArray(this.ArrestDocument, i, 'ArrestDocument');
+        this.deleteFormArray(this.ArrestDocument, i);
     }
 
     deleteNotice(i: number) {
-        this.ArrestNotice.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        let notice = sortFormArray(this.ArrestNotice.value, 'RowId');
-        this.ArrestNotice.value.map(() => this.ArrestNotice.removeAt(0));
-        notice.then(x => this.setNoticeForm(x))
-            .catch((error) => this.catchError(error));
+        this.deleteFormArray(this.ArrestNotice, i);
+        // this.ArrestNotice.at(i).patchValue({ IsModify: 'd', RowId: 0 });
+        // let notice = sortFormArray(this.ArrestNotice.value, 'RowId');
+        // this.ArrestNotice.value.map(() => this.ArrestNotice.removeAt(0));
+        // notice.then(x => this.setNoticeForm(x))
+        //     .catch((error) => this.catchError(error));
     }
 
     async deleteIndicment(i: number) {
-        this.ArrestIndictment.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        const indictment = sortFormArray(this.ArrestIndictment.value, 'RowId');
-        this.ArrestIndictment.value.map(() => this.ArrestIndictment.removeAt(0));
-        indictment.then((_x) => {
-            _x.filter(x => x.IsModify != 'd')
-                .map((x) => {
-                    x.RowId = null;
-                    return x;
-                });
-            this.setArrestIndictment(_x, null);
-        })
+        this.deleteFormArray(this.ArrestIndictment, i);
+        // this.ArrestIndictment.at(i).patchValue({ IsModify: 'd', RowId: 0 });
+        // const indictment = sortFormArray(this.ArrestIndictment.value, 'RowId');
+        // this.ArrestIndictment.value.map(() => this.ArrestIndictment.removeAt(0));
+        // indictment.then((_x) => {
+        //     _x.filter(x => x.IsModify != 'd')
+        //         .map((x) => {
+        //             x.RowId = null;
+        //             return x;
+        //         });
+        //     this.setArrestIndictment(_x, null);
+        // })
     }
 
     searchProduct = (text$: Observable<string>) =>
@@ -1608,7 +1607,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             DepartmentCode: e.item.OfficeCode,
             DepartmentName: e.item.OfficeName,
             DepartmentLevel: e.item.DeptLevel,
-            ContributorID: e.item.ContributorID || staff.ContributorID
+            ContributorID: e.item.ContributorID || staff.ContributorID,
+            ContributorCode: e.item.ContributorID || staff.ContributorID
         })
     }
 
@@ -1623,7 +1623,8 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
             FirstName: e.target.value,
             ProgramCode: 'ILG60-03-02-00-00',
             ProcessCode: '02',
-            ContributorID: staff.ContributorID
+            ContributorID: staff.ContributorID,
+            ContributorCode: staff.ContributorID
         })
     }
 
@@ -2418,6 +2419,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     ) {
         if ((indictmentModify == 'c' || lawbreakerModify == 'c') && lawbreakerChecked == this.ACCEPTABILITY.INACCEPTABLE) {
             const _Promise = await indictmentProduct
+                .filter(x => x.IsModify != 'd')
                 .map(async x => {
                     let apd = new fromModels.ArrestProductDetail();
                     apd.ProductDetailID = null;

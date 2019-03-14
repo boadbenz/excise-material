@@ -37,6 +37,7 @@ export class ListComponent implements OnInit, OnDestroy {
     StatusOption = [];
     options = [];
     rawOptions = [];
+    lsData = [];
 
     RevenueStatus: string;
     EvidenceOutType: string;
@@ -73,6 +74,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode','ILG60-11-00');
         // set false
         this.navService.setEditButton(false);
         this.navService.setDeleteButton(false);
@@ -83,7 +85,7 @@ export class ListComponent implements OnInit, OnDestroy {
         // set true
         this.navService.setSearchBar(true);
         this.navService.setNewButton(true);
-        this.sidebarService.setVersion('evidenceOut 0.0.0.1');
+        this.sidebarService.setVersion('evidenceOut 0.0.0.3');
         this.RevenueStatus = "";
         this.EvidenceOutList = [];
         this.active_Route();
@@ -93,10 +95,10 @@ export class ListComponent implements OnInit, OnDestroy {
                 await this.navService.setOnSearch('');
 
                 let ts;
-                ts = { TextSearch: "" }
+                ts = { TextSearch: "", OfficeCode: localStorage.getItem("officeCode") }
                 ts = TextSearch;
 
-                if (ts.TextSearch == null) { this.onSearch({ TextSearch: "", EvidenceOutType: this.EvidenceOutType }); }
+                if (ts.TextSearch == null) { this.onSearch({ TextSearch: "" }); }
                 else { this.onSearch(TextSearch); }
             }
         })
@@ -131,7 +133,7 @@ export class ListComponent implements OnInit, OnDestroy {
                         case '11':
                             data.urls[1].title = "ค้นหารายการคืนของกลาง";
                             data.codePage = "ILG60-11-01-00-00";
-                            this.EvidenceOutType = "1";
+                            this.EvidenceOutType = "0";
                             break;
                         case '12':
                             data.urls[1].title = "ค้นหารายการจัดเก็บเข้าพิพิธภัณฑ์";
@@ -151,7 +153,7 @@ export class ListComponent implements OnInit, OnDestroy {
                         case '15':
                             data.urls[1].title = "ค้นหารายการนำของกลางออกจากคลัง";
                             data.codePage = "ILG60-15-01-00-00";
-                            this.EvidenceOutType = "3,5";
+                            this.EvidenceOutType = "3";
                             break;
                         case '16':
                             data.urls[1].title = "ค้นหารายการโอนย้ายของกลาง";
@@ -167,22 +169,49 @@ export class ListComponent implements OnInit, OnDestroy {
         });
     }
 
-    clickView(RevenueID: string) {
-        this._router.navigate(['/evidenceOut/manage', this.evitype, 'R', RevenueID]);
+    clickView(EvidenceOutID: string, EvidenceOutType: string) {
+        if (this.evitype == "11") {
+            this.EvidenceService.EvidenceOutInTypegetByCon(EvidenceOutID).then(async res => {
+                if (res.EvidenceInType == "0") {
+                    this._router.navigate(['/evidenceOut/manage', '11I', 'R', EvidenceOutID]);
+                } else if (res.EvidenceInType == "1") {
+                    this._router.navigate(['/evidenceOut/manage', "11E", 'R', EvidenceOutID]);
+                }
+            });
+        } else if (this.evitype == "15" && EvidenceOutType == "3") {
+            this._router.navigate(['/evidenceOut/manage', "15G", 'R', EvidenceOutID]);
+        } else if (this.evitype == "15" && EvidenceOutType == "5") {
+            this._router.navigate(['/evidenceOut/manage', "15D", 'R', EvidenceOutID]);
+
+        } else {
+            this._router.navigate(['/evidenceOut/manage', this.evitype, 'R', EvidenceOutID]);
+        }
     }
 
-    onSearch(Textsearch: any) {
-        this.preloader.setShowPreloader(true);
+    async onSearch(p: any) {
+        this.lsData = [];
+        if (this.EvidenceOutType == "3") {
+            await this.getByKeyword(p, "3");
+            await this.getByKeyword(p, "5");
+        } else {
+            await this.getByKeyword(p, this.EvidenceOutType);
+        }
 
-        this.EvidenceService.getByKeyword(Textsearch).subscribe(list => {
-            this.onSearchComplete(list)
+        this.onSearchComplete(this.lsData)
+        this.preloader.setShowPreloader(false);
+    }
 
-            this.preloader.setShowPreloader(false);
-        }, (err: HttpErrorResponse) => {
+    async getByKeyword(p: any, pOutType: string) {
+        var paramsOther = {
+            TextSearch: p.TextSearch,
+            EvidenceOutType: pOutType,
+            OfficeCode: localStorage.getItem("officeCode")
+        }
 
-            this.ShowAlertNoRecord();
-            this.EvidenceOutList = [];
-            this.preloader.setShowPreloader(false);
+        await this.EvidenceService.getByKeyword(paramsOther).then(async list => {
+            list.map(f => {
+                this.lsData.push(f);
+            })
         });
     }
 
@@ -235,6 +264,21 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async onAdvSearch() {
         this.preloader.setShowPreloader(true);
+
+        this.lsData = [];
+        if (this.EvidenceOutType == "3") {
+            await this.GetAdvSearch("3");
+            await this.GetAdvSearch("5");
+        } else {
+            await this.GetAdvSearch(this.EvidenceOutType);
+        }
+
+        this.onSearchComplete(this.lsData)
+        this.preloader.setShowPreloader(false);
+    }
+
+    async GetAdvSearch(pOutType: string) {
+
         let sDate, eDate, sFullDate, eFullDate;
 
         // วันที่คืน/วันที่ขาย/วันที่ทำลาย/วันที่นำออก/วันที่โอนย้าย/วันที่จัดเก็บพิพิธภัณฑ์ เริ่มต้น
@@ -287,20 +331,22 @@ export class ListComponent implements OnInit, OnDestroy {
 
         let oEvidenceOut = {
             EvidenceOutCode: this.EvidenceOutCode,
-            EvidenceOutDateStart: this.EvidenceOutDateStart,
+            EvidenceOutDateFrom: this.EvidenceOutDateStart,
             EvidenceOutDateTo: this.EvidenceOutDateTo,
             EvidenceOutNo: this.EvidenceOutNo,
-            EvidenceOutNoDateStart: this.EvidenceOutNoDateStart,
+            EvidenceOutNoDateFrom: this.EvidenceOutNoDateStart,
             EvidenceOutNoDateTo: this.EvidenceOutNoDateTo,
             StaffName: this.StaffName,
-            OfficeName: this.OfficeName,
-            EvidenceOutType: this.EvidenceOutType
+            StaffOfficeName: this.OfficeName,
+            OfficeCode: localStorage.getItem("officeCode"),
+            EvidenceOutType: pOutType
         }
 
 
         await this.EvidenceService.getByConAdv(oEvidenceOut).then(async list => {
-            this.onSearchComplete(list);
-            this.preloader.setShowPreloader(false);
+            list.map(f => {
+                this.lsData.push(f);
+            })
         }, (err: HttpErrorResponse) => {
             swal('', err.message, 'error');
             this.preloader.setShowPreloader(false);

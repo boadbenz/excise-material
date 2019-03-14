@@ -56,6 +56,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        localStorage.setItem('programcode', 'ILG60-01-00');
         this.advSearch.next(true)
         this.sidebarService.setVersion(this.s_invest.version);
 
@@ -72,7 +73,6 @@ export class ListComponent implements OnInit, OnDestroy {
                 this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
             }
         })
-
     }
 
     ngOnDestroy(): void {

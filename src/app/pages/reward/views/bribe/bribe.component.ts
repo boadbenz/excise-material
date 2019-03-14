@@ -367,6 +367,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
   }
   ngOnInit() {
     this.sidebarService.setVersion('0.0.1.16');
+    localStorage.setItem('programcode','ILG60-08-02');
 
     // ILG60-08-03-00-00-E01 (Page Load)
     this.pageLoad();
@@ -980,25 +981,41 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
         DocumentType: 8
       })
       .toPromise();
+    // const Doc: any[] = []
+    // const printDoc1: any[] = RequestBribe.map(m => ({
+    //     DocName:  "หนังสือมอบอำนาจ รว.10",
+    //     DocType: 'แบบฟอร์ม', RequestBribeID:`${m.RequestBribeID}`, checked: false, TypeName: "RB"
+    //   }));
 
-    const printDoc: any[] = RequestBribe.map(m => ({
+   
+    const printDoc1: any[] = RequestBribe.map(m => ({
       DocName: `${m.RequestBribeCode}: คำร้องขอรับเงินสินบน`,
-      DocType: 'แบบฟอร์ม'
+      DocType: 'แบบฟอร์ม', RequestBribeID: `${m.RequestBribeID}`, checked: false, TypeName: "RB"
     }));
+ 
 
-    printDoc.concat(
+    printDoc1.concat(
       MasDocument.map(m => ({
         DocName: `${m.DocumentName}`,
         DocType: 'เอกสารแนบภายใน'
       }))
     );
+    const printDoc2: any[] = RequestBribe.map(m => ({
+      DocName: `แบบฟอร์มหนังสือมอบอำนาจ รว.10`,
+      DocType: 'แบบฟอร์ม', RequestBribeID: `${m.RequestBribeID}`, checked: false, TypeName: "RB"
+    }));
+    const printDoc = [...printDoc1, ...printDoc2];
+    // printDoc.concat(m => ({
+    //   DocName: `แบบฟอร์มหนังสือมอบอำนาจ รว.10`,
+    //   DocType: 'แบบฟอร์ม', RequestBribeID: `${m.RequestBribeID}`, checked: false, TypeName: "RB"
+    // }));
 
-    const dialogRef = this.dialog.open(PrintDialogComponent, {
+    const dialogRef = this.dialog.open(PrintDialogComponent, {size: 'lg',
       backdrop: 'static'
     });
     dialogRef.componentInstance.data = printDoc;
     dialogRef.result.then(r => { });
-    // 2 END
+
   }
   private async buttonEdit() {
     // ILG60-08-03-00-00-E05 (ปุ่ม “แก้ไข”)

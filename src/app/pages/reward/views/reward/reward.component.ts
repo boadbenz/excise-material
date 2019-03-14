@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MainMasterService } from '../../../../services/main-master.service'
 import { Location } from '@angular/common';
 import { RewardConfig, IRewardBinding } from './reward.config';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -51,12 +52,15 @@ import { Config } from '../../config/config';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
 import swal from 'sweetalert2';
+import { a } from '@angular/core/src/render3';
+import { variable } from '@angular/compiler/src/output/output_ast';
 @Component({
   selector: 'app-reward',
   templateUrl: './reward.component.html',
   styleUrls: ['./reward.component.scss']
 })
 export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
+  public PosLeveltemp: any[] = [];
   public ILG60_08_04_00_00_E12_DATA: IRewardBinding[] = [];
   public listData: any[] = [];
   public DataSelect: any[] = [];
@@ -189,7 +193,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private masOfficeService: MasOfficeService,
     private masStaffService: MasStaffService,
-    private masTitleService: MasTitleService
+    private masTitleService: MasTitleService,
+    private mainMasterService: MainMasterService
   ) {
     super();
     this.navService.setInnerTextNextPageButton('กลับ');
@@ -349,6 +354,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sidebarService.setVersion('0.0.1.15');
+    localStorage.setItem('programcode', 'ILG60-08-02');
     this.pageLoad();
   }
   public changeFullName(text, index) {
@@ -647,6 +653,14 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           })
           .toPromise();
 
+        // 1.1.9 NEW
+        nonRequestRewardStaff.forEach(element => {
+          this.mainMasterService.SecondPartLevelCode(element.PosLevel).then(res => { 
+            this.PosLeveltemp.push(res[0].SecondPart)  , console.log('++++res', res) 
+          }) 
+        });
+        // console.log('++++++nonRequestRewardStaff : ', nonRequestRewardStaff)
+        console.log('++++this.PosLeveltemp', this.PosLeveltemp)
         const datatable_nonRequestRewardStaff = nonRequestRewardStaff.map(
           m => ({
             ...m,
@@ -680,7 +694,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           const newGroup: FormGroup = this.fb.group(objForm);
           this.RequestRewardStaff.push(newGroup);
         });
-
+        // console.log('++++this.RequestRewardStaff : ', this.RequestRewardStaff)
         // this.Input_nonRequestRewardStaff$.next(nonRequestRewardStaff);
         // this.ILG60_08_04_00_00_E12_DATA$.next({
         //   methodName: 'nonRequestRewardStaff',
@@ -688,6 +702,11 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         // });
 
         // this.ILG60_08_04_00_00_E12_DATA$.next(nonRequestRewardStaff); // 1.1.8
+
+
+        //  datatable_nonRequestRewardStaff = this.PosLeveltemp.map({})
+
+        // console.log('forEach PosLevel : ', this.PosLeveltemp)
 
         // 1.1.9
         const RequestBribeReward = await this.requestBribeReward
@@ -1224,19 +1243,36 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       })
       .toPromise();
 
-    const printDoc: any[] = RequestReward.map(m => ({
+    const printDoc1: any[] = RequestReward.map(m => ({
       DocName: `${m.RequestRewardCode}: คำร้องขอรับเงินรางวัล`,
-      DocType: 'แบบฟอร์ม'
+      DocType: 'แบบฟอร์ม', RequestRewardID: `${m.RequestRewardID}`, checked: false, TypeName: "RR"
     }));
 
-    printDoc.concat(
+    printDoc1.concat(
       MasDocument.map(m => ({
         DocName: `${m.DocumentName}`,
         DocType: 'เอกสารแนบภายใน'
       }))
     );
+    const printDoc2: any[] = RequestReward.map(m => ({
+      DocName: `คำร้องขอรับเงินรางวัลกรณีคดีถึงที่สุด โดยการเปรียบเทียบคดี รว. 4`,
+      DocType: 'แบบฟอร์ม', RequestRewardID: `${m.RequestRewardID}`, checked: false, TypeName: "RV4"
+    }));
+    const printDoc3: any[] = RequestReward.map(m => ({
+      DocName: `คำร้องขอรับเงินรางวัลกรณีคดีถึงที่สุด โดยการพิพากษา รว. 5 `,
+      DocType: 'แบบฟอร์ม', RequestRewardID: `${m.RequestRewardID}`, checked: false, TypeName: "RV5"
+    }));
+    const printDoc4: any[] = RequestReward.map(m => ({
+      DocName: `รายงานการจับกุมดำเนินคดีของเจ้าพนักงาน (รว.7)`,
+      DocType: 'แบบฟอร์ม', RequestRewardID: `${m.RequestRewardID}`, checked: false, TypeName: "RV7"
+    }));
+    const printDoc5: any[] = RequestReward.map(m => ({
+      DocName: ` แบบฟอร์มตารางการแบ่งจ่ายเงินสินบนรางวัล รว.8`,
+      DocType: 'แบบฟอร์ม', RequestRewardID: `${m.RequestRewardID}`, checked: false, TypeName: "RV8"
+    }));
+    const printDoc = [...printDoc1, ...printDoc2, ...printDoc3, ...printDoc4, ...printDoc5];
 
-    const dialogRef = this.dialog.open(PrintDialogComponent, {
+    const dialogRef = this.dialog.open(PrintDialogComponent, { size: 'lg',
       backdrop: 'static'
     });
     dialogRef.componentInstance.data = printDoc;

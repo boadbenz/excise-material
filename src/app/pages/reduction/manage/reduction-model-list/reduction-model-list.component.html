@@ -41,17 +41,17 @@
                       <input class="form-check-input" id="td{{i}}" type="checkbox" [formControlName]="i" (change)="chicking($event)" />
                     </td>
                     <td class="text-center">{{i + 1}}</td>
-                    <td>{{listData[i].LawbreakerName  }}</td>
+                    <td>{{listData[i].LawbreakerName}}</td>
                     <td>{{listData[i].IsLawsuitComplete}}</td>
                     <td>{{listData[i].UndecidedCaseNo}}</td>
                     <td>{{listData[i].PaymentFineDate}}</td>
                     <td>{{listData[i].PaymentPeriodNo}}</td>
-                    <td class="text-center">
+                    <!-- <td class="text-center">
                       <a class="text-center text-secondary" 
                         [routerLink]="['/investigation/suspect', 'R', i]" target="_blank">
                         <i class="fa fa-eye fa-lg"></i>
                       </a>
-                    </td>
+                    </td> -->
                   </tr>
                 </tbody>
               </table>

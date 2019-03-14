@@ -1,8 +1,11 @@
 import { Router } from '@angular/router';
+import { Message } from '../../../config/message';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { Component, OnInit } from '@angular/core';
 import { ReductionApiService } from '../reduction.api.service';
 import { Subject } from 'rxjs/Subject';
+
+import swal from 'sweetalert2';
 
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
@@ -15,19 +18,22 @@ export class ListComponent implements OnInit {
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   listData = [];
+  listRealData = [];
+  startPage = 0;
+  endPage = 0;
 
   arrestCode: string;
   lawsuitNo: string;
   proofNo: string;
   caseNumber: string;
-  lawsuitDateStart: Date;
-  lawsuitDateEnd: Date;
+  lawsuitDateStart: any;
+  lawsuitDateEnd: any;
   lawName: string;
   departmentlawName: string;
   advSearch: any;
   allPageCount = 0;
   numberPage = 5;
-  numberSelectPage;
+  numberSelectPage = [];
 
 
   constructor(
@@ -40,14 +46,16 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit() {
+    localStorage.setItem('programcode','ILG60-09-00');
     this.navService.setSearchBar(true);
     this.navService.setPrintButton(false);
     this.navService.setDeleteButton(false);
     this.navService.setCancelButton(false);
     this.navService.setEditButton(false);
     this.navService.setSaveButton(false);
+    this.navService.setNewButton(false);
 
-    this.allPageCount = this.listData.length / this.numberPage;
+    this.allPageCount = this.listRealData.length / this.numberPage;
     this.numberSelectPage = Array(Math.ceil(this.allPageCount)).fill(0).map((x, i) => i + 1);
 
     this.navService.searchByKeyword.subscribe(async text => {
@@ -69,62 +77,108 @@ export class ListComponent implements OnInit {
   }
 
   changeNumPage(numPage: number) {
+    this.startPage = 1;
     this.numberPage = numPage;
-    this.allPageCount = Math.ceil(this.listData.length / this.numberPage);
+    this.allPageCount = Math.ceil(this.listRealData.length / this.numberPage);
     this.numberSelectPage = Array(this.allPageCount).fill(0).map((x, i) => i + 1);
+
+    this.listData = this.listRealData.map((data, i) => {
+      return data;
+    });
+
+    this.endPage = numPage;
+  }
+
+  changePage(page: number) {
+    this.listData = this.listRealData.filter((data, i) => {
+      if (i >= ((page - 1) * this.numberPage)) {
+        return data;
+      }
+    });
+
+    this.startPage = ((page - 1) * this.numberPage) + 1;
+    this.endPage = page * this.numberPage;
+
+    if (this.endPage >= this.listRealData.length) {
+      this.endPage = this.listRealData.length;
+    }
   }
 
   public onSearch(text: string): void {
     const param = {
-      Textsearch: text || ''
+      TextSearch: text || ''
     };
     this.preloaderService.setShowPreloader(true);
-    this.apiServer.post('/XCS60/AdjustListgetByKeyword', param)
+    this.apiServer.post('/XCS60/AdjustCompareListgetByKeyword', param)
         .subscribe(response => this.adjustListByKeywordDone(response), error => this.adjustListByKeywordError(error));
   }
 
   public adjustListByKeywordDone(lists: any[]): void {
-    this.listData = lists;
+    this.listRealData = lists;
 
-    if (this.listData.length === 0) {
-      this.listData = [];
-      alert('ไม่พบข้อมูล')
+    if (this.listRealData.length === 0) {
+      this.listRealData = [];
+      this.ShowAlertNoRecord();
     }
 
     this.preloaderService.setShowPreloader(false);
+
+    this.changeNumPage(this.numberPage);
   }
 
   public adjustListByKeywordError(error: any): void {
-    console.log(error);
-    this.listData = [];
-    alert('โหลดข้อมูลไม่ได้กรุณาลองใหม่อีกครั้ง');
+    this.listRealData = [];
+    this.ShowAlertGetDataError()
     this.preloaderService.setShowPreloader(false);
   }
 
   public onAdvSearch() {
+    console.log(this.lawsuitDateStart);
+    const date_from = this.lawsuitDateStart.date.year + '-' + this.autoZero(this.lawsuitDateStart.date.month) + '-'
+                    + this.autoZero(this.lawsuitDateStart.date.day) + ' 00:00:00';
+    const date_to = this.lawsuitDateEnd.date.year + '-' + this.autoZero(this.lawsuitDateEnd.date.month) + '-'
+                  + this.autoZero(this.lawsuitDateEnd.date.day)  + ' 00:00:00';
+
+    if (Date.parse(date_from) > Date.parse(date_to)) {
+      swal('', 'วันที่เริ่มต้นต้องไม่มากกว่าวันที่สุดท้าย', 'warning');
+      return;
+    }
+
+    if (Date.now() < Date.parse(date_to)) {
+      swal('', 'วันที่สุดท้ายต้องไม่มากกว่าวันที่ปัจจุบัน', 'warning');
+      return;
+    }
+
     const param = {
       ArrestCode: this.arrestCode || '',
       LawsuitNo: this.lawsuitNo || '',
       CompareCode: this.caseNumber || '',
       ProveReportNo: this.proofNo || '',
-      CompareDateFrom: this.lawsuitDateStart || '',
-      CompareDateTo: this.lawsuitDateEnd || '',
+      CompareDateFrom: date_from || '',
+      CompareDateTo: date_to || '',
       StaffName: this.lawName || '',
       OfficeShortName: this.departmentlawName || ''
     };
 
     this.preloaderService.setShowPreloader(true);
-    this.apiServer.post('/XCS60/AdjustListgetByConAdv', param)
-        .subscribe(response => this.adjustListgetByConAdvDone(response), error => console.log(error));
+    this.apiServer.post('/XCS60/AdjustCompareListgetgetByConAdv', param)
+        .subscribe(response => this.adjustListgetByConAdvDone(response), error => this.adjustListgetByConAdvError(error));
   }
 
   public adjustListgetByConAdvDone(data: any): void {
     console.log(data);
     if (data) {
-      this.listData.push(data);
+      this.listRealData.push(data);
     } else {
-      this.listData = [];
-      alert('ไม่พบข้อมูล');
+      this.listRealData = [];
+      // this.ShowAlertNoRecord();
+      // swal('ไม่พบข้อมูล', 'error')
+      swal({
+        title: '',
+        text: 'ไม่พบข้อมูล',
+        type: 'warning',
+        confirmButtonText : 'ตกลง'
+      });
     }
 
     this.preloaderService.setShowPreloader(false);
@@ -132,9 +186,37 @@ export class ListComponent implements OnInit {
 
   public adjustListgetByConAdvError(error: any): void {
     console.log(error);
-    this.listData = [];
-    alert('โหลดข้อมูลไม่ได้กรุณาลองใหม่อีกครั้ง');
+    this.listRealData = [];
+    // this.ShowAlertGetDataError();
+    // swal('ไม่พบข้อมูล', 'error')
+    swal({
+      title: '',
+      text: 'ไม่พบข้อมูล',
+      type: 'warning',
+      confirmButtonText : 'ตกลง'
+    });
     this.preloaderService.setShowPreloader(false);
   }
 
+  public ShowAlertNoRecord() {
+    swal({
+        title: '',
+        text: Message.noRecord,
+        type: 'warning',
+        confirmButtonText : 'ตกลง'
+    });
+  }
+
+  public ShowAlertGetDataError() {
+    swal({
+        title: '',
+        text: Message.getDataError,
+        type: 'warning',
+        confirmButtonText : 'ตกลง'
+    });
+  }
+
+  private autoZero(data: string): string {
+    return data.toString().length === 1 ? '0' + data : data;
+  }
 }

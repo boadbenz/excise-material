@@ -51,12 +51,12 @@ import { SwalComponent, BeforeOpenEvent } from '@toverux/ngx-sweetalert2';
 })
 export class ManageComponent implements OnInit, OnDestroy {
 
-  @ViewChild('alertSwal') private alertSwal: SwalComponent;
-  @ViewChild('deleteNotice') private deleteNotice: SwalComponent;
-  @ViewChild('deleteProduct') private deleteProduct: SwalComponent;
-  @ViewChild('deleteSuspect') private deleteSuspect: SwalComponent;
-  @ViewChild('deleteDocument') private deleteDocument: SwalComponent;
-  @ViewChild('cancelEdit') private cancelEdit: SwalComponent;
+    @ViewChild('alertSwal') private alertSwal: SwalComponent;
+    @ViewChild('deleteNotice') private deleteNotice: SwalComponent;
+    @ViewChild('deleteProduct') private deleteProduct: SwalComponent;
+    @ViewChild('deleteSuspect') private deleteSuspect: SwalComponent;
+    @ViewChild('deleteDocument') private deleteDocument: SwalComponent;
+    @ViewChild('cancelEdit') private cancelEdit: SwalComponent;
 
     private onSaveSubscribe: any;
     private onDeleSubscribe: any;
@@ -64,9 +64,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
     private onShowEditFieldSubscribe: any;
+    private onEditButtonSubscribe: any;
 
-    actionFrom:string;
-    months:any[];
+    actionFrom: string;
+    months: any[];
     programSpect: string = 'ILG60-02-02-00-00';
     mode: string;
     showEditField: Boolean;
@@ -133,7 +134,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private preloader: PreloaderService,
         private sidebarService: SidebarService,
         private mainMasterService: MainMasterService,
-        private transactionRunningService: TransactionRunningService, private activatedRoute:ActivatedRoute
+        private transactionRunningService: TransactionRunningService, private activatedRoute: ActivatedRoute
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -142,6 +143,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode','ILG60-02-00');
         sessionStorage.removeItem("notice_form_data")
         this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
         this.activatedRoute.queryParams.subscribe(params => {
@@ -149,11 +151,11 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.44');
+        this.sidebarService.setVersion('0.0.2.47');
 
-        this.navigate_service();
-        this.active_route();
-        this.createForm();
+        await this.navigate_service();
+        await this.active_route();
+        await this.createForm();
 
         await this.setCommunicateStore();
         await this.setProductStore();
@@ -164,7 +166,9 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (this.mode == 'R') {
             await this.getByCon(this.noticeCode);
+            this.showEditField=true;
         }else if(this.mode=="C"){
+            this.showEditField = false;
             this.NoticeInformer.at(0).patchValue({
                 InformerType: true
             });
@@ -275,25 +279,45 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private navigate_service() {
         this.onShowEditFieldSubscribe = this.navService.showFieldEdit.subscribe(async p => {
+            // console.log("navigate service", this.noticeForm);
+            // if(this.noticeForm&&this.noticeForm.value.IsArrest==1){
+            //     this.showSwal("ไม่สามารถแก้ไขข้อมูลได้", "warning");
+            //     p = true;
+                
+            //     // await this.navService.setEditField(true);
+            //     await this.navService.setEditButton(false);
+            //     await this.navService.setPrintButton(true);
+            //     await this.navService.setDeleteButton(false);
+            //     await this.navService.setNextPageButton(false);
+            //     // // set false
+            //     await this.navService.setSaveButton(false);
+            //     await this.navService.setCancelButton(true);
+            // }
+            // await this.navService.setNextPageButton(false);
+            // this.showEditField = p;
+        });
+
+        this.onEditButtonSubscribe = this.navService.onEdit.subscribe(async status=>{
             if(this.noticeForm&&this.noticeForm.value.IsArrest==1){
                 this.showSwal("ไม่สามารถแก้ไขข้อมูลได้", "warning");
-                p = true;
+                this.showEditField = true;
                 
                 // await this.navService.setEditField(true);
-                await this.navService.setEditButton(true);
+                await this.navService.setEditButton(false);
                 await this.navService.setPrintButton(true);
                 await this.navService.setDeleteButton(false);
                 await this.navService.setNextPageButton(false);
                 // // set false
                 await this.navService.setSaveButton(false);
                 await this.navService.setCancelButton(true);
+            }else{
+                this.showEditField = false;
             }
             await this.navService.setNextPageButton(false);
-            this.showEditField = p;
         });
 
         this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
-            if (status) {
+            if (this.noticeForm&&status) {
                 this.cancelEdit.text = Message.confirmAction;
                 this.cancelEdit.show();
                 // if(this.mode==="R"){
@@ -356,21 +380,23 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
-            if (status) {
+            if (status && localStorage.programcode == "ILG60-02-00") {
                 this.preloader.setShowPreloader(true);
                 await this.navService.setOnPrint(false);
-                this.noticeService.print(this.noticeCode).subscribe((res)=>{
-                    this.preloader.setShowPreloader(false);
 
-                    const file = new Blob([res], {type: 'application/pdf'});
-                    const fileURL = URL.createObjectURL(file);
+                this.modal = this.ngbModel.open(this.printDocModel,{size:'lg',centered: true})
+                // this.noticeService.print(this.noticeCode).subscribe((res)=>{
+                //     this.preloader.setShowPreloader(false);
 
-                    // let a = document.createElement("a");
-                    // a.href = fileURL;
-                    // a.target = "_blank";
-                    // a.click();
-                    window.open(fileURL, "_blank");
-                });
+                //     const file = new Blob([res], {type: 'application/pdf'});
+                //     const fileURL = URL.createObjectURL(file);
+
+                //     // let a = document.createElement("a");
+                //     // a.href = fileURL;
+                //     // a.target = "_blank";
+                //     // a.click();
+                //     window.open(fileURL, "_blank");
+                // });
             }
         })
 
@@ -629,6 +655,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     private async getByCon(code: string) {
         await this.noticeService.getByCon(code).then(async res => {
             this.navService.setDeleteButton(true);
+            this.showEditField = true;
             
             // this.noticeCode = res.NoticeCode;
             // this.arrestCode = res.ArrestCode;
@@ -1501,6 +1528,14 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onDeleSubscribe.unsubscribe();
         this.onPrintSubscribe.unsubscribe();
         this.onNextPageSubscribe.unsubscribe();
+        this.onEditButtonSubscribe.unsubscribe();
+
+        this.alertSwal.ngOnDestroy();
+        this.deleteNotice.ngOnDestroy();
+        this.deleteProduct.ngOnDestroy();
+        this.deleteSuspect.ngOnDestroy();
+        this.deleteDocument.ngOnDestroy();
+        this.cancelEdit.ngOnDestroy();
     }
 
     openSuspect(e) {
@@ -1586,8 +1621,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         // this.router.navigate(['/notice/list']);
         // sessionStorage.removeItem("notice_form_data");
         if(this.mode==="R"){
-            // this.onComplete();
-            window.location.reload(true);
+            // this.onCancelEdit();
+            this.onComplete();
+            // window.location.reload(true);
         }else{
             this.onCancelEdit();
         }

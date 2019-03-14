@@ -19,9 +19,11 @@ export const routes: Routes = [
             { path: 'suspect/:mode/:code', loadChildren: './pages/notices/suspect/suspect.module#SuspectModule' }
         ]
     }, {
+        // canActivate: [AuthGuard],
         path: 'arrest', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/arrests/arrest.module#ArrestModule'
     }, {
+        // canActivate: [AuthGuard],
         path: 'suppression/investigation', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/investigation/investigation.module#InvestigationModule'
     }, {
@@ -51,13 +53,24 @@ export const routes: Routes = [
             { path: 'manage/:mode/:code1/:code2/:code3', loadChildren: './pages/fine/manage/manage.module#ManageModule' },
             { path: 'detail', loadChildren: './pages/fine/detail/detail.module#DetailModule' },
         ]
-    }, {
+    }, 
+    // {
+    //     path: 'uac', component: LayoutComponent, canActivate: [AuthGuard],
+    //     children: [
+    //         { path: 'list', loadChildren: './pages/UAC/list/list.module#ListModule' },
+    //         { path: 'manage', loadChildren: './pages/UAC/manage/manage.module#ManageModule' }
+    //     ]
+    // }, 
+    {
         path: 'uac', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
-            { path: 'list', loadChildren: './pages/UAC/list/list.module#ListModule' },
-            { path: 'manage', loadChildren: './pages/UAC/manage/manage.module#ManageModule' }
+            { path: 'useraccount/list', loadChildren: './pages/UAC/useraccount/list/list.module#ListModule' },
+            { path: 'useraccount/manage', loadChildren: './pages/UAC/useraccount/manage/manage.module#ManageModule' },
+
+            { path: 'role/list', loadChildren: './pages/UAC/role/list/list.module#ListModule' },
+            { path: 'role/manage', loadChildren: './pages/UAC/role/manage/manage.module#ManageModule' }
         ]
-    }, 
+    },  
     {
         path: 'report', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
@@ -65,6 +78,13 @@ export const routes: Routes = [
             { path: 'manage', loadChildren: './pages/report/manage/manage.module#ManageModule' }
         ]
     }, 
+    {
+        path: 'masProducts', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masProducts/list/list.module#ListModule' },
+            { path: 'manage/:mode/:code', loadChildren: './pages/masProducts/manage/manage.module#ManageModule' }
+        ]
+    },
     // {
     //     path: 'reward', component: LayoutComponent,
     //     children: [
@@ -88,7 +108,7 @@ export const routes: Routes = [
             { path: 'list', loadChildren: './pages/reduction/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/reduction/manage/manage.module#ManageModule' },
             {
-                path: 'manage/:mode/:compareid/:comparedetailid',
+                path: 'manage/:mode/:compareid',
                 loadChildren: './pages/reduction/manage-detail/manage-detail.module#ManageDetailModule'
             }
         ]
@@ -195,6 +215,14 @@ export const routes: Routes = [
         children: [
             { path: 'list/:type', loadChildren: './pages/evidenceOut/list/list.module#ListModule' },
             { path: 'manage/:type/:mode/:code', loadChildren: './pages/evidenceOut/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'evidenceStock', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/evidenceStock/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/evidenceStock/manage/manage.module#ManageModule' },
+            { path: 'managedetail/:code', loadChildren: './pages/evidenceStock/managedetail/managedetail.module#ManageDetailModule' }
         ]
     }
 ];

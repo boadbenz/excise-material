@@ -5,6 +5,9 @@ import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ReductionApiService } from '../reduction.api.service';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { MyDatePickerModule } from 'mydatepicker';
+import { MatInputModule } from '@angular/material';
 
 const routes: Routes = [
     {
@@ -23,7 +26,10 @@ const routes: Routes = [
     imports: [
         FormsModule,
         CommonModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        MyDatePickerTHModule,
+        MyDatePickerModule,
+        MatInputModule
     ],
     providers: [NavigationComponent, ReductionApiService],
     declarations: [ListComponent]

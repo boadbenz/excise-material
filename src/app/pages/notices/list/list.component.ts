@@ -17,11 +17,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
     templateUrl: './list.component.html'
 })
 export class ListComponent implements OnInit, OnDestroy {
-    
+
     @ViewChild('alertSwal') private alertSwal: SwalComponent;
 
-    months:any[];
-    monthsTh:any[];
+    months: any[];
+    monthsTh: any[];
 
     advSearch: any;
     isRequired = false;
@@ -95,12 +95,14 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.2.44');
+        this.sidebarService.setVersion('0.0.2.47');
+        localStorage.setItem('programcode', 'ILG60-02-00');
         this.paginage.TotalItems = 0;
 
+        this.navservice.setCancelButton(false);
         sessionStorage.removeItem("notice_form_data");
         let currentdate = new Date();
-        this.myDatePickerOptions.disableSince = {year: currentdate.getFullYear(), month: currentdate.getMonth()+1, day: currentdate.getDate()+1};
+        this.myDatePickerOptions.disableSince = { year: currentdate.getFullYear(), month: currentdate.getMonth() + 1, day: currentdate.getDate() + 1 };
 
         // this.preLoaderService.setShowPreloader(true);
         // await this.noticeService.getByKeywordOnInt().then(list => this.onSearchComplete(list));
@@ -119,8 +121,8 @@ export class ListComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-        this.monthsTh = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+        this.months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        this.monthsTh = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
 
         // this.preLoaderService.setShowPreloader(false);
     }
@@ -145,18 +147,18 @@ export class ListComponent implements OnInit, OnDestroy {
 
         let currDate = setDateMyDatepicker(new Date());
 
-        if(this.dateStartFrom){
-            form.value.DateStartFrom = this.dateStartFrom.date.day+"-"+this.months[this.dateStartFrom.date.month-1]+"-"+this.dateStartFrom.date.year;//setZeroHours(sdate);
-        }else if(!this.dateStartFrom&&this.dateStartTo){
+        if (this.dateStartFrom) {
+            form.value.DateStartFrom = this.dateStartFrom.date.day + "-" + this.months[this.dateStartFrom.date.month - 1] + "-" + this.dateStartFrom.date.year;//setZeroHours(sdate);
+        } else if (!this.dateStartFrom && this.dateStartTo) {
             this.dateStartFrom = this.dateStartTo;
-            form.value.DateStartFrom = this.dateStartFrom.date.day+"-"+this.months[this.dateStartFrom.date.month-1]+"-"+this.dateStartFrom.date.year;//setZeroHours(sdate);
+            form.value.DateStartFrom = this.dateStartFrom.date.day + "-" + this.months[this.dateStartFrom.date.month - 1] + "-" + this.dateStartFrom.date.year;//setZeroHours(sdate);
         }
 
-        if(this.dateStartTo){
-            form.value.DateStartTo = this.dateStartTo.date.day+"-"+this.months[this.dateStartTo.date.month-1]+"-"+this.dateStartTo.date.year;//setZeroHours(edate);
-        }else if(this.dateStartFrom&&!this.dateStartTo){
+        if (this.dateStartTo) {
+            form.value.DateStartTo = this.dateStartTo.date.day + "-" + this.months[this.dateStartTo.date.month - 1] + "-" + this.dateStartTo.date.year;//setZeroHours(edate);
+        } else if (this.dateStartFrom && !this.dateStartTo) {
             this.dateStartTo = currDate;
-            form.value.DateStartTo = this.dateStartTo.date.day+"-"+this.months[this.dateStartTo.date.month-1]+"-"+this.dateStartTo.date.year;//setZeroHours(edate);
+            form.value.DateStartTo = this.dateStartTo.date.day + "-" + this.months[this.dateStartTo.date.month - 1] + "-" + this.dateStartTo.date.year;//setZeroHours(edate);
         }
 
         let sdate = getDateMyDatepicker(this.dateStartFrom);
@@ -168,8 +170,8 @@ export class ListComponent implements OnInit, OnDestroy {
         }
 
 
-            form.value.DateStartFrom = form.value.DateStartFrom?form.value.DateStartFrom:"";
-            form.value.DateStartTo = form.value.DateStartTo?form.value.DateStartTo:"";
+        form.value.DateStartFrom = form.value.DateStartFrom ? form.value.DateStartFrom : "";
+        form.value.DateStartTo = form.value.DateStartTo ? form.value.DateStartTo : "";
         // }else{
         //     form.value.DateStartFrom = "";
         //     form.value.DateStartTo = "";
@@ -190,32 +192,32 @@ export class ListComponent implements OnInit, OnDestroy {
 
     onSearchComplete(list) {
         let datas = [];
-        if (!list || list.length==0) {
+        if (!list || list.length == 0) {
             this.showSwal(Message.noRecord, "warning");
             // return false;
-        }else{
+        } else {
             let cnt = 1;
-            for(let l of list){
+            for (let l of list) {
                 l.index = "";
                 let insert = true;
-                for(let i of datas){
-                    if(i.NoticeCode==l.NoticeCode){
+                for (let i of datas) {
+                    if (i.NoticeCode == l.NoticeCode) {
                         l.NoticeDate = "";
                         l.StaffTitleName = "";
                         l.StaffFirstName = "";
                         l.StaffLastName = "";
                         l.StaffOfficeName = "";
                         insert = false;
-                        
+
                         // i.childs.push(l);
-                        i.SuspectFullname += "<br/>"+l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
+                        i.SuspectFullname += "<br/>" + l.SuspectTitleName + "" + l.SuspectFirstName + " " + l.SuspectLastName;
                         break;
                     }
                 }
-    
-                if(insert){
+
+                if (insert) {
                     // l.childs = [];
-                    l.SuspectFullname = l.SuspectTitleName+""+l.SuspectFirstName+" "+l.SuspectLastName;
+                    l.SuspectFullname = l.SuspectTitleName + "" + l.SuspectFirstName + " " + l.SuspectLastName;
                     datas.push(l);
                     l.index = cnt++;
                 }
@@ -258,13 +260,13 @@ export class ListComponent implements OnInit, OnDestroy {
         this._router.navigate([`/notice/manage/R/${noticeCode}`]);
     }
 
-    formatDate(date:string){
-        if(date){
+    formatDate(date: string) {
+        if (date) {
             let tmps = date.split("-");
-            for(let i in this.months){
+            for (let i in this.months) {
                 let m = this.months[i];
-                if(tmps[1]==m){
-                    date = tmps[0]+" "+this.monthsTh[i]+" "+(parseInt(tmps[2])+543);
+                if (tmps[1] == m) {
+                    date = tmps[0] + " " + this.monthsTh[i] + " " + (parseInt(tmps[2]) + 543);
                     break;
                 }
             }
@@ -278,7 +280,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.noticeList = await this.notice.slice(event.startIndex - 1, event.endIndex);
     }
 
-    private showSwal(msg:string, iconType:any){
+    private showSwal(msg: string, iconType: any) {
         this.alertSwal.text = msg;
         this.alertSwal.type = iconType;
         this.alertSwal.show();

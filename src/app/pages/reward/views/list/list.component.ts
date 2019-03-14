@@ -40,6 +40,7 @@ export class ListComponent extends ListConfig implements OnInit {
 
   ngOnInit() {
     this.sidebarService.setVersion('0.0.1.9');
+    localStorage.setItem('programcode','ILG60-08-01');
     this.setShowButton();
     // this.fetchData('');
   }

@@ -7,6 +7,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ManageComponent } from './manage.component';
 import { ReductionApiService } from '../reduction.api.service';
 import { ReductionModelListComponent } from './reduction-model-list/reduction-model-list.component';
+import { PrintReductionModalModule } from '../print-doc-modal/print-doc-modal.module' ;
+import {ReductionService} from '../reduction.service'
+import { PrintDocumentComponent } from './print-document/print-document.component';
+// import { AddReduceComponent } from './add-reduce/add-reduce.component';
 
 const routes: Routes = [
   {
@@ -33,10 +37,11 @@ const routes: Routes = [
     CommonModule,
     CardActionsModule,
     NgbModule.forRoot(),
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    PrintReductionModalModule
   ],
-  declarations: [ManageComponent, ReductionModelListComponent],
+  declarations: [ManageComponent, ReductionModelListComponent, PrintDocumentComponent],
   exports: [ ],
-  providers: [ReductionApiService]
+  providers: [ReductionApiService,ReductionService]
 })
 export class ManageModule { }

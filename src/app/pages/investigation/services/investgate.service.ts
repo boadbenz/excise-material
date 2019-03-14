@@ -21,7 +21,7 @@ export class InvestgateService {
       })
   };
 
-  version = '0.0.0.20'
+  version = '0.0.0.23'
   private onEnd(): void {
     this.hideLoader();
   }
@@ -42,10 +42,11 @@ export class InvestgateService {
     console.log('Error, status code: ' + res.status);
   }
 
+
   private onCatch(error: any, caught: Observable<any>): Observable<any> {
     return Observable.throw(error);
   }
-  
+
   InvestigateDetailgetByCon(InvestigateDetailID: string) {
     const params = { InvestigateDetailID };
     const url = `${appConfig.apiReport}/ILG60_00_01_001.aspx`;

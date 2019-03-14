@@ -26,7 +26,7 @@ import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { setViewSuspect } from '../suspect-modal/suspect-modal.component';
 import swal from 'sweetalert2';
-import { clearFormArray } from 'app/pages/arrests/arrest.helper';
+import { clearFormArray, sortingArray, IntialLastRowID } from 'app/pages/arrests/arrest.helper';
 
 @Component({
     selector: 'app-investigate-detail-manage',
@@ -426,25 +426,18 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    // isObject = (obj) => obj === Object(obj);
-
-    private async sortFormArray(arr: any[]) {
-        let a = await arr.sort((a, b) => {
-            if (a.RowId < b.RowId) return -1; // asc
-            if (a.RowId > b.RowId) return 1; // desc
-            return 0;
-        });
-        let i = 0;
-        a.map((x) => { if (x.RowId != 0) x.RowId = ++i; });
-        return a;
+    private sortFormArray(o: FormArray) {
+        let sort = sortingArray(o.value, 'RowId');
+        sort.forEach(($, i1) => o.at(i1).patchValue($));
     }
 
-    private deleteFormArray(o: FormArray, i: number, controls: string) {
-        o.at(i).patchValue({ IsModify: 'd', RowId: 0 });
-        let sort = this.sortFormArray(o.value);
-        o.value.map(() => o.removeAt(0));
-        sort.then(x => this.setItemFormArray(x, controls))
-            .catch((error) => this.catchError(error));;
+    private deleteFormArray(o: FormArray, i: number) {
+        const arr = o.value.filter($ => $.IsModify == 'd');
+        const RowId = arr.length
+            ? arr.reduce((max, p) => p.RowId > max ? p.RowId : max, arr[0].RowId) + 1
+            : IntialLastRowID;
+        o.at(i).patchValue({ IsModify: 'd', RowId: RowId });
+        sortingArray(o.value, 'RowId').forEach(($, i1) => o.at(i1).patchValue($));
     }
 
     private setItemFormArray(array: any[], formControl: string) {
@@ -458,7 +451,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     endLoader = () => this.loaderService.hide();
 
     addStaff() {
-        const lastIndex = this.InvestigateDetailStaff.length - 1;
+        const lastIndex = this.InvestigateDetailStaff.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new fromModels.InvestigateDetailStaff();
         item.StaffID = null;
         item.ProgramCode = null;
@@ -481,31 +474,31 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         item.OfficeShortName = null;
         item.ContributorID = null;
         item.IsActive = null;
-        item.IsModify = 'c'
-        if (lastIndex < 0) {
+        item.IsModify = 'c';
+
+        if (lastIndex >= 0) {
+            const lastDoc = this.InvestigateDetailStaff.at(lastIndex).value;
+            if (lastDoc.ContributorID) {
+                item.RowId = lastDoc.RowId;
+                this.InvestigateDetailStaff.push(this.fb.group(item));
+            }
+        } else {
             item.RowId = 1;
             this.InvestigateDetailStaff.push(this.fb.group(item));
-            return;
         }
-        const lastDoc = this.InvestigateDetailStaff.at(lastIndex).value;
-        if (lastDoc.ContributorID) {
-            item.RowId = lastDoc.RowId + 1;
-            this.InvestigateDetailStaff.push(this.fb.group(item));
-        }
+        this.sortFormArray(this.InvestigateDetailStaff);
     }
 
     addSuspect(suspect: fromModels.InvestigateDetailSuspect) {
         suspect.RowId = 1;
         suspect.IsModify = 'c';
 
-        this.InvestigateDetailSuspect.push(this.fb.group(suspect))
-        let sort = this.sortFormArray(this.InvestigateDetailSuspect.value);
-        sort.then(x => this.setItemFormArray(x, 'InvestigateDetailSuspect'))
-            .catch((error) => this.catchError(error));
+        this.InvestigateDetailSuspect.push(this.fb.group(suspect));
+        this.sortFormArray(this.InvestigateDetailSuspect);
     }
 
     addLocal() {
-        const lastIndex = this.InvestigateDetailLocal.length - 1;
+        const lastIndex = this.InvestigateDetailLocal.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new fromModels.InvestigateDetailLocal();
         item.LocalID = null;
         item.InvestigateDetailID = null;
@@ -528,20 +521,22 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         item.IsActive = 1;
         item.Region = '';
         item.IsModify = 'c';
-        if (lastIndex < 0) {
+
+        if (lastIndex >= 0) {
+            const lastDoc = this.InvestigateDetailLocal.at(lastIndex).value;
+            if (lastDoc.Address) {
+                item.RowId = lastDoc.RowId;
+                this.InvestigateDetailLocal.push(this.fb.group(item));
+            }
+        } else {
             item.RowId = 1;
             this.InvestigateDetailLocal.push(this.fb.group(item));
-            return;
         }
-        const lastDoc = this.InvestigateDetailLocal.at(lastIndex).value;
-        if (lastDoc.Address) {
-            item.RowId = lastDoc.RowId + 1;
-            this.InvestigateDetailLocal.push(this.fb.group(item));
-        }
+        this.sortFormArray(this.InvestigateDetailLocal);
     }
 
     addProduct() {
-        const lastIndex = this.InvestigateDetailProduct.length - 1;
+        const lastIndex = this.InvestigateDetailProduct.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new fromModels.InvestigateDetailProduct();
         item.ProductID = null;
         item.InvestigateDetailID = null;
@@ -575,35 +570,39 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         item.IsActive = null;
         item.IsModify = 'c';
         item.GroupCode = '1';
-        if (lastIndex < 0) {
+
+        if (lastIndex >= 0) {
+            const lastDoc = this.InvestigateDetailProduct.at(lastIndex).value;
+            if (lastDoc.ProductDesc) {
+                item.RowId = lastDoc.RowId;
+                this.InvestigateDetailProduct.push(this.fb.group(item));
+            }
+        } else {
             item.RowId = 1;
             this.InvestigateDetailProduct.push(this.fb.group(item));
-            return;
         }
-        const lastDoc = this.InvestigateDetailProduct.at(lastIndex).value;
-        if (lastDoc.ProductDesc) {
-            item.RowId = lastDoc.RowId + 1;
-            this.InvestigateDetailProduct.push(this.fb.group(item));
-        }
+        this.sortFormArray(this.InvestigateDetailProduct);
     }
 
     addDocument() {
-        const lastIndex = this.InvestigateDocument.length - 1;
+        const lastIndex = this.InvestigateDocument.value.filter(x => x.IsModify != 'd').length - 1;
         let item = new fromModels.InvestigateDocumentModel();
         item.DocumentType = this.documentType;
         item.DataSource = null;
         item.FilePath = null;
         item.IsModify = 'c';
-        if (lastIndex < 0) {
+
+        if (lastIndex >= 0) {
+            const lastItem = this.InvestigateDocument.at(lastIndex).value;
+            if (lastItem.DataSource && lastItem.FilePath) {
+                item.RowId = lastItem.RowId;
+                this.InvestigateDocument.push(this.fb.group(item));
+            }
+        } else {
             item.RowId = 1;
             this.InvestigateDocument.push(this.fb.group(item));
-            return;
         }
-        const lastItem = this.InvestigateDocument.at(lastIndex).value;
-        if (lastItem.DataSource && lastItem.FilePath) {
-            item.RowId = lastItem.RowId + 1;
-            this.InvestigateDocument.push(this.fb.group(item));
-        }
+        this.sortFormArray(this.InvestigateDocument);
     }
 
     changeArrestDoc(e: any, index: number) {
@@ -617,23 +616,23 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     deleteStaff(i: number) {
-        this.deleteFormArray(this.InvestigateDetailStaff, i, 'InvestigateDetailStaff');
+        this.deleteFormArray(this.InvestigateDetailStaff, i);
     }
 
     deleteSuspect(i: number) {
-        this.deleteFormArray(this.InvestigateDetailSuspect, i, 'InvestigateDetailSuspect');
+        this.deleteFormArray(this.InvestigateDetailSuspect, i);
     }
 
     deleteLocal(i: number) {
-        this.deleteFormArray(this.InvestigateDetailLocal, i, 'InvestigateDetailLocal');
+        this.deleteFormArray(this.InvestigateDetailLocal, i);
     }
 
     deleteProduct(i: number) {
-        this.deleteFormArray(this.InvestigateDetailProduct, i, 'InvestigateDetailProduct');
+        this.deleteFormArray(this.InvestigateDetailProduct, i);
     }
 
     deleteDocument(i: number) {
-        this.deleteFormArray(this.InvestigateDocument, i, 'InvestigateDocument');
+        this.deleteFormArray(this.InvestigateDocument, i);
     }
 
     private createForm() {
@@ -947,7 +946,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     private async onSave() {
-
+        
         if (this.investigateFG.invalid) {
             swal('', Message.checkData, 'warning');
             this.isRequired = true;
@@ -1103,6 +1102,10 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         form.InvestigateDateStart = setZeroHours(dateStart);
         form.InvestigateDateEnd = setZeroHours(dateEnd);
 
+        form.InvestigateDetailLocal = form.InvestigateDetailLocal.filter(x => x.IsModify != 'd');
+        // form.InvestigateDetailProduct = form.InvestigateDetailProduct.filter(x => x.IsModify != 'd');
+        form.InvestigateDetailStaff = form.InvestigateDetailStaff.filter(x => x.IsModify != 'd');
+
         console.log("InvestigateDetailinsAll : ", JSON.stringify(form));
 
         await this.s_investDetail.InvestigateDetailinsAll(form).then(async x => {
@@ -1126,6 +1129,10 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         const dateEnd = getDateMyDatepicker(form.InvestigateDateEnd);
         form.InvestigateDateStart = setZeroHours(dateStart);
         form.InvestigateDateEnd = setZeroHours(dateEnd);
+
+        form.InvestigateDetailLocal = form.InvestigateDetailLocal.filter(x => x.IsModify != 'd');
+        // form.InvestigateDetailProduct = form.InvestigateDetailProduct.filter(x => x.IsModify != 'd');
+        form.InvestigateDetailStaff = form.InvestigateDetailStaff.filter(x => x.IsModify != 'd');
 
         console.log("InvestigateDetailupdByCon : ", JSON.stringify(form));
 
@@ -1250,6 +1257,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                             .catch((error) => this.catchError(error));
                         break;
                     case 'c':
+                        // if (this.mode == 'C') return;
                         await this.s_investDetail.InvestigateDetailProductinsAll(x)
                             .then(y => {
                                 if (!this.checkIsSuccess(y)) return;

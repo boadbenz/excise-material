@@ -19,32 +19,47 @@ export class EvidenceOut {
     public EvidenceOutCode?: string;
     public IsActive?: string;
     public DeptName?: string;
+    public OfficeCode?: string;
+    public EvidenceInID?: string;
     public EvidenceStaffName?: string;
     public EvidenceOutItem?: EvidenceOutItem[];
     public EvidenceOutStaff?: EvidenceOutStaff[];
 }
 
 export class EvidenceOutItem {
+    public EvidenceOutID?: string;
+    public ProductSeq?: number;
     public EvidenceOutItemID?: string;
+    public DeliveryNo?: string;
+    public EvidenceInItemCode?: string;
+    public ProductDesc?: string;
     public StockID?: string;
+    public NetVolumn?: string;
+    public NetVolumnUnit?: string;
     public Qty?: string;
     public QtyUnit?: string;
     public Size?: string;
     public SizeUnit?: string;
-    public NetVolumn?: string;
-    public NetVolumnUnit?: string;
-    public EvidenceOutID?: string;
-    public IsActive?: string;
-    public IsReturn?: string;
-    public EvidenceStock?: EvidenceStock[];
-}
-
-export class EvidenceStock {
-    public StockID?: string;
-    public WarehouseID?: string;
-    public EvidenceInItemID?: string;
     public ReceiveQty?: string;
     public ReceiveQtyUnit?: string;
+    public InitBalanceQty?: string;
+    public BalanceQty?: string;
+    public BalanceQtyUnit?: string;
+    public IsActive?: string;
+    public IsReturn?: string;
+    public IsNewItem?: boolean;
+    public IsDelItem?: boolean;
+    public EvidenceOutStockBalance?: EvidenceOutStockBalance[];
+}
+
+export class EvidenceOutStockBalance{
+    public StockID?: string;
+    public EvidenceInItemID?: string;
+    public WarehouseID?: string;
+    public ReceiveQty?: string;
+    public ReceiveQtyUnit?: string;
+    public ReceiveSize?: string;
+    public ReceiveSizeUnit?: string;
     public ReceiveNetVolumn?: string;
     public ReceiveNetVolumnUnit?: string;
     public BalanceQty?: string;
@@ -55,47 +70,6 @@ export class EvidenceStock {
     public BalanceNetVolumnUnit?: string;
     public IsFinish?: string;
     public IsReceive?: string;
-    public EvidenceInItem?: EvidenceInItem[];
-}
-
-export class EvidenceInItem {
-    public EvidenceInItemID?: string;
-    public EvidenceInItemCode?: string;
-    public EvidenceInID?: string;
-    public GroupCode?: string;
-    public IsDomestic?: string;
-    public ProductCode?: string;
-    public BrandCode?: string;
-    public BrandNameTH?: string;
-    public BrandNameEN?: string;
-    public SubBrandCode?: string;
-    public SubBrandNameTH?: string;
-    public SubBrandNameEN?: string;
-    public ModelCode?: string;
-    public ModelName?: string;
-    public FixNo1?: string;
-    public DegreeCode?: string;
-    public Degree?: string;
-    public FixNo2?: string;
-    public SequenceNo?: string;
-    public ProductDesc?: string;
-    public CarNo?: string;
-    public DeliveryQty?: string;
-    public DeliveryQtyUnit?: string;
-    public DeliverySize?: string;
-    public DeliverySizeUnit?: string;
-    public DeliveryNetVolumn?: string;
-    public DeliveryNetVolumnUnit?: string;
-    public DamageQty?: string;
-    public DamageQtyUnit?: string;
-    public DamageSize?: string;
-    public DamageSizeUnit?: string;
-    public DamageNetVolumn?: string;
-    public DamageNetVolumnUnit?: string;
-    public IsActive?: string;
-    public IsNewItem?: boolean;
-    public IsDelItem?: boolean;
-
 }
 
 export class EvidenceOutStaff {

@@ -49,4 +49,14 @@ export class MasterService {
       return res;
     } catch (error) { }
   }
+
+  async getWarehourse(OfficeCode: string): Promise<any> {
+    const params = { OfficeCode };
+    const url = `${appConfig.api8777}/MasWarehouseMaingetByOfficeCode`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) { }
+  }
 }

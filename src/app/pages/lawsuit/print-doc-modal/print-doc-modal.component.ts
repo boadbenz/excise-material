@@ -4,6 +4,7 @@ import { PreloaderService } from "../../../shared/preloader/preloader.component"
 import { LawsuitService } from "../lawsuit.service";
 import { MainMasterService } from 'app/services/main-master.service';
 import { ActivatedRoute } from '@angular/router';
+import { element } from 'protractor';
 enum SORTING { ASC, DESC }
 @Component({
   selector: 'app-print-lawsuit-modal',
@@ -47,6 +48,7 @@ export class PrintLawsuitModalComponent implements OnInit {
   // private lawsuitService: LawsuitService
 
   async ngOnInit() {
+    console.log('********OnPintLawsuit***********')
     this.preLoaderService.setShowPreloader(true);
     this.FG = this.fb.group({
       PrintDoc: this.fb.array([
@@ -68,23 +70,30 @@ export class PrintLawsuitModalComponent implements OnInit {
         DocTypeName: new FormControl('แบบฟอร์ม')
       })
     )
-    this.lawsuitService.LawsuitArrestgetByCon(this.indictmentID).then(x => {
+  await  this.lawsuitService.LawsuitArrestgetByCon(this.indictmentID).then(x => {
       x.filter(y => y.IsActive == 1)
         .map(y => {
-          let lawbreak = y.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitArrestLawbreaker
-          lawbreak.forEach(element => {
-            this.PrintDoc.push(
-              this.fb.group({
-                chkbox: 3,
-                IsChecked: false,
-                DocName: "คำร้องขอให้เปรียบเทียบคดี คด.1 ของ" + " " + element.LawbreakerTitleName + element.LawbreakerFirstName +
-                  " " + element.LawbreakerLastName,
-                DocType: 0,
-                DocTypeName: 'แบบฟอร์ม'
-              })
-            )
-          });
+          console.log("X : ",x)
+          console.log("Y : ",y) 
+          
+          // for (let i = 0; i < y.length; i++) {
+            let lawbreak = y.LawsuitArrestIndicment[0].LawsuitArrestIndicmentDetail[0].LawsuitArrestLawbreaker
+            lawbreak.forEach(element => {
+              console.log("element : ",element)
+              console.log("lawbreak : ",lawbreak)
+              this.PrintDoc.push(
+                this.fb.group({
+                  chkbox: 3,
+                  IsChecked: false,
 
+                  DocName: "คำร้องขอให้เปรียบเทียบคดี คด.1 ของ" + " " + element.LawbreakerTitleName + element.LawbreakerFirstName +
+                    " " + element.LawbreakerLastName,
+                  DocType: 0,
+                  DocTypeName: 'แบบฟอร์ม'
+                })
+              )
+            });
+          // }
         })
     })
     await this.lawsuitService.MasDocumentMaingetAll(4, this.lawsuitID).then(x => {

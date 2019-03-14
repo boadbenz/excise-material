@@ -35,7 +35,7 @@ export class LawsuitService {
 
   async getByKeywordOnInt(): Promise<Lawsuit[]> {
     const params = { 'Textsearch': '' };
-    const url = `${appConfig.apiUrl}/LawsuitgetByKeyword`;
+    const url = `${appConfig.api8777}/LawsuitgetByKeyword`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
     // const params = {
     //   'ArrestCode': ''
@@ -44,34 +44,34 @@ export class LawsuitService {
     //   , 'LawsuitDateTo': ''
     //   , 'StaffName': ''
     //   , 'OfficeName': '' };
-    // const url = `${appConfig.apiUrl}/LawsuitgetByConAdv`;
+    // const url = `${appConfig.api8777}/LawsuitgetByConAdv`;
     // return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)
   }
 
   getByKeyword(Textsearch: any): Promise<Lawsuit[]> {
     const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
-    const url = `${appConfig.apiUrl}/LawsuitgetByKeyword`;
+    const url = `${appConfig.api8777}/LawsuitgetByKeyword`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)
   }
   async LawsuitArrestGetByKeyword(Textsearch: any): Promise<Lawsuit[]> {
     const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
-    const url = `${appConfig.apiUrl}/LawsuitArrestgetByKeyword`;
+    const url = `${appConfig.api8777}/LawsuitArrestgetByKeyword`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)
   }
 
   async LawsuitgetByConAdv(form: any): Promise<Lawsuit[]> {
-    const url = `${appConfig.apiUrl}/LawsuitgetByConAdv`;
+    const url = `${appConfig.api8777}/LawsuitgetByConAdv`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(form), url)
   }
 
   async LawsuitArrestGetByConAdv(form: any): Promise<Lawsuit[]> {
-    const url = `${appConfig.apiUrl}/LawsuitArrestgetByConAdv`;
+    const url = `${appConfig.api8777}/LawsuitArrestgetByConAdv`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(form), url)
   }
 
   async ArrestgetByCon(ArrestCode) {
     const params = { ArrestCode: ArrestCode };
-    const url = `${appConfig.apiUrl}/ArrestgetByCon`;
+    const url = `${appConfig.api8777}/ArrestgetByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
@@ -80,129 +80,130 @@ export class LawsuitService {
       ArrestCode: ArrestCode,
       IndictmentID: IndictmentID
     };
-    const url = `${appConfig.apiUrl}/LawsuitArrestupdDeleteLawsuit`;
+    const url = `${appConfig.api8777}/LawsuitArrestupdDeleteLawsuit`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitArrestIndicmentDetailgetByCon(indictmentDetailID: string) {
     const params = { IndictmentDetailID: indictmentDetailID };
-    const url = `${appConfig.apiUrl}/LawsuitArrestIndicmentDetailgetByCon`;
+    const url = `${appConfig.api8777}/LawsuitArrestIndicmentDetailgetByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitgetByCon(LawsuitID) {
     const params = { LawsuitID: LawsuitID };
-    const url = `${appConfig.apiUrl}/LawsuitgetByCon`;
+    const url = `${appConfig.api8777}/LawsuitgetByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitArrestGetByCon(IndictmentID) {
     const params = { IndictmentID: IndictmentID };
-    const url = `${appConfig.apiUrl}/LawsuitArrestgetByCon`;
+    const url = `${appConfig.api8777}/LawsuitArrestgetByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitArrestIndictmentProductgetByIndictmentID(IndictmentID) {
     const params = { IndictmentID: IndictmentID };
-    const url = `${appConfig.apiUrl}/LawsuitArrestIndictmentProductgetByIndictmentID`;
+    const url = `${appConfig.api8777}/LawsuitArrestIndictmentProductgetByIndictmentID`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async CompareMasLawgetByCon(GuiltBaseID) {
     const params = { GuiltBaseID: GuiltBaseID };
-    const url = `${appConfig.apiUrl}/CompareMasLawgetByCon`;
+    const url = `${appConfig.api8777}/CompareMasLawgetByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitArrestgetByCon(IndictmentID) {
     const params = { IndictmentID: IndictmentID };
-    const url = `${appConfig.apiUrl}/LawsuitArrestgetByCon`;
+    const url = `${appConfig.api8777}/LawsuitArrestgetByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async MasDocumentMaingetAll(DocumentType: any, ReferenceCode: any) {
     const params = { DocumentType, ReferenceCode };
-    const url = `${appConfig.apiUrl}/MasDocumentMaingetAll`;
+    const url = `${appConfig.api8777}/MasDocumentMaingetAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async MasDocumentMaingetinsAll(document: any) {
     const params = document;
-    const url = `${appConfig.apiUrl}/MasDocumentMaininsAll`;
+    const url = `${appConfig.api8777}/MasDocumentMaininsAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
 
   async MasDocumentMaingetAllString(documentType: DocumentType, ReferenceCode: string) {
     const params = { DocumentType: documentType, ReferenceCode: ReferenceCode };
-    const url = `${appConfig.apiUrl}/MasDocumentMaingetAll`;
+    const url = `${appConfig.api8777}/MasDocumentMaingetAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitVerifyLawsuitNo(LawsuitNo: string, OfficeCode: string, IsOutside: number) {
     const params = { LawsuitNo: LawsuitNo, OfficeCode: OfficeCode, IsOutside: IsOutside };
-    const url = `${appConfig.apiUrl}/LawsuitVerifyLawsuitNo`;
+    const url = `${appConfig.api8777}/LawsuitVerifyLawsuitNo`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitinsAll(lawsuitForm) {
     console.log('lawsuitForm==>', lawsuitForm)
-    const url = `${appConfig.apiUrl}/LawsuitinsAll `;
+    const url = `${appConfig.api8777}/LawsuitinsAll `;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(lawsuitForm), url);
   }
 
   async MasStaffMaingetAll() {
     const params = {};
-    const url = `${appConfig.apiUrl}/MasStaffMaingetAll`;
+    const url = `${appConfig.api8777}/MasStaffMaingetAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async MasOfficeMaingetAll() {
     const params = {};
-    const url = `${appConfig.apiUrl}/MasOfficeMaingetAll`;
+    const url = `${appConfig.api8777}/MasOfficeMaingetAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitPaymentFinegetByJudgementID(JudgementID) {
     const params = { JudgementID: JudgementID };
-    const url = `${appConfig.apiUrl}/LawsuitPaymentFinegetByJudgementID`;
+    const url = `${appConfig.api8777}/LawsuitPaymentFinegetByJudgementID`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitJudgementupdDelete(JudgementID) {
     const params = { JudgementID: JudgementID };
-    const url = `${appConfig.apiUrl}/LawsuitJudgementupdDelete`;
+    const url = `${appConfig.api8777}/LawsuitJudgementupdDelete`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitJudgementupdByCon(Judgement) {
-    const url = `${appConfig.apiUrl}/LawsuitJudgementupdByCon`;
+    const url = `${appConfig.api8777}/LawsuitJudgementupdByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(Judgement), url);
   }
 
   async LawsuitPaymentFineDetailupdDelete(PaymentFineID) {
     const params = { PaymentFineID: PaymentFineID };
-    const url = `${appConfig.apiUrl}/LawsuitPaymentFineDetailupdDelete`;
+    const url = `${appConfig.api8777}/LawsuitPaymentFineDetailupdDelete`;
+    // const url = `${appConfig.apiUrl}/LawsuitPaymentFineDetailupdDelete`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitPaymentFineDetailinsAll(Payment) {
-    const url = `${appConfig.apiUrl}/LawsuitPaymentFineDetailinsAll`;
+    const url = `${appConfig.api8777}/LawsuitPaymentFineDetailinsAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(Payment), url);
   }
 
   async LawsuitJudgementinsAll(lawsuitForm) {
-    const url = `${appConfig.apiUrl}/LawsuitJudgementinsAll`;
+    const url = `${appConfig.api8777}/LawsuitJudgementinsAll`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(lawsuitForm), url);
   }
   async LawsuitArrestIndicmentupdByCon(IndictmentID) {
     const params = { IndictmentID: IndictmentID };
-    const url = `${appConfig.apiUrl}/LawsuitArrestIndictmentupdByCon`;
+    const url = `${appConfig.api8777}/LawsuitArrestIndictmentupdByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
 
   async LawsuitformupdByCon(lawsuitForm) {
-    const url = `${appConfig.apiUrl}/LawsuitupdByCon`;
+    const url = `${appConfig.api8777}/LawsuitupdByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(lawsuitForm), url);
   }
 
@@ -211,24 +212,24 @@ export class LawsuitService {
       DocumentType: DocumentType,
       ReferenceCode: ReferenceCode
     };
-    const url = `${appConfig.apiUrl}/LawsuitupdByCon`;
+    const url = `${appConfig.api8777}/LawsuitupdByCon`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url);
   }
   // async MasStaffMaingetAll() {
   //   const params = {};
-  //   const url = `${appConfig.apiUrl}/MasStaffMaingetAll`;
+  //   const url = `${appConfig.api8777}/MasStaffMaingetAll`;
   //   return await this.http.post<any>(url, this.httpOptions).toPromise();
   // }
   // async MasOfficeMaingetAll() {
   //   const params = {};
-  //   const url = `${appConfig.apiUrl}/MasOfficeMaingetAll`;
+  //   const url = `${appConfig.api8777}/MasOfficeMaingetAll`;
   //   return await this.http.get<any>(url, this.httpOptions).toPromise();
   // }
 
 
   async getByArrestCon(ArrestCode: string): Promise<Arrest> {
     const params = { ArrestCode };
-    const url = `${appConfig.apiUrl}/ArrestgetByCon`;
+    const url = `${appConfig.api8777}/ArrestgetByCon`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -240,43 +241,43 @@ export class LawsuitService {
 
   async ArrestLawbreakergetByCon(LawbreakerID) {
     const params = { LawbreakerID: LawbreakerID };
-    const url = `${appConfig.apiUrl}/ArrestLawbreakergetByCon`;
+    const url = `${appConfig.api8777}/ArrestLawbreakergetByCon`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
   async LawsuitupdByCon(LawsuitID, LawsuitNo) {
     const params = { LawsuitID: LawsuitID, LawsuitNo: LawsuitNo };
-    const url = `${appConfig.apiUrl}/LawsuitupdByCon`;
+    const url = `${appConfig.api8777}/LawsuitupdByCon`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
   async LawsuitupdDelete(LawsuitID) {
     const params = { LawsuitID: LawsuitID };
-    const url = `${appConfig.apiUrl}/LawsuitupdDelete`;
+    const url = `${appConfig.api8777}/LawsuitupdDelete`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
   async LawsuitCompareDocumentgetByCon(LawsuitID) {
     const params = { LawsuitID: LawsuitID };
-    const url = `${appConfig.apiUrl}/LawsuitCompareDocumentgetByCon`;
+    const url = `${appConfig.api8777}/LawsuitCompareDocumentgetByCon`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
   async LawsuitComparegetByLawsuitID(LawsuitID) {
     const params = { LawsuitID: LawsuitID };
-    const url = `${appConfig.apiUrl}/LawsuitComparegetByLawsuitID`;
+    const url = `${appConfig.api8777}/LawsuitComparegetByLawsuitID`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
   async LawsuitProvegetByLawsuitID(LawsuitID) {
     const params = { LawsuitID: LawsuitID };
-    const url = `${appConfig.apiUrl}/LawsuitProvegetByLawsuitID`;
+    const url = `${appConfig.api8777}/LawsuitProvegetByLawsuitID`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
   async LawsuitArrestCheckNotComplete(ArrestCode) {
     const params = { ArrestCode: ArrestCode };
-    const url = `${appConfig.apiUrl}/LawsuitArrestCheckNotComplete`;
+    const url = `${appConfig.api8777}/LawsuitArrestCheckNotComplete`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
@@ -286,19 +287,19 @@ export class LawsuitService {
       LawsuitType: LawsuitType,
       LawsuitEnd: LawsuitEnd
     };
-    const url = `${appConfig.apiUrl}/LawsuitArrestIndicmentDetailupdByCon`;
+    const url = `${appConfig.api8777}/LawsuitArrestIndicmentDetailupdByCon`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
   async LawsuitArrestupdByCon(ArrestCode) {
     const params = {
       ArrestCode: ArrestCode,
     };
-    const url = `${appConfig.apiUrl}/LawsuitArrestupdByCon`;
+    const url = `${appConfig.api8777}/LawsuitArrestupdByCon`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
   async MasCourtMaingetAll() {
     const params = {};
-    const url = `${appConfig.apiUrl}/MasCourtMaingetAll`;
+    const url = `${appConfig.api8777}/MasCourtMaingetAll`;
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
@@ -325,7 +326,7 @@ export class LawsuitService {
   }
   // async getByKeyword(filterValue) {
   //   const params = JSON.stringify(filterValue);
-  //   const url = `${appConfig.apiUrl}/LawsuitgetByKeyword`;
+  //   const url = `${appConfig.api8777}/LawsuitgetByKeyword`;
   //   const res = await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   //   try {
   //     const res = await this.http
@@ -339,7 +340,7 @@ export class LawsuitService {
   //
   // async LawSuitgetByConAdv(advForm) {
   //   const params = JSON.stringify({ advForm });
-  //   const url = `${appConfig.apiUrl}/LawSuitgetByConAdv`;
+  //   const url = `${appConfig.api8777}/LawSuitgetByConAdv`;
   //   try {
   //     const res = await this.http
   //       .post(url, params, this.httpOptions)
@@ -352,7 +353,7 @@ export class LawsuitService {
   //
   // async LawsuitArrestgetByCon(ArrestCode) {
   //   const params = JSON.stringify({ ArrestCode: ArrestCode });
-  //   const url = `${appConfig.apiUrl}/LawsuitArrestgetByCon`;
+  //   const url = `${appConfig.api8777}/LawsuitArrestgetByCon`;
   //   try {
   //     const res = await this.http
   //       .post(url, params, this.httpOptions)
@@ -365,7 +366,7 @@ export class LawsuitService {
   //
   // async LawsuitgetByCon(LawsuitID) {
   //   const params = JSON.stringify({ LawsuitID: LawsuitID });
-  //   const url = `${appConfig.apiUrl}/LawsuitgetByCon`;
+  //   const url = `${appConfig.api8777}/LawsuitgetByCon`;
   //   try {
   //     const res = await this.http
   //       .post(url, params, this.httpOptions)
@@ -378,7 +379,7 @@ export class LawsuitService {
   //
   // async ArrestgetByCon(ArrestCode) {
   //   const params = JSON.stringify({ ArrestCode: ArrestCode });
-  //   const url = `${appConfig.apiUrl}/ArrestgetByCon`;
+  //   const url = `${appConfig.api8777}/ArrestgetByCon`;
   //   try {
   //     const res = await this.http
   //       .post(url, params, this.httpOptions)
@@ -391,7 +392,7 @@ export class LawsuitService {
   //
   // async CompareMasLawgetByCon(GuiltBaseID) {
   //   const params = JSON.stringify({ GuiltBaseID: GuiltBaseID });
-  //   const url = `${appConfig.apiUrl}/CompareMasLawgetByCon`;
+  //   const url = `${appConfig.api8777}/CompareMasLawgetByCon`;
   //   try {
   //     const res = await this.http
   //       .post(url, params, this.httpOptions)

@@ -76,9 +76,10 @@ export class SuspectComponent implements OnInit, OnDestroy {
     typeheadRegion: RegionModel[] = []
 
     async ngOnInit() {
+        localStorage.setItem('IsNewSuspect',"false")
         this.preloader.setShowPreloader(true);
         this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-        this.myDatePickerOptions.showClearDateBtn = true;
+        this.myDatePickerOptions.showClearDateBtn = true; 
 
         await this.createForm();
 

@@ -84,6 +84,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
+        localStorage.setItem('programcode', 'ILG60-01-00');
         this.sidebarService.setVersion(this.s_invest.version);
         this.active_Route();
         this.navigate_Service();
@@ -179,7 +180,7 @@ export class ManageComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.navService.onPrint.takeUntil(this.destroy$).subscribe(async status => {
-            if (status) {
+            if (status && localStorage.programcode == "ILG60-01-00" ) {
                 await this.navService.setOnPrint(false);
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
             }

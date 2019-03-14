@@ -80,6 +80,14 @@
                             required/>
                     </div>
                 </div>
+
+                <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
+                <div formArrayName="NoticeStaff" class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group " *ngFor="let item of NoticeStaff.controls; let i=index;" [formGroupName]="i">
+                        <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" 
+                        readonly="true" [ngClass]="{'ng-touched':isRequired}" required>
+                    </div>
+                </div>
             </div>
 
             <div formArrayName="NoticeStaff">
@@ -102,14 +110,6 @@
                             (blur)="blurSelectItemStaff(i)"
                             [ngClass]="{'ng-touched':isRequired}"
                             required/>
-                    </div>
-
-                    <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
-                    <div class="col-lg-4 col-md-7 col-sm-8">
-                        <div class="form-group ">
-                            <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" 
-                            readonly="true" [ngClass]="{'ng-touched':isRequired}" required>
-                        </div>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
@@ -547,6 +547,7 @@
   buttonsStyling="false"
   cancelButtonText="OK"
   cancelButtonClass="swal2-confirm"
+  cancelButtonColor="#3085d6"
   [focusCancel]="true">
 </swal>
 

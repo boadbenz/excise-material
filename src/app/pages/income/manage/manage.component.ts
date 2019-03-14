@@ -103,6 +103,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode','ILG60-07-00');
         this.preloader.setShowPreloader(true);
         //this.sidebarService.setVersion('Revenue 0.0.0.19');
 
@@ -307,7 +308,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
-            if (status) {
+            if (status && localStorage.programcode == "ILG60-07-00") {
                 await this.navService.setOnPrint(false);
                 this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
             }
@@ -1128,7 +1129,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // 
         // return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
         //return date.getHours() + ":" + date.getMinutes();
-        return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false });
+        return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false }) + " น.";
     }
 
     selectedChkAll() {

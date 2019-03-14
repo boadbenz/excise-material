@@ -1,13 +1,14 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, OnDestroy, TemplateRef } from '@angular/core';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { Router, ActivatedRoute } from '@angular/router';
-
 import { ReductionApiService } from '../reduction.api.service';
-
 import { Subject } from 'rxjs/Subject';
-
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReductionModelListComponent } from './reduction-model-list/reduction-model-list.component';
+
+// import { PrintDocumentComponent } from './print-document/print-document.component';///////////
+// import { AddReduceComponent } from './add-reduce/add-reduce.component';
+import { PrintDocModalComponent } from '../print-doc-modal/print-doc-modal.component'
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -15,40 +16,79 @@ import { ReductionModelListComponent } from './reduction-model-list/reduction-mo
 })
 export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(ReductionModelListComponent)
+  @ViewChild('printDocModal') printDocModel: ElementRef;
   reductionModelList: ReductionModelListComponent;
 
-  tableData = [
-    // {
-    //   fullName: 'นายธวัชชัย บิงขุนทด',
-    //   oldFine: '1,400,000.00',
-    //   newFine: '',
-    //   dateFine: '10-ม.ค.-2560',
-    //   payment: 'เงินสด',
-    //   receiptNo: '33',
-    //   receiptRef: '001/2561',
-    //   statusCase: 'รับรายการนำส่ง',
-    //   typeCase: 'เปรียบเทียบคดี',
-    //   period: '1/1'
-    // }
-  ];
+  private onPrintSubscribe: any
+  modal:any
+
+  // @ViewChild(PrintDocumentComponent) printDocumentComponent: PrintDocumentComponent;///////////////
+
+  // @ViewChild('printList') public printList: TemplateRef<any>;//////////////////
+
+  tableData = [];
 
   listData = {
-    ArrestCode: 'TN90806026000001',
-    LawsuitNo: '001/2561',
-    ProofNo: '001/2561',
-    CaseNumber: '001/2561',
-    TitleName: 'นาย',
-    FirstName: 'ธวัชชัย',
-    LastName: 'บิงขุนทด',
-    LawsuitDate: '10-ม.ค.-2560',
-    LawsuitTime: '12.00',
-    DepartmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-    PositionlawName: 'เจ้าพนักงานสรรพสามิตชำนาญงาน',
-    LocationlawName: 'คลองจั่น/บางกะปิ/กรุงเทพมหานคร',
-    FaultSubject: 'มีไว้ในครอบครองซึ่งสินค้าที่มิได้เสียภาษี',
-    FaultNo: '203',
-    Penalty: 'กรณียาสูบ สุรา และไพ่ ปรับ 10 เท่า กรณีความผิดสินค้าอื่น กระทำผิดครั้งที่ 1 ปรับ 2 เท่า เว้นน้ำมัน และผลิตภัณฑ์น้ำมันปรับ'
-             + ' 5 เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
+    ArrestCode: '',
+    LawsuitNo: '',
+    ProofNo: '',
+    CaseNumber: '',
+    TitleName: '',
+    FirstName: '',
+    LastName: '',
+    LawsuitDate: '',
+    LawsuitTime: '',
+    DepartmentlawName: '',
+    PositionlawName: '',
+    LocationlawName: '',
+    FaultSubject: '',
+    FaultNo: '',
+    Penalty: '',
+    CompareDate: ['', ''],
+    AdjustArrestStaff: [
+      {
+        ArrestCode: '',
+        ContributorID: '',
+        DepartmentCode: '',
+        DepartmentLevel: '',
+        DepartmentName: '',
+        FirstName: '',
+        IsActive: '',
+        LastName: '',
+        OfficeCode: '',
+        OfficeName: '',
+        OfficeShortName: '',
+        PosLevel: '',
+        PosLevelName: '',
+        PositionCode: '',
+        PositionName: '',
+        StaffCode: '',
+        StaffID: '',
+        TitleName: '',
+      }
+    ],
+    AdjustCompareStaff: [
+      {
+        CompareID: null,
+        ContributorID: null,
+        DepartmentCode: null,
+        DepartmentLevel: null,
+        DepartmentName: null,
+        FirstName: '',
+        IsActive: 0,
+        LastName: '',
+        OfficeCode: '',
+        OfficeName: '',
+        OfficeShortName: '',
+        PosLevel: '',
+        PosLevelName: '',
+        PositionCode: '',
+        PositionName: '',
+        StaffCode: '',
+        StaffID: 0,
+        TitleName: '',
+      }
+    ]
   };
 
   fileItem = [{
@@ -60,27 +100,32 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   detailData: any = this.listData;
   showField: any;
   navServiceSub: any;
+  navServiceSubs: any;
   selectAll: any;
   adjustDetailData: any[] = [];
+  documentMailgetAll: any[] = [];
 
 
   private getDataFromListPage: any;
   private destroy$: Subject<boolean> = new Subject<boolean>();
   public dialog: any;
+  public print_dialog: any;
   public compareID: string;
   public indictmentID: string;
+  
 
   constructor
-  (private router: Router,
-    private activeRoute: ActivatedRoute,
-    private navService: NavigationService,
-    private readonly apiServer: ReductionApiService,
-    private ngbModel: NgbModal
-  ) { }
+    (private router: Router,
+      private activeRoute: ActivatedRoute,
+      private navService: NavigationService,
+      private readonly apiServer: ReductionApiService,
+      public ngbModel: NgbModal
+    ) { }
 
   ngOnInit() {
+    localStorage.setItem('programcode','ILG60-09-00');
     if (this.activeRoute.snapshot.queryParamMap.get('CompareID') == null
-    || this.activeRoute.snapshot.queryParamMap.get('CompareID') === '') {
+      || this.activeRoute.snapshot.queryParamMap.get('CompareID') === '') {
       alert('ไม่สามารถดึงค่าข้อมูลรายการเปรียบเทียบได้');
       this.router.navigate(['/reduction/list']);
     }
@@ -91,19 +136,26 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.navService.setEditField(true);
     // set show button
+    this.navService.setSendIncomeButton(false);
+    this.navService.setDeleteButton(false);
+    this.navServiceSub = this.navService.onCancel.subscribe(status => {
+      if (status) {
+        this.navService.setEditField(true);
+      }
+    });
+
     this.navServiceSub = this.navService.showFieldEdit.subscribe(status => {
       this.showField = status;
       if (!this.showField) {
         this.navService.setCancelButton(true);
         this.navService.setSaveButton(true);
-        this.navService.setPrintButton(false);
+        // this.navService.setPrintButton(false);
         this.navService.setSearchBar(false);
-        this.navService.setDeleteButton(false);
+        // this.navService.setDeleteButton(false);
         this.navService.setEditButton(false);
-
       } else {
-        this.navService.setPrintButton(true);
-        this.navService.setDeleteButton(true);
+        // this.navService.setPrintButton(true);
+        // this.navService.setDeleteButton(true);
         this.navService.setEditButton(true);
         this.navService.setSearchBar(false);
         this.navService.setCancelButton(false);
@@ -112,22 +164,60 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     });
 
     this._adjustArrestgetByCon(this.compareID);
-    this._adjustReceiptgetByCon(this.compareID);
-    this._adjustDetailgetByCon(this.compareID);
+    // this._adjustReceiptgetByCon(this.compareID);
+    // this._adjustDetailgetByCon(this.compareID);
+    // this._masDocumentMailgetAll(this.compareID);
+
+    console.log("adjustDetailgetByCon : ",this.adjustDetailData)
+    console.log("adjustReceiptgetByCon : ", this.tableData)
+    console.log("adjustArrestgetByCon : ", this.detailData)
 
     this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
-          this.onSave();
+        this.onSave();
       }
     });
+
+    this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
+      if (status) {
+        await this.navService.setOnPrint(false);
+        // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+        this.buttonPrint()
+      }
+    })
+
   }
+  public async buttonPrint() {
+    var tester = [{a:'ada',b:'jyhfdtsd'}]
+    var ReportAll = []
+
+    console.log("++++detailData : ",this.detailData)
+    const test: any[] = tester.map(m => ({
+      DocName: `xxx `,
+      DocType: 'แบบฟอร์ม', CompareDetailID: `xxx `, checked: false, TypeName: "xxx"
+    }));
+
+    ReportAll = [...test]
+    const dialogRef = this.ngbModel.open(PrintDocModalComponent, {
+      backdrop: 'static', size: 'lg'
+    });
+
+    dialogRef.componentInstance.data = ReportAll;
+    dialogRef.result.then(res => { });
+
+  }
+
+  // public onPrint = (content) => {//////////////////////
+  //   console.log("Print2")
+  //   this.modal = this.ngbModel.open(content, { size: 'lg', centered: true });
+  // }
 
   private onSave() {
     console.log('5555');
   }
 
   private _adjustArrestgetByCon(compareID) {
-    this.apiServer.post('/XCS60/AdjustArrestgetByCon', {CompareID: compareID})
+    this.apiServer.post('/XCS60/AdjustComparegetByCon', {CompareID: compareID})
         .subscribe(response => {
           if (response.length > 0) {
             this.detailData = Object.assign(this.listData, response[0]);
@@ -135,38 +225,61 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
             this.detailData = Object.assign(this.listData, response);
           }
 
-          this.fullName =
-            this.detailData.TitleName +
-            this.detailData.FirstName +
-            ' ' +
-            this.detailData.LastName;
+          console.log(this.detailData);
+          if (this.detailData.AdjustArrestStaff.length > 0) {
+            this.detailData.CompareName = this.detailData.AdjustArrestStaff[0].TitleName
+                                        + this.detailData.AdjustArrestStaff[0].FirstName
+                                        + ' '
+                                        + this.detailData.AdjustArrestStaff[0].LastName;
+          } else {
+            this.detailData.CompareName = '';
+            this.detailData.ComparePositionName = '';
+          }
+
+          if (this.detailData.IsOutside === 1) {
+            this.detailData.CompareCode = 'น' + this.detailData.CompareCode;
+          }
+
+          if (this.detailData.CompareDate) {
+            this.detailData.CompareDate = this.detailData.CompareDate.split(' ');
+          } else {
+            this.detailData.CompareDate = ['', ''];
+          }
+
+          this.tableData = this.detailData.AdjustCompareReceipt;
         }, error => console.log(error));
   }
 
-  private _adjustReceiptgetByCon(compareID) {
-    this.apiServer.post('/XCS60/AdjustReceiptgetByCon', {CompareID: compareID})
-        .subscribe(response => {
-          this.tableData = response;
-        }, error => {
-          console.log(error);
-        }
-    );
+  // private _adjustReceiptgetByCon(compareID) {
+  //   this.apiServer.post('/XCS60/AdjustReceiptgetByCon', {CompareID: compareID})
+  //       .subscribe(response => {
+  //         this.tableData = response;
+  //       }, error => {
+  //         console.log(error);
+  //       }
+  //   );
+  // }
+
+
+  // private  _adjustDetailgetByCon(compareID) {
+  //   this.apiServer.post('/XCS60/AdjustCompareDetailgetByCon', {CompareID: compareID})
+  //       .subscribe(response => this.adjustDetailData =  response, error => console.log(error));
+  // }
+
+  private _masDocumentMailgetAll(compareID) {
+    this.apiServer.post('/XCS60/MasDocumentMaingetAll', {DocumentType: 10, ReferenceCode: compareID})
+        .subscribe(response => response.length > 0
+                  ? this.documentMailgetAll = response
+                  : this.documentMailgetAll = [{DocumentName: 'NonDoc', DocumentType: 'data'}]
+                  , error => console.log(error));
   }
 
-
-  private  _adjustDetailgetByCon(compareID) {
-    this.apiServer.post('/XCS60/AdjustDetailgetByCon', {CompareID: compareID})
-        .subscribe(response => this.adjustDetailData =  response, error => console.log(error));
-  }
-
-  viewData(CompareID: string, CompareDetailID: string) {
-    console.log(CompareID, ' and ', CompareDetailID);
-    console.log(this.detailData.ArrestCode);
-    this.router.navigate(['/reduction/manage', 'V', CompareID, CompareDetailID]);
+  viewData(CompareID: string = '', CompareDetailID: string = '') {
+    this.router.navigate(['/reduction/manage', 'V', this.compareID]);
   }
 
   editData(CompareID: string, CompareDetailID: string) {
-    this.router.navigate(['/reduction/manage', 'E', CompareID, CompareDetailID]);
+    this.router.navigate(['/reduction/manage', 'E', this.compareID]);
   }
 
   attachFile(file) {
@@ -176,8 +289,14 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     });
   }
 
-  showReductionPopup(e) {
+  public showReductionPopup(e) {
+    console.log(e);
     this.dialog = this.ngbModel.open(e, { size: 'lg', centered: true });
+  }
+
+  public showPrintPopup(e) {
+    console.log(e);
+    this.print_dialog = this.ngbModel.open(e, { size: 'lg', centered: true});
   }
 
   ngAfterViewInit() {
@@ -188,8 +307,13 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     console.log(event);
   }
 
+  printResult(event) {
+    console.log(event);
+  }
+
   ngOnDestroy() {
     // this.getDataFromListPage.unsubscribe();
+    this.navService.setEditField(false);
     this.navServiceSub.unsubscribe();
   }
 }

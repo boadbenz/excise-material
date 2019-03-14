@@ -10,113 +10,7 @@ import { ReductionApiService } from '../reduction.api.service';
 })
 export class ManageDetailComponent implements OnInit, OnDestroy {
 
-  approveDataTable = [{
-    fullName: 'นายธวัชชัย บิงขุนทด',
-    dateReport: '10-ม.ค.-2560',
-    typeApprove: 'แบบอนุมัติ 4'
-  }, {
-    fullName: 'นายสุชาติ ปัญโญใหญ่',
-    dateReport: '',
-    typeApprove: ''
-  }];
-
-  reductionDataTable = [];
-
-  payFineDataTable = [];
-
-
-  listData = [
-    {
-      arrestCode: 'TN90806026000001',
-      lawsuitNo: '001/2561',
-      proofNo: '001/2561',
-      caseNumber: '001/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '10-ม.ค.-2560',
-      lawsuitTime: '12.00',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-      positionlawName: 'เจ้าพนักงานสรรพสามิตชำนาญงาน',
-      locationlawName: 'คลองจั่น/บางกะปิ/กรุงเทพมหานคร',
-      faultSubject: 'มีไว้ในครอบครองซึ่งสินค้าที่มิได้เสียภาษี',
-      faultNo: '203',
-      penalty: 'กรณียาสูบ สุรา และไพ่ ปรับ 10 เท่า กรณีความผิดสินค้าอื่น กระทำผิดครั้งที่ 1 ปรับ 2 เท่า เว้นน้ำมัน และผลิตภัณฑ์น้ำมันปรับ '
-            + ' 5 เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
-
-    }, {
-      arrestCode: 'TN90806026000002',
-      lawsuitNo: 'น.001/2561',
-      proofNo: 'น.001/2561',
-      caseNumber: '001/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '19-มี.ค.-2560',
-      lawsuitTime: '12.00',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-      positionlawName: 'เจ้าพนักงานสรรพสามิตชำนาญงาน',
-      locationlawName: 'คลองจั่น/บางกะปิ/กรุงเทพมหานคร',
-      faultSubject: 'มีไว้ในครอบครองซึ่งสินค้าที่มิได้เสียภาษี',
-      faultNo: '203',
-      penalty: 'กรณียาสูบ สุรา และไพ่ ปรับ 10 เท่า กรณีความผิดสินค้าอื่น กระทำผิดครั้งที่ 1 ปรับ 2 เท่า'
-             + ' เว้นน้ำมัน และผลิตภัณฑ์น้ำมันปรับ 5 เท่า กระทำผิดครั้งที่ 2 ปรับ 5'
-             + ' เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
-
-    }, {
-      arrestCode: 'TN90806026000003',
-      lawsuitNo: '002/2561',
-      proofNo: '002/2561',
-      caseNumber: '002/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '22-ต.ค.-2560',
-      lawsuitTime: '12.00',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-      positionlawName: 'เจ้าพนักงานสรรพสามิตชำนาญงาน',
-      locationlawName: 'คลองจั่น/บางกะปิ/กรุงเทพมหานคร',
-      faultSubject: 'มีไว้ในครอบครองซึ่งสินค้าที่มิได้เสียภาษี',
-      faultNo: '203',
-      penalty: 'กรณียาสูบ สุรา และไพ่ ปรับ 10 เท่า กรณีความผิดสินค้าอื่น กระทำผิดครั้งที่ 1 ปรับ 2 เท่า เว้นน้ำมัน และผลิตภัณฑ์น้ำมันปรับ 5'
-             + ' เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
-    }, {
-      arrestCode: 'TN90806026000004',
-      lawsuitNo: '003/2561',
-      proofNo: '003/2561',
-      caseNumber: '003/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '11-ธ.ค.-2560',
-      lawsuitTime: '12.00',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-      positionlawName: 'เจ้าพนักงานสรรพสามิตชำนาญงาน',
-      locationlawName: 'คลองจั่น/บางกะปิ/กรุงเทพมหานคร',
-      faultSubject: 'มีไว้ในครอบครองซึ่งสินค้าที่มิได้เสียภาษี',
-      faultNo: '203',
-      penalty: 'กรณียาสูบ สุรา และไพ่ ปรับ 10 เท่า กรณีความผิดสินค้าอื่น กระทำผิดครั้งที่ 1 ปรับ 2 เท่า เว้นน้ำมัน และผลิตภัณฑ์น้ำมันปรับ 5'
-             + ' เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
-    }, {
-      arrestCode: 'TN90806026000005',
-      lawsuitNo: '004/2561',
-      proofNo: '004/2561',
-      caseNumber: '004/2561',
-      titleName: 'นาย',
-      firstName: 'ธวัชชัย',
-      lastName: 'บิงขุนทด',
-      lawsuitDate: '03-มี.ค.-2561',
-      lawsuitTime: '12.00',
-      departmentlawName: 'สสท.ระนอง สาขาเมืองกระบุรี',
-      positionlawName: 'เจ้าพนักงานสรรพสามิตชำนาญงาน',
-      locationlawName: 'คลองจั่น/บางกะปิ/กรุงเทพมหานคร',
-      faultSubject: 'มีไว้ในครอบครองซึ่งสินค้าที่มิได้เสียภาษี',
-      faultNo: '203',
-      penalty: 'กรณียาสูบ สุรา และไพ่ ปรับ 10 เท่า กรณีความผิดสินค้าอื่น กระทำผิดครั้งที่ 1 ปรับ 2 เท่า เว้นน้ำมัน และผลิตภัณฑ์น้ำมันปรับ 5'
-             + ' เท่า กระทำผิดครั้งที่ 2 ปรับ 5 เท่า เว้นน้ำมันและผลิตภัณฑ์น้ำมันปรับ 10 เท่า กระทำผิดครั้งที่ 3 ปรับ 10 เท่า'
-    }]
-
-  public detailData = {
+  public adjustArrest = {
     ArrestCode: '',
     ArrestDate: '',
     ArrestTime: '',
@@ -137,7 +31,77 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     OccurrenceTime: '',
     Prompt: '',
     Testimony: '',
+    SubDistrict : '',
+    District : '',
+    Province: '',
+    Locations: '',
+    IsOutside: 0,
+    ArrestStaff: '',
+    AdjustArrestStaff: [
+      {
+        StaffID: 0,
+        ArrestCode: '',
+        StaffCode: '',
+        TitleName: '',
+        FirstName: '',
+        LastName: '',
+        PositionCode: '',
+        PositionName: '',
+        PosLevel: '',
+        PosLevelName: '',
+        DepartmentCode: '',
+        DepartmentName: '',
+        DepartmentLevel: null,
+        OfficeCode: '',
+        OfficeName: '',
+        OfficeShortName: '.บึงกาฬ',
+        ContributorID: 0,
+        IsActive: 0
+      }
+    ],
+    AdjustCompareStaff: [
+      {
+        CompareID: 0,
+        ContributorID: 0,
+        DepartmentCode: '',
+        DepartmentLevel: '',
+        DepartmentName: '',
+        FirstName: '',
+        IsActive: 0,
+        LastName: '',
+        OfficeCode: '',
+        OfficeName: '',
+        OfficeShortName: '',
+        PosLevel: '',
+        PosLevelName: '',
+        PositionCode: '',
+        PositionName: '',
+        StaffCode: '',
+        StaffID: 0,
+        TitleName: '',
+      }
+    ],
+    AdjustCompareReceiptCR: [{
+      CompareDetailID: 0,
+      FineType: 0,
+      LawbreakerName: '',
+      ProductDesc: '',
+      ProductFine: 0,
+      ProductID: 0,
+      ReceiptDate: '',
+    }]
   }
+
+  public AdjustCompareDetail: any = [];
+  public CompareReason = '';
+
+  public CompareReceipt: any = [];
+
+  adjustFine = [];
+
+  adjustReceipt = [];
+
+  adjustDetail = [];
 
   public fileItem = [{
     fileName: '',
@@ -152,9 +116,12 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public errorShow: any;
 
   public compareID: string;
+  public compareIdDetail: string;
   public indictmentID: string;
   private getDataFromListPage: any;
 
+  public startIndexSum = 0;
+  public startList = [];
   constructor(
     private router: Router,
     private activeRoute: ActivatedRoute,
@@ -162,14 +129,27 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     private readonly apiService: ReductionApiService
   ) { }
 
-  ngOnInit() {
+  public async ngOnInit() {
 
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
+      this.navService.setSendIncomeButton(true);
     } else if (this.activeRoute.snapshot.paramMap.get('mode') === 'E') {
       this.navService.setEditField(false);
+      this.navService.setSendIncomeButton(false);
     }
+
+    this.compareID = this.activeRoute.snapshot.paramMap.get('compareid');
+    this.compareIdDetail = this.activeRoute.snapshot.paramMap.get('comparedetailid');
+    this.indictmentID = this.activeRoute.snapshot.paramMap.get('compareid'); // shoud it differren
+
     // set show button
+    this.navServiceSub = this.navService.onCancel.subscribe(status => {
+      if (status) {
+        this.navService.setEditField(true);
+      }
+    });
+
     this.navServiceSub = this.navService.showFieldEdit.subscribe(status => {
       this.showField = status;
       if (!this.showField) {
@@ -190,73 +170,135 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.navServiceSub = this.navService.onSendIncome.subscribe(status => {
+      console.log(status);
+      if (status) {
+        this.sentInCome();
+      }
+    });
 
-    // this.getDataFromListPage = this.activeRoute.params
-    //   .subscribe(params => {
-    //     // check id from manage view page
-    //     for (let i = 0; i < this.listData.length; i++) {
-    //       if (params.code === this.listData[i].arrestCode) {
-    //         this.detailData = this.listData[i];
-    //         this.fullName =
-    //           this.listData[i].titleName +
-    //           this.listData[i].firstName +
-    //           ' ' +
-    //           this.listData[i].lastName;
-    //       }
-    //     }
-    //   });
-
-    this.getAdjustArrestgetByCon(this.activeRoute.snapshot.paramMap.get('compareid'));
-    this.getAdjustFinegetByCon(this.activeRoute.snapshot.paramMap.get('compareid'),
-    this.activeRoute.snapshot.paramMap.get('comparedetailid'));
+    await this.GetAdjustCompareCRgetByCon(this.compareID);
+    await this.GetAdjustCompareDetailgetByCon (this.compareID);
+    await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
+    this.getAdjustDetailgetByCompareDetailId(this.compareIdDetail);
+    // this.getMasDocumentMaingetAll(this.compareID);
+    this.getAdjustFinecheckComplete(this.compareIdDetail);
   }
 
   // เตรียมข้อมูลรายละเอียดคดีจาก
-  public getAdjustArrestgetByCon(CompareID: any = null): void {
+  public async GetAdjustCompareCRgetByCon(CompareID: any = null): Promise<void> {
     if (CompareID == null ) { return }
-    this.apiService.post('/XCS60/AdjustArrestgetByCon', {CompareID: CompareID})
-        .subscribe(response => {
-          if (response.length > 0) {
-            Object.assign(this.detailData, response[0]);
-          }
-        }, error => console.log(error))
+    try {
+      const response = await this.apiService.post('/XCS60/AdjustCompareCRgetByCon', {CompareID: CompareID}).toPromise();
+      Object.assign(this.adjustArrest, response);
+
+      this.adjustArrest.ArrestStaff = this.adjustArrest.AdjustArrestStaff[0].TitleName + this.adjustArrest.AdjustArrestStaff[0].FirstName
+                                    + ' ' + this.adjustArrest.AdjustArrestStaff[0].LastName;
+      this.adjustArrest.Locations = this.adjustArrest.SubDistrict + '/' + this.adjustArrest.District + '/' + this.adjustArrest.Province;
+      this.adjustArrest.CompareCode = this.adjustArrest.IsOutside === 1
+                                    ? 'น' + this.adjustArrest.CompareCode
+                                    : this.adjustArrest.CompareCode;
+
+      this.adjustArrest.CompareName = this.adjustArrest.AdjustCompareStaff[0].TitleName + this.adjustArrest.AdjustCompareStaff[0].FirstName
+                                    + ' ' + this.adjustArrest.AdjustCompareStaff[0].LastName;
+      this.adjustFine = this.adjustArrest.AdjustCompareReceiptCR;
+      this.adjustFine.forEach((e, i) => {
+        this.calAdjustFine(i);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log(this.adjustArrest);
   }
 
   // ดึงข้อมูลการปรับเพิ่มหรือปรับลด
-  public getAdjustFinegetByCon(CompareID: any = null, CompareDetailID: any = null) {
-    if (CompareID == null || CompareDetailID == null) { return }
-    this.apiService.post('/XCS60/AdjustFinegetByCon', {
-      CompareID: CompareID,
-      CompareDetailID: CompareDetailID
-    })
-    .subscribe(response => {
-      if (response.length > 0) {
-        this.reductionDataTable = response;
+  public async GetAdjustCompareDetailgetByCon(CompareID: any = null): Promise<void> {
+    if (this.adjustArrest.AdjustCompareReceiptCR.length === 0
+        && this.adjustArrest.AdjustCompareReceiptCR[0].CompareDetailID === 0) {
+      return;
+    }
+
+    for (let i = 0; i < this.adjustArrest.AdjustCompareReceiptCR.length; i++) {
+      try {
+        const response = await this.apiService.post('/XCS60/AdjustCompareDetailgetByCon',
+                                    {CompareDetailID: this.adjustArrest.AdjustCompareReceiptCR[0].CompareDetailID})
+                             .toPromise();
+        this.AdjustCompareDetail.push(response);
+      } catch (e) {
+        console.log(e);
       }
-    }, error => {
-      console.log(error);
-    });
+    }
+
+    if (this.AdjustCompareDetail.length > 0) {
+      this.CompareReason = this.AdjustCompareDetail[0].CompareReason;
+    }
+    console.log(this.AdjustCompareDetail);
+  }
+
+  // คำนวณปรับเพิ่ม-ลด ใหม่
+  public async enterNewValue(event, index): Promise<void> {
+    if (event.keyCode === 13) {
+      console.log(this.adjustFine[index].CompareFine);
+      await this.calAdjustFine(index);
+    }
+  }
+
+  // คำนวณปรับเพิ่มลด
+  public async calAdjustFine(index): Promise<any> {
+    this.adjustFine[index].CompareFineDiff = 0;
+    this.adjustFine[index].CompareFineTreasuryMoney = 0;
+    this.adjustFine[index].CompareFineBribeMoney = 0;
+    this.adjustFine[index].CompareFineRewardMoney = 0;
+    if (this.adjustFine[index].CompareFine) {
+      this.adjustFine[index].CompareFineDiff = this.adjustFine[index].ProductFine - this.adjustFine[index].CompareFine;
+      if (this.adjustFine[index].ProductFine < this.adjustFine[index].CompareFine) {
+        this.adjustFine[index].CompareFineStatus = true;
+      } else if (this.adjustFine[index].ProductFine > this.adjustFine[index].CompareFine) {
+        this.adjustFine[index].CompareFineStatus = false;
+      }
+
+      this.adjustFine[index].CompareFineTreasuryMoney = (20 * this.adjustFine[index].CompareFine) / 100;
+      this.adjustFine[index].CompareFineBribeMoney = (20 * this.adjustFine[index].CompareFine) / 100;
+      this.adjustFine[index].CompareFineRewardMoney = (60 * this.adjustFine[index].CompareFine) / 100;
+    }
+
+    console.log(this.adjustFine);
+  }
+
+  public sumAllAdjustFine(column, start = 0, end = this.adjustFine.length): any {
+    let sum = 0;
+    for (let i = start; i < end; i++) {
+      sum += this.adjustFine[i][column];
+    }
+    sum = isNaN(sum) ? 0 : sum;
+    return sum;
+  }
+
+  public changestartIndexSum(start_index) {
+    this.startIndexSum = start_index;
   }
 
   // ดึงข้อมูลในส่วนของการชำระค่าปรับ
-  public getAdjustReceiptgetByCompareDetailId(CompareDetailID: any = null) {
-    if (CompareDetailID == null) { return; }
-    this.apiService.post('/XCS60/AdjustReceiptgetByCompareDetailId', {
-      CompareDetailID: CompareDetailID
-    })
-    .subscribe(response => {
-      console.log(response);
-    }, error => {
-      console.log(error);
-    });
+  public async GetAdjustCompareReciptConfirmgetByCon(CompareID: any = null) {
+    if (CompareID == null) { return; }
+
+    try {
+      const response = await this.apiService.post('/XCS60/AdjustCompareReciptConfirmgetByCon', {
+        CompareID: CompareID
+      }).toPromise();
+      this.CompareReceipt = response;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   // ดึงข้อมูลการจออนุมัติเปรียบเทียบคดีและแบบอนุ
   public getAdjustDetailgetByCompareDetailId(CompareDetailID: any = null) {
     if (CompareDetailID == null ) { return; }
-    this.apiService.post('/XCS60/AdjustDetailgetByCompareDetailId', { CompareDetailID: CompareDetailID})
+    this.apiService.post('/XCS60/AdjustDetailgetByCompareDetailID', { CompareDetailID: CompareDetailID})
         .subscribe(response => {
           console.log(response);
+          this.adjustDetail = response;
         }, error => {
           console.log(error);
         });
@@ -287,23 +329,31 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     })
   }
 
-  viewData() {
+  public viewData() {
     this.viewMode = true;
   }
 
-  editData() {
+  public editData() {
     this.viewMode = false;
   }
 
-  attachFile(file) {
+  public attachFile(file) {
     this.fileItem.push({
       fileName: file[0].name,
       filePath: ''
     });
   }
 
-  ngOnDestroy() {
-    this.getDataFromListPage.unsubscribe();
+  public sentInCome(): void {
+    this.router.navigate(['/income/manage', 'R', this.compareID]);
+  }
+
+  public ngOnDestroy() {
+    // hind ส่งรายได้
+    this.navService.setSendIncomeButton(false);
+    // hide ปุ่มลบ
+    this.navService.setDeleteButton(false);
+
     this.navServiceSub.unsubscribe();
   }
 

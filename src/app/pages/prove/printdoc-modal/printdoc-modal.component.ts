@@ -4,6 +4,7 @@ import { ProveService } from '../prove.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import swal from 'sweetalert2';
+import { ManageComponent } from '../manage/manage.component'
 
 
 @Component({
@@ -28,26 +29,53 @@ export class PrintDocModalComponent implements OnInit {
 
     constructor(
         private proveService: ProveService,
-        private preloader: PreloaderService
+        private preloader: PreloaderService,
+        private manageComponent: ManageComponent
     ) { }
 
     ngOnInit() {
-        this.printDoc = [
-            {
-                IsChecked: false,
-                DocName: 'บันทึกการตรวจรับของกลาง',
-                DocType: 0,
-                DocTypeName: 'แบบฟอร์ม'
-            },
-            {
-                IsChecked: false,
-                DocName: 'บัญชีของกลางและรายการการตรวจพิสูจน์ของกลาง ส.ส 2/4',
-                DocType: 0,
-                DocTypeName: 'แบบฟอร์ม'
-            }
-        ];
+        var IsoutSide = this.manageComponent.IsOutside
+        console.log(' IsoutSide : ', IsoutSide)
+        if (IsoutSide == true) {
+            this.printDoc = [
+                {
+                    IsChecked: false,
+                    DocName: 'บันทึกการตรวจรับของกลาง',
+                    DocType: 0,
+                    DocTypeName: 'แบบฟอร์ม'
+                },
+                {
+                    IsChecked: false,
+                    DocName: 'บัญชีของกลางและรายการการตรวจพิสูจน์ของกลาง ส.ส 2/4',
+                    DocType: 0,
+                    DocTypeName: 'แบบฟอร์ม'
+                },
+                {
+                    IsChecked: false,
+                    DocName: 'บันทึกการตรวจพิสูจน์นอกสถานที่ทำการ',
+                    DocType: 0,
+                    DocTypeName: 'แบบฟอร์ม'
+                }
+            ];
+        } else {
+            this.printDoc = [
+                {
+                    IsChecked: false,
+                    DocName: 'บันทึกการตรวจรับของกลาง',
+                    DocType: 0,
+                    DocTypeName: 'แบบฟอร์ม'
+                },
+                {
+                    IsChecked: false,
+                    DocName: 'บัญชีของกลางและรายการการตรวจพิสูจน์ของกลาง ส.ส 2/4',
+                    DocType: 0,
+                    DocTypeName: 'แบบฟอร์ม'
+                }
+            ];
+        }
 
-        this.proveService.MasDocumentMaingetAll(this.ProveID,"5").then(result => {
+
+        this.proveService.MasDocumentMaingetAll(this.ProveID, "5").then(result => {
             let pValue = {
                 "IsChecked": false,
                 "DocName": result[0].DocumentName,
@@ -76,6 +104,56 @@ export class PrintDocModalComponent implements OnInit {
                         // link.download = `${this.ProveID}.pdf`;
                         // link.click();
 
+                        const file = new Blob([x], { type: 'application/pdf' });
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+
+                        this.preloader.setShowPreloader(false);
+                    }, (error) => {
+                        console.error(error);
+
+                        swal({
+                            title: '',
+                            text: "พบปัญหาในการพิมพ์รายงาน",
+                            type: 'error',
+                            confirmButtonText: 'ตกลง'
+                        });
+
+                        this.preloader.setShowPreloader(false);
+                        return false;
+                    });
+            });
+
+            _print.filter(x => x.DocName == "บันทึกการตรวจรับของกลาง").map(item => {
+                console.log("this.ProveID : ", this.ProveID)
+                this.preloader.setShowPreloader(true);
+                this.proveService.ProveReport2(this.ProveID)
+                    .subscribe(x => {
+                        const file = new Blob([x], { type: 'application/pdf' });
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+
+                        this.preloader.setShowPreloader(false);
+                    }, (error) => {
+                        console.error(error);
+
+                        swal({
+                            title: '',
+                            text: "พบปัญหาในการพิมพ์รายงาน",
+                            type: 'error',
+                            confirmButtonText: 'ตกลง'
+                        });
+
+                        this.preloader.setShowPreloader(false);
+                        return false;
+                    });
+            });
+
+            _print.filter(x => x.DocName == "บันทึกการตรวจพิสูจน์นอกสถานที่ทำการ").map(item => {
+                console.log("this.ProveID : ", this.ProveID)
+                this.preloader.setShowPreloader(true);
+                this.proveService.ProveReport3(this.ProveID)
+                    .subscribe(x => {
                         const file = new Blob([x], { type: 'application/pdf' });
                         const fileURL = URL.createObjectURL(file);
                         window.open(fileURL);

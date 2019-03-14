@@ -51,6 +51,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode', 'ILG60-03-00');
         // set false
         await this.navService.setEditButton(false);
         await this.navService.setDeleteButton(false);
@@ -62,7 +63,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
         // set true
         await this.navService.setSearchBar(true);
         await this.navService.setNewButton(true);
-        
+
         this.advSearch.next(true);
 
         this.sidebarService.setVersion(this.arrestService.version);
@@ -139,7 +140,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
         })
 
         this.arrest = rows;
-        this.arrestList =  this.arrest.slice(0, 5);
+        this.arrestList = this.arrest.slice(0, 5);
         // set total record     
         this.paginage.TotalItems = this.arrest.length;
 

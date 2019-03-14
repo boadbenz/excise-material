@@ -75,7 +75,10 @@ export class MainMasterService {
     return this.resposePromisGetList(JSON.stringify(params), `${appConfig.api8777}/MasDocumentMaingetAll`);
   }
 
-
+  async SecondPartLevelCode(param): Promise<any> {
+    const params = { SecondPartLevelCode: param }
+    return this.resposePromisGetList(JSON.stringify(params), `${appConfig.api8777}/MasRewardSecondDivisionRateMaingetBySecondPartLevelCode`);
+  }
 
   masStaffMaingetAll(): Promise<any[]> {
     const url = `${appConfig.api8777}/MasStaffMaingetAll`;
@@ -110,5 +113,7 @@ export class MainMasterService {
     const url = `${appConfig.api8777}/MasCommunicationchanelMaingetAll`;
     return this.resposePromisGetList('{}', url);
   }
+
+
 
 }

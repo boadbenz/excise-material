@@ -30,8 +30,8 @@ export class ReductionModelListComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.id);
-    console.log(this.listData);
+    // console.log(this.id);
+    // console.log(this.listData);
     // Create a new array with a form control for each order
     const controls = this.listData.map(c => new FormControl(false));
     this.checkNo = 0;
@@ -39,21 +39,19 @@ export class ReductionModelListComponent implements OnInit {
   }
 
   public activeModel() {
-    console.log('active model');
   }
 
   public dismiss(e: any) {
     this.d.emit(e);
   }
   public next() {
-    console.log('next');
     const result = this._checked();
     console.log(result);
   }
 
   private _checked() {
     const selected = this.checkBoxForm.value.listData
-      .map((v, i) => v ? this.listData[i].receiptNo : null)
+      .map((v, i) => v ? this.listData[i].LawbreakerName : null)
       .filter(v => v !== null);
 
     return selected;

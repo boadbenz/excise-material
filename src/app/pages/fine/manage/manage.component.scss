@@ -98,3 +98,10 @@ input[type=time]::-webkit-clear-button {
 	left: inherit !important;
 	top: inherit !important;
 }
+
+.editable
+{
+  :placeholder-shown {
+    text-align: right;
+  }
+}

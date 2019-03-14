@@ -56,6 +56,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode','ILG60-10-00');
         // set false
         this.navService.setEditButton(false);
         this.navService.setDeleteButton(false);
@@ -66,7 +67,7 @@ export class ListComponent implements OnInit, OnDestroy {
         // set true
         this.navService.setSearchBar(true);
         this.navService.setNewButton(true);
-        this.sidebarService.setVersion('evidenceIn 0.0.0.12');
+        this.sidebarService.setVersion('evidenceIn 0.0.0.18');
         this.RevenueStatus = "";
 
         this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
@@ -141,7 +142,10 @@ export class ListComponent implements OnInit, OnDestroy {
         }
 
         await list.map((item) => {
-            item.EvidenceInDate = toLocalShort(item.EvidenceInDate);
+            if(item.EvidenceInDate){
+                item.EvidenceInDate = toLocalShort(item.EvidenceInDate);
+            }
+            
             item.DeliveryDate = toLocalShort(item.DeliveryDate);
 
             // หน่วยงานที่รับมอบของกลางเพื่อเก็บรักษา

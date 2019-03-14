@@ -50,7 +50,8 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.35');
+    this.sidebarService.setVersion('0.0.0.52');
+    localStorage.setItem('programcode','ILG60-04-00')
     await this.onSearchByKeyword()
     await this.setShowButton();
     // await this.onNextPage()
@@ -72,7 +73,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.navService.setSaveButton(false);
     this.navService.setNewButton(false);
     this.navService.setOnPrevPage(false);
-    this.navService.setPrevPageButton(false);
+    this.navService.setNextPageButton(false);
   }
 
   setPagination() {

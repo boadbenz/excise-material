@@ -137,6 +137,13 @@
                     </a>
                 </div>
             </div>
+            <div *ngIf="sendInComeButton | async" class="navbar-nav my-lg-0">
+                <div class="nav-link text-muted waves-effect waves-dark">
+                    <a class="btn btn-ghost" href="javascript:void(0)" (click)="clickSendIncome()">
+                        ส่งเงินรายได้ >>
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
 </header>
