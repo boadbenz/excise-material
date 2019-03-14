@@ -22,6 +22,9 @@ export class ListComponent implements OnInit {
   ListMasProd: any;
   DutyGroup: any;
   BrandMain: any;
+  afBrandMain: any;
+  BrandSecond: any;
+  afBrandSecond: any;
   constructor(private navService: NavigationService,
     private preLoaderService: PreloaderService,
     private masProdService: MasProdService,
@@ -75,9 +78,14 @@ export class ListComponent implements OnInit {
 
   getValueByIndex($event) {
     console.log('$event : ', $event.GroupCode)
+    this.setGroup('7002');
+  }
 
-
-
+   setGroup(GroupCode: string){
+    this.afBrandMain = this.BrandMain.filter(f => f.GroupID == GroupCode);
+    // this.afBrandSecond = this.BrandSecond.filter(f => f.GroupID == GroupCode);
+    console.log('afBrandMain : ',this.afBrandMain)
+    console.log('afBrandSecond : ',this.afBrandSecond)
   }
 
   private navigate_service() {
