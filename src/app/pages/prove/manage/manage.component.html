@@ -161,14 +161,14 @@
             <div class="row">
                 <div class="col-lg-2 col-md-4" style="padding-right:0">
                     <label for="" class="control-label" style="float: left;">ทะเบียนตรวจพิสูจน์ : </label>
-                    <div style="float: right;">น.</div>
+                    <!-- <div style="float: right;">น.</div> -->
+                    <span style="float: right;" *ngIf="IsOutside==true">น.</span>
                 </div>
-                <div class="form-group input-group  col-lg-4 col-md-7">
-                    <span style="margin-right: 5px" *ngIf="IsOutside==true">น.</span>
-                    <input type="text" [(ngModel)]="DeliveryDocNo" name="DeliveryDocNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                <div class="form-group input-group  col-lg-4 col-md-7">     
+                    <input type="number" [(ngModel)]="DeliveryDocNo" name="DeliveryDocNo" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
                         required>
                     <label class="col-form-label" style="padding: 0 5px 0 5px;">/</label>
-                    <input type="text" [(ngModel)]="ProveYear" name="ProveYear" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    <input type="number" [(ngModel)]="ProveYear" name="ProveYear" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
                         required>
                 </div>
                 <label for="" class="col-lg-2 col-md-4 control-label">เขียนที่ :</label>
@@ -436,10 +436,10 @@
                 </div>
 
                 <div class="form-group input-group  col-lg-4 col-md-7">
-                    <input type="text" [(ngModel)]="DeliverNo" name="DeliverNo" class="form-control" [disabled]="showEditField || ShowReceiveField"
+                    <input type="number" [(ngModel)]="DeliverNo" name="DeliverNo" class="form-control" [disabled]="showEditField || ShowReceiveField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                     <label class="col-form-label" style="padding: 0 5px 0 5px;">/</label>
-                    <input type="text" [(ngModel)]="DeliverNoYear" name="DeliverNoYear" class="form-control" [disabled]="showEditField || ShowReceiveField"
+                    <input type="number" [(ngModel)]="DeliverNoYear" name="DeliverNoYear" class="form-control" [disabled]="showEditField || ShowReceiveField"
                         [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
 

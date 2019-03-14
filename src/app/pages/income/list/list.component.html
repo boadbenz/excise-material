@@ -20,7 +20,7 @@
 
                     <label for="" class="col-lg-2 col-sm-3 control-label">วันที่นำส่ง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
-                        <div class="form-group input-group form-line">
+                        <div class="input-group form-line">
                             <div style="width:45%">
                                 <my-date-picker-th name="DateStartFrom" [options]="myDatePickerOptions" (dateChanged)="onSDateChange($event)" [(ngModel)]="DateStartFrom"></my-date-picker-th>
                             </div>
@@ -69,7 +69,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <div class="form-line">
-                                <select [(ngModel)]="RevenueStatus" name="RevenueStatus" class="form-control form-control-sm" [disabled]="showEditField">
+                                <select [(ngModel)]="RevenueStatus" name="RevenueStatus" class="form-control" [disabled]="showEditField">
                                     <option value="">ไม่เลือกสถานะนำส่งเงิน</option>
                                     <option value="1">นำส่งเงินรายได้</option>
                                     <option value="2">รับรายการนำส่งเงิน</option>
