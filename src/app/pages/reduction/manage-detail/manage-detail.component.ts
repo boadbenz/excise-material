@@ -10,6 +10,7 @@ import { ReductionApiService } from '../reduction.api.service';
 })
 export class ManageDetailComponent implements OnInit, OnDestroy {
 
+  public mode = 'A';
   public adjustArrest = {
     ArrestCode: '',
     ArrestDate: '',
@@ -97,6 +98,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   public CompareReceipt: any = [];
 
+  public EditApproveCaseComparison: number[] = [];
+
   adjustFine = [];
 
   adjustReceipt = [];
@@ -131,6 +134,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   public async ngOnInit() {
 
+    this.mode = this.activeRoute.snapshot.paramMap.get('mode');
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
       this.navService.setSendIncomeButton(true);
@@ -335,6 +339,21 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   public editData() {
     this.viewMode = false;
+  }
+
+  public ViewApproveData(CompareDetailID: any) {
+    this.viewMode = true;
+    console.log(CompareDetailID);
+  }
+
+  public EditApproveData(CompareDetailID: any) {
+    this.viewMode = false;
+    console.log(CompareDetailID);
+    if (this.EditApproveCaseComparison.indexOf(CompareDetailID) === (-1)) {
+      this.EditApproveCaseComparison.push(CompareDetailID);
+    }
+
+    console.log(this.EditApproveCaseComparison);
   }
 
   public attachFile(file) {

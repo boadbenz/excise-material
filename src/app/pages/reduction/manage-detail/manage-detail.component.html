@@ -279,13 +279,13 @@
             <th class="footable-sortable">ใบเสร็จเล่มที่</th>
             <th class="footable-sortable">ใบเสร็จเลขที่/เลขอ้างอิง</th>
             <th class="footable-sortable">สถานะคดี</th>
-            <th class="footable-sortable" [hidden]="true"></th>
+            <th class="footable-sortable"></th>
           </tr>
         </thead>
         <tbody>
           <tr class="footable" *ngFor="let item of CompareReceipt; let i = index;">
             <td class="text-center">{{i+1}}</td>
-            <td>{{item.LawbreakerTitleName ? item.LawbreakerTitleName : '' 
+            <td>{{((item.LawbreakerTitleName) ? item.LawbreakerTitleName : '') 
                 + item.LawbreakerFirstName + ' ' + item.LawbreakerLastName}}</td>
             <td>{{item.PaymentDate | date}}</td>
             <!-- <td>Missing ผู้รับชำระ</td> -->
@@ -293,11 +293,11 @@
             <td>{{item.ReceiptBookNo}}</td>
             <td>{{item.ReceiptBookNo}}</td>
             <td>{{item.RevenueStatus === 0 ? 'ยังไม่ส่งรายได้' : 'ส่งารายได้แล้ว'}}</td>
-            <td [hidden]="true">
-              <a href="javaScript:void(0);" class="text-secondary" (click)="viewData()" data-toggle="modal" data-target="#finePopup">
+            <td>
+              <a href="javaScript:void(0);" class="text-secondary" (click)="viewData()" data-toggle="modal" [hidden]="mode === 'A'" data-target="#finePopup">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
-              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="editData()" [hidden]="showField" data-toggle="modal" data-target="#finePopup">
+              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="editData()" [hidden]="mode === 'V'" data-toggle="modal" data-target="#finePopup">
                 <i class="ti-pencil-alt btn-action"></i>
               </a>
             </td>
@@ -458,21 +458,21 @@
             <th class="footable-sortable col-3">ชื่อผู้ต้องหา</th>
             <th class="footable-sortable">วันที่จัดทำรายงานฯ</th>
             <th class="footable-sortable col-6">แบบอนุมัติ</th>
-            <th class="footable-sortable" [hidden]="true"></th>
+            <th class="footable-sortable"></th>
           </tr>
         </thead>
         <tbody>
           <tr class="footable" *ngFor="let item of AdjustCompareDetail; let i = index;">
             <td class="text-center">{{i+1}}</td>
-            <td>{{item.AdjustCompareLawbreaker[0].LawbreakerTitleName ? item.AdjustCompareLawbreaker[0].LawbreakerTitleName : ''
+            <td>{{((item.AdjustCompareLawbreaker[0].LawbreakerTitleName) ? item.AdjustCompareLawbreaker[0].LawbreakerTitleName : '')
               + item.AdjustCompareLawbreaker[0].LawbreakerFirstName + ' ' + item.AdjustCompareLawbreaker[0].LawbreakerLastName}}</td>
             <td>{{item.ApproveReportDate | date}}</td>
             <td>{{'แบบอนุมัติ' + item.ApproveReportType}}</td>
-            <td [hidden]="true">
-              <a href="javaScript:void(0);" class="text-secondary" (click)="viewData()" data-toggle="modal" data-target="#approvePopup">
+            <td>
+              <a href="javaScript:void(0);" class="text-secondary" (click)="ViewApproveData(item.CompareDetailID)" data-toggle="modal" [hidden]="mode === 'A'" data-target="#approvePopup">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
-              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="editData()" [hidden]="showField" data-toggle="modal" data-target="#approvePopup">
+              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="EditApproveData(item.CompareDetailID)" [hidden]="mode === 'V'" data-toggle="modal" data-target="#approvePopup">
                 <i class="ti-pencil-alt btn-action"></i>
               </a>
             </td>
