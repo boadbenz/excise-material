@@ -7,8 +7,6 @@ import { ManageDetailComponent } from './manage-detail.component';
 import { ReductionApiService } from '../reduction.api.service';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MyDatePickerModule } from 'mydatepicker';
-import { StaffComponent } from './autocomplete/staff.component';
-
 
 const routes: Routes = [
   {
@@ -40,7 +38,6 @@ const routes: Routes = [
   ],
   declarations: [
     ManageDetailComponent,
-    StaffComponent
   ],
   providers: [ReductionApiService]
 })

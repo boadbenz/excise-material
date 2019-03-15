@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-import { StaffComponent } from './autocomplete/staff.component';
 import { ReductionApiService } from '../reduction.api.service';
 import moment = require('moment');
 import 'moment/locale/th';
@@ -14,8 +13,6 @@ import { Subject } from 'rxjs/Subject';
   styleUrls: ['./manage-detail.component.scss']
 })
 export class ManageDetailComponent implements OnInit, OnDestroy {
-
-  @ViewChild(StaffComponent) private staff: StaffComponent;
 
   /**
    * Send data to autocomplete child.
