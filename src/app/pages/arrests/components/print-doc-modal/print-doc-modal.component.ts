@@ -5,7 +5,7 @@ import { ArrestService } from '../../services';
 enum SORTING { ASC, DESC }
 
 @Component({
-  selector: 'app-print-doc-modal',
+  selector: 'app-Arrestprint-doc-modal',
   templateUrl: './print-doc-modal.component.html',
   styleUrls: ['./print-doc-modal.component.scss']
 })

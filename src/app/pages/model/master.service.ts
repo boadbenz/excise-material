@@ -18,7 +18,7 @@ export class MasterService {
   
   async getStation(): Promise<any> {
     const params = {};
-    const url = `${appConfig.api7789}/MasOfficeMaingetAll`;
+    const url = `${appConfig.api8777}/MasOfficeMaingetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -30,7 +30,7 @@ export class MasterService {
 
   async getStaff(): Promise<any> {
     const params = {};
-    const url = `${appConfig.api7789}/MasStaffMaingetAll`;
+    const url = `${appConfig.api8777}/MasStaffMaingetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -42,14 +42,21 @@ export class MasterService {
 
   async getProduct(): Promise<any> {
     const params = {};
-    const url = `${appConfig.api7789}/MasProductMaingetAll`;
+    const url = `${appConfig.api8777}/MasProductMaingetAll`;
 
     try {
       const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
       return res;
-    } catch (error) {
-      //await alert(error);
-    }
+    } catch (error) { }
   }
-  
+
+  async getWarehourse(OfficeCode: string): Promise<any> {
+    const params = { OfficeCode };
+    const url = `${appConfig.api8777}/MasWarehouseMaingetByOfficeCode`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) { }
+  }
 }

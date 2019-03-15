@@ -1,0 +1,124 @@
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h4 class="card-title m-b-0">ของกลาง</h4>
+  </div>
+  <div class="card-body">
+    <form class="form-horizontal">
+      <div class="row">
+        <label for="" class="col-lg-2 col-md-4 control-label">รหัสของกลาง :
+        </label>
+        <div class="col-lg-4 col-md-7 col-sm-8">
+          <div class="form-group ">
+            <input type="text" [(ngModel)]="ProductCode" name="ProductCode" class="form-control">
+          </div>
+        </div>
+        <label for="" class="col-lg-2 col-sm-3 control-label">กลุ่มสินค้า :</label>
+        <div class="col-lg-4 col-md-7 col-sm-9">
+          <div class="form-group">
+            <div class="form-line">
+              <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm" [disabled]="showEditField">
+                <option value="" selected disabled></option>
+                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อหลัก :</label>
+        <div class="col-lg-4 col-md-7 col-sm-9">
+          <div class="form-group">
+            <div class="form-line">
+              <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm"
+                [disabled]="showEditField">
+                <option value="" selected disabled></option>
+                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อรอง :</label>
+        <div class="col-lg-4 col-md-7 col-sm-9">
+          <div class="form-group">
+            <div class="form-line">
+              <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm"
+                [disabled]="showEditField">
+                <option value="" selected disabled></option>
+                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <label for="" class="col-lg-2 col-sm-3 control-label">รุ่น :</label>
+        <div class="col-lg-4 col-md-7 col-sm-9">
+          <div class="form-group">
+            <div class="form-line">
+              <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm"
+                [disabled]="showEditField">
+                <option value="" selected disabled></option>
+                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <label for="" class="col-lg-2 col-sm-3 control-label">ขนาด :</label>
+        <div class="col-lg-4 col-md-7 col-sm-9">
+          <div class="form-group">
+            <div class="form-line">
+              <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm"
+                [disabled]="showEditField">
+                <option value="" selected disabled></option>
+                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <label for="" class="col-lg-2 col-sm-3 control-label">หน่วยของขนาด :</label>
+        <div class="col-lg-4 col-md-7 col-sm-9">
+          <div class="form-group">
+            <div class="form-line">
+              <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm"
+                [disabled]="showEditField">
+                <option value="" selected disabled></option>
+                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <label for="" class="col-lg-2 col-sm-3 control-label">ปริมาณแอลกอฮอล์ :</label>
+        <div class="col-lg-4 col-md-7 col-sm-9">
+          <div class="form-group">
+            <div class="form-line">
+              <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm"
+                [disabled]="showEditField">
+                <option value="" selected disabled></option>
+                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <label for="" class="col-lg-2 col-md-4 control-label">คำอธิบายของกลาง :
+        </label>
+        <div class="col-sm-10">
+          <div class="form-group">
+            <textarea rows="3" [(ngModel)]="xxx" name="xxx" class="form-control"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="custom-control custom-checkbox col-form-label col-md-6">
+          <input class="filled-in chk-col-indigo" name="Isactive" id="Isactive" type="checkbox">
+          <label class="m-t-10 m-b-0" for="Isactive">ใช้งาน</label>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

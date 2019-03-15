@@ -2,6 +2,8 @@ import { Component, OnInit, HostListener, Input, ElementRef, OnDestroy } from '@
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { NavigationService } from './navigation.service';
 import { NgForm } from '@angular/forms';
+import swal from 'sweetalert2';
+import { async } from '@angular/core/testing';
 
 // declare var jQuery: any;
 
@@ -28,6 +30,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
     nextPage: any = '';
     nextPageTitle: any;
     prevPageTitle: any;
+
+    permisCheck: any
+    perBeforReturn: any
 
     constructor(
         private router: Router,
@@ -78,11 +83,17 @@ export class NavigationComponent implements OnInit, OnDestroy {
         formSearch.reset();
     }
 
-    clickNew() {
-        this.navService.setOnNextPage(true);
+    async clickNew() {
+        var pmCheck = this.permissionCheck('IsCreate')
+        if (await pmCheck != 1) {
+            swal('', 'ผู้ใช้งานไม่มีสิทธิ์สร้างข้อมูล กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (await pmCheck == 1) {
+            this.navService.setOnNextPage(true);
+        }
+        // this.navService.setOnNextPage(true); //Old
     }
 
-    clickNextPage() {
+    async clickNextPage() {
         this.navService.setOnNextPage(true);
     }
 
@@ -94,17 +105,29 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.navService.setOnPrint(true);
     }
 
-    clickEdit() {
-        // // set false
-        this.navService.setEditField(false);
-        this.navService.setEditButton(false);
-        this.navService.setPrintButton(false);
-        this.navService.setDeleteButton(false);
-        // set true
-        this.navService.setSaveButton(true);
-        this.navService.setCancelButton(true);
-        // set event click edit
-        this.navService.setOnEdit(true);
+    async clickEdit() {
+        var pmCheck = this.permissionCheck('IsUpdate')
+        if (await pmCheck != 1) {
+            swal('', 'ผู้ใช้งานไม่มีสิทธิ์แก้ไขข้อมูล กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (await pmCheck == 1) {
+            this.navService.setEditField(false);
+            this.navService.setEditButton(false);
+            this.navService.setPrintButton(false);
+            this.navService.setDeleteButton(false);
+            this.navService.setSaveButton(true);
+            this.navService.setCancelButton(true);
+            this.navService.setOnEdit(true);
+        }
+        // // set false //Old
+        // this.navService.setEditField(false);
+        // this.navService.setEditButton(false);
+        // this.navService.setPrintButton(false);
+        // this.navService.setDeleteButton(false);
+        // // set true
+        // this.navService.setSaveButton(true);
+        // this.navService.setCancelButton(true);
+        // // set event click edit
+        // this.navService.setOnEdit(true);
     }
 
     clickCancel() {
@@ -120,17 +143,58 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.navService.setOnCancel(true);
     }
 
-    clickSave() {
+    async clickSave() {
+        var pmCheck = this.permissionCheck('IsUpdate')
+        if (await pmCheck != 1) {
+            swal('', 'ผู้ใช้งานไม่มีสิทธิ์บันทึก กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (await pmCheck == 1) {
+            this.navService.setOnSave(true);
+        }
         // set event click save
-        this.navService.setOnSave(true);
+        // this.navService.setOnSave(true); //Old
     }
 
-    clickDelete() {
-        this.navService.setOnDelete(true);
+    async clickDelete() {
+        // this.navService.setOnDelete(true); //Old
+
+        var pmCheck = this.permissionCheck('IsDelete')
+        if (await pmCheck != 1) {
+            swal('', 'ผู้ใช้งานไม่มีสิทธิ์ลบข้อมูล กรุณาติดต่อผู้ดูแลระบบ', 'warning');
+        } else if (await pmCheck == 1) {
+            this.navService.setOnDelete(true);
+        }
     }
 
     clickSendIncome() {
         this.navService.setOnSendIncome(true);
+    }
+
+    async permissionCheck(subscribe) {
+        var userAccountID = localStorage.getItem('UserAccountID')
+        var programCode = localStorage.getItem('programcode')
+        const params = {
+            UserAccountID: userAccountID,
+            ProgramCode: programCode
+        };
+        await this.navService.PermissionCheck(params).then(Res => {
+            this.permisCheck = Res;
+            console.log('subscribe : ', subscribe)
+            console.log('params : ', params)
+            console.log('PermisRes : ', this.permisCheck)
+            if (subscribe == 'IsCreate') {
+                this.perBeforReturn = !this.permisCheck ? this.permisCheck = { "IsCreate": 0 } : this.permisCheck.IsCreate;
+                // this.perBeforReturn = this.permisCheck.IsCreate;
+            } else if (subscribe == 'IsDelete') {
+                this.perBeforReturn = !this.permisCheck ? this.permisCheck = { "IsDelete": 0 } : this.permisCheck.IsDelete;
+            } else if (subscribe == 'IsRead') {
+                this.perBeforReturn = !this.permisCheck ? this.permisCheck = { "IsRead": 0 } : this.permisCheck.IsRead;
+            } else if (subscribe == 'IsUpdate') {
+                this.perBeforReturn = !this.permisCheck ? this.permisCheck = { "IsUpdate": 0 } : this.permisCheck.IsUpdate;
+            }
+
+        }, (error) => { console.error('error : ', error); });
+
+        return this.perBeforReturn
     }
 
 }

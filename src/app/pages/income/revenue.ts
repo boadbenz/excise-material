@@ -49,6 +49,7 @@ export class RevenueDetail {
     public CompareReceiptID ?: number;
     public CompareID?: string;
     public CompareCode?: string;
+    public CompareCodeTemp?: string;
     public LawBreaker?: string;
     public SurnameLawBreaker?: string;
     public StaffReceip?: string;

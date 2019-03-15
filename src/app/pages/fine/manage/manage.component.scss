@@ -1,4 +1,7 @@
-@import '../../../../styles';
+// @import '../../../../styles';
+.cdk-overlay-container {
+  z-index: 99999 !important;
+}
   .btn-navy {
     background: rgb(0, 94, 141);
     color: white;
@@ -91,6 +94,14 @@ input[type=time]::-webkit-clear-button {
 .mat-expansion-panel-content {
   font: unset !important;
 }
-.cdk-global-overlay-wrapper, .cdk-overlay-container {
-z-index: 99999 !important;
+:host /deep/ ng2-dropdown-menu div{
+	left: inherit !important;
+	top: inherit !important;
+}
+
+.editable
+{
+  :placeholder-shown {
+    text-align: right;
+  }
 }

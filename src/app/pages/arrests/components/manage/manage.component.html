@@ -1,7 +1,7 @@
 <app-step-wizard [sectionId]="2" [disabledLine]="!ArrestNotice.value.length"></app-step-wizard>
 
-<ng-template #printDocModal let-c="close" let-d="dismiss">
-  <app-print-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()"></app-print-doc-modal>
+<ng-template #printDocModalArrests let-c="close" let-d="dismiss">
+  <app-Arrestprint-doc-modal [ArrestCode]="arrestCode" (c)="modal.close()" (d)="modal.dismiss()" ></app-Arrestprint-doc-modal>
 </ng-template>
 
 <form action="" [formGroup]="arrestFG">
@@ -47,11 +47,11 @@
             {{ r.OfficeName }}
           </ng-template>
 
-          <input type="text" class="form-control form-control-sm " [ngClass]="{'ng-touched':isRequired}" required
-            [ngbTypeahead]="serachOffice" [resultTemplate]="rt" [readOnly]="showEditField" [inputFormatter]="formatterOffice"
-            (selectItem)="selectItemOffice($event)" [value]="arrestFG.get('ArrestStation').value" (change)="onChangeArrestStation($event)" />
+          <input type="text" class="form-control form-control-sm " [ngbTypeahead]="serachOffice" [resultTemplate]="rt"
+            [readOnly]="showEditField" [inputFormatter]="formatterOffice" (selectItem)="selectItemOffice($event)" value="{{arrestFG.get('ArrestStation').value}}"
+            [ngClass]="{'is-invalid': (arrestFG.get('ArrestStation').invalid && isRequired)}" />
 
-          <input type="text" style="display: none;" formControlName="ArrestStation">
+          <input type="text" style="display: none;" formControlName="ArrestStation" required>
         </div>
       </div>
       <div class="row">
@@ -97,7 +97,8 @@
         <div class="col-lg-2 col-md-3 col-sm-4">
           <button type="button" class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="openModal(noticelist)">เพิ่มใบแจ้งความ</button>
           <ng-template #noticelist let-c="close" let-d="dismiss">
-            <app-modal-notice (c)="modal.close()" (d)="modal.dismiss()" (outputNotice)="setNoticeForm($event)"></app-modal-notice>
+            <app-modal-notice [arrestDate]="getDateMyDatepicker(arrestFG.value.ArrestDate)" (c)="modal.close()" (d)="modal.dismiss()"
+              (outputNotice)="setNoticeForm($event)"></app-modal-notice>
           </ng-template>
         </div>
       </div>
@@ -117,23 +118,25 @@
           </thead>
           <tbody formArrayName="ArrestNotice">
             <tr *ngFor="let item of ArrestNotice.controls; let i=index" [formGroupName]="i">
-              <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">{{item.get('RowId').value}}</td>
-              <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('NoticeCode').value}}</td>
-              <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('NoticeDateString').value}}</td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <div *ngFor="let staff of item.value.ArrestNoticeStaff;">{{staff.FullName}}</div>
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <div *ngFor="let staff of item.value.ArrestNoticeStaff;">{{staff.OfficeName}}</div>
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <div *ngFor="let staff of item.value.ArrestNoticeSuspect;">{{staff.FullName}}</div>
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">
-                <a *ngIf="!showEditField" href="javaScript:void(0);" class="text-warning" (click)="deleteNotice(i)">
-                  <i class="fa fa-trash-o fa-lg"></i>
-                </a>
-              </td>
+              <ng-container *ngIf="item.get('IsModify').value != 'd'">
+                <td class="text-center">{{item.get('RowId').value}}</td>
+                <td>{{item.get('NoticeCode').value}}</td>
+                <td>{{toLocalShort(item.value.NoticeDate)}}</td>
+                <td>
+                  <div *ngFor="let staff of item.value.ArrestNoticeStaff;">{{staff.FullName}}</div>
+                </td>
+                <td>
+                  <div *ngFor="let staff of item.value.ArrestNoticeStaff;">{{staff.OfficeName}}</div>
+                </td>
+                <td>
+                  <div *ngFor="let staff of item.value.ArrestNoticeSuspect;">{{staff.FullName}}</div>
+                </td>
+                <td class="text-center">
+                  <a *ngIf="!showEditField" href="javaScript:void(0);" class="text-warning" (click)="deleteNotice(i)">
+                    <i class="fa fa-trash-o fa-lg"></i>
+                  </a>
+                </td>
+              </ng-container>
             </tr>
           </tbody>
         </table>
@@ -174,38 +177,41 @@
           </thead>
           <tbody formArrayName="ArrestStaff">
             <tr *ngFor="let item of ArrestStaff.controls; let i = index;" [formGroupName]="i">
-              <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">
-                {{item.get('RowId').value}}
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <ng-template #rt let-r="result" let-t="term">
-                  {{ r.TitleName == null ? '' : r.TitleName }}
-                  {{r.FirstName == null ? '' : r.FirstName}}
-                  {{r.LastName == null ? '' : r.LastName}}
-                </ng-template>
+              <ng-container *ngIf="item.get('IsModify').value != 'd'">
+                <td class="text-center">
+                  {{item.get('RowId').value}}
+                </td>
+                <td>
+                  <ng-template #rt let-r="result" let-t="term">
+                    {{ r.TitleName == null ? '' : r.TitleName }}
+                    {{r.FirstName == null ? '' : r.FirstName}}
+                    {{r.LastName == null ? '' : r.LastName}}
+                  </ng-template>
 
-                <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchStaff" [resultTemplate]="rt"
-                  [readOnly]="showEditField" [inputFormatter]="formatterStaff" (selectItem)="selectItemStaff($event, i)"
-                  value="{{item.value.FullName}}" />
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly>
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <input type="text" formControlName="OfficeName" class="form-control form-control-sm" readonly>
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <select (change)="onChangeContributer($event, i)" formControlName="ContributorID" class="form-control form-control-sm"
-                  [attr.disabled]="showEditField ? '' : null">
-                  <option value="" disabled selected></option>
-                  <option *ngFor="let c of contributerType;" [value]="c.value">{{c.text}}</option>
-                </select>
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <a class="text-warning" href="javaScript:void(0);" *ngIf="!showEditField" (click)="deleteStaff(i)">
-                  <i class="fa fa-trash-o fa-lg"></i>
-                </a>
-              </td>
+                  <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchStaff" [resultTemplate]="rt"
+                    [readOnly]="showEditField" [inputFormatter]="formatterStaff" (selectItem)="selectItemStaff($event, i)"
+                    (change)="onChangeStaff($event, i)" value="{{item.value.FullName}}" [ngClass]="{'is-invalid': isRequired}" />
+                  <input type="text" formControlName="FullName" style="display: none;">
+                </td>
+                <td>
+                  <input type="text" formControlName="PositionName" class="form-control form-control-sm" readonly>
+                </td>
+                <td>
+                  <input type="text" formControlName="OfficeName" class="form-control form-control-sm" readonly>
+                </td>
+                <td>
+                  <select (change)="onChangeContributer($event, i)" formControlName="ContributorID" class="form-control form-control-sm"
+                    [attr.disabled]="showEditField ? '' : null">
+                    <option value="" disabled selected></option>
+                    <option *ngFor="let c of contributerType;" [value]="c.value">{{c.text}}</option>
+                  </select>
+                </td>
+                <td>
+                  <a class="text-warning" href="javaScript:void(0);" *ngIf="!showEditField" (click)="deleteStaff(i)">
+                    <i class="fa fa-trash-o fa-lg"></i>
+                  </a>
+                </td>
+              </ng-container>
             </tr>
           </tbody>
         </table>
@@ -256,6 +262,7 @@
             <input type="text" formControlName="Alley" class="form-control form-control-sm" [readonly]="showEditField">
           </div>
         </div>
+
         <div class="row">
           <label for="" class="col-lg-2 col-sm-4 control-label">ถนน :</label>
           <div class="col-lg-4 col-md-7 col-sm-8 form-group">
@@ -268,8 +275,9 @@
             </ng-template>
 
             <input type="text" class="form-control form-control-sm" [ngbTypeahead]="searchRegion" [resultTemplate]="rt"
-              [readOnly]="showEditField" [inputFormatter]="formatterRegion" (selectItem)="selectItemLocaleRegion($event)"
-              value="{{item.value.Region}}" />
+              [inputFormatter]="formatterRegion" (selectItem)="selectItemLocaleRegion($event)" [ngClass]="{'is-invalid': (item.get('Region').invalid && isRequired)}"
+              [value]="item.get('Region').value" [readOnly]="showEditField" />
+            <input type="text" formControlName="Region" required style="display: none;">
           </div>
         </div>
         <div class="row">
@@ -297,15 +305,14 @@
     </div>
     <div *ngIf="ILG60_03_02_00_00_E20 | async" class="card-body">
       <div class="row">
-        <label for="" class="col-lg-2 col-sm-4 control-label">พฤติกรรมในการจับ :</label>
-        <div class="col-lg-10 col-sm-8 form-group ">
+        <label for="" class="col-md-2 col-sm-4 control-label">พฤติกรรมในการจับ :</label>
+        <div class="col-md-4 col-sm-8 form-group ">
           <textarea formControlName="Behaviour" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"
             [ngClass]="{'ng-touched':isRequired}" required></textarea>
         </div>
-      </div>
-      <div class="row">
-        <label for="" class="col-lg-2 col-sm-4 control-label">คำให้การของผู้ต้องหา :</label>
-        <div class="col-lg-10 col-sm-8 form-group ">
+
+        <label for="" class="col-md-2 col-sm-4 control-label">คำให้การของผู้ต้องหา :</label>
+        <div class="col-md-4 col-sm-8 form-group ">
           <textarea formControlName="Testimony" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"
             [ngClass]="{'ng-touched':isRequired}" required></textarea>
         </div>
@@ -352,46 +359,49 @@
           </thead>
           <tbody formArrayName="ArrestProduct">
             <tr *ngFor="let item of ArrestProduct.controls; let i=index;" [formGroupName]="i">
-              <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">{{item.get('RowId').value}}</td>
-              <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 200px;">
-                <ng-template #rt let-r="result" let-t="term">
-                  {{ r.ProductDesc }}
-                </ng-template>
-                <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchProduct"
-                  [resultTemplate]="rt" [inputFormatter]="formatterProduct" (selectItem)="selectItemProductItem($event, i)"
-                  [value]="item.value.ProductDesc" />
-                <!-- (change)="onChangeProductDesc($event, i)" 
-                                <input style="display: none" type="text" formControlName="ProductDesc"> -->
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 30px;">
-                <input type="number" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField"
-                  min="0" step="0.01">
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
-                <ng-template #qtyUnit let-r="result" let-t="term">
-                  {{ r.DutyCode }}
-                </ng-template>
-                <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
-                  [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemQtyUnit($event, i)"
-                  [value]="item.value.QtyUnit" />
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 30px;">
-                <input type="number" formControlName="NetVolume" class="form-control form-control-sm" [readonly]="showEditField"
-                  min="0" step="0.01">
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'" style="max-width: 60px;">
-                <ng-template #netVolumeUnit let-r="result" let-t="term">
-                  {{ r.DutyCode }}
-                </ng-template>
-                <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
-                  [resultTemplate]="netVolumeUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)"
-                  [value]="item.value.NetVolumeUnit" />
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">
-                  <i class="fa fa-trash-o fa-lg"></i>
-                </a>
-              </td>
+              <ng-container *ngIf="item.get('IsModify').value != 'd'">
+                <td class="text-center">{{item.get('RowId').value}}</td>
+                <td style="max-width: 200px;">
+                  <ng-template #rt let-r="result" let-t="term">
+                    {{ r.ProductDesc }}
+                  </ng-template>
+                  <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchProduct"
+                    [resultTemplate]="rt" [inputFormatter]="formatterProduct" (selectItem)="selectItemProductItem($event, i)"
+                    [value]="item.value.ProductDesc" [ngClass]="{'is-invalid': isRequired}" />
+                  <input type="text" formControlName="ProductDesc" style="display: none;">
+                </td>
+                <td style="max-width: 30px;">
+                  <input type="number" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField"
+                    min="0" step="0.01" [ngClass]="{'ng-touched':isRequired}">
+                </td>
+                <td style="max-width: 60px;">
+                  <ng-template #qtyUnit let-rqu="result" let-tqu="term">
+                    {{ rqu.DutyCode }}
+                  </ng-template>
+                  <input type="text" class="form-control form-control-sm" [readOnly]="showEditField" [ngbTypeahead]="searchUnit"
+                    [resultTemplate]="qtyUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemQtyUnit($event, i)"
+                    (change)="changeItemQtyUnit($event, i)" value="{{item.value.QtyUnit}}" [ngClass]="{'is-invalid': isRequired}" />
+                  <input type="text" formControlName="QtyUnit" style="display: none;">
+                </td>
+                <td style="max-width: 30px;">
+                  <input type="number" #NetVolume formControlName="NetVolume" class="form-control form-control-sm"
+                    [readonly]="showEditField" min="0" step="0.01" [ngClass]="{'ng-touched': isRequired}">
+                </td>
+                <td style="max-width: 60px;">
+                  <ng-template #netVolumeUnit let-rvu="result" let-tvu="term">
+                    {{ rvu.DutyCode }}
+                  </ng-template>
+                  <input type="text" class="form-control form-control-sm" [readonly]="showEditField" [ngbTypeahead]="searchUnit"
+                    [resultTemplate]="netVolumeUnit" [inputFormatter]="formatterUnit" (selectItem)="selectItemNetVolumeUnit($event, i)"
+                    [value]="item.value.NetVolumeUnit" (change)="changeItemNetVolumeUnit($event, i)" [ngClass]="{'is-invalid': isRequired}" />
+                  <input type="text" formControlName="NetVolumeUnit" style="display: none;">
+                </td>
+                <td>
+                  <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteProduct(i)">
+                    <i class="fa fa-trash-o fa-lg"></i>
+                  </a>
+                </td>
+              </ng-container>
             </tr>
           </tbody>
         </table>
@@ -425,7 +435,7 @@
           <thead>
             <tr>
               <th class="text-center">ลำดับ</th>
-              <th>ประเภทผู้ต้องสงสัย</th>
+              <th>ประเภทผู้ต้องหา</th>
               <th>ประเภทบุคคล</th>
               <th>เลขประจำตัว</th>
               <th>ชื่อ</th>
@@ -434,16 +444,18 @@
           </thead>
           <tbody formArrayName="ArrestLawbreaker">
             <tr *ngFor="let item of ArrestLawbreaker.controls; let i=index;" [formGroupName]="i">
-              <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">{{item.get('RowId').value}}</td>
-              <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('LawbreakerTypeName').value}}</td>
-              <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('EntityTypeName').value}}</td>
-              <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('ReferenceID').value}}</td>
-              <td *ngIf="item.get('IsModify').value != 'd'">{{item.get('LawbreakerFullName').value}}</td>
-              <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">
-                <a href="javaScript:void(0);" class="text-warning text-secondary" (click)="deleteLawbreaker(i)">
-                  <i class="fa fa-trash-o fa-lg"></i>
-                </a>
-              </td>
+              <ng-container *ngIf="item.get('IsModify').value != 'd'">
+                <td class="text-center">{{item.get('RowId').value}}</td>
+                <td>{{item.get('LawbreakerTypeName').value}}</td>
+                <td>{{item.get('EntityTypeName').value}}</td>
+                <td>{{item.get('ReferenceID').value}}</td>
+                <td>{{item.get('LawbreakerFullName').value}}</td>
+                <td class="text-center">
+                  <a href="javaScript:void(0);" class="text-warning text-secondary" (click)="deleteLawbreaker(i)" *ngIf="!showEditField">
+                    <i class="fa fa-trash-o fa-lg"></i>
+                  </a>
+                </td>
+              </ng-container>
             </tr>
           </tbody>
         </table>
@@ -483,82 +495,77 @@
           </thead>
           <tbody formArrayName="ArrestIndictment">
             <tr *ngFor="let indict of ArrestIndictment.controls; let j=index;" [formGroupName]="j">
-              <ng-template ngFor let-item [ngForOf]="getArrestLawGuitbase(indict)" let-i="index">
-                <td *ngIf="indict.get('IsModify').value != 'd'" class="text-center">{{indict.get('RowId').value}}</td>
-                <td *ngIf="indict.get('IsModify').value != 'd'" style="width: 200px" class="text-center">
+              <ng-container *ngIf="indict.get('IsModify').value != 'd'">
+                <ng-template ngFor let-item [ngForOf]="getArrestLawGuitbase(indict)" let-i="index">
+                  <td class="text-center">{{indict.get('RowId').value}}</td>
+                  <td style="width: 200px" class="text-center">
 
-                  <ng-container *ngFor="let subSectionRule of getArrestLawSubSectionRule(item);">
-                    <div class="input-group" *ngFor="let subSection of getArrestLawSubSection(subSectionRule)">
-                      <input id="'SubSectionType'+j" type="text" class="form-control form-control-sm" style="border-right: 0;"
-                        readonly [value]="subSection.get('SubSectionType').value">
-                      <div class="input-group-append">
-                        <a class="input-group-text custom-file-upload text-secondary" (click)="!showEditField && openModal(allegation)">
-                          <i class="ti-more-alt"></i>
-                        </a>
-                        <ng-template #allegation let-c="close" let-d="dismiss">
-                          <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()" [inputArrestIndictment]="indict.value"
-                            (outputArrestIndictment)="setArrestIndictment($event, j)"></app-allegation-modal>
-                        </ng-template>
+                    <ng-container *ngFor="let subSectionRule of getArrestLawSubSectionRule(item);">
+                      <div class="input-group" *ngFor="let subSection of getArrestLawSubSection(subSectionRule)">
+                        <input id="'SubSectionType'+j" type="text" class="form-control form-control-sm" style="border-right: 0;"
+                          readonly [value]="subSection.get('SubSectionType').value">
+                        <div class="input-group-append">
+                          <a class="input-group-text custom-file-upload text-secondary" (click)="!showEditField && openModal(allegation)">
+                            <i class="ti-more-alt"></i>
+                          </a>
+                          <ng-template #allegation let-c="close" let-d="dismiss">
+                            <app-allegation-modal (c)="modal.close()" (d)="modal.dismiss()" [inputArrestIndictment]="indict.value"
+                              (outputArrestIndictment)="setArrestIndictment($event, j)"></app-allegation-modal>
+                          </ng-template>
+                        </div>
                       </div>
-                    </div>
+                    </ng-container>
+
+                  </td>
+                  <td style="width: 300px;">
+                    <p class="text-truncate" style="width: 300px;">
+                      {{item.get('GuiltBaseName').value}}
+                    </p>
+                  </td>
+                </ng-template>
+
+                <td style="width: 300px">
+                  <ng-container formArrayName="ArrestIndicmentDetail">
+                    <ng-container *ngFor="let item of getArrestIndicmentDetail(indict); let i1=index" [formGroupName]="i1">
+
+                      <div formArrayName="ArrestLawbreaker">
+                        <ng-container *ngFor="let lawb of getArrestLawbreaker(item); let lIndex=index" [formGroupName]="lIndex">
+                          <ng-container *ngIf="lawb.get('LawbreakerID').value && lawb.get('IsModify').value != 'd'">
+                            <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" [id]="j+'-'+i1+'-'+lIndex+'lb'"
+                              [attr.disabled]="showEditField ? '' : null" (click)="checkedIndictmentLawbreaker(j, i1)">
+                            <label [for]="j+'-'+i1+'-'+lIndex+'lb'">
+                              {{ lawb.get('LawbreakerTitleName').value }}
+                              {{ lawb.get('LawbreakerFirstName').value }}
+                              {{ lawb.get('LawbreakerMiddleName').value }}
+                              {{ lawb.get('LawbreakerLastName').value }}
+                            </label>
+                          </ng-container>
+                        </ng-container>
+                      </div>
+
+                    </ng-container>
                   </ng-container>
 
                 </td>
-                <td *ngIf="indict.get('IsModify').value != 'd'" style="width: 200px;" >
-                  <!-- <span class="text-truncate" style="width: 200px;"> -->
-                    {{item.get('GuiltBaseName').value}}
-                  <!-- </span> -->
-                </td>
-              </ng-template>
-
-              <td *ngIf="indict.get('IsModify').value != 'd'" style="width: 300px">
-
-
-                <div formArrayName="ArrestIndicmentDetail">
-                  <ng-container *ngFor="let item of getArrestIndicmentDetail(indict); let i1=index" [formGroupName]="i1">
-
-                    <div formArrayName="ArrestLawbreaker">
-                      <ng-container *ngFor="let lawb of getArrestLawbreaker(item); let lIndex=index" [formGroupName]="lIndex">
-                        <ng-container *ngIf="lawb.get('LawbreakerID').value">
-                          <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" [id]="j+'-'+lawb.get('LawbreakerID').value">
-                          <label [for]="j+'-'+lawb.get('LawbreakerID').value">
-                            {{ lawb.get('LawbreakerTitleName').value }}
-                            {{ lawb.get('LawbreakerFirstName').value }}
-                            {{ lawb.get('LawbreakerMiddleName').value }}
-                            {{ lawb.get('LawbreakerLastName').value }}
-                            {{ lawb.get('LawbreakerOtherName').value }}
-                          </label>
-                        </ng-container>
-                      </ng-container>
-                    </div>
-
-                  </ng-container>
-                </div>
-
-              </td>
-              <td *ngIf="indict.get('IsModify').value != 'd'" style="width: 300px;">
-                <ng-container formArrayName="ArrestIndicmentDetail">
-                  <ng-container *ngFor="let item of getArrestIndicmentDetail(indict); let i2=index" [formGroupName]="i2">
-
-                    <div formArrayName="ArrestProductDetail">
-                      <div *ngFor="let prod of getArrestProductDetail(item); let pIndex=index" class="text-truncate"
-                        style="width: 300px;" [formGroupName]="pIndex">
-                        <ng-container *ngIf="prod.get('ProductID').value">
-                          <input type="checkbox" formControlName="IsChecked" class="filled-in chk-col-indigo" [id]="j+'-'+i2+'-'+pIndex+'-'+prod.get('ProductID').value">
-                          <label [for]="j+'-'+i2+'-'+pIndex+'-'+prod.get('ProductID').value">{{prod.get('ProductDesc').value}}</label>
+                <td style="width: 300px;">
+                  <ng-container formArrayName="ArrestIndictmentProduct">
+                    <ng-container *ngFor="let prod of getArrestIndictmentProduct(indict); let i=index;">
+                      <div [formGroupName]="i" style="width: 300px;" class="text-truncate">
+                        <ng-container *ngIf="prod.get('ProductID').value && prod.get('IsModify').value != 'd'">
+                          <input formControlName="IsChecked" type="checkbox" class="filled-in chk-col-indigo" [id]="j+'_'+i+'pd'"
+                            [attr.disabled]="showEditField ? '' : null" (click)="checkedIndictmentProduct(j, i)">
+                          <label [for]="j+'_'+i+'pd'">{{prod.get('ProductDesc').value}}</label>
                         </ng-container>
                       </div>
-                    </div>
-
+                    </ng-container>
                   </ng-container>
-                </ng-container>
-
-              </td>
-              <td *ngIf="indict.get('IsModify').value != 'd'">
-                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteIndicment(j)">
-                  <i class="fa fa-trash-o fa-lg"></i>
-                </a>
-              </td>
+                </td>
+                <td>
+                  <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteIndicment(j)">
+                    <i class="fa fa-trash-o fa-lg"></i>
+                  </a>
+                </td>
+              </ng-container>
             </tr>
 
           </tbody>
@@ -596,28 +603,30 @@
           </thead>
           <tbody formArrayName="ArrestDocument">
             <tr *ngFor="let item of ArrestDocument.controls; let i=index;" [formGroupName]="i">
-              <td *ngIf="item.get('IsModify').value != 'd'" class="text-center">{{item.get('RowId').value}}</td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField">
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <div class="input-group">
-                  <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"
-                    [readonly]="showEditField">
-                  <div class="input-group-append">
-                    <input [id]="'arrestAttach'+i" type="file" (change)="changeArrestDoc($event, i)" hidden
-                      [attr.disabled]="showEditField ? '' : null">
-                    <label [for]="'arrestAttach'+i" class="input-group-text custom-file-upload text-secondary">
-                      <i class="ti-more-alt"></i>
-                    </label>
+              <ng-container *ngIf="item.get('IsModify').value != 'd'">
+                <td class="text-center">{{item.get('RowId').value}}</td>
+                <td>
+                  <input type="text" formControlName="DataSource" class="form-control form-control-sm" [readonly]="showEditField">
+                </td>
+                <td>
+                  <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;"
+                      [readonly]="showEditField">
+                    <div class="input-group-append">
+                      <input [id]="'arrestAttach'+i" type="file" (change)="changeArrestDoc($event, i)" hidden
+                        [attr.disabled]="showEditField ? '' : null">
+                      <label [for]="'arrestAttach'+i" class="input-group-text custom-file-upload text-secondary">
+                        <i class="ti-more-alt"></i>
+                      </label>
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td *ngIf="item.get('IsModify').value != 'd'">
-                <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteDocument(i)">
-                  <i class="fa fa-trash-o fa-lg"></i>
-                </a>
-              </td>
+                </td>
+                <td>
+                  <a href="javaScript:void(0)" class="text-warning" *ngIf="!showEditField" (click)="deleteDocument(i)">
+                    <i class="fa fa-trash-o fa-lg"></i>
+                  </a>
+                </td>
+              </ng-container>
             </tr>
           </tbody>
         </table>

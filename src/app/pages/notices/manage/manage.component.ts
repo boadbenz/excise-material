@@ -51,21 +51,24 @@ import { SwalComponent, BeforeOpenEvent } from '@toverux/ngx-sweetalert2';
 })
 export class ManageComponent implements OnInit, OnDestroy {
 
-  @ViewChild('alertSwal') private alertSwal: SwalComponent;
-  @ViewChild('deleteNotice') private deleteNotice: SwalComponent;
-  @ViewChild('deleteProduct') private deleteProduct: SwalComponent;
-  @ViewChild('deleteSuspect') private deleteSuspect: SwalComponent;
-  @ViewChild('deleteDocument') private deleteDocument: SwalComponent;
+    @ViewChild('alertSwal') private alertSwal: SwalComponent;
+    @ViewChild('deleteNotice') private deleteNotice: SwalComponent;
+    @ViewChild('deleteProduct') private deleteProduct: SwalComponent;
+    @ViewChild('deleteSuspect') private deleteSuspect: SwalComponent;
+    @ViewChild('deleteDocument') private deleteDocument: SwalComponent;
+    @ViewChild('cancelEdit') private cancelEdit: SwalComponent;
 
     private onSaveSubscribe: any;
     private onDeleSubscribe: any;
     private onPrintSubscribe: any;
     private onNextPageSubscribe: any;
     private onCancelSubscribe: any;
+    private onShowEditFieldSubscribe: any;
+    private onEditButtonSubscribe: any;
 
-    actionFrom:string;
-    months:any[];
-    programSpect: string = 'ILG60-02-02-00';
+    actionFrom: string;
+    months: any[];
+    programSpect: string = 'ILG60-02-02-00-00';
     mode: string;
     showEditField: Boolean;
     localEditField: Boolean;
@@ -131,7 +134,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private preloader: PreloaderService,
         private sidebarService: SidebarService,
         private mainMasterService: MainMasterService,
-        private transactionRunningService: TransactionRunningService, private activatedRoute:ActivatedRoute
+        private transactionRunningService: TransactionRunningService, private activatedRoute: ActivatedRoute
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -140,19 +143,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode','ILG60-02-00');
+        sessionStorage.removeItem("notice_form_data")
         this.months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
         this.activatedRoute.queryParams.subscribe(params => {
           this.actionFrom = params['from'];
         });
         this.preloader.setShowPreloader(true);
 
-        this.sidebarService.setVersion('0.0.2.32');
+        this.sidebarService.setVersion('0.0.2.47');
 
-        this.navigate_service();
-
-        this.active_route();
-
-        this.createForm();
+        await this.navigate_service();
+        await this.active_route();
+        await this.createForm();
 
         await this.setCommunicateStore();
         await this.setProductStore();
@@ -163,13 +166,56 @@ export class ManageComponent implements OnInit, OnDestroy {
 
         if (this.mode == 'R') {
             await this.getByCon(this.noticeCode);
+            this.showEditField=true;
         }else if(this.mode=="C"){
+            this.showEditField = false;
             this.NoticeInformer.at(0).patchValue({
                 InformerType: true
             });
             this.onChangeConceal();
             let e = {value:1};
             this.addNoticeDueDate(e);
+
+            let officeCode = localStorage.getItem("officeCode");
+            for(let l of this.typeheadOffice){
+                let code = l.OfficeCode;
+                if(officeCode==code){
+                    this.noticeForm.patchValue({
+                        NoticeStationCode: l.OfficeCode || '-',
+                        NoticeStation: l.OfficeName
+                    });
+                    break;
+                }
+            }
+            let staffCode = localStorage.getItem("staffCode");
+            for(let l of this.typeheadStaff){
+                let code = l.StaffCode;
+                if(staffCode==code){
+                    this.NoticeStaff.at(0).patchValue({
+                        ProgramCode: this.programSpect,
+                        ProcessCode: '0002',
+                        NoticeCode: this.noticeCode,
+                        IsActive: 1,
+                        StaffFullName: `${l.TitleName || ''} ${l.FirstName || ''} ${l.LastName || ''}`,
+                        StaffCode: code,
+                        PositionCode: l.OperationPosCode || l.OperationPosCode,
+                        PositionName: l.OperationPosName || l.OperationPosName,
+                        DepartmentLevel: l.DeptLevel,
+                        DepartmentCode: l.OfficeCode,
+                        DepartmentName: `${l.OfficeName}`,
+                        ContributorCode: 2,
+                        ContributorID: 1,
+                        TitleName: l.TitleName,
+                        FirstName: l.FirstName,
+                        LastName: l.LastName,
+                        OfficeCode: l.OfficeCode,
+                        OfficeName: l.OfficeName,
+                        OfficeShortName: l.OfficeShortName
+                    });
+
+                    break;
+                }
+            }
         }
 
         if(this.actionFrom=="edit"){
@@ -232,16 +278,54 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private navigate_service() {
-        this.navService.showFieldEdit.subscribe(async p => {
-            this.showEditField = p;
+        this.onShowEditFieldSubscribe = this.navService.showFieldEdit.subscribe(async p => {
+            // console.log("navigate service", this.noticeForm);
+            // if(this.noticeForm&&this.noticeForm.value.IsArrest==1){
+            //     this.showSwal("ไม่สามารถแก้ไขข้อมูลได้", "warning");
+            //     p = true;
+                
+            //     // await this.navService.setEditField(true);
+            //     await this.navService.setEditButton(false);
+            //     await this.navService.setPrintButton(true);
+            //     await this.navService.setDeleteButton(false);
+            //     await this.navService.setNextPageButton(false);
+            //     // // set false
+            //     await this.navService.setSaveButton(false);
+            //     await this.navService.setCancelButton(true);
+            // }
+            // await this.navService.setNextPageButton(false);
+            // this.showEditField = p;
+        });
+
+        this.onEditButtonSubscribe = this.navService.onEdit.subscribe(async status=>{
+            if(this.noticeForm&&this.noticeForm.value.IsArrest==1){
+                this.showSwal("ไม่สามารถแก้ไขข้อมูลได้", "warning");
+                this.showEditField = true;
+                
+                // await this.navService.setEditField(true);
+                await this.navService.setEditButton(false);
+                await this.navService.setPrintButton(true);
+                await this.navService.setDeleteButton(false);
+                await this.navService.setNextPageButton(false);
+                // // set false
+                await this.navService.setSaveButton(false);
+                await this.navService.setCancelButton(true);
+            }else{
+                this.showEditField = false;
+            }
+            await this.navService.setNextPageButton(false);
         });
 
         this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnCancel(false);
-                this.router.navigate(['/notice/list']);
-
-                sessionStorage.removeItem("notice_form_data");
+            if (this.noticeForm&&status) {
+                this.cancelEdit.text = Message.confirmAction;
+                this.cancelEdit.show();
+                // if(this.mode==="R"){
+                //     this.cancelEdit.text = Message.confirmAction;
+                //     this.cancelEdit.show();
+                // }else{
+                //     this.onCancelEdit();
+                // }
             }
         });
 
@@ -276,8 +360,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 });
 
                 if (this.mode === 'C') {
-                    // this.onCreate();
                     await this.getTransactionRunning(this.noticeForm.value.NoticeStaff[0].DepartmentCode||this.noticeForm.value.NoticeStaff[0].OfficeCode);
+                    // this.onCreate();
 
                 } else if (this.mode === 'R') {
                     this.onReviced();
@@ -296,21 +380,23 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
-            if (status) {
+            if (status && localStorage.programcode == "ILG60-02-00") {
                 this.preloader.setShowPreloader(true);
                 await this.navService.setOnPrint(false);
-                this.noticeService.print(this.noticeCode).subscribe((res)=>{
-                    this.preloader.setShowPreloader(false);
 
-                    const file = new Blob([res], {type: 'application/pdf'});
-                    const fileURL = URL.createObjectURL(file);
+                this.modal = this.ngbModel.open(this.printDocModel,{size:'lg',centered: true})
+                // this.noticeService.print(this.noticeCode).subscribe((res)=>{
+                //     this.preloader.setShowPreloader(false);
 
-                    // let a = document.createElement("a");
-                    // a.href = fileURL;
-                    // a.target = "_blank";
-                    // a.click();
-                    window.open(fileURL, "_blank");
-                });
+                //     const file = new Blob([res], {type: 'application/pdf'});
+                //     const fileURL = URL.createObjectURL(file);
+
+                //     // let a = document.createElement("a");
+                //     // a.href = fileURL;
+                //     // a.target = "_blank";
+                //     // a.click();
+                //     window.open(fileURL, "_blank");
+                // });
             }
         })
 
@@ -338,7 +424,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeTime: new FormControl(noticeTime, Validators.required),
             NoticeDue: new FormControl(1, Validators.required),
             NoticeDueDate: new FormControl(noticeDueDate, Validators.required),
-            NoticeDueTime: new FormControl(null),
+            NoticeDueTime: new FormControl("23.59 น."),
             GroupNameDesc: new FormControl('N/A'),
             CommunicationChanelID: new FormControl(null),
             DataSource: new FormControl(null),
@@ -478,6 +564,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         
             NoticeProductFormControl.BrandFullName = new FormControl(null);
             NoticeProductFormControl.IsNewItem = new FormControl(false);
+            NoticeProductFormControl.DutyCode = new FormControl(null);
         }
         return this.fb.group(NoticeProductFormControl)
     }
@@ -499,17 +586,20 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeStation: res.NoticeStation,
             NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
             NoticeTime: res.NoticeTime,
+            NoticeDueTime: "23.59 น.",
             NoticeDue: res.NoticeDue,
             NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
             GroupNameDesc: res.GroupNameDesc || 'N/A',
             CommunicationChanelID: res.CommunicationChanelID,
             ArrestCode: res.ArrestCode,
             IsActive: res.IsActive,
-            IsArrest: res.IsArrest || 1
+            IsArrest: res.IsArrest || 0
         });
 
         if(res.IsArrest==1){
             this.navService.setDeleteButton(false);
+            // this.navService.setEditButton(false);
+            // this.navService.setCancelButton(true);
         }
 
         const staff = res.NoticeStaff.filter(item => item.IsActive == 1);
@@ -518,15 +608,16 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
 
         await res.NoticeLocale.map(item =>
-            item.Region = `${item.SubDistrict}/${item.District}/${item.Province}`
+            item.Region = `${item.SubDistrict+"/" || ''}${item.District+"/"||''}${item.Province}`
         )
 
         const informer = res.NoticeInformer.filter(item => item.IsActive == 1);
         informer.map(item => {
             this.isConceal = item.InformerType == 1 ? true : false;
-            item.Region = item.SubDistrict == null ? '' : `${item.SubDistrict}`;
-            item.Region += item.District == null ? '' : `/${item.District}`;
-            item.Region += item.Province == null ? '' : `/${item.Province}`;
+            item.Region = !item.SubDistrict ? '' : `${item.SubDistrict}`;
+            item.Region += !item.District ? '' : `/${item.District}`;
+            item.Region += !item.Province ? '' : `/${item.Province}`;
+            item.Age = !item.Age||item.Age==0?"":item.Age;
         });
 
         const suspect = res.NoticeSuspect.filter(item => item.IsActive == 1);
@@ -551,8 +642,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             item.BrandFullName = item.ProductDesc?item.ProductDesc:"";
             item.NetWeight = item.NetWeight || '0';
             item.NetWeightUnit = item.NetWeightUnit || '0';
-        }
-        )
+            item.DutyCode = this.typeheadProductUnit.find(el => parseInt(el.DutyUnitCode) == item.QtyUnit).DutyCode;
+        });
 
         await this.setItemFormArray(staff, 'NoticeStaff');
         await this.setItemFormArray(informer, 'NoticeInformer');
@@ -563,6 +654,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private async getByCon(code: string) {
         await this.noticeService.getByCon(code).then(async res => {
+            this.navService.setDeleteButton(true);
+            this.showEditField = true;
             
             // this.noticeCode = res.NoticeCode;
             // this.arrestCode = res.ArrestCode;
@@ -632,10 +725,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.setDataInit(res);
         });
 
-        // await this.noticeService.getDocument(code).then(async res => {
-        //     res.map(item => item.IsNewItem = false)
-        //     await this.setItemFormArray(res, 'NoticeDocument')
-        // })
+        await this.noticeService.documentRequestgetByCon(code).then(async res => {
+            res.map(item => item.IsNewItem = false);
+            await this.setItemFormArray(res, 'NoticeDocument');
+        });
     }
 
     private async onCreate() {
@@ -674,13 +767,15 @@ export class ManageComponent implements OnInit, OnDestroy {
             l.IsActive = 1;
             noticeLocale.push(l);
         }
+        
         for(let l of noticeForm.NoticeProduct){
             l.NoticeCode = this.noticeCode;
             l.IsActive = 1;
             l.NetVolume = l.NetVolume?l.NetVolume:0;
-            if(!l.ProductCode){
+            if(!l.ProductCode || !l.DutyCode){
                 this.isRequired = true;
                 this.showSwal(Message.checkData, "warning");
+                this.preloader.setShowPreloader(false);
                 return false;
             }
             noticeProduct.push(l);
@@ -701,7 +796,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.noticeForm.value.NoticeProduct = noticeProduct;
         this.noticeForm.value.NoticeSuspect = noticeSuspect;
         this.noticeForm.value.NoticeDocument = noticeDocument;
-
+        
         // Set Preloader
         this.preloader.setShowPreloader(true);
         let IsSuccess: boolean = true;
@@ -709,15 +804,16 @@ export class ManageComponent implements OnInit, OnDestroy {
             if (!isSuccess) { IsSuccess = false; return false; };
         }, () => { IsSuccess = false; return; });
 
-        // if (IsSuccess) {
-        //     await this.NoticeDocument.value.map(async doc => {
-        //         // insert Document
-        //         await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
-        //             if (!docIsSuccess) { IsSuccess = false; return false; };
+        if (IsSuccess) {
+            await this.NoticeDocument.value.map(async doc => {
+                doc.ReferenceCode = this.noticeCode;
+                // insert Document
+                await this.noticeService.noticeDocumentinsAll(doc).then(docIsSuccess => {
+                    if (!docIsSuccess) { IsSuccess = false; return false; };
 
-        //         }, () => { IsSuccess = false; return false; });
-        //     });
-        // }
+                }, () => { IsSuccess = false; return false; });
+            });
+        }
 
         if (IsSuccess) {
             this.showSwal(Message.saveComplete, "success");
@@ -736,11 +832,18 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     private async onReviced() {
+        const noticeDate = this.noticeForm.value.NoticeDate;
+        const noticeDueDate = this.noticeForm.value.NoticeDueDate;
+
+        this.noticeForm.value.NoticeDate = noticeDate.date.day+"-"+this.months[noticeDate.date.month-1]+"-"+noticeDate.date.year;//convertDateForSave(sDateCompare);
+        this.noticeForm.value.NoticeDueDate = noticeDueDate.date.day+"-"+this.months[noticeDueDate.date.month-1]+"-"+noticeDueDate.date.year;//convertDateForSave(eDateCompare);
+
         let noticeForm = this.noticeForm.value;
         for(let l of noticeForm.NoticeProduct){
-            if(!l.ProductCode){
+            if(!l.ProductCode||!l.DutyCode){
                 this.isRequired = true;
                 this.showSwal(Message.checkData, "warning");
+                this.preloader.setShowPreloader(false);
                 return false;
             }
         }
@@ -781,19 +884,20 @@ export class ManageComponent implements OnInit, OnDestroy {
                     }
                 }
             }
-            // const document = this.NoticeDocument.value;
-            // await document.map(async (item: NoticeDocument) => {
-            //     if (item.IsNewItem) {
-            //         await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
-            //             if (!docIsSuccess) { IsSuccess = false; return; };
-            //         }, () => { IsSuccess = false; return; });
+            const document = this.NoticeDocument.value;
+            await document.map(async (item: NoticeDocument) => {
+                if (item.IsNewItem) {
+                    item.ReferenceCode = this.noticeCode;
+                    await this.noticeService.noticeDocumentinsAll(item).then(docIsSuccess => {
+                        if (!docIsSuccess) { IsSuccess = false; return; };
+                    }, () => { IsSuccess = false; return; });
 
-            //     } else {
-            //         this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
-            //             if (!docIsSuccess) { IsSuccess = false; return };
-            //         }, () => { IsSuccess = false; return; })
-            //     }
-            // });
+                } else {
+                    this.noticeService.noticeDocumentupd(item).then(docIsSuccess => {
+                        if (!docIsSuccess) { IsSuccess = false; return };
+                    }, () => { IsSuccess = false; return; })
+                }
+            });
         }
 
         if (IsSuccess) {
@@ -806,7 +910,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(false);
     }
 
-    private onDelete() {
+    public onDelete() {
         // if (confirm(Message.confirmAction)) {
             // Set Preloader
             this.preloader.setShowPreloader(true);
@@ -952,7 +1056,22 @@ export class ManageComponent implements OnInit, OnDestroy {
                     IDCard: item.IDCard,
                     PassportNo: item.PassportNo
                 }
-                this.NoticeSuspect.push(this.fb.group(noticeSuspect))
+                let suspects = this.NoticeSuspect.value;
+                let isInsert = true;
+                let susId = noticeSuspect.SuspectID;
+                if(suspects.length>0){
+                    for(let l of suspects){
+                        let _susId = l.SuspectReferenceID;
+                        if(susId==_susId){
+                            isInsert = false;
+                            break;
+                        }
+                    }
+                }
+
+                if(isInsert){
+                    this.NoticeSuspect.push(this.fb.group(noticeSuspect))
+                }
             });
         }
     }
@@ -964,6 +1083,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         document.DocumentName = "";
         document.FilePath = "";
         document.IsNewItem = true;
+        document.DocumentType = 2;
         if (lastIndex < 0) {
             this.NoticeDocument.push(this.fb.group(document));
         } else {
@@ -1040,7 +1160,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         noticeDate.setDate(noticeDate.getDate() + parseInt(dueDate));
         this.noticeForm.patchValue({
             NoticeDueDate: setDateMyDatepicker(noticeDate),
-            NoticeDueTime: noticeTime
+            NoticeDueTime: "23.59 น."
         })
     }
 
@@ -1083,16 +1203,28 @@ export class ManageComponent implements OnInit, OnDestroy {
                         (`${v.OfficeName || ''} ${v.OfficeShortName || ''}`.toLowerCase().indexOf(term.toLowerCase()) > -1)
                     ).slice(0, 10));
 
+    searchUnit = (text$: Observable<string>) =>
+    text$
+        .debounceTime(300)
+        .distinctUntilChanged()
+        .map(term => term === '' ? []
+            : this.typeheadProductUnit
+                .filter(v => (v.DutyCode.toLowerCase().indexOf(term.toLowerCase()) > - 1)
+                ).slice(0, 10));
+
     formatterProduct = (x: { ProductDesc: String }) =>
         `${x.ProductDesc || ''}`;
 
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubdistrictNameTH || ''}/${x.DistrictNameTH || ''}/${x.ProvinceNameTH || ''}`;
+        `${x.SubdistrictNameTH+"/" || ''}${x.DistrictNameTH+"/" || ''}${x.ProvinceNameTH || ''}`;
 
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`
 
     formatterOffice = (x: { OfficeShortName: string }) => x.OfficeShortName
+
+    formatterUnit = (x: { DutyCode: String }) =>
+        `${x.DutyCode || ''}`;
 
     selectItemInformmerRegion(ele: any) {
         this.NoticeInformer.at(0).patchValue({
@@ -1105,10 +1237,17 @@ export class ManageComponent implements OnInit, OnDestroy {
             ZipCode: ele.item.ZipCode
         });
     }
-    blurSelectItemInformmerRegion() {
-        let obj = this.NoticeInformer.at(0).value;
-        if(!obj.ProvinceCode){
+    blurSelectItemInformmerRegion(ele:any) {
+        // let obj = this.NoticeInformer.at(0).value;
+        if(!ele.value){
             this.NoticeInformer.at(0).patchValue({
+                SubDistrictCode: "",
+                SubDistrict: "",
+                DistrictCode: "",
+                District: "",
+                ProvinceCode: "",
+                Province: "",
+                ZipCode: "",
                 Region: ""
             });
         }
@@ -1125,11 +1264,18 @@ export class ManageComponent implements OnInit, OnDestroy {
             ZipCode: 'N/A'
         });
     }
-    blurSelectItemLocaleRegion() {
-        let obj = this.NoticeLocale.at(0).value;
-        if(!obj.ProvinceCode){
+    blurSelectItemLocaleRegion(ele: any) {
+        // let obj = this.NoticeLocale.at(0).value;
+        if(!ele.value){
             this.NoticeLocale.at(0).patchValue({
-                Region: ""
+                Region: "",
+                SubDistrictCode: "",
+                SubDistrict: "",
+                DistrictCode: "",
+                District: "",
+                ProvinceCode: "",
+                Province: "",
+                ZipCode: ""
             });
         }
     }
@@ -1150,6 +1296,15 @@ export class ManageComponent implements OnInit, OnDestroy {
             NetVolumeUnit: ele.item.NetVolumeUnit || 0,
             BrandFullName: ele.item.ProductDesc
         });
+    }
+
+    selectUnit:boolean = false;
+    selectItemUnit(ele: any, index: number) {
+        this.NoticeProduct.at(index).patchValue({
+            QtyUnit: ele.item.DutyUnitCode,
+            DutyCode: ele.item.DutyCode
+        });
+        this.selectUnit = true;
     }
     blurSelectItemProductItem(index: number) {
         const productID = this.NoticeProduct.at(index).value.ProductID;
@@ -1196,9 +1351,52 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeStation: e.item.OfficeName
         });
     }
-    blurSelectItemOffice(){
-        if(!this.noticeForm.value.NoticeStationCode){
-            this.noticeForm.patchValue({NoticeStation:""});
+    blurSelectItemOffice(input){
+        let val = input.value
+        if(!val){
+            this.noticeForm.patchValue({
+                NoticeStationCode: "",
+                NoticeStation:""
+            });
+        }
+    }
+
+    blurDataUnit(ele:any, index:number){
+        let text = ele.value;
+        if(!ele.value){
+            this.NoticeProduct.at(index).patchValue({
+                QtyUnit: "",
+                DutyCode: ""
+            });
+            ele.value = "";
+        }else{
+            let units = this.typeheadProductUnit
+                    .filter(v => (v.DutyCode.toLowerCase().indexOf(text.toLowerCase()) > - 1)
+                    ).slice(0, 10);
+            if(units.length<0||units.length>0 && !this.selectUnit){
+                this.NoticeProduct.at(index).patchValue({
+                    QtyUnit: "",
+                    DutyCode: ""
+                });
+                ele.value = "";
+            }
+
+            this.selectUnit = true;
+        }
+
+    }
+
+    searchDataUnit(ele: any, index:number) {
+        let text = ele.value;
+        let units = this.typeheadProductUnit
+                .filter(v => (v.DutyCode.toLowerCase().indexOf(text.toLowerCase()) > - 1)
+                ).slice(0, 10);
+        if(units.length==1){
+            this.NoticeProduct.at(index).patchValue({
+                QtyUnit: units[0].DutyUnitCode,
+                DutyCode: units[0].DutyCode
+            });
+            ele.value = units[0].DutyCode;
         }
     }
 
@@ -1324,11 +1522,20 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.onShowEditFieldSubscribe.unsubscribe();
         this.onCancelSubscribe.unsubscribe();
         this.onSaveSubscribe.unsubscribe();
         this.onDeleSubscribe.unsubscribe();
         this.onPrintSubscribe.unsubscribe();
         this.onNextPageSubscribe.unsubscribe();
+        this.onEditButtonSubscribe.unsubscribe();
+
+        this.alertSwal.ngOnDestroy();
+        this.deleteNotice.ngOnDestroy();
+        this.deleteProduct.ngOnDestroy();
+        this.deleteSuspect.ngOnDestroy();
+        this.deleteDocument.ngOnDestroy();
+        this.cancelEdit.ngOnDestroy();
     }
 
     openSuspect(e) {
@@ -1399,6 +1606,26 @@ export class ManageComponent implements OnInit, OnDestroy {
           return item.CompanyRegistrationNo;
         }else{
           return "";
+        }
+    }
+
+    async onCancelEdit(){
+        sessionStorage.removeItem("notice_form_data");
+        await this.navService.setOnCancel(false);
+        this.router.navigate(['/notice/list']);
+    }
+
+    async onCancelConfirmClick(){
+        // sessionStorage.removeItem("notice_form_data");
+        // await this.navService.setOnCancel(false);
+        // this.router.navigate(['/notice/list']);
+        // sessionStorage.removeItem("notice_form_data");
+        if(this.mode==="R"){
+            // this.onCancelEdit();
+            this.onComplete();
+            // window.location.reload(true);
+        }else{
+            this.onCancelEdit();
         }
     }
 }

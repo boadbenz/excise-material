@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { pagination } from 'app/config/pagination';
 import { LawbreakerTypes, EntityTypes } from 'app/models/drop-downs.model';
@@ -10,6 +10,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import swal from 'sweetalert2'
 import { Acceptability } from '../../models';
+import { clearFormArray } from '../../arrest.helper';
 
 @Component({
   selector: 'app-lawbreaker-modal',
@@ -19,6 +20,8 @@ import { Acceptability } from '../../models';
 export class LawbreakerModalComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
+
+  @ViewChild('advForm') advForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -95,7 +98,9 @@ export class LawbreakerModalComponent implements OnInit, OnDestroy {
 
     this.lawbreaker = law;
     // set total record
-    this.paginage.TotalItems = law.length;
+    const __list = await this.lawbreaker.slice(0, 5);
+    this.setItemFormArray(__list, 'Lawbreaker');
+    this.paginage.TotalItems = this.lawbreaker.length;
   }
 
   setIsChecked(i: number) {
@@ -110,6 +115,13 @@ export class LawbreakerModalComponent implements OnInit, OnDestroy {
       const itemFGs = array.map(item => this.fb.group(item));
       const itemFormArray = this.fb.array(itemFGs);
       this.formGroup.setControl(formControl, itemFormArray);
+    }
+  }
+
+  toggle() {
+    this.advSearch = !this.advSearch;
+    if (this.advSearch == false && this.advForm != undefined) {
+      this.advForm.reset();
     }
   }
 
@@ -157,7 +169,7 @@ export function setViewLawbreaker(item: fromModel.ArrestLawbreaker) {
           break;
       }
       break;
-      
+
     case 2: // นิติบุคคล
       item.ReferenceID = item.CompanyRegistrationNo;
       break;

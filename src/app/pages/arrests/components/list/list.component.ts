@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, DoCheck } from '@angular/core';
 import { Router } from '@angular/router';
 import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
 import { pagination } from 'app/config/pagination';
@@ -8,15 +8,17 @@ import { Arrest } from '../../models/arrest';
 import { getDateMyDatepicker, compareDate, toLocalShort, convertDateForSave, MyDatePickerOptions } from 'app/config/dateFormat';
 import { Message } from 'app/config/message';
 import { ArrestService } from '../../services';
-import { Subscription, Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import 'rxjs/add/operator/takeUntil';
 import swal from 'sweetalert2'
+import { FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html'
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ListComponent implements OnInit, OnDestroy, DoCheck {
+
 
     // private subOnSearch: Subscription;
     // private subSetNextPage: Subscription;
@@ -24,7 +26,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     paginage = pagination;
     dataTable: any;
-    advSearch: any;
+    advSearch: BehaviorSubject<Boolean>;
     private dateStartFrom: any;
     private dateStartTo: any;
     OccurrenceDateTo: any;
@@ -33,6 +35,7 @@ export class ListComponent implements OnInit, OnDestroy {
     arrest = new Array<Arrest>();
 
     @ViewChild('arrestTable') arrestTable: ElementRef;
+    @ViewChild('advForm') advForm: FormGroup;
 
     myDatePickerOptions = MyDatePickerOptions;
 
@@ -43,24 +46,26 @@ export class ListComponent implements OnInit, OnDestroy {
         private sidebarService: SidebarService,
         public chRef: ChangeDetectorRef
     ) {
-        // set false
-        this.navService.setEditButton(false);
-        this.navService.setDeleteButton(false);
-        this.navService.setPrintButton(false);
-        this.navService.setSaveButton(false);
-        this.navService.setCancelButton(false);
-        this.navService.setNextPageButton(false);
-        this.navService.setPrevPageButton(false);
-        // set true
-        this.navService.setSearchBar(true);
-        this.navService.setNewButton(true);
         this.advSearch = this.navService.showAdvSearch;
 
     }
 
     async ngOnInit() {
+        localStorage.setItem('programcode', 'ILG60-03-00');
+        // set false
+        await this.navService.setEditButton(false);
+        await this.navService.setDeleteButton(false);
+        await this.navService.setPrintButton(false);
+        await this.navService.setSaveButton(false);
+        await this.navService.setCancelButton(false);
+        await this.navService.setNextPageButton(false);
+        await this.navService.setPrevPageButton(false);
+        // set true
+        await this.navService.setSearchBar(true);
+        await this.navService.setNewButton(true);
+
         this.advSearch.next(true);
-        
+
         this.sidebarService.setVersion(this.arrestService.version);
 
         this.navService.searchByKeyword
@@ -82,6 +87,12 @@ export class ListComponent implements OnInit, OnDestroy {
             })
     }
 
+    ngDoCheck(): void {
+        if (this.advSearch.getValue() == false && this.advForm != undefined) {
+            this.advForm.reset();
+        };
+    }
+
     onSearch(Textsearch: any) {
         this.arrestService
             .ArrestgetByKeyword(Textsearch)
@@ -90,8 +101,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     onAdvSearch(form: any) {
-        const sdate = getDateMyDatepicker(form.OccurrenceDateFrom);
-        const edate = getDateMyDatepicker(form.OccurrenceDateTo);
+        let sdate = getDateMyDatepicker(form.OccurrenceDateFrom);
+        let edate = getDateMyDatepicker(form.OccurrenceDateTo);
 
         if (sdate && edate) {
             if (!compareDate(sdate, edate)) {
@@ -101,7 +112,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }
 
         form.OccurrenceDateFrom = convertDateForSave(sdate) || '';
-        form.OccurrenceDateTo = convertDateForSave(edate) || '';
+        form.OccurrenceDateTo = convertDateForSave(edate) || convertDateForSave(new Date());
 
         this.arrestService
             .ArrestgetByConAdv(form)
@@ -129,6 +140,7 @@ export class ListComponent implements OnInit, OnDestroy {
         })
 
         this.arrest = rows;
+        this.arrestList = this.arrest.slice(0, 5);
         // set total record     
         this.paginage.TotalItems = this.arrest.length;
 
@@ -173,6 +185,6 @@ export class ListComponent implements OnInit, OnDestroy {
         // this.subSetNextPage.unsubscribe();
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
-        this.advSearch = false;
+        this.advSearch.next(false);
     }
 }

@@ -8,7 +8,8 @@
     <div class="card-header unset-radius">
       <div class="card-actions">
         <a class="" (click)="ILG60_08_04_00_00_E08_EXPANDED = !ILG60_08_04_00_00_E08_EXPANDED">
-          <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_04_00_00_E08_EXPANDED, 'fa-chevron-up': !ILG60_08_04_00_00_E08_EXPANDED}"></i>
+          <i class="fa"
+            [ngClass]="{'fa-chevron-down': ILG60_08_04_00_00_E08_EXPANDED, 'fa-chevron-up': !ILG60_08_04_00_00_E08_EXPANDED}"></i>
         </a>
       </div>
       <h4 class="card-title m-b-0">คำร้องขอรับเงินรางวัล</h4>
@@ -20,23 +21,23 @@
           <!-- {{RewardFormGroup.value | json}} -->
 
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-12 col-md-12 col-lg-6 ">
               <div class="form-group row">
-                <label class="col-form-label col-md-4">เลขที่อ้างอิง : </label>
-                <div class="col-md-8">
-                  <select formControlName="ReferenceNo" class="form-control form-control-sm form-control form-control-sm-sm"
-                    [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
-                    <option [value]="item" *ngFor="let item of ReferenceNoList">{{item}}</option>
+                <label class="col-form-label col-sm-3 col-md-4">เลขที่อ้างอิง : </label>
+                <div class="col-sm-9 col-md-8">
+                  <select formControlName="ReferenceNo" class="form-control form-control-sm "
+                    [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null" (change)="selectChange($event)">
+                    <option [value]="item.value" *ngFor="let item of ReferenceNoList">{{item.text}}</option>
                   </select>
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-12 col-md-12 col-lg-6 ">
               <div class="form-group row">
-                <label class="col-form-label col-md-4">เลขที่คำร้องขอ : </label>
-                <div class="col-md-8">
-                  <input class="form-control form-control-sm form-control form-control-sm-sm" type="text"
-                    formControlName="RequestRewardCode" [attr.disabled]="true">
+                <label class="col-form-label col-sm-3 col-md-4">เลขที่คำร้องขอ : </label>
+                <div class="col-sm-9 col-md-8">
+                  <input class="form-control form-control-sm " type="text" formControlName="RequestRewardCode"
+                    [attr.disabled]="true">
                 </div>
               </div>
             </div>
@@ -44,27 +45,35 @@
 
           </div>
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-12 col-md-12 col-lg-6 ">
               <div class="form-group row">
-                <label class="col-form-label col-md-4">เขียนที่ : </label>
-                <div class="col-md-8">
-                  <input class="form-control form-control-sm form-control form-control-sm-sm" type="text"
-                    formControlName="Station" [ngbTypeahead]="searchStation" [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
+                <label class="col-form-label col-sm-3 col-md-4">เขียนที่ : </label>
+                <div class="col-sm-9 col-md-8">
+                  <input class="form-control form-control-sm " type="text" formControlName="Station"
+                    [ngbTypeahead]="searchStation"
+                    [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-12 col-md-12 col-lg-6 ">
               <div class="form-group row">
-                <label class="col-form-label col-md-4">วันที่จัดทำ : </label>
-                <div class="col-md-3">
-                  <my-date-picker formControlName="RequestDate" placeholder="dd/mm/yyyy" locale="th" [options]="myDatePickerOptions"
-                    [disabled]="(mode === 'R' && isEdit === false)"></my-date-picker>
-                  <!-- <input class="form-control form-control-sm form-control form-control-sm-sm" type="text" formControlName="RequestDate"> -->
-                </div>
-                <label class="col-form-label text-center col-md-2">เวลา</label>
-                <div class="col-md-3">
-                  <input class="form-control form-control-sm form-control form-control-sm-sm" type="text"
-                    formControlName="RequestTime" [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
+                <label class="col-form-label col-sm-3 col-md-4">วันที่จัดทำ : </label>
+                <div class="col-sm-9 col-md-8">
+
+                  <div class="form-line input-group input-group-sm">
+                    <div style="width:100%">
+                      <my-date-picker-th formControlName="RequestDate" placeholder="" locale="th"
+                        [options]="myDatePickerOptions" [disabled]="(mode === 'R' && isEdit === false)">
+                      </my-date-picker-th>
+
+                    </div>
+                    <label class="text-center">&nbsp;เวลา&nbsp;</label>
+                    <div style="width:100%">
+                      <input style="width:100%" class="form-control form-control-sm " type="text"
+                        formControlName="RequestTime"
+                        [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -123,11 +132,13 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let dataItem of listData; let i=index">
+                    <tr *ngFor="let dataItem of DataSelect; let i=index">
                       <td>
                         <input type="checkbox" [id]="'tdsec1'+i" name="ischeck" [ngModelOptions]="{standalone: true}"
-                          [(ngModel)]="checkList[i]" (change)="checkboxHandle(RequestRewardDetail.at(i).get('PaymentFineID').value, i , checkList[i])"
-                          class="filled-in chk-col-indigo" [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
+                          [(ngModel)]="checkList[i]"
+                          (change)="checkboxHandle(dataItem.PaymentFineID, i , checkList[i])"
+                          class="filled-in chk-col-indigo"
+                          [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
                         <label [for]="'tdsec1'+i" class="m-0"></label>
                         <!-- <mat-checkbox class="filled-in chk-col-indigo" [(ngModel)]="checkList[i]" (change)="checkboxHandle(dataRequestRewardStaff.at(i).PaymentFineID, i , checkList[i])"></mat-checkbox> -->
                       </td>
@@ -196,12 +207,12 @@
 
     </div>
   </div>
-
   <div class="card card-outline-bluish unset-radius">
     <div class="card-header unset-radius">
       <div class="card-actions">
         <a class="" (click)="ILG60_08_04_00_00_E12_EXPANDED = !ILG60_08_04_00_00_E12_EXPANDED">
-          <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_04_00_00_E12_EXPANDED, 'fa-chevron-up': !ILG60_08_04_00_00_E12_EXPANDED}"></i>
+          <i class="fa"
+            [ngClass]="{'fa-chevron-down': ILG60_08_04_00_00_E12_EXPANDED, 'fa-chevron-up': !ILG60_08_04_00_00_E12_EXPANDED}"></i>
         </a>
       </div>
       <h4 class="card-title m-b-0">ตารางการแบ่งจ่ายเงินสินบนรางวัล</h4>
@@ -216,7 +227,8 @@
     
           {{SumBribeMoney}} -->
             <div class="text-right">
-              <button (click)="addRow()" class="btn waves-effect waves-light btn-navy" [attr.disabled]="(RequestRewardStaff.invalid || (mode ==='R' && isEdit === false)) ? 'disabled' : null">เพิ่มจนท.สนับสนุน</button>
+              <button (click)="addRow()" class="btn waves-effect waves-light btn-navy"
+                [attr.disabled]="(RequestRewardStaff.invalid || (mode ==='R' && isEdit === false)) ? 'disabled' : null">เพิ่มจนท.สนับสนุน</button>
             </div>
             <table class="dataTable table table-sm table-striped table-hover">
               <thead>
@@ -252,10 +264,10 @@
               <tbody formArrayName="RequestRewardStaff">
 
                 <ng-container *ngFor="let item of RequestRewardStaff.controls | sortFormArray: 'sort'; let i=index;">
-                  <tr class="footable" 
-                    [formGroupName]="i">
+                  <tr class="footable" [formGroupName]="i">
                     <td>
-                      <input type="checkbox" [id]="'tdsec2'+i" name="ischeck" formControlName="check" class="filled-in chk-col-indigo"
+                      <input type="checkbox" [id]="'tdsec2'+i" name="ischeck" formControlName="check"
+                        class="filled-in chk-col-indigo"
                         [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
                       <label [for]="'tdsec2'+i" class="m-0"></label>
                       <!-- <mat-checkbox class="filled-in chk-col-indigo" formControlName="check"></mat-checkbox> -->
@@ -263,11 +275,13 @@
                     <td class="text-center">{{(i+1)}}</td>
                     <td>
                       <input class="form-control form-control-sm" type="text" formControlName="TitleName"
-                        [ngbTypeahead]="searchTitleName" [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
+                        [ngbTypeahead]="searchTitleName"
+                        [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
                     </td>
                     <td>
                       <input class="form-control form-control-sm" type="text" formControlName="FullName" #FullName
-                        [ngbTypeahead]="searchFullName" (keyup)="changeFullName(FullName.value, i)" [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
+                        [ngbTypeahead]="searchFullName" (keyup)="changeFullName(FullName.value, i)"
+                        [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
                     </td>
                     <td>
                       <input class="form-control form-control-sm" type="text" formControlName="PositionName"
@@ -278,10 +292,12 @@
                         [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
                     </td>
                     <td>
-                      <input *ngIf="!(RequestRewardStaff.at(i).get('sort').value == '4')" class="form-control form-control-sm"
-                        formControlName="ContributorName" [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
-                      <select *ngIf="RequestRewardStaff.at(i).get('sort').value == '4'" class="form-control form-control-sm"
-                        formControlName="ContributorID" #ContributorID (change)="onSelectContributor(ContributorID.value, i)"
+                      <input *ngIf="!(RequestRewardStaff.at(i).get('sort').value == '4')"
+                        class="form-control form-control-sm" formControlName="ContributorName"
+                        [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
+                      <select *ngIf="RequestRewardStaff.at(i).get('sort').value == '4'"
+                        class="form-control form-control-sm" formControlName="ContributorID" #ContributorID
+                        (change)="onSelectContributor(ContributorID.value, i)"
                         [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
                         <ng-container *ngFor="let itemCName of ContributorList">
                           <option *ngIf="itemCName.value < 4" [value]="itemCName.value">{{itemCName?.text}}</option>
@@ -290,25 +306,30 @@
                     </td>
                     <td>
                       <input class="form-control form-control-sm" type="number" formControlName="FirstPart" #FirstPart
-                        (change)="calChangeAll()" [attr.disabled]="'disabled'">
+                        (change)="calChangeAll()">
                     </td>
                     <td>
-                      <input class="form-control form-control-sm" type="number" formControlName="SecondPart"
-                        #SecondPart (change)="calChangeAll()" [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
+                      <input class="form-control form-control-sm" type="number" formControlName="SecondPart" #SecondPart
+                        (change)="calChangeAll()"
+                        >
                     </td>
                     <td>
-                      <input class="form-control form-control-sm" type="text" [value]="RequestRewardStaff.at(i).get('FirstMoney').value | currency:' '"
+                      <input class="form-control form-control-sm" type="text"
+                        [value]="RequestRewardStaff.at(i).get('FirstMoney').value | currency:' '"
+                       >
+                    </td>
+                    <td>
+                      <input class="form-control form-control-sm" type="text"
+                        [value]="RequestRewardStaff.at(i).get('SecondMoney').value | currency:' '"
+                       >
+                    </td>
+                    <td>
+                      <input class="form-control form-control-sm" type="text"
+                        [value]="RequestRewardStaff.at(i).get('ToTalMoney').value | currency:' '"
                         [attr.disabled]="'disabled'">
                     </td>
-                    <td>
-                      <input class="form-control form-control-sm" type="text" [value]="RequestRewardStaff.at(i).get('SecondMoney').value | currency:' '"
-                        [attr.disabled]="'disabled'">
-                    </td>
-                    <td>
-                      <input class="form-control form-control-sm" type="text" [value]="RequestRewardStaff.at(i).get('ToTalMoney').value | currency:' '"
-                        [attr.disabled]="'disabled'">
-                    </td>
-                    <td><i *ngIf="isEdit || RequestRewardStaff.at(i).get('sort').value === 4" class="ti-trash btn-action" (click)="deleteHandle(i)"></i></td>
+                    <td><i *ngIf="isEdit || RequestRewardStaff.at(i).get('sort').value === 4"
+                        class="ti-trash btn-action" (click)="deleteHandle(i)"></i></td>
                   </tr>
                 </ng-container>
               </tbody>
@@ -322,19 +343,24 @@
                   <td></td>
                   <td class="text-right">รวมทั้งสิ้น:</td>
                   <td>
-                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'" [value]="aggregate.FirstPart.sum">
+                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'"
+                      [value]="aggregate.FirstPart.sum">
                   </td>
                   <td>
-                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'" [value]="aggregate.SecondPart.sum">
+                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'"
+                      [value]="aggregate.SecondPart.sum">
                   </td>
                   <td>
-                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'" [value]="aggregate.FirstMoney.sum | currency:' '">
+                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'"
+                      [value]="aggregate.FirstMoney.sum | currency:' '">
                   </td>
                   <td>
-                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'" [value]="aggregate.SecondMoney.sum | currency:' '">
+                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'"
+                      [value]="aggregate.SecondMoney.sum | currency:' '">
                   </td>
                   <td>
-                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'" [value]="aggregate.ToTalMoney.sum | currency:' '">
+                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'"
+                      [value]="aggregate.ToTalMoney.sum | currency:' '">
                   </td>
                   <td></td>
                 </tr>
@@ -342,62 +368,62 @@
             </table>
           </div>
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-12 col-md-12 col-lg-6 ">
               <div class="form-group row">
                 <label class="col-form-label col-md-5 padding-adv-label">รวมเงินสินบนและรางวัล : </label>
                 <div class="col-md-7">
                   <input class="form-control form-control-sm" type="text" [value]="(SumMoney() || 0) | currency:' '"
-                    [attr.disabled]="'disabled'">
+                  [attr.disabled]="'disabled'">
                 </div>
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-12 col-md-12 col-lg-6 ">
               <div class="form-group row">
                 <label class="col-form-label col-md-5 padding-adv-label">1 ใน 3 ส่วนแรกเป็นเงิน : </label>
                 <div class="col-md-7">
-                  <input class="form-control form-control-sm" type="text" [value]="(SumFirstMoney() || 0) | currency:' '"
-                    [attr.disabled]="'disabled'">
+                  <input class="form-control form-control-sm" type="text"
+                    [value]="(SumFirstMoney() || 0) | currency:' '" [attr.disabled]="'disabled'">
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-12 col-md-12 col-lg-6 ">
               <div class="form-group row">
-                <label class="col-form-label col-md-4">แบ่งเป็นส่วนๆละ : </label>
+                <label class="col-form-label col-sm-3 col-md-4">แบ่งเป็นส่วนๆละ : </label>
                 <div class="col-md-3">
-                  <input class="form-control form-control-sm" type="text" [value]="(SumFirstMoneyPerPart() || 0) | currency:' '"
-                    [attr.disabled]="'disabled'">
+                  <input class="form-control form-control-sm" type="text"
+                    [value]="(SumFirstMoneyPerPart() || 0) | currency:' '" [attr.disabled]="'disabled'">
                 </div>
                 <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
                 <div class="col-md-3">
-                  <input class="form-control form-control-sm" type="text" [value]="(FirstRemainder() || 0) | currency:' '"
-                    [attr.disabled]="'disabled'">
+                  <input class="form-control form-control-sm" type="text"
+                    [value]="(FirstRemainder() || 0) | currency:' '" [attr.disabled]="'disabled'">
                 </div>
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-12 col-md-12 col-lg-6 ">
               <div class="form-group row">
                 <label class="col-form-label col-md-5 padding-adv-label">2 ใน 3 ส่วนแรกเป็นเงิน : </label>
                 <div class="col-md-7">
-                  <input class="form-control form-control-sm" type="text" [value]="(SumSecondMoney() || 0) | currency:' '"
-                    [attr.disabled]="'disabled'">
+                  <input class="form-control form-control-sm" type="text"
+                    [value]="(SumSecondMoney() || 0) | currency:' '" [attr.disabled]="'disabled'">
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-12 col-md-12 col-lg-6 ">
               <div class="form-group row">
-                <label class="col-form-label col-md-4">แบ่งเป็นส่วนๆละ : </label>
+                <label class="col-form-label col-sm-3 col-md-4">แบ่งเป็นส่วนๆละ : </label>
                 <div class="col-md-3">
-                  <input class="form-control form-control-sm" type="text" [value]="(SumSecondMoneyPerPart() || 0) | currency:' '"
-                    [attr.disabled]="'disabled'">
+                  <input class="form-control form-control-sm" type="text"
+                    [value]="(SumSecondMoneyPerPart() || 0) | currency:' '" [attr.disabled]="'disabled'">
                 </div>
                 <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
                 <div class="col-md-3">
-                  <input class="form-control form-control-sm" type="text" [value]="(SecondRemainder() || 0) | currency:' '"
-                    [attr.disabled]="'disabled'">
+                  <input class="form-control form-control-sm" type="text"
+                    [value]="(SecondRemainder() || 0) | currency:' '" [attr.disabled]="'disabled'">
                 </div>
               </div>
             </div>
@@ -411,7 +437,8 @@
     <div class="card-header unset-radius">
       <div class="card-actions">
         <a class="" (click)="ILG60_08_04_00_00_E19_EXPANDED = !ILG60_08_04_00_00_E19_EXPANDED">
-          <i class="fa" [ngClass]="{'fa-chevron-down': ILG60_08_04_00_00_E19_EXPANDED, 'fa-chevron-up': !ILG60_08_04_00_00_E19_EXPANDED}"></i>
+          <i class="fa"
+            [ngClass]="{'fa-chevron-down': ILG60_08_04_00_00_E19_EXPANDED, 'fa-chevron-up': !ILG60_08_04_00_00_E19_EXPANDED}"></i>
         </a>
       </div>
       <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
@@ -420,7 +447,8 @@
       <div class="row form-group">
         <div class="col-lg-10 col-md-9 col-sm-8"></div>
         <div class="col-lg-2 col-md-3 col-sm-4">
-          <button type="button" class="btn btn-block btn-themecolor" [attr.disabled]="(Document.invalid || (mode ==='R' && isEdit === false)) ? 'disabled' : null" 
+          <button type="button" class="btn btn-block btn-themecolor"
+            [attr.disabled]="(Document.invalid || (mode ==='R' && isEdit === false)) ? 'disabled' : null"
             (click)="addDocument()">เพิ่มเอกสารแนบ</button>
         </div>
       </div>
@@ -439,11 +467,13 @@
             <tr *ngFor="let item of Document.controls | isMatches:'isDelete':false; let i=index;" [formGroupName]="i">
               <td class="text-center">{{i+1}}</td>
               <td>
-                <input type="text" formControlName="DataSource" class="form-control form-control-sm" [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
+                <input type="text" formControlName="DataSource" class="form-control form-control-sm"
+                  [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
               </td>
               <td>
                 <div class="input-group">
-                  <input type="text" class="form-control form-control-sm" formControlName="FilePath" style="border-right: 0;" [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null"
+                  <input type="text" class="form-control form-control-sm" formControlName="FilePath"
+                    style="border-right: 0;" [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null"
                     readonly>
                   <div class="input-group-append">
                     <input [id]="'Doc'+i" type="file" (change)="changeDocument($event, i)" [style.display]="'none'">
@@ -454,7 +484,8 @@
                 </div>
               </td>
               <td>
-                <a href="javaScript:void(0)" class="text-warning"  (click)="deleteDocument(i)" *ngIf="!(mode === 'R' && isEdit === false)">
+                <a href="javaScript:void(0)" class="text-warning" (click)="deleteDocument(i)"
+                  *ngIf="!(mode === 'R' && isEdit === false)">
                   <i class="fa fa-trash-o fa-lg"></i>
                 </a>
               </td>
@@ -469,52 +500,3 @@
 
   </div>
 </form>
-<mat-accordion [multi]="true">
-  <!-- <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E08_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E08_DISABLED$ | async"
-    (opened)="ILG60_08_04_00_00_E08_EXPANDED$.next(true)" (closed)="ILG60_08_04_00_00_E08_EXPANDED$.next(false)">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <h4 class="card-title m-b-0">คำร้องขอรับเงินรางวัล</h4>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <ng-template matExpansionPanelContent>
-      <div class="card-body">
-        <ILG60-08-04-00-00-E08 [inputData]="ILG60_08_04_00_00_E08_DATA$ | async" (aggregateHandle)="emitAggregate($event)"
-          (emitChange)="changeForm($event)"></ILG60-08-04-00-00-E08>
-      </div>
-    </ng-template>
-  </mat-expansion-panel> -->
-
-  <!-- <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E12_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E12_DISABLED$ | async"
-    (opened)="ILG60_08_04_00_00_E12_EXPANDED$.next(true)" (closed)="ILG60_08_04_00_00_E12_EXPANDED$.next(false)">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <h4 class="card-title m-b-0">ตารางการแบ่งจ่ายเงินสินบนรางวัล</h4>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <ng-template matExpansionPanelContent>
-      <div class="card-body">
-        <ILG60-08-04-00-00-E12 (emitChange)="changeForm($event)"  [aggregate08]="aggregate"
-        [Input_nonRequestRewardStaff]="Input_nonRequestRewardStaff$ | async" 
-        [Input_RequestBribeRewardgetByIndictmentID]="Input_RequestBribeRewardgetByIndictmentID$ | async" 
-        [Input_RequestRewardgetByCon]="Input_RequestRewardgetByCon$ | async"
-        >
-        </ILG60-08-04-00-00-E12>
-      </div>
-    </ng-template>
-  </mat-expansion-panel> -->
-
-  <!-- <mat-expansion-panel [expanded]="ILG60_08_04_00_00_E19_EXPANDED$ | async" [disabled]="ILG60_08_04_00_00_E19_DISABLED$ | async"
-    (opened)="ILG60_08_04_00_00_E19_EXPANDED$.next(true)" (closed)="ILG60_08_04_00_00_E19_EXPANDED$.next(false)">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <ng-template matExpansionPanelContent>
-      <div class="card-body">
-        <ILG60-08-04-00-00-E19 (emitChange)="changeForm($event)"></ILG60-08-04-00-00-E19>
-      </div>
-    </ng-template>
-  </mat-expansion-panel> -->
-</mat-accordion>

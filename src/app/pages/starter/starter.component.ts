@@ -1,14 +1,20 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit ,OnInit} from '@angular/core';
 import { NavigationService } from '../../shared/header-navigation/navigation.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+
 @Component({
 	selector: 'ea-starter',
 	templateUrl: './starter.component.html',
 	styleUrls: ['./starter.component.scss']
 })
-export class StarterComponent implements AfterViewInit {
+export class StarterComponent implements OnInit {
 	title:string;
-	subtitle:string;	
-	constructor(private navService: NavigationService) {
+	subtitle:string;
+	
+	isLinear = false;
+	// firstFormGroup: FormGroup;
+	// secondFormGroup: FormGroup;
+	constructor(private navService: NavigationService,private _formBuilder: FormBuilder) {
 			this.title = "Starter Page";
 			this.subtitle = "This is some text within a card block."
 		
@@ -24,5 +30,13 @@ export class StarterComponent implements AfterViewInit {
         this.navService.setCancelButton(false);
 	}
 
-	ngAfterViewInit(){}
+	ngOnInit(){
+	
+		// this.firstFormGroup = this._formBuilder.group({
+		// 	firstCtrl: ['', Validators.required]
+		//   });
+		//   this.secondFormGroup = this._formBuilder.group({
+		// 	secondCtrl: ['', Validators.required]
+		//   });
+	}
 }

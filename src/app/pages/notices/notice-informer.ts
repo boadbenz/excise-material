@@ -61,7 +61,7 @@ export const NoticeInformerFormControl = {
     Province: new FormControl(null),
     ZipCode: new FormControl('N/A'),
     TelephoneNo: new FormControl('N/A'),
-    InformerInfo: new FormControl('N/A'),
+    InformerInfo: new FormControl(null),
     IsActive: new FormControl(1),
     FullName: new FormControl(null),
     Region: new FormControl(null)

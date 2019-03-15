@@ -24,8 +24,8 @@ export class SuspectService {
 
     async searchByKeyword(Textsearch: string): Promise<NoticeMasSuspect[]> {
         const params = JSON.stringify(Textsearch);
-        const lawbreakerUrl = `${appConfig.api8082}/NoticeMasLawbreakergetByKeyword`;
-        const suspectUrl = `${appConfig.api8082}/NoticeMasSuspectgetByKeyword`;
+        const lawbreakerUrl = `${appConfig.api7788}/NoticeMasLawbreakergetByKeyword`;
+        const suspectUrl = `${appConfig.api7788}/NoticeMasSuspectgetByKeyword`;
         const url = { lawbreakerUrl, suspectUrl };
 
         return this.response(params, url);
@@ -33,8 +33,8 @@ export class SuspectService {
 
     searchAdv(form: any): Promise<NoticeMasSuspect[]> {
         const params = JSON.stringify(form);
-        const lawbreakerUrl = `${appConfig.api8082}/NoticeMasLawbreakergetByConAdv`;
-        const suspectUrl = `${appConfig.api8082}/NoticeMasSuspectgetByConAdv`;
+        const lawbreakerUrl = `${appConfig.api7788}/NoticeMasLawbreakergetByConAdv`;
+        const suspectUrl = `${appConfig.api7788}/NoticeMasSuspectgetByConAdv`;
         const url = { lawbreakerUrl, suspectUrl };
 
         return this.response(params, url);

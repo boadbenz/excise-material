@@ -30,7 +30,7 @@ export class ArrestProduct {
     public QtyUnit = '';
     public NetVolume = '';
     public NetVolumeUnit = '';
-    
+
     public IsActive: number;
     public IsChecked: boolean;
     public IsNewItem: boolean;
@@ -45,7 +45,7 @@ export class ArrestProductDetail {
     ProductID: number;
     ProductDetailID?: number;
     IsProdcutCo?: string;
-    Qty?: string;
+    Qty?: number;
     QtyUnit?: string;
     Size?: string;
     SizeUnit?: string;
@@ -56,5 +56,8 @@ export class ArrestProductDetail {
     IndictmentDetailID?: number;
     ProductDesc?: string;
     IsActive?: number;
+
     IsChecked: boolean;
+    IsModify: string;
+    RowId: number;
 }

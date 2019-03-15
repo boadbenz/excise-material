@@ -9,7 +9,7 @@ import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import * as fromServices from '../../services';
 import * as fromModels from '../../models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker-th';
-import { compareDate, getDateMyDatepicker, toLocalShort, convertDateForSave, MyDatePickerOptions } from 'app/config/dateFormat';
+import { compareDate, getDateMyDatepicker, toLocalShort, convertDateForSave, MyDatePickerOptions, setZeroHours } from 'app/config/dateFormat';
 import { Subject } from 'rxjs/Subject';
 import swal from 'sweetalert2';
 
@@ -19,7 +19,7 @@ import swal from 'sweetalert2';
 })
 export class ListComponent implements OnInit, OnDestroy {
 
-    private staffCode = '134194';
+    staffCode = localStorage.getItem('staffCode');
 
     private destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -56,6 +56,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        localStorage.setItem('programcode', 'ILG60-01-00');
         this.advSearch.next(true)
         this.sidebarService.setVersion(this.s_invest.version);
 
@@ -69,10 +70,9 @@ export class ListComponent implements OnInit, OnDestroy {
         this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-                this.router.navigate([`/investigation/manage/C/NEW`]);
+                this.router.navigate([`/suppression/investigation/manage/C/NEW`]);
             }
         })
-
     }
 
     ngOnDestroy(): void {
@@ -100,11 +100,11 @@ export class ListComponent implements OnInit, OnDestroy {
             }
         }
 
-        form.DateStart = sdate || '';
-        form.DateEnd = edate || '';
+        form.DateStart = setZeroHours(sdate) || '';
+        form.DateEnd = setZeroHours(edate) || '';
 
         console.log(JSON.stringify(form));
-        
+
         this.s_invest.InvestigateListgetByConAdv(form)
             .takeUntil(this.destroy$)
             .subscribe(list => {
@@ -130,6 +130,7 @@ export class ListComponent implements OnInit, OnDestroy {
         })
 
         this.investigate = rows;
+        this.invesList = this.investigate.slice(0, 5);
         // set total record
         this.paginage.TotalItems = this.investigate.length;
     }
@@ -160,7 +161,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     clickView(invesCode: string) {
-        this.router.navigate([`/investigation/manage/R/${invesCode}`]);
+        this.router.navigate([`/suppression/investigation/manage/R/${invesCode}`]);
     }
 
     async pageChanges(event) {

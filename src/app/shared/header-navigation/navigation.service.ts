@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { appConfig } from "../../app.config";
 
 @Injectable()
 export class NavigationService {
@@ -33,7 +35,20 @@ export class NavigationService {
     innerTextPrevPageButton = new BehaviorSubject<string>(null);
     searchByKeyword = new BehaviorSubject<any>(null);
 
-    constructor() { }
+    constructor(private httpClient: HttpClient,) { }
+
+    private httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
+    
+     PermissionCheck(params: any): Promise<any> {
+        const paramss = JSON.stringify(params);
+        const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
+        try {
+          const res =  this.httpClient.post<any>(url, paramss, this.httpOptions).toPromise();
+          return res;
+        } catch (error) {
+        //   return [];
+        }
+      }
 
     setInnerTextNextPageButton(text: string) {
         this.innerTextNextPageButton.next(text);

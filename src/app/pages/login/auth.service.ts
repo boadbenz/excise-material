@@ -3,21 +3,16 @@ import { appConfig } from "app/app.config";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { HttpService } from "app/core/http.service";
 import { Observable } from 'rxjs';
-import { Http, Response, RequestOptions, Headers, Jsonp } from '@angular/http'
+import { Http, Response, RequestOptions, Headers, Jsonp, ResponseContentType } from '@angular/http'
+import { stringify } from '@angular/compiler/src/util';
 
 @Injectable()
 export class AuthService {
 
   constructor(private httpClient: HttpClient,
-              private HttpService: HttpService,
-              private http: Http) { }
+    private HttpService: HttpService,
+    private http: Http) { }
 
-  private httpOptions = {
-    headers: new HttpHeaders(
-      {
-        'Content-Type': 'application/json'
-      })
-  };
 
   signin(form: any) {
 
@@ -42,8 +37,34 @@ export class AuthService {
       .catch(this.handleErrorObservable);
   }
 
+  /****************************(Used with in the Excise Only)***************************** */
+  ssoService(params): Observable<any> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    const url = `${appConfig.exciseService}/EDRestServicesUAT/sso/ExciseUserInfomation`
+    return this.http.post(url, params, options)
+      .map((res: Response) => res.json())
+      .catch(this.handleErrorObservable);
+  }
+
+  userAndPrivilegeInfo(User) {
+    const url = `${appConfig.exciseService}/edssows/ldap/userAndPrivilegeInformation?userID=${User}&systemID=Test010"`
+    return this.http.get(url)
+      .map((res: Response) => res.json())
+      .catch(this.handleErrorObservable);
+  }
+
+  eofficeInfo(params): Observable<any> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    const url = `http://uat.eoffice.excise.go.th:7003/EOfficeWS/HrstPersonInformation `
+    return this.http.post(url, params, options)
+      .map((res: Response) => res.json())
+      .catch(this.handleErrorObservable);
+  }
+  /****************************(End Used with in the Excise Only)***************************** */
+
+
   private getHeaders() {
-    let headers = new Headers();
+    let headers = new Headers();  
     headers.append('Content-Type', 'application/json; charset=utf-8');
     return headers;
   }

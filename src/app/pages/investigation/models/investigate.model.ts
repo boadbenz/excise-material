@@ -51,7 +51,7 @@ export class InvestigateDetailStaff {
     IsActive: number;
 
     RowId: number;
-    FullName: string;
+    StaffFullName: string;
     IsModify: string;
 
     Commander: string;

@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HttpService } from "app/core/http.service";
 import { appConfig } from "app/app.config";
-import { ArrestIndictment, ArrestIndictmentProduct } from "../models/arrest-indictment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { ArrestIndictmentProduct, ArrestIndictment } from "../models";
 
 @Injectable()
 export class ArrestIndictmentService {
@@ -45,6 +45,18 @@ export class ArrestIndictmentService {
         return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
+    async ArrestIndictmentupdByCon(Indictment: ArrestIndictment) {
+        const params = Indictment;
+        const url = `${appConfig.api7788}/ArrestIndictmentupdByCon`;
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    }
+
+    async ArrestIndictmentupdDelete(IndictmentID: string) {
+        const params = { IndictmentID };
+        const url = `${appConfig.api7788}/ArrestIndictmentupdDelete`;
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    }
+
     async ArrestIndictmentProductinsAll(indictment: ArrestIndictmentProduct){
         const params = indictment;
         const url = `${appConfig.api7788}/ArrestIndictmentProductinsAll`;
@@ -57,15 +69,15 @@ export class ArrestIndictmentService {
         return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
-    async ArrestIndictmentupdByCon(Indictment: ArrestIndictment) {
-        const params = Indictment;
-        const url = `${appConfig.api7788}/ArrestIndictmentupdByCon`;
+    async ArrestIndictmentProductupdByProductID(ProductID: any) {
+        const params = {ProductID};
+        const url = `${appConfig.api7788}/ArrestIndictmentProductupdByProductID`;
         return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }
 
-    async ArrestIndictmentupdDelete(IndictmentID: string) {
-        const params = { IndictmentID };
-        const url = `${appConfig.api7788}/ArrestIndictmentupdDelete`;
-        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    async ArrestIndictmentProductupdDeleteByProductID(ProductID: string) {
+        const params = {ProductID};
+        const url = `${appConfig.api7788}/ArrestIndictmentProductupdDeleteByProductID`;
+        return await this.httpClient.post<any>(url, params, this.httpOptions).toPromise(); 
     }
 }

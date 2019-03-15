@@ -9,12 +9,12 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { ArrestService } from '../../model/arrest.service';
 import { LawsuitService } from '../../model/lawsuit.service';
-import { MasterService }  from '../../model/master.service';
+import { MasterService } from '../../model/master.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PrintDocModalModule } from '../printdoc-modal/printdoc-modal.module';
-import { IsActivePipe } from '../../../shared/pipe/IsActivePipe';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MyDatePickerModule } from 'mydatepicker';
+import { PrintDocModalComponent } from '../printdoc-modal/printdoc-modal.component'
 
 const routes: Routes = [
   {
@@ -25,31 +25,33 @@ const routes: Routes = [
         { title: 'ค้นหางานเปรียบแทียบและชำระค่าปรับ', url: '/fine/list' },
         { title: 'จัดการข้อมูลงานเปรียบแทียบและชำระค่าปรับ' }
       ],
-      nextPage: { title: 'ส่งเงินรายได้', url: '/income/manage' },
-      codePage: "ILG60-06-02-00",
+      codePage: "ILG60-06-02-00-00",
     },
     component: ManageComponent
   }
 ];
 @NgModule({
   imports: [
-      FormsModule,
-      CommonModule,
-      RouterModule.forChild(routes),
-      HttpModule,
-      HttpClientModule,
-      CardActionsModule,
-      MatAutocompleteModule,
-      PrintDocModalModule,
-      MyDatePickerTHModule,
-      MyDatePickerModule
+    FormsModule,
+    CommonModule,
+    RouterModule.forChild(routes),
+    HttpModule,
+    HttpClientModule,
+    CardActionsModule,
+    MatAutocompleteModule,
+    PrintDocModalModule,
+    MyDatePickerTHModule,
+    MyDatePickerModule,
   ],
   providers: [FineService,
-      ArrestService,
-      LawsuitService,
-      MasterService
+    ArrestService,
+    LawsuitService,
+    MasterService,
   ],
-  declarations: [ManageComponent,IsActivePipe],
+  declarations: [ManageComponent],
+  entryComponents: [
+    PrintDocModalComponent
+  ],
   exports: [MatAutocompleteModule]
 })
 export class ManageModule { }

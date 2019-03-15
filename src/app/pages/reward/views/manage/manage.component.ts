@@ -41,12 +41,14 @@ import { IResponseCommon } from '../../interfaces/ResponseCommon.interface';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import swal from 'sweetalert2';
+import { FormGroup, FormBuilder, FormControl, FormArray, FormGroupName } from '@angular/forms';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
   styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
+  ReqBribeDTL: any
   constructor(
     private navService: NavigationService,
     private activatedRoute: ActivatedRoute,
@@ -64,6 +66,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe(param => {
       this.IndictmentID$.next(param['IndictmentID']);
       this.ArrestCode$.next(param['ArrestCode']);
+      localStorage.setItem('IndictmentID', param['IndictmentID']);
+      localStorage.setItem('ArrestCode', param['ArrestCode']);
     });
     this.navService.onCancel.takeUntil(this.destroy$).subscribe(command => {
       if (command === true) {
@@ -123,7 +127,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.7');
+    this.sidebarService.setVersion('0.0.1.11');
+    localStorage.setItem('programcode','ILG60-08-02');
     this.pageLoad();
   }
 
@@ -187,7 +192,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           // 4.1.1(1.3)
           this.ILG60_08_02_00_00E08_EXPANDED = true;
           // 4.1.1(1.3.1)
-          this.ILG60_08_02_00_00E09_EXPANDED = false;
+          this.ILG60_08_02_00_00E09_DISABLED = true
           // 4.1.1(1.3.2)
           this.ILG60_08_02_00_00E11_EXPANDED = false;
           this.ILG60_08_02_00_00E14_EXPANDED = true;
@@ -222,6 +227,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
             })
             .toPromise();
+            this.ReqBribeDTL = RequestBribe[0].RequestBribeID;
+            localStorage.setItem("ReqDTL",this.ReqBribeDTL)
           // 4.1.1(2.2.1)
           if (RequestBribe.length > 0) {
             // 4.1.1(2.2.1(1))
@@ -401,7 +408,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           // 4.2.2(1.4.1(1))
           this.ILG60_08_02_00_00E08_EXPANDED = true;
           // 4.2.2(1.4.1(1.1))
-          this.ILG60_08_02_00_00E09_EXPANDED = false;
+          this.ILG60_08_02_00_00E09_DISABLED = true;
           this.ILG60_08_02_00_00E11_EXPANDED = true;
           this.ILG60_08_02_00_00E14_EXPANDED = true;
 
@@ -765,6 +772,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
       })
       .toPromise();
+      console.log("++++RequestBribe : ",RequestBribe)
 
     // 1.2
     const RequestReward: IRequestReward[] = await this.requestRewardService
@@ -772,20 +780,21 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
       })
       .toPromise();
+      console.log("++++RequestReward  : ",RequestReward)
 
     const printDocRequestBribe: any[] = RequestBribe.map(m => ({
       DocName: `${m.RequestBribeCode || ''}: คำร้องขอรับเงินสินบน`,
-      DocType: 'แบบฟอร์ม'
+      DocType: 'แบบฟอร์ม', RequestBribeID:`${m.RequestBribeID}`, checked: false, TypeName: "RB"
     }));
 
     const printDocRequestReward: any[] = RequestReward.map(m => ({
       DocName: `${m.RequestRewardCode || ''}: คำร้องขอรับเงินรางวัล`,
-      DocType: 'แบบฟอร์ม'
+      DocType: 'แบบฟอร์ม', RequestRewardID:`${m.RequestRewardID}`, checked: false, TypeName: "RR"
     }));
     const printDoc = [...printDocRequestBribe, ...printDocRequestReward];
 
     const dialogRef = this.dialog.open(PrintDialogComponent, {
-      backdrop: 'static'
+      backdrop: 'static', size: 'lg'
     });
     dialogRef.componentInstance.data = printDoc;
     dialogRef.result.then(res => {});

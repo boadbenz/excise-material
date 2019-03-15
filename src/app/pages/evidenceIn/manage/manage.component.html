@@ -1,0 +1,619 @@
+<ng-template #printDocModal let-c="close" let-d="dismiss">
+    <app-printdoc-modal (c)="modal.close()" (d)="modal.dismiss()" [RevenueID]="RevenueID"></app-printdoc-modal>
+</ng-template>
+
+<!-- <div class="wizard-content" style="margin-bottom: 10px;">
+    <div class="wizard-circle wizard clearfix clearfix">
+        <div class="steps tab-wizard">
+            <ul role="tablist">
+                <li role="tab" class="current" aria-disabled="false" aria-selected="true">
+                    <a>
+                        <span class="current-info audible">current step: </span>
+                        <span class="step"></span> 1. ใบแจ้งความนำจับ</a>
+                </li>
+                <li role="tab" class="current" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 2. งานจับกุม </a>
+                </li>
+                <li role="tab" class="current" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 3. รับคำกล่าวโทษ </a>
+                </li>
+                <li role="tab" class="current" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
+                </li>
+                <li role="tab" class="current" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
+                </li>
+                <li role="tab" class="current" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 6. นำส่งเงินรายได้ </a>
+                </li>
+                <li role="tab" class="disabled" aria-disabled="true">
+                    <a>
+                        <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div> -->
+
+
+<!-- รายละเอียดประกอบการนำส่ง จากหน่วยงานภายใน -->
+<div *ngIf="evitype == 'I'" class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายละเอียดประกอบการนำส่ง</h4>
+    </div>
+    <div class="card-body">
+
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-sm-4 control-label">เลขที่ใบงาน :</label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" name="ArrestCode" [(ngModel)]="ArrestCode" class="form-control " disabled>
+                </div>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">วันที่จับกุม :</label>
+            <div class="form-group input-group  col-lg-4 col-md-7">
+                <div style="width:45%">
+                    <my-date-picker-th name="OccurrenceDate" [(ngModel)]="OccurrenceDate" [disabled]="true"></my-date-picker-th>
+                </div>
+                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                <input type="text" [(ngModel)]="OccurrenceTime" name="OccurrenceTime" style="height: 35px;" class="form-control" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">ผู้กล่าวหา :
+            </label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" name="Accuser" [(ngModel)]="Accuser" class="form-control " readonly>
+                </div>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+            </label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" [(ngModel)]="AccuserPositionName" name="AccuserPositionName" class="form-control " readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+            </label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="AccuserOfficeShortName" name="AccuserOfficeShortName" class="form-control " readonly>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">สถานที่จับกุม :
+            </label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" [(ngModel)]="AccuserStation" name="AccuserStation" class="form-control " readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">เลขที่คดีรับคำกล่าวโทษ :
+            </label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="LawsuitNo" name="LawsuitNo" class="form-control " readonly>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">วันที่รับคดี :
+            </label>
+            <div class="form-group input-group  col-lg-4 col-md-7">
+                <div style="width:45%">
+                    <my-date-picker-th name="LawsuitDate" [(ngModel)]="LawsuitDate" [disabled]="true"></my-date-picker-th>
+                </div>
+                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                <input type="text" [(ngModel)]="LawsuitTime" name="LawsuitTime" style="height: 35px;" class="form-control" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">ฐานความผิดมาตรา :
+            </label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="SubSectionType" name="SubSectionType" class="form-control " readonly>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">ฐานความผิด :
+            </label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" [(ngModel)]="GuiltBaseName" name="GuiltBaseName" class="form-control " readonly>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">บทกำหนดโทษ :
+            </label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="SectionNo" name="SectionNo" class="form-control " readonly>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">อัตราโทษ :
+            </label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" [(ngModel)]="PenaltyDesc" name="PenaltyDesc" class="form-control" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :
+            </label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="DeliverNo" name="DeliverNo" class="form-control" readonly>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
+            </label>
+
+            <div class="form-group input-group  col-lg-4 col-md-7">
+                <div style="width:45%">
+                    <my-date-picker-th name="DeliverDate" [(ngModel)]="DeliverDate" [disabled]="true"></my-date-picker-th>
+                </div>
+                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                <input type="text" [(ngModel)]="DeliverTime" name="DeliverTime" style="height: 35px;" class="form-control" readonly>
+            </div>
+        </div>
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :
+            </label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" name="Receiveuser" [(ngModel)]="Receiveuser" class="form-control " readonly>
+                </div>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+            </label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" [(ngModel)]="ReceiverPositionName" name="ReceiverPositionName" class="form-control " readonly>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+            </label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="ReceiverOfficeShortName" name="ReceiverOfficeShortName" class="form-control " readonly>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- รายละเอียดประกอบการนำส่ง จากหน่วยงานภายนอก -->
+<div *ngIf="evitype == 'E'" class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายละเอียดประกอบการนำส่ง</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :
+            </label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="DeliveryNo" name="DeliveryNo" class="form-control " [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
+            </label>
+            <div class="form-group input-group col-lg-4 col-md-7">
+                <div style="width:45%">
+                    <my-date-picker-th name="DeliveryDate" [(ngModel)]="DeliveryDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
+                        required></my-date-picker-th>
+                </div>
+                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                <input type="text" [(ngModel)]="DeliveryTime" name="DeliveryTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
+                    [ngClass]="{'ng-touched':isRequired}" required>
+            </div>
+        </div>
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">วันที่รับคืน :
+            </label>
+            <div class="col-lg-4 col-md-7">
+                <div class="form-group input-group ">
+                    <my-date-picker-th name="ReturnDate" [(ngModel)]="ReturnDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
+                        class="form-control  unset-form-control" required></my-date-picker-th>
+                </div>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptStaffSend" name="DeptStaffSend" class="form-control" 
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+        </div>
+        <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName"
+                            [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        <!-- <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="" aria-label="Number"
+                            matInput [matAutocomplete]="auto2" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
+                            [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
+                            <mat-option *ngFor="let sOption of StaffSendoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                (click)="StaffSendonAutoSelecteWord(sOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(sOption)">
+                                {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                            </mat-option>
+                        </mat-autocomplete> -->
+                    </div>
+                </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+            </label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" [(ngModel)]="PosStaffSend" name="PosStaffSend" class="form-control" 
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำส่ง :</label>
+            <div class="form-group col-lg-10 col-md-12">
+                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- รายละเอียดประกอบการนำส่ง นำออกจากคลังไปใช้ทางราชการ -->
+<div *ngIf="evitype == 'G'" class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายละเอียดประกอบการนำส่ง</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสือนำส่ง :
+            </label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="DeliveryNo" name="DeliveryNo" class="form-control " [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
+            </label>
+            <div class="form-group input-group col-lg-4 col-md-7">
+                <div style="width:45%">
+                    <my-date-picker-th name="DeliveryDate" [(ngModel)]="DeliveryDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
+                        required></my-date-picker-th>
+                </div>
+                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                <input type="text" [(ngModel)]="DeliveryTime" name="DeliveryTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
+                    [ngClass]="{'ng-touched':isRequired}" required>
+            </div>
+        </div>
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :
+            </label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto3" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                    <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete">
+                        <mat-option *ngFor="let sOption of StaffSendoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                            (click)="StaffSendonAutoSelecteWord(sOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(sOption)">
+                            {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                        </mat-option>
+                    </mat-autocomplete>
+                </div>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+            </label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" [(ngModel)]="PosStaffSend" name="PosStaffSend" class="form-control" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+            </label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="DeptStaffSend" name="DeptStaffSend" class="form-control" readonly>
+            </div>
+
+            <label *ngIf="evitype == 'G'" for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :
+            </label>
+            <div *ngIf="evitype == 'G'" class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto8"
+                    (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
+                    [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
+                <mat-autocomplete autoActiveFirstOption #auto8="matAutocomplete">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
+                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                        {{ optionWh.WarehouseName }}
+                    </mat-option>
+                </mat-autocomplete>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- รายละเอียดการตรวจรับของกลาง -->
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">รายละเอียดการตรวจรับของกลาง</h4>
+    </div>
+    <div class="card-body">
+        <div *ngIf="evitype != 'I'" class="row form-group">
+            <div class="col-lg-10 col-md-9 col-sm-8"></div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <button class="btn btn-block btn-themecolor" (click)="AddProduct()" [disabled]="showEditField">เพิ่มของกลาง</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+
+                <div class="table-responsive table-striped ">
+                    <table class="table">
+                        <thead>
+                            <tr style="font-size: 14px">
+                                <th style="text-align:center;width:7%">ลำดับ</th>
+                                <th style="width:14%">เลขทะเบียนบัญชี</th>
+                                <th>ของกลาง</th>
+                                <th style="width:7%">จำนวนส่ง</th>
+                                <th style="width:9%">จำนวนชำรุด</th>
+                                <th style="width:7%">จำนวนรับ</th>
+                                <th style="width:10%">หน่วย</th>
+                                <th *ngIf="evitype != 'G'" style="width:7%">ปริมาณส่ง</th>
+                                <th *ngIf="evitype != 'G'" style="width:9%">ปริมาณชำรุด</th>
+                                <th *ngIf="evitype != 'G'" style="width:7%">ปริมาณรับ</th>
+                                <th *ngIf="evitype != 'G'" style="width:10%">หน่วย</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of ListEvidenceInItem | IsActivePipe ; let i=index;">
+                                <td style="text-align:center;">{{i + 1}}</td>
+                                <td>
+                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.EvidenceInItemCode"
+                                        name="item.EvidenceInItemCode" placeholder="" aria-label="Number" [matAutocomplete]="auto5"
+                                        (input)="EviItemCodeonAutoChange($event.target.value, item.ProductSeq)" (focus)="ProductonAutoFocus($event.target.value)"
+                                        [disabled]="showEditField || evitype != 'G'" [ngClass]="{'ng-touched':isRequired}" required>
+                                    <mat-autocomplete autoActiveFirstOption #auto5="matAutocomplete">
+                                        <mat-option *ngFor="let pOption of Productoptions" [value]="pOption.EvidenceInItemCode" (click)="ProductonAutoSelecteWord(pOption, item.ProductSeq)"
+                                            style="font-size: 14px;" (onSelectionChange)="ProductonAutoSelecteWord(pOption, item.ProductSeq)">
+                                            {{ pOption.EvidenceInItemCode }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </td>
+                                <td>
+                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.ProductDesc" name="item.ProductDesc"
+                                        placeholder="" aria-label="Number" [matAutocomplete]="auto4" (input)="ProductonAutoChange($event.target.value, item.ProductSeq)"
+                                        (focus)="ProductonAutoFocus($event.target.value)" [disabled]="showEditField || evitype != 'E'"
+                                        [ngClass]="{'ng-touched':isRequired}" required>
+                                    <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
+                                        <mat-option *ngFor="let pOption of Productoptions" [value]="pOption.ProductDesc" (click)="ProductonAutoSelecteWord(pOption, item.ProductSeq)"
+                                            style="font-size: 14px;" (onSelectionChange)="ProductonAutoSelecteWord(pOption, item.ProductSeq)">
+                                            {{ pOption.ProductDesc }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </td>
+                                <td>
+                                    <input type="text" [(ngModel)]="item.DeliveryQty" name="item.DeliveryQty" class="form-control form-control-sm" style="font-size: 14px"
+                                        [disabled]="showEditField || evitype != 'E'" (input)="CalReceive(item.ProductSeq)" [ngClass]="{'ng-touched':isRequired}"
+                                        required>
+                                </td>
+                                <td>
+                                    <input type="text" [(ngModel)]="item.DamageQty" name="item.DamageQty" class="form-control form-control-sm" style="font-size: 14px"
+                                        [disabled]="showEditField" (input)="CalReceive(item.ProductSeq)" [ngClass]="{'ng-touched':isRequired}"
+                                        required>
+                                </td>
+                                <td>
+                                    <input type="text" [(ngModel)]="item.ReceiveQty" name="item.ReceiveQty" class="form-control form-control-sm" style="font-size: 14px"
+                                        readonly>
+                                </td>
+                                <td>
+                                    <!-- <select [(ngModel)]="item.DeliveryQtyUnit" name="item.DeliveryQtyUnit" class="form-control form-control-sm" style="font-size: 14px"
+                                        [disabled]="showEditField || evitype != 'E'" [ngClass]="{'ng-touched':isRequired}" required>
+                                        <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
+                                        </option>
+                                    </select> -->
+                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.DeliveryQtyUnit"
+                                        name="item.DeliveryQtyUnit" placeholder="" aria-label="Number" [matAutocomplete]="auto6"
+                                        (input)="UnitOnAutoChange($event.target.value, item.ProductSeq)" (focus)="UnitOnAutoFocus($event.target.value)"
+                                        [disabled]="showEditField || evitype != 'E'" [ngClass]="{'ng-touched':isRequired}" required>
+                                    <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
+                                        <mat-option *ngFor="let pOption of UnitOption" [value]="pOption.DutyCode" style="font-size: 14px;">
+                                            {{ pOption.DutyCode }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </td>
+                                <td *ngIf="evitype != 'G'">
+                                    <input type="text" [(ngModel)]="item.DeliveryNetVolumn" name="item.DeliveryNetVolumn" class="form-control form-control-sm"
+                                        style="font-size: 14px" [disabled]="showEditField || evitype != 'E'" (input)="CalReceiveNetVolumn(item.ProductSeq)"
+                                        [ngClass]="{'ng-touched':isRequired}" required>
+                                </td>
+                                <td *ngIf="evitype != 'G'">
+                                    <input type="text" [(ngModel)]="item.DamageNetVolumn" name="item.DamageNetVolumn" class="form-control form-control-sm" style="font-size: 14px"
+                                        [disabled]="showEditField" (input)="CalReceiveNetVolumn(item.ProductSeq)" [ngClass]="{'ng-touched':isRequired}"
+                                        required>
+                                </td>
+                                <td *ngIf="evitype != 'G'">
+                                    <input type="text" [(ngModel)]="item.ReceiveNetVolumn" name="item.ReceiveNetVolumn" class="form-control form-control-sm"
+                                        style="font-size: 14px" readonly>
+                                </td>
+                                <td *ngIf="evitype != 'G'">
+                                    <!-- <select [(ngModel)]="item.DeliveryNetVolumnUnit" name="item.DeliveryNetVolumnUnit" class="form-control form-control-sm" style="font-size: 14px"
+                                        [disabled]="showEditField || evitype != 'E'" [ngClass]="{'ng-touched':isRequired}" required>
+                                        <option *ngFor="let opt of UnitOption" value={{opt.DutyCode}}>{{opt.DutyCode}}
+                                        </option>
+                                    </select> -->
+                                    <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.DeliveryNetVolumnUnit"
+                                        name="item.DeliveryNetVolumnUnit" placeholder="" aria-label="Number" [matAutocomplete]="auto7"
+                                        (input)="UnitOnAutoChange($event.target.value, item.ProductSeq)" (focus)="UnitOnAutoFocus($event.target.value)"
+                                        [disabled]="showEditField || evitype != 'E'" [ngClass]="{'ng-touched':isRequired}" required>
+                                    <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
+                                        <mat-option *ngFor="let pOption of UnitOption" [value]="pOption.DutyCode" style="font-size: 14px;">
+                                            {{ pOption.DutyCode }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </td>
+                                <td>
+                                    <a href="javaScript:void(0);" class="text-warning">
+                                        <i class="fa fa-trash-o fa-lg" (click)="DelProduct(item.ProductSeq)" [hidden]="showEditField"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">เลขที่รับ :
+            </label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" [(ngModel)]="EvidenceInCode" name="EvidenceInCode" class="form-control" readonly>
+                </div>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">วันที่รับ :
+            </label>
+            <div class="form-group input-group col-lg-4 col-md-7">
+                <div style="width:45%">
+                    <my-date-picker-th name="EvidenceInDate" [(ngModel)]="EvidenceInDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
+                        required></my-date-picker-th>
+                </div>
+                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                <input type="text" [(ngModel)]="EvidenceInTime" name="EvidenceInTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
+                    [ngClass]="{'ng-touched':isRequired}" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">ผู้ตรวจรับ :
+            </label>
+            <div class="col-lg-4 col-md-7">
+                <div class="form-group ">
+                    <input type="text" matInput class="form-control" [(ngModel)]="StaffRecvName" name="StaffRecvName" placeholder="" aria-label="Number"
+                        matInput [matAutocomplete]="auto2" (input)="StaffRecvonAutoChange($event.target.value)" (focus)="StaffRecvonAutoFocus($event.target.value)"
+                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                    <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
+                        <mat-option *ngFor="let sOption of StaffRecvoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                            (click)="StaffRecvonAutoSelecteWord(sOption)" (onSelectionChange)="StaffRecvonAutoSelecteWord(sOption)">
+                            {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                        </mat-option>
+                    </mat-autocomplete>
+                </div>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
+            </label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="PosStaffRecv" name="PosStaffRecv" class="form-control" readonly>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+            </label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="DeptStaffRecv" name="DeptStaffRecv" class="form-control" readonly>
+            </div>
+
+            <label *ngIf="evitype != 'G'" for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :
+            </label>
+            <div *ngIf="evitype != 'G'" class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto8"
+                    (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
+                    [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
+                <mat-autocomplete autoActiveFirstOption #auto8="matAutocomplete">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)"
+                        (onSelectionChange)="WarehouseOnAutoSelecteWord(optionWh)">
+                        {{ optionWh.WarehouseName }}
+                    </mat-option>
+                </mat-autocomplete>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- เอกสารแนบภายใน -->
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+    </div>
+    <div class="card-body">
+        <div class="row form-group">
+            <div class="col-lg-10 col-md-9 col-sm-8"></div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <button class="btn btn-block btn-themecolor" (click)="AddDocument()" [disabled]="showEditField">เพิ่มเอกสารแนบ</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive table-striped ">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center">ลำดับ</th>
+                                <th>ชื่อเอกสารแนบ</th>
+                                <th>ที่อยู่เอกสารแนบ</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let lsDoc of ListDoc | IsActivePipe ; let i=index;">
+                                <td style="text-align: center">{{i+1}}</td>
+                                <td>
+                                    <input type="text" [(ngModel)]="lsDoc.DocumentName" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" [(ngModel)]="lsDoc.FilePath" name="lsDoc.FilePath" style="border-right: 0;" [disabled]="showEditField">
+                                        <div class="input-group-append">
+                                            <input [id]="'communicateAttach'+lsDoc.DocumentSeq" type="file" (change)="changeComunicateFile($event, lsDoc.DocumentSeq)"
+                                                hidden>
+                                            <label [for]="'communicateAttach'+lsDoc.DocumentSeq" class="input-group-text custom-file-upload text-secondary" [hidden]="showEditField">
+                                                <i class="ti-more-alt"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="javaScript:void(0);" class="text-warning">
+                                        <i class="fa fa-trash-o fa-lg" (click)="DelDocument(lsDoc.DocumentSeq)" [hidden]="showEditField"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

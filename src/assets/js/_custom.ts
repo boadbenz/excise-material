@@ -22,7 +22,7 @@ export function detectChange() {
     var set = function () {
             var width = (window.innerWidth > 0) ? window.innerWidth : this.screen.width;
             var topOffset = 59;
-            if (width > 1170) {
+            if (width > 0) { //change value to zero for mini sidebar (old value is 1170)
                 $("body").addClass("mini-sidebar");
                 $('.navbar-brand span').hide();
                 $(".scroll-sidebar, .slimScrollDiv").css("overflow-x", "visible").parent().css("overflow", "visible");
@@ -102,6 +102,7 @@ export function detectChange() {
         var element = $('ul#sidebarnav li').filter(function () {
             return this.href == url;
         }).addClass('active').parent().addClass('active');
+        
         while (true) {
             if (element.is('li')) {
                 element = element.parent().addClass('in').parent().addClass('active');
@@ -113,10 +114,10 @@ export function detectChange() {
         }
        
     }); 
-    /*$('ul#sidebarnav').on('click', 'li', function() {
+    $('ul#sidebarnav').on('click', 'li', function() {
         $('ul#sidebarnav li.active').removeClass('active');
-        $(this).addClass('active');
-    });*/
+        // $(this).addClass('active');
+    });
     // ============================================================== 
     //tooltip
     // ============================================================== 

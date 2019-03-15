@@ -41,11 +41,35 @@ const routes: Routes = [
       },
       {
         path: 'bribe',
-        loadChildren: './views/bribe/bribe.module#BribeModule'
+        loadChildren: './views/bribe/bribe.module#BribeModule',
+        data: {
+          urls: [
+            { title: 'หน้าหลัก', url: '/' },
+            { title: 'ค้นหาคำร้องขอรับเงินสินบนรางวัล', url: '/reward/list' },
+            {
+              title: 'จัดการข้อมูลคำร้องขอรับเงินสินบนรางวัล'
+            },
+            { title: 'จัดการข้อมูลคำร้องขอรับเงินสินบน' }
+          ],
+          pageType: 'manage',
+          codePage: 'ILG60-08-03-00-00'
+        },
       },
       {
         path: 'reward',
-        loadChildren: './views/reward/reward.module#RewardModule'
+        loadChildren: './views/reward/reward.module#RewardModule',
+        data: {
+          urls: [
+            { title: 'หน้าหลัก', url: '/' },
+            { title: 'ค้นหาคำร้องขอรับเงินสินบนรางวัล', url: '/reward/list' },
+            { title: 'จัดการข้อมูลคำร้องขอรับเงินสินบนรางวัล' },
+            { title: 'จัดการข้อมูลคำร้องขอรับเงินรางวัล' }
+          ],
+          pageType: 'manage',
+          codePage: 'ILG60-08-04-00-00'
+
+          // nextPage: { title: '...', url: '#' }
+        }
       }
     ]
   }

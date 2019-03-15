@@ -13,12 +13,16 @@
     <div class="col-md-6">
       <div class="form-group row">
         <label class="col-form-label col-md-4">วันที่จับกุม<span class="pull-right">:</span></label>
-        <div class="col-md-3">
-          <input class="form-control form-control-sm" type="text" [value]="columns.OccurrenceDate | thaiDate" disabled>
-        </div>
-        <label class="col-form-label text-center col-md-2">เวลา</label>
-        <div class="col-md-3">
-          <input class="form-control form-control-sm" type="text" [value]="columns.OccurrenceTime" disabled>
+        <div class="col-sm-8 ">
+
+          <div class="input-group input-group-sm">
+            <input class="form-control form-control-sm" type="text" [value]="columns.OccurrenceDate | thaiDate"
+              disabled>
+
+            <label class="text-center ml-1 mr-1">เวลา</label>
+
+            <input class="form-control form-control-sm" type="text" [value]="columns.OccurrenceTime" disabled>
+          </div>
         </div>
       </div>
     </div>
@@ -71,12 +75,17 @@
     <div class="col-md-6">
       <div class="form-group row">
         <label class="col-form-label col-md-4">วันที่รับคดี<span class="pull-right">:</span></label>
-        <div class="col-md-3">
-          <input class="form-control form-control-sm" type="text" [value]="columns.LawsuitDate | thaiDate" disabled>
-        </div>
-        <label class="col-form-label text-center col-md-2">เวลา</label>
-        <div class="col-md-3">
-          <input class="form-control form-control-sm" type="text" [value]="columns.LawsuitTime" disabled>
+        <div class="col-sm-8 ">
+
+          <div class="input-group input-group-sm">
+
+            <input class="form-control form-control-sm" type="text" [value]="columns.LawsuitDate | thaiDate" disabled>
+
+            <label class="text-center ml-1 mr-1">เวลา</label>
+
+            <input class="form-control form-control-sm" type="text" [value]="columns.LawsuitTime" disabled>
+
+          </div>
         </div>
       </div>
     </div>

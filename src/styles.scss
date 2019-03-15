@@ -1,6 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+// .mat-expansion-panel-content {
+//     font: unset !important;
+// }
+
+// .cdk-global-overlay-wrapper, .cdk-overlay-container {
+//   z-index: 99999 !important;
+// }
+
+// mat-dialog-container.mat-dialog-container {
+//     padding: unset;
+// }
+
+// .cdk-overlay-pane {
+//     /* Do you changes here */
+//     min-width: auto;
+//     width: auto !important;
+// }
+
+//*********************************************************//
+// input:read-only,
+// textarea:read-only,
+// select:disabled {
+//     color: black !important; 
+//     font-size: .9rem !important
+// }
+// input[type=number]::-webkit-outer-spin-button,
+// input[type=number]::-webkit-inner-spin-button{
+//     -webkit-appearance: none;
+//     margin: 0;
+// }
+//**************************************************
+
+// @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
 .mat-expansion-panel-content {
     font: unset !important;
 }
@@ -22,4 +56,7 @@ input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button{
     -webkit-appearance: none;
     margin: 0;
+}
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
+  z-index: 99999 !important;
 }

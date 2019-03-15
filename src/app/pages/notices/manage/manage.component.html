@@ -53,8 +53,7 @@
     
                         <label for="" class="">&nbsp;เวลา :&nbsp;</label>
                         <input type="text" formControlName="NoticeDueTime" class="form-control form-control-sm" 
-                        [readOnly]="true"
-                        [value]="noticeTime.value">
+                        [readOnly]="true">
                     </div>
                 </div>
             </div>
@@ -68,17 +67,25 @@
                             {{ r.OfficeName }}
                         </ng-template>
     
-                        <input type="text" class="form-control form-control-sm {{!noticeForm.get('NoticeStation').value?'ng-invalid ng-touched':''}}"
+                        <input type="text" class="form-control form-control-sm {{!noticeForm.value.NoticeStation?'ng-invalid ng-touched':''}}"
                             [ngClass]="{'ng-touched':isRequired}"
-                            required
                             [ngbTypeahead]="serachOffice"
                             [resultTemplate]="rt"
                             [readOnly]="showEditField"
                             [inputFormatter]="formatterOffice" 
                             (selectItem)="selectItemOffice($event)"
-                            [value]="noticeForm.get('NoticeStation').value"
-                            (blur)="blurSelectItemOffice()"
-                                />
+                            [value]="noticeForm.value.NoticeStation"
+                            (blur)="blurSelectItemOffice(noticeStationInput)"
+                            #noticeStationInput
+                            required/>
+                    </div>
+                </div>
+
+                <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
+                <div formArrayName="NoticeStaff" class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="form-group " *ngFor="let item of NoticeStaff.controls; let i=index;" [formGroupName]="i">
+                        <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" 
+                        readonly="true" [ngClass]="{'ng-touched':isRequired}" required>
                     </div>
                 </div>
             </div>
@@ -103,14 +110,6 @@
                             (blur)="blurSelectItemStaff(i)"
                             [ngClass]="{'ng-touched':isRequired}"
                             required/>
-                    </div>
-
-                    <label for="" class="col-lg-2 col-sm-4 control-label">หน่วยงาน :</label>
-                    <div class="col-lg-4 col-md-7 col-sm-8">
-                        <div class="form-group ">
-                            <input type="text" formControlName="DepartmentName" class="form-control form-control-sm" 
-                            readonly="true" [ngClass]="{'ng-touched':isRequired}" required>
-                        </div>
                     </div>
                     <label for="" class="col-lg-2 col-sm-4 control-label">ตำแหน่ง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-8">
@@ -217,7 +216,8 @@
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemInformmerRegion($event)"
                             [value]="item.get('Region').value"
-                            (blur)="blurSelectItemInformmerRegion()"/>
+                            (blur)="blurSelectItemInformmerRegion(informerRegion)"
+                            #informerRegion/>
                     </div>
                 </div>
                 <div class="row">
@@ -292,16 +292,16 @@
                         <ng-template #rt let-r="result" let-t="term">
                             {{ r.SubdistrictNameTH }} {{r.DistrictNameTH}} {{r.ProvinceNameTH}}
                         </ng-template>
-                        <input type="text" class="form-control form-control-sm {{!item.get('Region').value?'ng-invalid ng-touched':''}}"
+                        <input type="text" class="form-control form-control-sm {{!item.get('ProvinceCode').value?'ng-invalid ng-touched':''}}"
                             [ngbTypeahead]="searchRegion"
                             [readOnly]="showEditField"
                             [resultTemplate]="rt"
                             [inputFormatter]="formatterRegion" 
                             (selectItem)="selectItemLocaleRegion($event)" 
-                            (blur)="blurSelectItemLocaleRegion()" 
+                            (blur)="blurSelectItemLocaleRegion(localeRegion)" 
                             [value]="item.get('Region').value"
                             [ngClass]="{'ng-touched':isRequired}"
-                            required/>
+                            #localeRegion/>
                     </div>
                 </div>
 
@@ -339,7 +339,7 @@
                             <ng-template #rt let-r="result" let-t="term">
                                 {{r.ProductDesc}} 
                             </ng-template>
-                            <input type="text" class="form-control form-control-sm"
+                            <input type="text" class="form-control form-control-sm {{!item.get('BrandFullName').value?'ng-invalid ng-touched':''}}"
                                 [readonly]="showEditField"
                                 [ngbTypeahead]="searchProduct"
                                 [resultTemplate]="rt"
@@ -352,10 +352,26 @@
                             <input type="number" min="0" formControlName="Qty" class="form-control form-control-sm" [readonly]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                         </td>
                         <td>
-                            <select formControlName="QtyUnit" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null" [ngClass]="{'ng-touched':isRequired}" required>
+                            <ng-template #rtUnit let-r="result" let-t="term">
+                                {{r.DutyCode}} 
+                            </ng-template>
+                            <input type="text" class="form-control form-control-sm {{!item.get('DutyCode').value?'ng-invalid ng-touched':''}}"
+                                [readonly]="showEditField"
+                                [ngbTypeahead]="searchUnit"
+                                [resultTemplate]="rtUnit"
+                                [inputFormatter]="formatterUnit"
+                                (selectItem)="selectItemUnit($event, i)"
+                                [value]="item.get('DutyCode').value" 
+                                [ngClass]="{'ng-touched':isRequired}" required
+                                (keydown.enter)="false"
+                                #unitProductItem
+                                (keyup)="searchDataUnit(unitProductItem, i)"
+                                (blur)="blurDataUnit(unitProductItem, i)"/>
+
+                            <!-- <select formControlName="QtyUnit" class="form-control form-control-sm" [attr.disabled]="showEditField ? '' : null" [ngClass]="{'ng-touched':isRequired}" required>
                                 <option value="" selected disabled></option>
                                 <option *ngFor="let unit of typeheadProductUnit;" [value]="unit.DutyUnitCode">{{unit.DutyCode}}</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="beforeDeleteProduct(item.get('ProductID').value, i)">
@@ -396,7 +412,7 @@
                         <th>เลขประจำตัว</th>
                         <th>ชื่อ</th>
                         <th>จำนวนครั้งการกระทำผิด</th>
-                        <th></th>
+                        <!-- <th></th> -->
                         <th></th>
                     </tr>
                 </thead>
@@ -416,11 +432,11 @@
                             </span> -->
                         </td>
                         <td>{{item.get('MistreatNo').value}}</td>
-                        <td class="text-center">
+                        <!-- <td class="text-center">
                             <a href="javaScript:void(0);" class="text-secondary" *ngIf="!showEditField" (click)="onViewSuspect(item.get('SuspectID').value)">
                                 <i class="fa fa-eye fa-lg"></i>
                             </a>
-                        </td>
+                        </td> -->
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-danger" *ngIf="!showEditField" (click)="beforeDeleteSuspect(item.get('SuspectID').value, i)">
                                 <i class="fa fa-trash-o fa-lg"></i>
@@ -531,41 +547,66 @@
   buttonsStyling="false"
   cancelButtonText="OK"
   cancelButtonClass="swal2-confirm"
+  cancelButtonColor="#3085d6"
   [focusCancel]="true">
 </swal>
 
 <swal
   #deleteNotice
   text=""
-  type="question"
+  type="warning"
   [showCancelButton]="true"
   [focusCancel]="true"
+  confirmButtonColor= '#3085d6'
+  cancelButtonColor="#d33"
+  confirmButtonText="Confirm!"
   (confirm)="onDelete()">
 </swal>
 
 <swal
   #deleteProduct
   text=""
-  type="question"
+  type="warning"
   [showCancelButton]="true"
   [focusCancel]="true"
+  confirmButtonColor= '#3085d6'
+  cancelButtonColor="#d33"
+  confirmButtonText="Confirm!"
   (confirm)="onDeleteProduct()">
 </swal>
 
 <swal
   #deleteSuspect
   text=""
-  type="question"
+  type="warning"
   [showCancelButton]="true"
   [focusCancel]="true"
+  confirmButtonColor= '#3085d6'
+  cancelButtonColor="#d33"
+  confirmButtonText="Confirm!"
   (confirm)="onDeleteSuspect()">
 </swal>
 
 <swal
   #deleteDocument
   text=""
-  type="question"
+  type="warning"
   [showCancelButton]="true"
   [focusCancel]="true"
+  confirmButtonColor= '#3085d6'
+  cancelButtonColor="#d33"
+  confirmButtonText="Confirm!"
   (confirm)="onDeleteDocument()">
+</swal>
+
+<swal
+  #cancelEdit
+  text=""
+  type="warning"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  confirmButtonColor= '#3085d6'
+  cancelButtonColor="#d33"
+  confirmButtonText="Confirm!"
+  (confirm)="onCancelConfirmClick()">
 </swal>

@@ -32,83 +32,88 @@ export class MainMasterService {
   }
 
   MasStaffMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasStaffMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasStaffMaingetAll`);
   }
   MasDepartmentMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasDepartmentMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasDepartmentMaingetAll`);
   }
   MasOfficeMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasOfficeMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasOfficeMaingetAll`);
   }
   MasDistrictMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasDistrictMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasDistrictMaingetAll`);
   }
   MasDutyUnitMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasDutyUnitMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasDutyUnitMaingetAll`);
   }
   MasProductMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasProductMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasProductMaingetAll`);
   }
   MasCourtMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasCourtMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasCourtMaingetAll`);
   }
   MasCommunicationchanelMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasCommunicationchanelMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasCommunicationchanelMaingetAll`);
   }
   MasTitleMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasTitleMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasTitleMaingetAll`);
   }
   MasNationalityMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasNationalityMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasNationalityMaingetAll`);
   }
   MasRaceMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasRaceMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasRaceMaingetAll`);
   }
   MasReligionMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasReligionMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasReligionMaingetAll`);
   }
   MasCountryMaingetAll() {
-    return this.callApi(`${appConfig.api7789}/MasCountryMaingetAll`);
+    return this.callApi(`${appConfig.api8777}/MasCountryMaingetAll`);
   }
   MasDocumentMaingetAll(DocumentType: string, ReferenceCode: string): Promise<MasDocumentModel[]> {
     const params = { DocumentType, ReferenceCode }
-    return this.resposePromisGetList(JSON.stringify(params), `${appConfig.api7789}/MasDocumentMaingetAll`);
+    return this.resposePromisGetList(JSON.stringify(params), `${appConfig.api8777}/MasDocumentMaingetAll`);
   }
 
-
+  async SecondPartLevelCode(param): Promise<any> {
+    const params = { SecondPartLevelCode: param }
+    return this.resposePromisGetList(JSON.stringify(params), `${appConfig.api8777}/MasRewardSecondDivisionRateMaingetBySecondPartLevelCode`);
+  }
 
   masStaffMaingetAll(): Promise<any[]> {
-    const url = `${appConfig.api7789}/MasStaffMaingetAll`;
+    const url = `${appConfig.api8777}/MasStaffMaingetAll`;
     return this.resposePromisGetList('{}', url);
   }
 
   masDepartmentMaingetAll(): Promise<any[]> {
-    const url = `${appConfig.api7789}/MasDepartmentMaingetAll`;
+    const url = `${appConfig.api8777}/MasDepartmentMaingetAll`;
     return this.resposePromisGetList('{}', url);
   }
   masOfficeMaingetAll(): Promise<any[]> {
-    const url = `${appConfig.api7789}/MasOfficeMaingetAll`;
+    const url = `${appConfig.api8777}/MasOfficeMaingetAll`;
     return this.resposePromisGetList('{}', url);
   }
   masDistrictMaingetAll(): Promise<any[]> {
-    const url = `${appConfig.api7789}/MasDistrictMaingetAll`;
+    const url = `${appConfig.api8777}/MasDistrictMaingetAll`;
     return this.resposePromisGetList('{}', url);
   }
   masDutyUnitMaingetAll(): Promise<any[]> {
-    const url = `${appConfig.api7789}/MasDutyUnitMaingetAll`;
+    const url = `${appConfig.api8777}/MasDutyUnitMaingetAll`;
     return this.resposePromisGetList('{}', url);
   }
   masProductMaingetAll(): Promise<any[]> {
-    const url = `${appConfig.api7789}/MasProductMaingetAll`;
+    const url = `${appConfig.api8777}/MasProductMaingetAll`;
     return this.resposePromisGetList('{}', url);
   }
   masCourtMaingetAll(): Promise<any[]> {
-    const url = `${appConfig.api7789}/MasCourtMaingetAll`;
+    const url = `${appConfig.api8777}/MasCourtMaingetAll`;
     return this.resposePromisGetList('{}', url);
   }
   masCommunicationchanelMaingetAll(): Promise<any[]> {
-    const url = `${appConfig.api7789}/MasCommunicationchanelMaingetAll`;
+    const url = `${appConfig.api8777}/MasCommunicationchanelMaingetAll`;
     return this.resposePromisGetList('{}', url);
   }
+
+
 
 }
