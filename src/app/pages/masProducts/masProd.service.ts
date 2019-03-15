@@ -21,7 +21,7 @@ export class MasProdService {
   }
 
   MasProductgetByCon(ProductID: string) {
-    const params = ProductID;
+    const params ={ProductID: ProductID} 
     const url = `${appConfig.api7777}/MasProductgetByCon`;
     return this.http.post<any>(url, params, this.httpOptions);
   }
@@ -47,6 +47,17 @@ export class MasProdService {
   SizePackagegetAll() {
     const params = '';
     const url = `${appConfig.api7777}/SizePackagegetAll`;
+    return this.http.post<any>(url, params, this.httpOptions);
+  }
+
+  MasProductinsAll(params) {
+    // const params = '';
+    const url = `${appConfig.api7777}/MasProductinsAll`;
+    return this.http.post<any>(url, params, this.httpOptions);
+  }
+
+  MasProductupdByCon(params) {
+    const url = `${appConfig.api7777}/MasProductupdByCon`;
     return this.http.post<any>(url, params, this.httpOptions);
   }
 

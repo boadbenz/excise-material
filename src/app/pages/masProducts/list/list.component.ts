@@ -48,8 +48,8 @@ export class ListComponent implements OnInit {
   async ngOnInit() {
 
     this.listOfsreach = [
-      {prodCode:'3597',GroupName:'ยาสูบ',BrandMain:'LM',BrandSecond:'LM',model:'LM 7.1',size:'20',Alcohol:''},
-      {prodCode:'5799',GroupName:'สุรา',BrandMain:'รวงข้าว',BrandSecond:'รวงข้าวเขียว',model:'smallsize',size:'0.700',Alcohol:'40%'}
+      {prodCode:'175',GroupName:'ยาสูบ',BrandMain:'LM',BrandSecond:'LM',model:'LM 7.1',size:'20',Alcohol:''},
+      {prodCode:'100',GroupName:'สุรา',BrandMain:'รวงข้าว',BrandSecond:'รวงข้าวเขียว',model:'smallsize',size:'0.700',Alcohol:'40%'}
     ]
 
     localStorage.setItem('programcode', 'ILG60-99-01');
