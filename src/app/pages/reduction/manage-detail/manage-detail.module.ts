@@ -5,6 +5,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ManageDetailComponent } from './manage-detail.component';
 import { ReductionApiService } from '../reduction.api.service';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { MyDatePickerModule } from 'mydatepicker';
+import { StaffComponent } from './autocomplete/staff.component';
 
 
 const routes: Routes = [
@@ -31,10 +34,13 @@ const routes: Routes = [
     FormsModule,
     CommonModule,
     CardActionsModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    MyDatePickerTHModule,
+    MyDatePickerModule
   ],
   declarations: [
-    ManageDetailComponent
+    ManageDetailComponent,
+    StaffComponent
   ],
   providers: [ReductionApiService]
 })

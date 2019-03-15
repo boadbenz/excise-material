@@ -544,8 +544,10 @@
             <div class="col-md-6">
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่จัดทำรายงานฯ : </label>
-                <div class="col-md-8">
-                  <input class="form-control" type="text" [disabled]="viewMode">
+                <div class="form-group input-group col-md-8">
+                  <div style="width: 100%">
+                    <my-date-picker class="form-control date-setting" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.date" [disabled]="viewMode"></my-date-picker>
+                  </div>
                 </div>
               </div>
             </div>
@@ -574,7 +576,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้เสนอพิจารณาเห็นชอบ : </label>
                 <div class="col-md-8">
-                  <input class="form-control" type="text" [disabled]="viewMode">
+                  <input class="form-control" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.proponentsName" [disabled]="viewMode">
                 </div>
               </div>
             </div>
