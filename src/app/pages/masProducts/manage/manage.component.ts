@@ -216,6 +216,10 @@ export class ManageComponent implements OnInit {
     }
   }
 
+  onSave(){
+    
+  }
+
 
   ngOnDestroy(): void {
     if(this.onPrintSubscribe){this.onPrintSubscribe.unsubscribe();}
