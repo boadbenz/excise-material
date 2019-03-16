@@ -460,7 +460,6 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     //   this.aggregate.FirstMoney.sum +
     //   this.aggregate.SecondMoney.sum +
     //   this.aggregate.MoneySort1.sum;      
-    console.log('Rx_', this.aggregate.BribeMoney.sum +' + '+ this.aggregate.RewardMoney.sum);
     
   }
   public setTotal(controls: FormArray, index) {
@@ -600,7 +599,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               value: m.StaffCode
             }));
             this.StaffList = staff.map(
-              m => `${m.TitleName}${m.FirstName} ${m.LastName}`
+              // m => `${m.TitleName}${m.FirstName} ${m.LastName}`
+              m => `${m.FirstName} ${m.LastName}` //g
             );
           }); // 1.1.2
 
@@ -1015,9 +1015,21 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             MapDataRewardStaff.filter(f => f.check === true).forEach(
               element => {
                 const m12 = RequestRewardStaffModel;
-                Object.keys(m12).forEach(x => {
-                  m12[x] = element[x] || '';
-                });
+                // Object.keys(m12).forEach(x => {
+                //   m12[x] = element[x] || '';
+                // });
+                if (element['sort'] == 4) { //g
+                  Object.keys(m12).forEach(x => {
+                    m12[x] = element[x] || '';
+                  });
+                  m12['FirstName'] = element['FullName'].split(' ')[0] || '';
+                  m12['LastName'] = element['FullName'].split(' ')[1] || '';
+                  m12['ContributorName'] = this.ContributorList.filter(f => f.value === parseInt(element['ContributorID'])).map(m => m.text).shift() || ' ';
+                }else{
+                  Object.keys(m12).forEach(x => {
+                    m12[x] = element[x] || '';
+                  });
+                }
                 newMapDataRewardStaff.push(this.ConvObjectValue(m12));
               }
             );
@@ -1108,9 +1120,21 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             MapDataRewardStaffUpd.filter(f => f.check === true).forEach(
               element => {
                 const m12 = RequestRewardStaffModel;
-                Object.keys(m12).forEach(x => {
-                  m12[x] = element[x] || '';
-                });
+                // Object.keys(m12).forEach(x => {
+                //   m12[x] = element[x] || '';
+                // });
+                if (element['sort'] == 4) { //g
+                  Object.keys(m12).forEach(x => {
+                    m12[x] = element[x] || '';
+                  });
+                  m12['FirstName'] = element['FullName'].split(' ')[0] || '';
+                  m12['LastName'] = element['FullName'].split(' ')[1] || '';
+                  m12['ContributorName'] = this.ContributorList.filter(f => f.value === parseInt(element['ContributorID'])).map(m => m.text).shift() || ' ';
+                }else{
+                  Object.keys(m12).forEach(x => {
+                    m12[x] = element[x] || '';
+                  });
+                }
                 newMapDataRewardStaffUpd.push(this.ConvObjectValue(m12));
               }
             );
@@ -1360,11 +1384,13 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       .toPromise();
     this.staffAll = await this.masStaffService.MasStaffMaingetAll().toPromise();
     this.Staff_StaffCode_List = this.staffAll.map(m => ({
-      text: `${m.TitleName}${m.FirstName} ${m.LastName}`,
+      // text: `${m.TitleName}${m.FirstName} ${m.LastName}`,
+      text: `${m.FirstName} ${m.LastName}`, //g
       value: m.StaffCode
     }));
     this.StaffList = this.staffAll.map(
-      m => `${m.TitleName}${m.FirstName} ${m.LastName}`
+      // m => `${m.TitleName}${m.FirstName} ${m.LastName}`
+      m => `${m.FirstName} ${m.LastName}` //g
     );
     this.MasOfficeMainList = await this.masOfficeService
       .MasOfficeMaingetAll()
