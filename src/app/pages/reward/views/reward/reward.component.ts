@@ -115,16 +115,26 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         (this.SumFirstMoney() || 0) / (this.aggregate.FirstPart.sum || 0)
       ).toFixed(2)
     ) || 0;
+  SumFirstMoneyPerPartView = () => parseInt(this.SumFirstMoneyPerPart().toString()) || 0;
+  // FirstRemainder = () =>
+  //   (this.SumFirstMoney() || 0) - this.aggregate.FirstMoney.sum;
   FirstRemainder = () =>
-    (this.SumFirstMoney() || 0) - this.aggregate.FirstMoney.sum;
+    Number(
+      (this.SumFirstMoneyPerPart() - this.SumFirstMoneyPerPartView()).toFixed(2)
+    ) || 0;
   SumSecondMoney = () =>
     Number(((this.SumMoney() / 3) * 2).toFixed(2));
   SumSecondMoneyPerPart = () =>
     Number(
       (this.SumSecondMoney() / (this.aggregate.SecondPart.sum || 0)).toFixed(2)
     ) || 0;
-  SecondRemainder = () =>
-    this.SumSecondMoney() - this.aggregate.SecondMoney.sum;
+  SumSecondMoneyPerPartView = () => parseInt(this.SumSecondMoneyPerPart().toString()) || 0;
+  // SecondRemainder = () =>
+  //   this.SumSecondMoney() - this.aggregate.SecondMoney.sum;
+  SecondRemainder = () => 
+  Number(
+    (this.SumSecondMoneyPerPart() - this.SumSecondMoneyPerPartView()).toFixed(2)
+  ) || 0;
   searchStation = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -503,6 +513,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     };
   }
   private buttonPrevPage() {
+    this.navService.setNextPageButton(true);
     this.router.navigate([
       '/reward/manage/',
       localStorage.getItem('IndictmentID'),
@@ -905,6 +916,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           );
         });
 
+        this.selectChange();
+        
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
         this.navService.setPrintButton(true);
@@ -1211,8 +1224,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       swal('', 'กรุณาตรวจสอบและระบุข้อมูลให้ครบถ้วน', 'warning');
     }
   }
-  public selectChange(event) {
-    const ReferenceNo = event.target.value;
+  public selectChange() {
+    // const ReferenceNo = event.target.value;
     // console.log('event', ReferenceNo);
 
     this.DataSelect = this.listData;
@@ -1330,6 +1343,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
     if (delResp.IsSuccess) {
       swal('', 'ลบข้อมูลสำเร็จ', 'success');
+      this.navService.setNextPageButton(false);
       this.router.navigate([
         '/reward/manage/',
         localStorage.getItem('IndictmentID'),
