@@ -95,7 +95,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.2.47');
+        this.sidebarService.setVersion('0.0.2.48');
         localStorage.setItem('programcode', 'ILG60-02-00');
         this.paginage.TotalItems = 0;
 
@@ -138,7 +138,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async onSearch(Textsearch: any) {
         this.preLoaderService.setShowPreloader(true);
-        await this.noticeService.getByKeyword(Textsearch).then(list => this.onSearchComplete(list));
+        const officeCode = localStorage.getItem("officeCode");
+        await this.noticeService.getByKeyword(Textsearch, officeCode).then(list => this.onSearchComplete(list));
         this.preLoaderService.setShowPreloader(false);
     }
 
@@ -176,6 +177,8 @@ export class ListComponent implements OnInit, OnDestroy {
         //     form.value.DateStartFrom = "";
         //     form.value.DateStartTo = "";
         // }
+
+        form.value.AccountOfficeCode = localStorage.getItem("officeCode");
 
         this.preLoaderService.setShowPreloader(true);
 

@@ -21,7 +21,7 @@ export class MasProdService {
   }
 
   MasProductgetByCon(ProductID: string) {
-    const params = ProductID;
+    const params ={ProductID: ProductID} 
     const url = `${appConfig.api7777}/MasProductgetByCon`;
     return this.http.post<any>(url, params, this.httpOptions);
   }
@@ -35,7 +35,7 @@ export class MasProdService {
   BrandMaingetAll() {
     const params = '';
     const url = `${appConfig.api7777}/BrandMaingetAll`;
-    return this.http.post<any>(url, params, this.httpOptions);
+    return this.http.post<BrandMainset>(url, params, this.httpOptions);
   }
 
   DutyUnitgetAll() {
@@ -50,5 +50,25 @@ export class MasProdService {
     return this.http.post<any>(url, params, this.httpOptions);
   }
 
+  MasProductinsAll(params) {
+    // const params = '';
+    const url = `${appConfig.api7777}/MasProductinsAll`;
+    return this.http.post<any>(url, params, this.httpOptions);
+  }
+
+  MasProductupdByCon(params) {
+    const url = `${appConfig.api7777}/MasProductupdByCon`;
+    return this.http.post<any>(url, params, this.httpOptions);
+  }
+
 }
 
+export interface BrandMainset {
+  ID?: string;
+  DutyCode?: string;
+  BrandMainCode?: string;
+  BrandMainThai?: string;
+  BrandMainENG?: string;
+  GroupID?: string;
+  IsActive?: string;
+}

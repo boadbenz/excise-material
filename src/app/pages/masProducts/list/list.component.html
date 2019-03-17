@@ -7,35 +7,53 @@
 
     <div class="card-body">
         <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onAdvSearch(advForm)">
-            <div>
+           
                 <div class="row">
                     <label for="" class="col-lg-2 col-sm-3 control-label">กลุ่มสินค้า :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
-                            <div class="form-line">
-                                <select [(ngModel)]="GroupName" (ngModelChange)="getValueByIndex($event)" name="GroupName"  class="form-control form-control-sm">
-                                    <!-- <option value="" selected disabled></option> -->
-                                    <option value=""></option>
-                                    <option *ngFor="let item of DutyGroup; let i=index" [ngValue]="item" >{{i+1}}. {{item.GroupName}}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อหลัก :</label>
-                    <div class="col-lg-4 col-md-7 col-sm-8">
-                        <div class="form-group ">
-                            <input type="text" class="form-control form-control-sm" 
-                                [(ngModel)]="xxx" name="xxx" placeholder="พิมพ์ข้อความ"
+                                <input type="text" class="form-control form-control-sm" 
+                                placeholder=""
                                 aria-label="Number" 
-                                matInput [matAutocomplete]="auto" 
+                                matInput [matAutocomplete]="auto1" 
                                 [ngClass]="{'ng-touched':isRequired}"
                                 (focus)="onAutoFocus($event.target.value)" 
                                 (input)="onAutoChange($event.target.value)"
                                 [disabled]="showEditField"
-                                required>
-                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                                <mat-option *ngFor="let item of options" [value]="item.BrandMainENG" (click)="onAutoSelecteWord(item)" (onSelectionChange)="onAutoSelecteWord(item)">
-                                    {{ item.BrandMainENG }}
+                                >
+                            <mat-autocomplete  #auto1="matAutocomplete">
+                                <mat-option *ngFor="let item of options" [value]="item.GroupName" 
+                                (click)="onAutoSelecteWord(item)" 
+                                (onSelectionChange)="onAutoSelecteWord(item)">
+                                    {{ item.GroupName }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <!-- <div class="form-line">
+                                <select [(ngModel)]="GroupName" (ngModelChange)="getValueByIndex($event)" name="GroupName"  class="form-control form-control-sm">
+                                    
+                                    <option value=""></option>
+                                    <option *ngFor="let item of DutyGroup; let i=index" [ngValue]="item" >{{i+1}}. {{item.GroupName}}</option>
+                                </select>
+                            </div> -->
+                        </div>
+                    </div>
+                    <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อหลัก :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <input type="text" class="form-control form-control-sm" 
+                            placeholder=""
+                            aria-label="Number" 
+                            matInput [matAutocomplete]="auto2" 
+                            [ngClass]="{'ng-touched':isRequired}"
+                            (focus)="BrandMainonAutoFocus($event.target.value)" 
+                            (input)="BrandMainonAutoChange($event.target.value)"
+                            [disabled]="showEditField"
+                            >
+                            <mat-autocomplete  #auto2="matAutocomplete">
+                                <mat-option *ngFor="let items of BrandMainoptions" [value]="items.BrandMainENG"
+                                (click)="BrandMainonAutoSelecteWord(items)" 
+                                (onSelectionChange)="BrandMainonAutoSelecteWord(items)">
+                                    {{items.BrandMainENG }} {{items.BrandMainThai}}
                                 </mat-option>
                             </mat-autocomplete>
                         </div>
@@ -55,23 +73,47 @@
                     <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อรอง :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
-                            <div class="form-line">
-                                <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm">
-                                    <option value=""></option>
-                                    <option *ngFor="let item of afBrandSecond; let i=index" [value]="item.value">{{i+1}}. {{item.BrandMainENG}}   {{item.BrandMainThai}}</option>
-                                </select>
-                            </div>
+                                <input type="text" class="form-control form-control-sm" 
+                                placeholder=""
+                                aria-label="Number" 
+                                matInput [matAutocomplete]="auto3" 
+                                [ngClass]="{'ng-touched':isRequired}"
+                                (focus)="BrandSecondonAutoFocus($event.target.value)" 
+                                (input)="BrandSecondonAutoChange($event.target.value)"
+                                [disabled]="showEditField"
+                                >
+                                <mat-autocomplete  #auto3="matAutocomplete">
+                                    <mat-option *ngFor="let items of BrandSecondoptions" [value]="items.GroupName"
+                                    (click)="BrandSecondonAutoSelecteWord(items)" 
+                                    (onSelectionChange)="BrandSecondonAutoSelecteWord(items)">
+                                        {{items.GroupName }}
+                                    </mat-option>
+                                </mat-autocomplete>
                         </div>
                     </div>
                     <label for="" class="col-lg-2 col-sm-3 control-label">รุ่น :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
-                            <div class="form-line">
-                                <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm">
-                                    <option value="" selected disabled></option>
-                                    <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
-                                </select>
-                            </div>
+                                <div class="form-line">
+                                        <input type="text" class="form-control form-control-sm" 
+                                        placeholder="">
+                                </div>
+                                <!-- <input type="text" class="form-control form-control-sm" 
+                                placeholder=""
+                                aria-label="Number" 
+                                matInput [matAutocomplete]="auto4" 
+                                [ngClass]="{'ng-touched':isRequired}"
+                                (focus)="BrandSecondonAutoFocus($event.target.value)" 
+                                (input)="BrandSecondonAutoChange($event.target.value)"
+                                [disabled]="showEditField"
+                                >
+                                <mat-autocomplete  #auto4="matAutocomplete">
+                                    <mat-option *ngFor="let items of BrandSecondoptions" [value]="items.GroupName"
+                                    (click)="BrandSecondonAutoSelecteWord(items)" 
+                                    (onSelectionChange)="BrandSecondonAutoSelecteWord(items)">
+                                        {{items.GroupName }}
+                                    </mat-option>
+                                </mat-autocomplete> -->
                         </div>
                     </div>
                 </div>
@@ -82,7 +124,7 @@
                         <button type="submit" class="btn btn-block btn-themecolor">ค้นข้อมูล</button>
                     </div>
                 </div>
-            </div>
+            
         </form>
     </div>
 
@@ -108,18 +150,17 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let item of xxx; let i=index;">
+                    <tr *ngFor="let item of listOfsreach; let i=index;">
                         <td style="text-align: center;">{{i + 1}}</td>
-                        <td>{{item.RevenueCode}}</td>
-                        <td>{{item.RevenueDate}}</td>
-                        <td>{{item.RevenueOneStaff}}</td>
-                        <td>{{item.RevenueOneStaffDept}}</td>
-                        <td style="text-align: center">{{item.ResultCount}}
-                        </td>
+                        <td>{{item.prodCode}}</td>
+                        <td>{{item.GroupName}}</td>
+                        <td>{{item.BrandMain}}</td>
+                        <td>{{item.BrandSecond}}</td>
+                        <td>{{item.model}}</td>
+                        <td>{{item.size}}</td>
+                        <td>{{item.Alcohol}}</td>
                         <td class="text-center;">
-                            {{item.RevenueStatusStr}}</td>
-                        <td class="text-center;">
-                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.RevenueID)">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.prodCode)">
                                 <i class="mdi mdi-eye fa-lg"></i>
                             </a>
                         </td>
