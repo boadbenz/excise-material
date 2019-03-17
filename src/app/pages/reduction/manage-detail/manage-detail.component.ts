@@ -1,7 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ReductionApiService } from '../reduction.api.service';
+import moment = require('moment');
+import 'moment/locale/th';
+
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-manage-detail',
@@ -9,6 +13,15 @@ import { ReductionApiService } from '../reduction.api.service';
   styleUrls: ['./manage-detail.component.scss']
 })
 export class ManageDetailComponent implements OnInit, OnDestroy {
+
+  /**
+   * Send data to autocomplete child.
+   */
+  public autoCompleteData: any = {
+    api: '/XCS60/MassStaffMaingetAll'
+  };
+
+  private destroy$: Subject<boolean> = new Subject<boolean>();
 
   public mode = 'A';
   public adjustArrest = {
@@ -103,7 +116,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public EditApproveCaseComparisonPopUp: any = {
     fullName: '',
     PaymentFineDate: ['', ''],
-    FineType: '1'
+    FineType: '1',
+    proponentsName: '',
+    date: moment().format('DD-MM-YYYY')
   }
 
   adjustFine = [];
@@ -193,6 +208,13 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.getAdjustDetailgetByCompareDetailId(this.compareIdDetail);
     // this.getMasDocumentMaingetAll(this.compareID);
     this.getAdjustFinecheckComplete(this.compareIdDetail);
+
+    this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
+      if (status) {
+          this.saveData();
+      }
+    });
+
   }
 
   // เตรียมข้อมูลรายละเอียดคดีจาก
@@ -424,6 +446,128 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.navService.setDeleteButton(false);
 
     this.navServiceSub.unsubscribe();
+  }
+
+  public saveData(): void {
+    console.log(this.adjustFine);
+    const adjustData = [];
+    this.adjustFine.forEach((data, i) => {
+      console.log(data);
+      if (data.CompareFine == null || data.CompareFine === '') {
+        return;
+      }
+
+      adjustData.push({
+        CompareFineID: '',
+        CompareDetailID: data.CompareDetailID,
+        ProductID: data.ProductID,
+        ProductFine: data.CompareFine,
+        VatValue: 500,
+        FineRate: 300,
+        IsActive: 1,
+        FineType: data.CompareFineDiff > 0 ? 0 : data.CompareFineDiff === 0 ? 1 : 2
+      });
+    });
+
+    console.log(adjustData);
+    return;
+    const param = {
+      CompareDetailID: '',
+      CompareID: 2,
+      IndictmentDetailID: 5,
+      CompareAction: 'แจ้งให้ญาติทร',
+      LawbrakerTestimony: '',
+      Fact: '',
+      IsRequest: '',
+      RequestForAction: '',
+      CompareReason: '',
+      IsProvisionalAcquittal: 1,
+      Bail: '',
+      Guaruntee: '',
+      CompareFine: '',
+      PaymentFineDate: '2017-12-29 00:00:00.0000000 +12:15',
+      PaymentFineAppointDate: '2017-12-29 00:00:00.0000000 +12:15',
+      PaymentVatDate: '2017-12-29 00:00:00.0000000 +12:15',
+      TreasuryMoney: '',
+      BribeMoney: '',
+      RewardMoney: '',
+      IsActive: 1,
+      ApproveStationCode: '',
+      ApproveStation: '',
+      ApproveReportDate: '2017-12-29 00:00:00.0000000 +12:15',
+      CommandNo: '',
+      CommandDate: '2017-12-29 00:00:00.0000000 +12:15',
+      CompareAuthority: '',
+      ApproveReportType: '',
+      MistreatNo: 2,
+      FineType: 1,
+      AdjustReason: 'เหตุผลในการปรับเพิ่มปรับลด',
+      AdjustCompareDetailFine: [
+        {
+          CompareFineID: '',
+          CompareDetailID: '',
+          ProductID: 556,
+          ProductFine: 1500,
+          VatValue: 500,
+          FineRate: 300,
+          IsActive: 1,
+          FineType: 1
+        },
+        {
+          CompareFineID: '',
+          CompareDetailID: '',
+          ProductID: 557,
+          ProductFine: 1500,
+          VatValue: 300,
+          FineRate: 100,
+          IsActive: 1,
+          FineType: 1
+        }
+      ],
+      AdjustCompareDetailReceipt: [
+        {
+          CompareReceiptID: '',
+          ReceiptType: 'A',
+          ReceiptBookNo: '2561/1022',
+          ReceiptNo: '2561/101001',
+          ReceiptDate: '2017-12-29 00:00:00.0000000 +12:15',
+          StationCode: '02',
+          Station: 'ระยอง',
+          CompareDetailID: '341',
+          PaymentDate: '2017-12-29 00:00:00.0000000 +12:15',
+          TotalFine: 1500,
+          RevenueStatus: 1,
+          RevenueDate: '2017-12-29 00:00:00.0000000 +12:15',
+          IsActive: 1,
+          ReceiptChanel: '',
+          ReferenceNo: '',
+          CompareAuthority: 1,
+          FineType: 1
+        }
+      ],
+      AdjustCompareStaff: [
+        {
+          StaffID: '',
+          CompareID: '2',
+          StaffCode: '01255',
+          TitleName: 'นาย',
+          FirstName: 'ธวัชชัย',
+          LastName: 'บิงขุนทด',
+          PositionCode: '02566',
+          PositionName: 'นักวิชาการ',
+          PosLevel: '01',
+          PosLevelName: 'ชำนาญการ',
+          DepartmentCode: '02000',
+          DepartmentName: 'สำนักตรวจสอบม',
+          DepartmentLevel: '01',
+          OfficeCode: '05',
+          OfficeName: 'สำนักตรวจสอบ',
+          OfficeShortName: 'สตป',
+          ContributorID: 43,
+          IsActive: '1'
+        }
+      ]
+    };
   }
 
 }
