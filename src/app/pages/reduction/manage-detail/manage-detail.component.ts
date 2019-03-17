@@ -2,8 +2,9 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { ReductionApiService } from '../reduction.api.service';
-import { PrintDocModalComponent } from '../print-doc-modal/print-doc-modal.component'
-import moment = require('moment');
+import { PrintDocModalComponent } from '../print-doc-modal/print-doc-modal.component';
+// import moment = require('moment');
+import * as moment from 'moment';
 import 'moment/locale/th';
 
 import { Subject } from 'rxjs/Subject';
