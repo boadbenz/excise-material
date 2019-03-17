@@ -9,7 +9,7 @@
         <h4 class="card-title m-b-0">ค้นหา</h4>
     </div>
 
-    <div class="card-body">
+    <div class="card-body" style="font-weight: 400;">
         <!-- คืนของกลาง(11), ขายทอดตลาด(13), ทำลายของกลาง(14), นำของกลางออกจากคลัง(15), โอนย้ายของกลาง(16)   -->
         <div *ngIf="evitype == '11' || evitype == '13' || evitype == '14' || evitype == '15' || evitype == '16'">
             <div class="row">
@@ -32,7 +32,7 @@
                 <label *ngIf="evitype == '15'" for="" class="col-lg-2 col-sm-3 control-label">วันที่นำออก :</label>
                 <label *ngIf="evitype == '16'" for="" class="col-lg-2 col-sm-3 control-label">วันที่โอนย้าย :</label>
                 <div class="col-lg-4 col-md-7 col-sm-9">
-                    <div class="form-group input-group form-line">
+                    <div class="input-group form-line">
                         <div style="width:45%">
                             <my-date-picker-th name="EvidenceOutDateStart" [(ngModel)]="EvidenceOutDateStart" [options]="myDatePickerOptions" (dateChanged)="onSEviDateChange($event)"></my-date-picker-th>
                         </div>
@@ -62,7 +62,7 @@
                 <label *ngIf="evitype == '11'" for="" class="col-lg-2 col-sm-3 control-label">วันที่ขอคืน :</label>
                 <label *ngIf="evitype == '13' || evitype == '14' || evitype == '15' || evitype == '16'" for="" class="col-lg-2 col-sm-3 control-label">วันที่อนุมัติ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-9">
-                    <div class="form-group input-group form-line">
+                    <div class="input-group form-line">
                         <div style="width:45%">
                             <my-date-picker-th name="EvidenceOutNoDateStart" [(ngModel)]="EvidenceOutNoDateStart" [options]="myDatePickerOptions" (dateChanged)="onSEviNoDateChange($event)"></my-date-picker-th>
                         </div>
@@ -120,7 +120,7 @@
 
                 <label for="" class="col-lg-2 col-sm-3 control-label">วันที่จัดเก็บพิพิธภัณฑ์ :</label>
                 <div class="col-lg-4 col-md-7 col-sm-9">
-                    <div class="form-group input-group form-line">
+                    <div class="input-group form-line">
                         <div style="width:45%">
                             <my-date-picker-th name="EvidenceOutDateStart" [(ngModel)]="EvidenceOutDateStart" [options]="myDatePickerOptions" (dateChanged)="onSEviDateChange($event)"></my-date-picker-th>
                         </div>

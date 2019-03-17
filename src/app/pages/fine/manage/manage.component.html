@@ -193,9 +193,9 @@
           <th class="footable-sortable" style="width:7%">มูลค่าภาษี</th>
           <th class="footable-sortable" style="width:7%">ค่าปรับสุทธิ</th>
           <th class="footable-sortable" style="width:7%">ยอดชำระ</th>
-          <th class="footable-sortable" style="width:7%">สินบน(20)</th>
-          <th class="footable-sortable" style="width:7%">รางวัล(20)</th>
-          <th class="footable-sortable" style="width:7%">ส่งคลัง(60)</th>
+          <th class="footable-sortable" style="width:7%">สินบน({{ sumAllCompare && sumAllCompare.sum3 ? (multiReward.BribeMoney > 0 ? 20 : 0) : 0 }}%)</th>
+          <th class="footable-sortable" style="width:7%">รางวัล({{ sumAllCompare && sumAllCompare.sum3 ? 20 : 0 }}%)</th>
+          <th class="footable-sortable" style="width:7%">ส่งคลัง({{ sumAllCompare && sumAllCompare.sum3 ? (multiReward.BribeMoney > 0 ? 60 : 80) : 0 }}%)</th>
           <!--<th class="footable-sortable" style="width:7%">รวม</th>-->
         </tr>
         </thead>
@@ -429,7 +429,7 @@
                     <span *ngIf="receipt.IsOutside" style="padding: 0.5rem;">น.</span>
                   </div>
                   <div class="row col-md-10">
-                      <input class="form-control" type="text" [(ngModel)]="receipt.CompareNo" name="CompareNo"
+                      <input class="form-control" type="number" [(ngModel)]="receipt.CompareNo" name="CompareNo"
                       [disabled]="showEditField || receipt.isHaveData">
                   </div>
             </div> <span style="font-size: 1.5rem">/</span>

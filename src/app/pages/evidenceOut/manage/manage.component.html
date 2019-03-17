@@ -58,7 +58,7 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :
             </label>
-            <div class="form-group input-group col-lg-4 col-md-7">
+            <div class="input-group col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="EvidenceOutNoDate" [(ngModel)]="EvidenceOutNoDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         required></my-date-picker-th>
@@ -139,7 +139,7 @@
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">วันที่ชำระภาษี :
             </label>
-            <div class="form-group input-group col-lg-4 col-md-7">
+            <div class="input-group col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="PayDate" [(ngModel)]="PayDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         required></my-date-picker-th>
@@ -159,7 +159,7 @@
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :
             </label>
-            <div class="form-group input-group col-lg-4 col-md-7">
+            <div class="input-group col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="EvidenceOutNoDate" [(ngModel)]="EvidenceOutNoDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         required></my-date-picker-th>
@@ -169,6 +169,12 @@
                     [ngClass]="{'ng-touched':isRequired}" required>
             </div>
 
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
+            </div>
+        </div>
+        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้อนุมัติหนังสือ :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
@@ -183,18 +189,12 @@
                     </mat-autocomplete>
                 </div>
             </div>
-        </div>
-        <div class="row">
+
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
                     <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control" readonly>
                 </div>
-            </div>
-
-            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
-            <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
             </div>
         </div>
         <div class="row">
@@ -231,7 +231,7 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :
             </label>
-            <div class="form-group input-group col-lg-4 col-md-7">
+            <div class="input-group col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="EvidenceOutNoDate" [(ngModel)]="EvidenceOutNoDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         required></my-date-picker-th>
@@ -271,6 +271,20 @@
                 <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control" readonly>
             </div>
 
+            <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :
+            </label>
+            <div class="input-group col-lg-4 col-md-7">
+                <div style="width:45%">
+                    <my-date-picker-th name="ApproveDate" [(ngModel)]="ApproveDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
+                        required></my-date-picker-th>
+                </div>
+                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                <input type="text" [(ngModel)]="ApproveTime" name="ApproveTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
+                    [ngClass]="{'ng-touched':isRequired}" required>
+            </div>
+        </div>
+
+        <div class="row">
             <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาเห็นชอบ :</label>
             <label *ngIf="evitype == '13' || evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :</label>
             <div class="col-lg-4 col-md-7">
@@ -286,8 +300,7 @@
                     </mat-autocomplete>
                 </div>
             </div>
-        </div>
-        <div class="row">
+
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
             </label>
             <div class="col-lg-4 col-md-7 col-sm-8">
@@ -295,25 +308,13 @@
                     <input type="text" name="PosApprove" [(ngModel)]="PosApprove" class="form-control" readonly>
                 </div>
             </div>
-
+        </div>
+        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
                     <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :
-            </label>
-            <div class="form-group input-group col-lg-4 col-md-7">
-                <div style="width:45%">
-                    <my-date-picker-th name="ApproveDate" [(ngModel)]="ApproveDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
-                        required></my-date-picker-th>
-                </div>
-                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                <input type="text" [(ngModel)]="ApproveTime" name="ApproveTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
@@ -347,7 +348,7 @@
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :</label>
-            <div class="form-group input-group col-lg-4 col-md-7">
+            <div class="input-group col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="EvidenceOutNoDate" [(ngModel)]="EvidenceOutNoDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         required></my-date-picker-th>
@@ -359,15 +360,6 @@
         </div>
 
         <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">กำหนดคืนวันที่ :</label>
-            <div class="col-lg-4 col-md-7">
-                <div class="form-group input-group ">
-                    <my-date-picker-th name="ReturnDate" [(ngModel)]="ReturnDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
-                        class="form-control  unset-form-control" required></my-date-picker-th>
-                </div>
-            </div>
-
-
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้ขอนำออก :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
@@ -382,17 +374,26 @@
                     </mat-autocomplete>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control" readonly>
             </div>
+        </div>
+
+        <div class="row">
 
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control" readonly>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">กำหนดคืนวันที่ :</label>
+            <div class="col-lg-4 col-md-7">
+                <div class="input-group ">
+                    <my-date-picker-th name="ReturnDate" [(ngModel)]="ReturnDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
+                        class="form-control  unset-form-control" required></my-date-picker-th>
+                </div>
             </div>
         </div>
 
@@ -425,7 +426,7 @@
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :</label>
-            <div class="form-group input-group col-lg-4 col-md-7">
+            <div class="input-group col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="ApproveDate" [(ngModel)]="ApproveDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         required></my-date-picker-th>
@@ -451,8 +452,8 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำออก :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
             </div>
         </div>
     </div>
@@ -474,7 +475,7 @@
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :</label>
-            <div class="form-group input-group col-lg-4 col-md-7">
+            <div class="input-group col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="EvidenceOutNoDate" [(ngModel)]="EvidenceOutNoDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         required></my-date-picker-th>
@@ -512,36 +513,18 @@
                 <input type="text" [(ngModel)]="DeptRequest" name="DeptRequest" class="form-control" readonly>
             </div>
 
-            <label for="" class="col-lg-2 col-md-4 control-label">ผู้รับบริจาค :</label>
-            <div class="col-lg-4 col-md-7">
-                <div class="form-group ">
-                    <input type="text" [(ngModel)]="StaffReceiverName" name="StaffReceiverName" class="form-control" [disabled]="showEditField">
-                    <!-- <input type="text" matInput class="form-control" [(ngModel)]="StaffReceiverName" name="StaffReceiverName" placeholder=""
-                        aria-label="Number" matInput [matAutocomplete]="auto4" (input)="StaffReceiveEvidenceonAutoChange($event.target.value)"
-                        (focus)="StaffReceiveEvidenceonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
-                        required>
-                    <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
-                        <mat-option *ngFor="let sOption of StaffReceiveoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                            (click)="StaffReceiveEvidenceonAutoSelecteWord(sOption)" (onSelectionChange)="StaffReceiveEvidenceonAutoSelecteWord(sOption)">
-                            {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
-                        </mat-option>
-                    </mat-autocomplete> -->
+            <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :</label>
+            <div class="input-group col-lg-4 col-md-7">
+                <div style="width:45%">
+                    <my-date-picker-th name="ApproveDate" [(ngModel)]="ApproveDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
+                        required></my-date-picker-th>
                 </div>
+                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
+                <input type="text" [(ngModel)]="ApproveTime" name="ApproveTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
+                    [ngClass]="{'ng-touched':isRequired}" required>
             </div>
         </div>
-        <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
-            <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="PosReceiver" name="PosReceiver" class="form-control" [disabled]="showEditField">
-            </div>
 
-            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
-            <div class="col-lg-4 col-md-7 col-sm-8">
-                <div class="form-group ">
-                    <input type="text" name="DeptReceiver" [(ngModel)]="DeptReceiver" class="form-control" [disabled]="showEditField">
-                </div>
-            </div>
-        </div>
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :</label>
             <div class="col-lg-4 col-md-7">
@@ -563,24 +546,51 @@
                 <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control" readonly>
             </div>
         </div>
+
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
             </div>
 
-            <label for="" class="col-lg-2 col-md-4 control-label">พิจารณาวันที่ :</label>
-            <div class="form-group input-group col-lg-4 col-md-7">
-                <div style="width:45%">
-                    <my-date-picker-th name="ApproveDate" [(ngModel)]="ApproveDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
-                        required></my-date-picker-th>
+            <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำบริจาค :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">ผู้รับบริจาค :</label>
+            <div class="col-lg-4 col-md-7">
+                <div class="form-group ">
+                    <input type="text" [(ngModel)]="StaffReceiverName" name="StaffReceiverName" class="form-control" [disabled]="showEditField">
+                    <!-- <input type="text" matInput class="form-control" [(ngModel)]="StaffReceiverName" name="StaffReceiverName" placeholder=""
+                        aria-label="Number" matInput [matAutocomplete]="auto4" (input)="StaffReceiveEvidenceonAutoChange($event.target.value)"
+                        (focus)="StaffReceiveEvidenceonAutoFocus($event.target.value)" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                        required>
+                    <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
+                        <mat-option *ngFor="let sOption of StaffReceiveoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                            (click)="StaffReceiveEvidenceonAutoSelecteWord(sOption)" (onSelectionChange)="StaffReceiveEvidenceonAutoSelecteWord(sOption)">
+                            {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                        </mat-option>
+                    </mat-autocomplete> -->
                 </div>
-                <label for="" class="">&nbsp; เวลา : &nbsp;</label>
-                <input type="text" [(ngModel)]="ApproveTime" name="ApproveTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" [(ngModel)]="PosReceiver" name="PosReceiver" class="form-control" [disabled]="showEditField">
             </div>
         </div>
         <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" name="DeptReceiver" [(ngModel)]="DeptReceiver" class="form-control" [disabled]="showEditField">
+                </div>
+            </div>
+
             <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บ :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto16"
@@ -591,12 +601,6 @@
                         {{ optionWh.WarehouseName }}
                     </mat-option>
                 </mat-autocomplete>
-            </div>
-
-            <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการนำบริจาค :</label>
-            <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
             </div>
         </div>
     </div>
@@ -618,7 +622,7 @@
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">ลงวันที่ :</label>
-            <div class="form-group input-group col-lg-4 col-md-7">
+            <div class="input-group col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="EvidenceOutNoDate" [(ngModel)]="EvidenceOutNoDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         required></my-date-picker-th>
@@ -672,6 +676,18 @@
         </div>
 
         <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บต้นทาง :</label>
+            <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto17"
+                    (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
+                    [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
+                <mat-autocomplete autoActiveFirstOption #auto17="matAutocomplete">
+                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)">
+                        {{ optionWh.WarehouseName }}
+                    </mat-option>
+                </mat-autocomplete>
+            </div>
+
             <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บปลายทาง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" class="form-control" [(ngModel)]="WarehouseDestName" name="WarehouseDestName" placeholder="" matInput
@@ -684,7 +700,9 @@
                     </mat-option>
                 </mat-autocomplete>
             </div>
+        </div>
 
+        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">เลขที่หนังสืออนุมัติ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
@@ -692,12 +710,10 @@
                         required>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">วันที่อนุมัติ :
             </label>
-            <div class="form-group input-group col-lg-4 col-md-7">
+            <div class="input-group col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="ApproveDate" [(ngModel)]="ApproveDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         required></my-date-picker-th>
@@ -706,7 +722,9 @@
                 <input type="text" [(ngModel)]="ApproveTime" name="ApproveTime" style="height: 35px;" class="form-control " [disabled]="showEditField"
                     [ngClass]="{'ng-touched':isRequired}" required>
             </div>
+        </div>
 
+        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ผู้พิจารณาอนุมัติ :</label>
             <div class="col-lg-4 col-md-7">
                 <div class="form-group ">
@@ -721,37 +739,23 @@
                     </mat-autocomplete>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="PosApprove" name="PosApprove" class="form-control" readonly>
             </div>
+        </div>
 
+        <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
                 <input type="text" [(ngModel)]="DeptApprove" name="DeptApprove" class="form-control" readonly>
             </div>
-        </div>
-
-        <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">คลังจัดเก็บต้นทาง :</label>
-            <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" class="form-control" [(ngModel)]="WarehouseName" name="WarehouseName" placeholder="" matInput [matAutocomplete]="auto17"
-                    (input)="WarehouseOnAutoChange($event.target.value)" (focus)="WarehouseOnAutoFocus($event.target.value)"
-                    [disabled]="showEditField || ShowReceiveField" [ngClass]="{'ng-touched':isRequired}" required (keydown.Tab)="chooseFirstWarehouse()">
-                <mat-autocomplete autoActiveFirstOption #auto17="matAutocomplete">
-                    <mat-option *ngFor="let optionWh of Warehouseoptions" [value]="optionWh.WarehouseName" (click)="WarehouseOnAutoSelecteWord(optionWh)">
-                        {{ optionWh.WarehouseName }}
-                    </mat-option>
-                </mat-autocomplete>
-            </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">เหตุผลในการโอนย้าย :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField"
-                    [ngClass]="{'ng-touched':isRequired}" required>
+                <input type="text" [(ngModel)]="Remark" name="Remark" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
             </div>
         </div>
     </div>
@@ -778,8 +782,8 @@
             </div>
 
             <!--  data-target="#ProductPopup" -->
-            <div *ngIf="evitype == '11I' || evitype == '11E'" class="col-lg-2 col-md-3 col-sm-4" data-toggle="modal">    
-                <button class="btn btn-block btn-themecolor" [disabled]="showEditField"  (click)="VaridatePopup()">เพิ่มของกลาง</button>
+            <div *ngIf="evitype == '11I' || evitype == '11E'" class="col-lg-2 col-md-3 col-sm-4" data-toggle="modal">
+                <button class="btn btn-block btn-themecolor" [disabled]="showEditField" (click)="VaridatePopup()">เพิ่มของกลาง</button>
             </div>
         </div>
 
@@ -833,9 +837,8 @@
                                 <th>
                                     <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.EvidenceInItemCode"
                                         name="item.EvidenceInItemCode" placeholder="" aria-label="Number" [matAutocomplete]="auto18"
-                                        (input)="ProductonAutoChange($event.target.value, item.ProductSeq)"
-                                        [disabled]="showEditField || evitype == '11E' || evitype == '11I' || mode == 'R'" [ngClass]="{'ng-touched':isRequired}"
-                                        required>
+                                        (input)="ProductonAutoChange($event.target.value, item.ProductSeq)" [disabled]="showEditField || evitype == '11E' || evitype == '11I' || mode == 'R'"
+                                        [ngClass]="{'ng-touched':isRequired}" required>
                                     <mat-autocomplete autoActiveFirstOption #auto18="matAutocomplete">
                                         <mat-option *ngFor="let pOption of Productoptions" [value]="pOption.EvidenceInItemCode" (click)="ProductonAutoSelecteWord(pOption, item.ProductSeq)"
                                             style="font-size: 14px;" (onSelectionChange)="ProductonAutoSelecteWord(pOption, item.ProductSeq)">
@@ -962,7 +965,7 @@
                 <label *ngIf="evitype == '12'" for="" class="col-lg-2 col-md-4 control-label">วันที่จัดเก็บ :</label>
                 <label *ngIf="evitype == '13'" for="" class="col-lg-2 col-md-4 control-label">วันที่ขาย :</label>
                 <label *ngIf="evitype == '14'" for="" class="col-lg-2 col-md-4 control-label">วันที่ทำลาย :</label>
-                <div class="form-group input-group col-lg-4 col-md-7">
+                <div class="input-group col-lg-4 col-md-7">
                     <div style="width:45%">
                         <my-date-picker-th name="EvidenceOutDate" [(ngModel)]="EvidenceOutDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                             required></my-date-picker-th>

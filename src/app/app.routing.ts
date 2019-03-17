@@ -20,11 +20,11 @@ export const routes: Routes = [
         ]
     }, {
         // canActivate: [AuthGuard],
-        path: 'arrest', component: LayoutComponent,
+        path: 'arrest', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/arrests/arrest.module#ArrestModule'
     }, {
         // canActivate: [AuthGuard],
-        path: 'suppression/investigation', component: LayoutComponent,
+        path: 'suppression/investigation', component: LayoutComponent, canActivate: [AuthGuard],
         loadChildren: './pages/investigation/investigation.module#InvestigationModule'
     }, {
         path: 'prove', component: LayoutComponent, canActivate: [AuthGuard],
@@ -108,7 +108,7 @@ export const routes: Routes = [
             { path: 'list', loadChildren: './pages/reduction/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/reduction/manage/manage.module#ManageModule' },
             {
-                path: 'manage/:mode/:compareid/:comparedetailid',
+                path: 'manage/:mode/:compareid',
                 loadChildren: './pages/reduction/manage-detail/manage-detail.module#ManageDetailModule'
             }
         ]

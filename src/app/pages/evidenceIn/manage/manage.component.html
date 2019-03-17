@@ -59,7 +59,7 @@
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">วันที่จับกุม :</label>
-            <div class="form-group input-group  col-lg-4 col-md-7">
+            <div class="input-group  col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="OccurrenceDate" [(ngModel)]="OccurrenceDate" [disabled]="true"></my-date-picker-th>
                 </div>
@@ -111,7 +111,7 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">วันที่รับคดี :
             </label>
-            <div class="form-group input-group  col-lg-4 col-md-7">
+            <div class="input-group  col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="LawsuitDate" [(ngModel)]="LawsuitDate" [disabled]="true"></my-date-picker-th>
                 </div>
@@ -160,7 +160,7 @@
             <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
             </label>
 
-            <div class="form-group input-group  col-lg-4 col-md-7">
+            <div class="input-group  col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="DeliverDate" [(ngModel)]="DeliverDate" [disabled]="true"></my-date-picker-th>
                 </div>
@@ -213,7 +213,7 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
             </label>
-            <div class="form-group input-group col-lg-4 col-md-7">
+            <div class="input-group col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="DeliveryDate" [(ngModel)]="DeliveryDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         required></my-date-picker-th>
@@ -227,30 +227,37 @@
             <label for="" class="col-lg-2 col-md-4 control-label">วันที่รับคืน :
             </label>
             <div class="col-lg-4 col-md-7">
-                <div class="form-group input-group ">
+                <div class="input-group ">
                     <my-date-picker-th name="ReturnDate" [(ngModel)]="ReturnDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         class="form-control  unset-form-control" required></my-date-picker-th>
                 </div>
             </div>
 
-            <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :</label>
-            <div class="col-lg-4 col-md-7">
-                <div class="form-group ">
-                    <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName"
+            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
+                </label>
+                <div class="form-group col-lg-4 col-md-7 col-sm-8">
+                    <input type="text" [(ngModel)]="DeptStaffSend" name="DeptStaffSend" class="form-control" 
                         [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                    <!-- <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="" aria-label="Number"
-                        matInput [matAutocomplete]="auto2" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
-                        [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
-                    <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
-                        <mat-option *ngFor="let sOption of StaffSendoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
-                            (click)="StaffSendonAutoSelecteWord(sOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(sOption)">
-                            {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
-                        </mat-option>
-                    </mat-autocomplete> -->
                 </div>
-            </div>
         </div>
         <div class="row">
+                <label for="" class="col-lg-2 col-md-4 control-label">ผู้นำส่ง :</label>
+                <div class="col-lg-4 col-md-7">
+                    <div class="form-group ">
+                        <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName"
+                            [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        <!-- <input type="text" matInput class="form-control" [(ngModel)]="StaffSendName" name="StaffSendName" placeholder="" aria-label="Number"
+                            matInput [matAutocomplete]="auto2" (input)="StaffSendonAutoChange($event.target.value)" (focus)="StaffSendonAutoFocus($event.target.value)"
+                            [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
+                        <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
+                            <mat-option *ngFor="let sOption of StaffSendoptions" [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                (click)="StaffSendonAutoSelecteWord(sOption)" (onSelectionChange)="StaffSendonAutoSelecteWord(sOption)">
+                                {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                            </mat-option>
+                        </mat-autocomplete> -->
+                    </div>
+                </div>
+
             <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
             </label>
             <div class="col-lg-4 col-md-7 col-sm-8">
@@ -258,13 +265,6 @@
                     <input type="text" [(ngModel)]="PosStaffSend" name="PosStaffSend" class="form-control" 
                         [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
                 </div>
-            </div>
-
-            <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :
-            </label>
-            <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="DeptStaffSend" name="DeptStaffSend" class="form-control" 
-                    [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}" required>
             </div>
         </div>
 
@@ -296,7 +296,7 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">วันที่นำส่ง :
             </label>
-            <div class="form-group input-group col-lg-4 col-md-7">
+            <div class="input-group col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="DeliveryDate" [(ngModel)]="DeliveryDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         required></my-date-picker-th>
@@ -500,7 +500,7 @@
 
             <label for="" class="col-lg-2 col-md-4 control-label">วันที่รับ :
             </label>
-            <div class="form-group input-group col-lg-4 col-md-7">
+            <div class="input-group col-lg-4 col-md-7">
                 <div style="width:45%">
                     <my-date-picker-th name="EvidenceInDate" [(ngModel)]="EvidenceInDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
                         required></my-date-picker-th>

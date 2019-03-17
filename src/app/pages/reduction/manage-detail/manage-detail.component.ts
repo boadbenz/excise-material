@@ -10,6 +10,7 @@ import { ReductionApiService } from '../reduction.api.service';
 })
 export class ManageDetailComponent implements OnInit, OnDestroy {
 
+  public mode = 'A';
   public adjustArrest = {
     ArrestCode: '',
     ArrestDate: '',
@@ -31,6 +32,78 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     OccurrenceTime: '',
     Prompt: '',
     Testimony: '',
+    SubDistrict : '',
+    District : '',
+    Province: '',
+    Locations: '',
+    IsOutside: 0,
+    ArrestStaff: '',
+    AdjustArrestStaff: [
+      {
+        StaffID: 0,
+        ArrestCode: '',
+        StaffCode: '',
+        TitleName: '',
+        FirstName: '',
+        LastName: '',
+        PositionCode: '',
+        PositionName: '',
+        PosLevel: '',
+        PosLevelName: '',
+        DepartmentCode: '',
+        DepartmentName: '',
+        DepartmentLevel: null,
+        OfficeCode: '',
+        OfficeName: '',
+        OfficeShortName: '.บึงกาฬ',
+        ContributorID: 0,
+        IsActive: 0
+      }
+    ],
+    AdjustCompareStaff: [
+      {
+        CompareID: 0,
+        ContributorID: 0,
+        DepartmentCode: '',
+        DepartmentLevel: '',
+        DepartmentName: '',
+        FirstName: '',
+        IsActive: 0,
+        LastName: '',
+        OfficeCode: '',
+        OfficeName: '',
+        OfficeShortName: '',
+        PosLevel: '',
+        PosLevelName: '',
+        PositionCode: '',
+        PositionName: '',
+        StaffCode: '',
+        StaffID: 0,
+        TitleName: '',
+      }
+    ],
+    AdjustCompareReceiptCR: [{
+      CompareDetailID: 0,
+      FineType: 0,
+      LawbreakerName: '',
+      ProductDesc: '',
+      ProductFine: 0,
+      ProductID: 0,
+      ReceiptDate: '',
+    }]
+  }
+
+  public AdjustCompareDetail: any = [];
+  public CompareReason = '';
+
+  public CompareReceipt: any = [];
+
+  public EditApproveCaseComparison: number[] = [];
+  public EditApproveCaseComparisonData: any[] = [];
+  public EditApproveCaseComparisonPopUp: any = {
+    fullName: '',
+    PaymentFineDate: ['', ''],
+    FineType: '1'
   }
 
   adjustFine = [];
@@ -38,8 +111,6 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   adjustReceipt = [];
 
   adjustDetail = [];
-
-  compareReason = '';
 
   public fileItem = [{
     fileName: '',
@@ -67,8 +138,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     private readonly apiService: ReductionApiService
   ) { }
 
-  public ngOnInit() {
+  public async ngOnInit() {
 
+    this.mode = this.activeRoute.snapshot.paramMap.get('mode');
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
       this.navService.setSendIncomeButton(true);
@@ -115,169 +187,62 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.getAdjustArrestgetByCon(this.compareID);
-    this.getAdjustFinegetByCon(this.compareID, this.compareIdDetail);
-    this.getAdjustReceiptgetByCompareDetailId(this.compareIdDetail);
+    await this.GetAdjustCompareCRgetByCon(this.compareID);
+    await this.GetAdjustCompareDetailgetByCon (this.compareID);
+    await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
     this.getAdjustDetailgetByCompareDetailId(this.compareIdDetail);
-    this.getMasDocumentMaingetAll(this.compareID);
+    // this.getMasDocumentMaingetAll(this.compareID);
     this.getAdjustFinecheckComplete(this.compareIdDetail);
   }
 
   // เตรียมข้อมูลรายละเอียดคดีจาก
-  public getAdjustArrestgetByCon(CompareID: any = null): void {
+  public async GetAdjustCompareCRgetByCon(CompareID: any = null): Promise<void> {
     if (CompareID == null ) { return }
-    this.apiService.post('/XCS60/AdjustArrestgetByCon', {CompareID: CompareID})
-        .subscribe(response => {
-          if (response.length > 0) {
-            Object.assign(this.adjustArrest, response[0]);
-          }
-        }, error => console.log(error))
+    try {
+      const response = await this.apiService.post('/XCS60/AdjustCompareCRgetByCon', {CompareID: CompareID}).toPromise();
+      Object.assign(this.adjustArrest, response);
+
+      this.adjustArrest.ArrestStaff = this.adjustArrest.AdjustArrestStaff[0].TitleName + this.adjustArrest.AdjustArrestStaff[0].FirstName
+                                    + ' ' + this.adjustArrest.AdjustArrestStaff[0].LastName;
+      this.adjustArrest.Locations = this.adjustArrest.SubDistrict + '/' + this.adjustArrest.District + '/' + this.adjustArrest.Province;
+      this.adjustArrest.CompareCode = this.adjustArrest.IsOutside === 1
+                                    ? 'น' + this.adjustArrest.CompareCode
+                                    : this.adjustArrest.CompareCode;
+
+      this.adjustArrest.CompareName = this.adjustArrest.AdjustCompareStaff[0].TitleName + this.adjustArrest.AdjustCompareStaff[0].FirstName
+                                    + ' ' + this.adjustArrest.AdjustCompareStaff[0].LastName;
+      this.adjustFine = this.adjustArrest.AdjustCompareReceiptCR;
+      this.adjustFine.forEach((e, i) => {
+        this.calAdjustFine(i);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log(this.adjustArrest);
   }
 
   // ดึงข้อมูลการปรับเพิ่มหรือปรับลด
-  public getAdjustFinegetByCon(CompareID: any = null, CompareDetailID: any = null) {
-    console.log(CompareID, CompareDetailID);
-    if (CompareID == null || CompareDetailID == null) { return }
-    this.apiService.post('/XCS60/AdjustFinegetByCon', {
-      CompareID: CompareID,
-      CompareDetailID: CompareDetailID
-    })
-    .subscribe(async response => {
-      if (response.length > 0) {
-        this.adjustFine = response;
-        if (this.adjustFine.length > 0) {
-          this.compareReason = this.adjustFine[0].CompareReason;
+  public async GetAdjustCompareDetailgetByCon(CompareID: any = null): Promise<void> {
+    if (this.adjustArrest.AdjustCompareReceiptCR.length === 0
+        && this.adjustArrest.AdjustCompareReceiptCR[0].CompareDetailID === 0) {
+      return;
+    }
 
-          this.adjustFine = [
-            {
-              CompareDetailID: 989,
-              CompareFineID: 813,
-              CompareReason: 'ไม่มี',
-              FineRate: 7,
-              FineType: 3,
-              IsActive: 1,
-              LawbreakerName: 'หยวก  เหมศรี',
-              ProductDesc: null,
-              ProductFine: 16100,
-              ProductID: 1136,
-              VatValue: 2300,
-              start_index: 0
-            },
-            {
-              CompareDetailID: 989,
-              CompareFineID: 813,
-              CompareReason: 'ไม่มี',
-              FineRate: 7,
-              FineType: 3,
-              IsActive: 1,
-              LawbreakerName: 'หยวก  เหมศรี',
-              ProductDesc: null,
-              ProductFine: 16100,
-              ProductID: 1136,
-              VatValue: 2300,
-              start_index: 0
-            },
-            {
-              CompareDetailID: 989,
-              CompareFineID: 813,
-              CompareReason: 'ไม่มี',
-              FineRate: 7,
-              FineType: 3,
-              IsActive: 1,
-              LawbreakerName: 'หยวก2  เหมศรี',
-              ProductDesc: null,
-              ProductFine: 16100,
-              ProductID: 1136,
-              VatValue: 2300,
-              start_index: 0
-            },
-            {
-              CompareDetailID: 989,
-              CompareFineID: 813,
-              CompareReason: 'ไม่มี',
-              FineRate: 7,
-              FineType: 3,
-              IsActive: 1,
-              LawbreakerName: 'หยวก2  เหมศรี',
-              ProductDesc: null,
-              ProductFine: 16100,
-              ProductID: 1136,
-              VatValue: 2300,
-              start_index: 0
-            },
-            {
-              CompareDetailID: 989,
-              CompareFineID: 813,
-              CompareReason: 'ไม่มี',
-              FineRate: 7,
-              FineType: 3,
-              IsActive: 1,
-              LawbreakerName: 'หยวก2  เหมศรี',
-              ProductDesc: null,
-              ProductFine: 16100,
-              ProductID: 1136,
-              VatValue: 2300,
-              start_index: 0
-            },
-            {
-              CompareDetailID: 989,
-              CompareFineID: 813,
-              CompareReason: 'ไม่มี',
-              FineRate: 7,
-              FineType: 3,
-              IsActive: 1,
-              LawbreakerName: 'หยวก3  เหมศรี',
-              ProductDesc: null,
-              ProductFine: 16100,
-              ProductID: 1136,
-              VatValue: 2300,
-              start_index: 0
-            },
-            {
-              CompareDetailID: 989,
-              CompareFineID: 813,
-              CompareReason: 'ไม่มี',
-              FineRate: 7,
-              FineType: 3,
-              IsActive: 1,
-              LawbreakerName: 'หยวก3  เหมศรี',
-              ProductDesc: null,
-              ProductFine: 16100,
-              ProductID: 1136,
-              VatValue: 2300,
-              start_index: 0
-            },
-            {
-              CompareDetailID: 989,
-              CompareFineID: 813,
-              CompareReason: 'ไม่มี',
-              FineRate: 7,
-              FineType: 3,
-              IsActive: 1,
-              LawbreakerName: 'หยวก3  เหมศรี',
-              ProductDesc: null,
-              ProductFine: 16100,
-              ProductID: 1136,
-              VatValue: 2300,
-              start_index: 0
-            }
-          ];
-
-          await this.adjustFine.forEach((element, i) => {
-            if (i === 0) {
-              element.start_index = i;
-            } else if (element.LawbreakerName !== this.adjustFine[i - 1].LawbreakerName) {
-              element.start_index = i;
-            } else {
-              element.start_index = this.adjustFine[i - 1].start_index;
-            }
-            this.calAdjustFine(i);
-          });
-        }
+    for (let i = 0; i < this.adjustArrest.AdjustCompareReceiptCR.length; i++) {
+      try {
+        const response = await this.apiService.post('/XCS60/AdjustCompareDetailgetByCon',
+                                    {CompareDetailID: this.adjustArrest.AdjustCompareReceiptCR[0].CompareDetailID})
+                             .toPromise();
+        this.AdjustCompareDetail.push(response);
+      } catch (e) {
+        console.log(e);
       }
-    }, async error => {
-      console.log(error);
-    });
+    }
+
+    if (this.AdjustCompareDetail.length > 0) {
+      this.CompareReason = this.AdjustCompareDetail[0].CompareReason;
+    }
+    console.log(this.AdjustCompareDetail);
   }
 
   // คำนวณปรับเพิ่ม-ลด ใหม่
@@ -295,18 +260,16 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.adjustFine[index].CompareFineBribeMoney = 0;
     this.adjustFine[index].CompareFineRewardMoney = 0;
     if (this.adjustFine[index].CompareFine) {
-      this.adjustFine[index].CompareFineDiff = this.adjustFine[index].CompareFine - this.adjustFine[index].ProductFine;
+      this.adjustFine[index].CompareFineDiff = this.adjustFine[index].ProductFine - this.adjustFine[index].CompareFine;
       if (this.adjustFine[index].ProductFine < this.adjustFine[index].CompareFine) {
         this.adjustFine[index].CompareFineStatus = true;
       } else if (this.adjustFine[index].ProductFine > this.adjustFine[index].CompareFine) {
         this.adjustFine[index].CompareFineStatus = false;
       }
 
-      this.adjustFine[index].CompareFineTreasuryMoney = this.adjustFine[index].CompareFine * (1 - (20 / 100));
-      this.adjustFine[index].CompareFineBribeMoney = this.adjustFine[index].CompareFine * (1 - (20 / 100));
-      this.adjustFine[index].CompareFineRewardMoney = this.adjustFine[index].CompareFineDiff
-                                                    - this.adjustFine[index].CompareFineTreasuryMoney
-                                                    - this.adjustFine[index].CompareFineBribeMoney;
+      this.adjustFine[index].CompareFineTreasuryMoney = (20 * this.adjustFine[index].CompareFine) / 100;
+      this.adjustFine[index].CompareFineBribeMoney = (20 * this.adjustFine[index].CompareFine) / 100;
+      this.adjustFine[index].CompareFineRewardMoney = (60 * this.adjustFine[index].CompareFine) / 100;
     }
 
     console.log(this.adjustFine);
@@ -317,6 +280,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     for (let i = start; i < end; i++) {
       sum += this.adjustFine[i][column];
     }
+    sum = isNaN(sum) ? 0 : sum;
     return sum;
   }
 
@@ -325,17 +289,17 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   }
 
   // ดึงข้อมูลในส่วนของการชำระค่าปรับ
-  public getAdjustReceiptgetByCompareDetailId(CompareDetailID: any = null) {
-    if (CompareDetailID == null) { return; }
-    this.apiService.post('/XCS60/AdjustReceiptgetByCompareDetailID', {
-      CompareDetailID: CompareDetailID
-    })
-    .subscribe(response => {
-      console.log(response);
-      this.adjustReceipt = response;
-    }, error => {
-      console.log(error);
-    });
+  public async GetAdjustCompareReciptConfirmgetByCon(CompareID: any = null) {
+    if (CompareID == null) { return; }
+
+    try {
+      const response = await this.apiService.post('/XCS60/AdjustCompareReciptConfirmgetByCon', {
+        CompareID: CompareID
+      }).toPromise();
+      this.CompareReceipt = response;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   // ดึงข้อมูลการจออนุมัติเปรียบเทียบคดีและแบบอนุ
@@ -381,6 +345,65 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   public editData() {
     this.viewMode = false;
+  }
+
+  public async ViewApproveData(CompareDetailID: any) {
+    this.viewMode = true;
+    console.log(CompareDetailID);
+    await this.GetEditApproveCaseComparisonData(CompareDetailID);
+  }
+
+  public async EditApproveData(CompareDetailID: any) {
+    this.viewMode = false;
+    await this.GetEditApproveCaseComparisonData(CompareDetailID);
+  }
+
+  public async GetEditApproveCaseComparisonData(CompareDetailID: any) {
+    if (this.EditApproveCaseComparison.indexOf(CompareDetailID) === (-1)) {
+      this.EditApproveCaseComparison.push(CompareDetailID);
+
+      const response = await this.apiService.post('/XCS60/AdjustCompareDetailgetByCon', {
+        CompareDetailID: CompareDetailID
+      }).toPromise();
+
+      this.EditApproveCaseComparisonData[CompareDetailID] = response;
+
+      if (this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineDate != null) {
+        this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineDate =
+        (this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineDate.split(' '));
+      } else {
+        this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineDate = ['', ''];
+      }
+
+      if (this.EditApproveCaseComparisonData[CompareDetailID].FineType === 1) {
+        this.EditApproveCaseComparisonData[CompareDetailID].FineType = '1';
+      } else if (this.EditApproveCaseComparisonData[CompareDetailID].FineType === 2) {
+        this.EditApproveCaseComparisonData[CompareDetailID].FineType = '2';
+      } else if (this.EditApproveCaseComparisonData[CompareDetailID].FineType === 3) {
+        this.EditApproveCaseComparisonData[CompareDetailID].FineType = '3';
+      } else if (this.EditApproveCaseComparisonData[CompareDetailID].FineType === 4) {
+        this.EditApproveCaseComparisonData[CompareDetailID].FineType = '4';
+      }
+
+      this.EditApproveCaseComparisonData[CompareDetailID].fullName =
+      (this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareLawbreaker[0].LawbreakerTitleName || '') +
+      (this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareLawbreaker[0].LawbreakerFirstName || '') + ' ' +
+      (this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareLawbreaker[0].LawbreakerLastName || '');
+
+      this.EditApproveCaseComparisonPopUp = this.EditApproveCaseComparisonData[CompareDetailID];
+      console.log(this.EditApproveCaseComparisonData);
+      console.log(this.EditApproveCaseComparisonPopUp);
+    } else {
+      console.log('has data alredy');
+      this.EditApproveCaseComparisonPopUp = this.EditApproveCaseComparisonData[CompareDetailID];
+      this.EditApproveCaseComparisonPopUp.FineType = 2;
+      console.log(this.EditApproveCaseComparisonData);
+      console.log(this.EditApproveCaseComparisonPopUp);
+    }
+  }
+
+  public checkPopUp(): any {
+    console.log(this.EditApproveCaseComparisonPopUp);
   }
 
   public attachFile(file) {

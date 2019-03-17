@@ -4,24 +4,40 @@
     <h4 class="card-title m-b-0">ของกลาง</h4>
   </div>
   <div class="card-body">
-    <form class="form-horizontal">
+    <form class="form-horizontal" >
       <div class="row">
         <label for="" class="col-lg-2 col-md-4 control-label">รหัสของกลาง :
         </label>
-        <div class="col-lg-4 col-md-7 col-sm-8">
+        <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group ">
-            <input type="text" [(ngModel)]="ProductCode" name="ProductCode" class="form-control">
+            <input type="text"  [(ngModel)]="ProductCode" name="ProductCode" [disabled]="showEditField" class="form-control">
           </div>
         </div>
         <label for="" class="col-lg-2 col-sm-3 control-label">กลุ่มสินค้า :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
-            <div class="form-line">
+              <input type="text" name="group" class="form-control form-control-sm" 
+              placeholder=""
+              aria-label="Number" 
+              matInput [matAutocomplete]="auto1" 
+              [ngClass]="{'ng-touched':isRequired}"
+              (focus)="onAutoFocus($event.target.value)" 
+              (input)="onAutoChange($event.target.value)"
+              [disabled]="showEditField"
+              >
+          <mat-autocomplete  #auto1="matAutocomplete">
+              <mat-option *ngFor="let item of options" [value]="item.GroupName" 
+              (click)="onAutoSelecteWord(item.GroupCode)" 
+              (onSelectionChange)="onAutoSelecteWord(item.GroupCode)">
+                  {{item.GroupName }}
+              </mat-option>
+          </mat-autocomplete>
+            <!-- <div class="form-line">
               <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm" [disabled]="showEditField">
                 <option value="" selected disabled></option>
                 <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
               </select>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -29,25 +45,59 @@
         <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อหลัก :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
-            <div class="form-line">
-              <select [(ngModel)]="RevenueStatus" name="RevenueStatus" class="form-control form-control-sm"
+              <input name="BrandMain" type="text" class="form-control form-control-sm" 
+              value="{{BrandMainENG}}"
+              placeholder=""
+              aria-label="Number" 
+              matInput [matAutocomplete]="auto2" 
+              [ngClass]="{'ng-touched':isRequired}"
+              (focus)="BrandMainonAutoFocus($event.target.value)" 
+              (input)="BrandMainonAutoChange($event.target.value)"
+              [disabled]="showEditField"
+              >
+              <mat-autocomplete  #auto2="matAutocomplete">
+                  <mat-option *ngFor="let items of BrandMainoptions" [value]="items.BrandMainENG"
+                  (click)="BrandMainonAutoSelecteWord(items.BrandMainCode, items.BrandMainThai, items.BrandMainENG)" 
+                  (onSelectionChange)="BrandMainonAutoSelecteWord(items.BrandMainCode, items.BrandMainThai, items.BrandMainENG)">
+                      {{items.BrandMainENG }}
+                  </mat-option>
+              </mat-autocomplete>
+            <!-- <div class="form-line">
+              <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm"
                 [disabled]="showEditField">
                 <option value="" selected disabled></option>
                 <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
               </select>
-            </div>
+            </div> -->
           </div>
         </div>
         <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อรอง :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
-            <div class="form-line">
-              <select [(ngModel)]="RevenueStatus" name="RevenueStatus" class="form-control form-control-sm"
+              <input name="BrandSecond" type="text" class="form-control form-control-sm" 
+              value="{{BrandSecondENG}}"
+              placeholder=""
+              aria-label="Number" 
+              matInput [matAutocomplete]="auto3" 
+              [ngClass]="{'ng-touched':isRequired}"
+              (focus)="BrandSecondonAutoFocus($event.target.value)" 
+              (input)="BrandSecondonAutoChange($event.target.value)"
+              [disabled]="showEditField"
+              >
+              <mat-autocomplete  #auto3="matAutocomplete">
+                  <mat-option *ngFor="let items of BrandSecondoptions" [value]="items.GroupName"
+                  (click)="BrandSecondonAutoSelecteWord(items.BrandSecondCode,items.BrandSecondNameENG,items.BrandSecondNameThai)" 
+                  (onSelectionChange)="BrandSecondonAutoSelecteWord(items.BrandSecondCode,items.BrandSecondNameENG,items.BrandSecondNameThai)">
+                      {{items.GroupName }}
+                  </mat-option>
+              </mat-autocomplete>
+            <!-- <div class="form-line">
+              <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm"
                 [disabled]="showEditField">
                 <option value="" selected disabled></option>
                 <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
               </select>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -56,25 +106,19 @@
         <label for="" class="col-lg-2 col-sm-3 control-label">รุ่น :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
-            <div class="form-line">
-              <select [(ngModel)]="RevenueStatus" name="RevenueStatus" class="form-control form-control-sm"
-                [disabled]="showEditField">
-                <option value="" selected disabled></option>
-                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
-              </select>
+              <div class="form-line">
+                <input type="text" name="ModelName" [(ngModel)]="ModelName" [disabled]="showEditField" class="form-control form-control-sm" 
+                placeholder="">
             </div>
           </div>
         </div>
         <label for="" class="col-lg-2 col-sm-3 control-label">ขนาด :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
-            <div class="form-line">
-              <select [(ngModel)]="RevenueStatus" name="RevenueStatus" class="form-control form-control-sm"
-                [disabled]="showEditField">
-                <option value="" selected disabled></option>
-                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
-              </select>
-            </div>
+              <div class="form-line">
+                <input type="text" name="Size" [(ngModel)]="Size" [disabled]="showEditField" class="form-control form-control-sm" 
+                placeholder="">
+              </div>
           </div>
         </div>
       </div>
@@ -82,40 +126,69 @@
         <label for="" class="col-lg-2 col-sm-3 control-label">หน่วยของขนาด :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
-            <div class="form-line">
-              <select [(ngModel)]="RevenueStatus" name="RevenueStatus" class="form-control form-control-sm"
-                [disabled]="showEditField">
-                <option value="" selected disabled></option>
-                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
-              </select>
-            </div>
+              <input type="text" [disabled]="showEditField" class="form-control form-control-sm" 
+              value="{{DutyCode}}"
+              placeholder=""
+              aria-label="Number" 
+              matInput [matAutocomplete]="auto4" 
+              [ngClass]="{'ng-touched':isRequired}"
+              (focus)="DutyUnitonAutoFocus($event.target.value)" 
+              (input)="DutyUnitonAutoChange($event.target.value)"
+              [disabled]="showEditField"
+              >
+              <mat-autocomplete  #auto4="matAutocomplete">
+                  <mat-option *ngFor="let items of DutyUnitoptions" [value]="items.DutyCode"
+                  (click)="DutyUnitonAutoSelecteWord(items.DutyUnitCode,items.DutyCode)" 
+                  (onSelectionChange)="DutyUnitonAutoSelecteWord(items.DutyUnitCode,items.DutyCode)">
+                      {{items.DutyCode }}
+                  </mat-option>
+              </mat-autocomplete>
+         
           </div>
         </div>
         <label for="" class="col-lg-2 col-sm-3 control-label">ปริมาณแอลกอฮอล์ :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
             <div class="form-line">
-              <select [(ngModel)]="RevenueStatus" name="RevenueStatus" class="form-control form-control-sm"
-                [disabled]="showEditField">
-                <option value="" selected disabled></option>
-                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
-              </select>
+                <div class="form-line">
+                    <input type="text" name="Degree" [(ngModel)]="Degree" [disabled]="showEditField" class="form-control form-control-sm" 
+                    placeholder="">
+                </div>
             </div>
           </div>
         </div>
+      </div>
+      <div class="row">
+        <label for="" class="col-lg-2 col-md-4 control-label">ประเภทสินค้า : </label>
+        <div class="col-lg-4 col-md-7 col-sm-9">
+          <div class="form-group">
+              <!-- <form [formGroup]="couForm"> -->
+              <select name="ProductType" class="form-control form-control-sm"
+              [(ngModel)]="ProductType"
+                [disabled]="showEditField">
+                <!-- <option  *ngFor="let item of ProductType">{{item.TypeName}}</option> -->
+                <option value="3" [selected]="ProductType.Selected">ไม่ระบุ</option>
+                <option value="2" [selected]="ProductType.Selected">ต่างประเทศ</option>
+                <option value="1" [selected]="ProductType.Selected">ภายในประเทศ</option>
+                <!-- <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option> -->
+              </select>
+            <!-- </form> -->
+            </div>
+        </div> 
       </div>
       <div class="row">
         <label for="" class="col-lg-2 col-md-4 control-label">คำอธิบายของกลาง :
         </label>
         <div class="col-sm-10">
           <div class="form-group">
-            <textarea rows="3" [(ngModel)]="xxx" name="xxx" class="form-control"></textarea>
+            <textarea rows="3" [(ngModel)]="ProductDesc" [disabled]="showEditField" name="ProductDesc" class="form-control"></textarea>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="custom-control custom-checkbox col-form-label col-md-6">
-          <input class="filled-in chk-col-indigo" name="Isactive" id="Isactive" type="checkbox">
+          <input class="filled-in chk-col-indigo" name="Isactive" id="Isactive" type="checkbox" 
+            ngModel (ngModelChange)="onChecked(obj, $event)">
           <label class="m-t-10 m-b-0" for="Isactive">ใช้งาน</label>
         </div>
       </div>

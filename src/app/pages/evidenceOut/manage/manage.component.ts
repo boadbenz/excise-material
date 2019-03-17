@@ -1998,8 +1998,8 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.rawProductOptions.map(f => {
                     f.EvidenceOutInItem.forEach(element => {
                         let LawsuitNo = "";
-                        if(f.EvidenceOutProve.EvidenceOutLawsuit){
-                            LawsuitNo = f.EvidenceOutProve.EvidenceOutLawsuit.LawsuitNo;
+                        if(f.EvidenceOutProve[0].EvidenceOutLawsuit){
+                            LawsuitNo = f.EvidenceOutProve[0].EvidenceOutLawsuit.LawsuitNo;
                         }
                         
                         var item = {
