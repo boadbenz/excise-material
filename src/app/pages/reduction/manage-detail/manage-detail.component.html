@@ -582,7 +582,7 @@
                           matInput [matAutocomplete]="autoStaff1"
                           (input)="StaffonAutoChange($event.target.value)"
                           (focus)="StaffonAutoFocus($event.target.value)"
-                          [disabled]="showEditField || (EditApproveCaseComparisonPopUp.ApproveType) == 1" [required]="(EditApproveCaseComparisonPopUp.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1)">
+                          [disabled]="showField || (EditApproveCaseComparisonPopUp.ApproveType) == 1" [required]="(EditApproveCaseComparisonPopUp.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1)">
                   <mat-autocomplete #autoStaff1="matAutocomplete">
                     <mat-option *ngFor="let sOption of Staffoptions"
                                 [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -626,7 +626,7 @@
                           matInput [matAutocomplete]="autoStaff2"
                           (input)="StaffonAutoChange($event.target.value)"
                           (focus)="StaffonAutoFocus($event.target.value)"
-                          [disabled]="showEditField || (EditApproveCaseComparisonPopUp.ApproveType) == 1" [required]="(EditApproveCaseComparisonPopUp.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 2)">
+                          [disabled]="showField || (EditApproveCaseComparisonPopUp.ApproveType) == 1" [required]="(EditApproveCaseComparisonPopUp.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 2)">
                   <mat-autocomplete #autoStaff2="matAutocomplete">
                     <mat-option *ngFor="let sOption of Staffoptions"
                                 [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -671,7 +671,7 @@
                     matInput [matAutocomplete]="autoStaff3"
                     (input)="StaffonAutoChange($event.target.value)"
                     (focus)="StaffonAutoFocus($event.target.value)"
-                    [disabled]="showEditField || (EditApproveCaseComparisonPopUp.ApproveType) == 1" [required]="(EditApproveCaseComparisonPopUp.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 3)">
+                    [disabled]="showField || (EditApproveCaseComparisonPopUp.ApproveType) == 1" [required]="(EditApproveCaseComparisonPopUp.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 3)">
                 <mat-autocomplete #autoStaff3="matAutocomplete">
                   <mat-option *ngFor="let sOption of Staffoptions"
                     [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -758,7 +758,7 @@
 </div>
 
 
-<div class="card card-outline-bluish unset-radius">
+<!-- <div class="card card-outline-bluish unset-radius">
   <div class="card-header unset-radius">
     <app-card-actions-collapse></app-card-actions-collapse>
     <h5 class="card-title m-b-0">เอกสารแนบภายใน</h5>
@@ -792,6 +792,73 @@
               </a>
             </td>
           </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> -->
+
+<div class="card ">
+  <div class="card-header  unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+  </div>
+  <div class="card-body">
+    <div class="text-right">
+      <button for="btn-browse" [ngClass]="{disabled : showField}"
+             class="btn waves-effect waves-light btn-navy" (click)="addNewFile()" [disabled]="showField">
+        เพิ่มเอกสารแนบ </button>
+    </div>
+    <div class="table-responsive">
+      <table class="dataTable table table-sm table-striped table-hover">
+        <thead>
+        <tr>
+          <th class="footable-sortable text-center">ลำดับ</th>
+          <th class="footable-sortable">ชื่อเอกสารแนบ</th>
+          <th class="footable-sortable">ที่อยู่เอกสารแนบ</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="footable" *ngFor="let item of AllAddFiles; let i=index;">
+
+            <td class="text-center">{{ (i+1) }}</td>
+            <td>
+                <input class="form-control" type="text" name="fileName" [(ngModel)]="item.DocumentName"
+                [disabled]="showField">
+            </td>
+            <td>
+              <div class="input-group">
+                  <input class="form-control" type="text" name="filePath" [(ngModel)]="item.FilePath"
+                  [disabled]="true">
+                <div class="input-group-append">
+                  <input [id]="'arrestAttach'+i" type="file" (change)="handleFileInput($event, i)" hidden
+                    [attr.disabled]="showField ? '' : null">
+                  <label [for]="'arrestAttach'+i" class="input-group-text custom-file-upload text-secondary">
+                    <i class="ti-more-alt"></i>
+                  </label>
+                </div>
+              </div>
+            </td>
+            <td>
+              <a href="javaScript:void(0)" class="text-warning" *ngIf="!showField" (click)="deleteFile(item.DocumentID, i)">
+                <i class="fa fa-trash-o fa-lg"></i>
+              </a>
+            </td>
+<!-- 
+          <td class="text-center">{{ (i+1) }}</td>
+          <td>
+            <input class="form-control" type="text" name="fileName" [(ngModel)]="item.DocumentName"
+                   [disabled]="showEditField">
+          </td>
+          <td>
+            <input class="form-control" type="text" name="filePath" [(ngModel)]="item.FilePath"
+                   [disabled]="true">
+          </td>
+          <td>
+            <i class="ti-trash btn-action" [hidden]="showEditField"
+               (click)="deleteFile(item.DocumentID, i)"></i>
+          </td> -->
+        </tr>
         </tbody>
       </table>
     </div>

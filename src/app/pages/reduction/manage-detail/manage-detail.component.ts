@@ -11,6 +11,9 @@ import { MatAutocomplete, _MatListItemMixinBase } from '@angular/material';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import swal from 'sweetalert2';
 
+import { replaceFakePath } from 'app/config/dataString';
+import { MasDocumentMainService } from 'app/services/mas-document-main.service';
+
 @Component({
   selector: 'app-manage-detail',
   templateUrl: './manage-detail.component.html',
@@ -178,13 +181,29 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public rawStaffOptions: any = [];
 
   public AdjustCompareStaff: any = [];
-  private onPrintSubscribe: any
+  private onPrintSubscribe: any;
+
+  AllAddFiles: any = [];
+  compareDocument: any = {
+    DocumentID: '',
+    DocumentName: '',
+    ReferenceCode: '',
+    FilePath: '',
+    DataSource: '',
+
+    // --- Custom --- //
+    IsNewItem: false,
+    IsActive: 1,
+  }
+  filePath: any = [];
+  dataForCompare: any = {};
   constructor(
     private router: Router,
     private activeRoute: ActivatedRoute,
     private navService: NavigationService,
     private readonly apiService: ReductionApiService,
-    public ngbModel: NgbModal
+    public ngbModel: NgbModal,
+    private masDocumentMainService: MasDocumentMainService,
   ) { }
 
   public async ngOnInit() {
@@ -771,6 +790,14 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       console.log(e);
       swal('', 'บันทึกข้อมูลไม่สำเร็จ', 'error');
     }
+
+    if (this.AllAddFiles.length > 0) {
+      for (const f of this.AllAddFiles) {
+        if (f.IsNewItem && f.IsActive) {
+          await this.insertFile(f);
+        }
+      }
+    }
   }
 
   public async buttonPrint() {
@@ -807,6 +834,147 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     dialogRef.componentInstance.data = ReportAll;
     dialogRef.result.then(res => { });
 
+  }
+
+  jsonCopy(src) {
+    return JSON.parse(JSON.stringify(src));
+  }
+
+  async MasDocumentMaingetAll() {
+    try {
+      const data: any = {
+        'DocumentType': '3',
+        'ReferenceCode': 'TN9011126100002'
+      };
+      return await this.apiService.post('MasDocumentMaingetAll', data, '8777');
+    } catch (err) {
+      return [];
+    }
+  }
+
+  async setDocument() {
+    this.AllAddFiles = [];
+    this.filePath = [];
+    const file: any = await this.MasDocumentMaingetAll();
+    if (file) {
+      for (const ap of file) {
+        const fileData: any = this.jsonCopy(ap);
+        fileData.DocumentName = ap.DocumentName;
+        fileData.DataSource = ap.DataSource;
+        fileData.FilePath = ap.FilePath;
+        fileData.DocumentID = ap.DocumentID;
+        fileData.CompareCode = ap.CompareCode;
+        fileData.ReferenceCode = ap.ReferenceCode;
+        fileData.IsActive = 1;
+        this.AllAddFiles.push(fileData);
+        this.filePath.push({ path: ap.FilePath, name: ap.DocumentName });
+      }
+    }
+    this.dataForCompare.document = this.jsonCopy(file);
+  }
+
+  addNewFile() {
+    const fileData: any = this.jsonCopy(this.compareDocument);
+    fileData.DocumentName = '';
+    fileData.DataSource = '';
+    fileData.IsNewItem = true;
+    fileData.FilePath = '';
+    fileData.DocumentID = null;
+    fileData.CompareCode = '';
+    fileData.ReferenceCode = '';
+    fileData.IsActive = 0;
+    fileData.DocumentType = '3';
+    this.AllAddFiles.push(fileData);
+    this.filePath.push({ path: '', name: '' });
+
+  }
+
+  handleFileInput(files: any, index: any) {
+    // this.fileToUpload = files.item(0);
+    console.log(files);
+    const fileData: any = this.jsonCopy(this.compareDocument);
+    fileData.DocumentName = files.target.files.item(0).name;
+    fileData.DataSource = fileData.DocumentName;
+    fileData.IsNewItem = true;
+    fileData.FilePath = replaceFakePath(files.target.value);
+    fileData.DocumentID = null;
+    fileData.CompareCode = this.compareID;
+    // fileData.ReferenceCode = this.params.ArrestCode;
+    fileData.IsActive = 1;
+    fileData.DocumentType = '3';
+    this.AllAddFiles[index] = fileData;
+    this.filePath[index] = { path: replaceFakePath(files.target.value), name: files.target.files.item(0).name };
+  }
+
+  async deleteFile(id: any, index: any) {
+    swal({
+      title: 'ยืนยันการทำรายการ?',
+      text: 'ต้องการลบไฟล์จริงหรือไม่!',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ลบ',
+      cancelButtonText: 'ยกเลิก'
+    }).then(async (result) => {
+      if (result.value) {
+        console.log(id);
+        if (id) {
+          try {
+            const resp: any = await this.apiService.post('/MasDocumentMainupdDelete', { 'DocumentID': id }, '8777');
+            swal(
+              '',
+              'ลบไฟล์สำเร็จ.',
+              'success'
+            );
+            if (index > -1) {
+              this.filePath.splice(index, 1);
+              this.AllAddFiles.splice(index, 1);
+            }
+          } catch (err) {
+            swal(
+              '',
+              'ลบไฟล์ไม่สำเร็จ.',
+              'error'
+            );
+          }
+        } else if (index || index === 0) {
+          if (index > -1) {
+            this.filePath.splice(index, 1);
+            this.AllAddFiles.splice(index, 1);
+            swal(
+              '',
+              'ลบไฟล์สำเร็จ.',
+              'success'
+            );
+          }
+        }
+      }
+    });
+  }
+
+  async insertFile(file: any) {
+    try {
+      file.DocumentID = null;
+      const resp: any = await this.masDocumentMainService.MasDocumentMaininsAll(file);
+      return resp;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+
+  }
+
+  getAllFile() {
+    try {
+      const i: any = 0;
+      for (const f of this.AllAddFiles) {
+        f.DocumentID = i;
+      }
+      return this.AllAddFiles;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
 }
