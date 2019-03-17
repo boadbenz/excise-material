@@ -12,7 +12,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgbModule.forRoot(),
   ],
   declarations: [PrintDocModalComponent],
-  exports: [PrintDocModalComponent],
-  entryComponents:[PrintDocModalComponent]
+  exports: [ PrintDocModalComponent ],
+  entryComponents: [ PrintDocModalComponent ]
 })
 export class PrintReductionModalModule { }

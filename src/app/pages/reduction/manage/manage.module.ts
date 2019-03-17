@@ -42,6 +42,6 @@ const routes: Routes = [
   ],
   declarations: [ManageComponent, ReductionModelListComponent, PrintDocumentComponent],
   exports: [ ],
-  providers: [ReductionApiService,ReductionService]
+  providers: [ReductionApiService, ReductionService]
 })
 export class ManageModule { }

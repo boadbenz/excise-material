@@ -192,7 +192,10 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
 
     let reports = [];
     try {
-      reports = await this.apiServer.post('/XCS60/MasDocumentMaingetAll', {CompareID: this.compareID}, '8777').toPromise();
+      reports = await this.apiServer.post('/XCS60/MasDocumentMaingetAll', {
+        DocumentType: '3',
+        ReferenceCode: this.detailData.ArrestCode,
+      }, '8777').toPromise();
       if (reports.length === 0) {
         throw new Error('no data');
       }
@@ -210,8 +213,8 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
 
     console.log('++++detailData : ', this.detailData);
     const test: any[] = reports.map(m => ({
-      DocName: `xxx `,
-      DocType: 'แบบฟอร์ม', CompareDetailID: `xxx `, checked: false, TypeName: 'xxx'
+      DocName: m.DocumentName,
+      DocType: 'เอกสารแนบภายใน', CompareDetailID: `xxx `, checked: false, TypeName: 'xxx'
     }));
 
     ReportAll = [...test]

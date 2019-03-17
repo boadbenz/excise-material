@@ -271,6 +271,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     await this.GetAdjustCompareCRgetByCon(this.compareID);
     await this.GetAdjustCompareDetailgetByCon (this.compareID);
     await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
+    await this.setDocument();
     this.getAdjustDetailgetByCompareDetailId(this.compareIdDetail);
     // this.getMasDocumentMaingetAll(this.compareID);
     this.getAdjustFinecheckComplete(this.compareIdDetail);
@@ -415,16 +416,16 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   }
 
   // ดึงข้อมูลเอกสารแนบภายใน
-  public getMasDocumentMaingetAll(CompareID: any = null) {
-    if (CompareID == null) { return; }
-    this.apiService.post('/XCS60/MasDocumentMaingetAll', {
-      DocumentType: 10,
-      ReferenceCode: CompareID
-    })
-    .subscribe(response => {
-      console.log(response);
-    }, error => console.log(error));
-  }
+  // public getMasDocumentMaingetAll(CompareID: any = null) {
+  //   if (CompareID == null) { return; }
+  //   this.apiService.post('/XCS60/MasDocumentMaingetAll', {
+  //     DocumentType: 10,
+  //     ReferenceCode: CompareID
+  //   })
+  //   .subscribe(response => {
+  //     console.log(response);
+  //   }, error => console.log(error));
+  // }
 
   // ดึงข้อมูลตรวจสอบข้อมูล
   public getAdjustFinecheckComplete(CompareDetailID: any = null) {
@@ -693,6 +694,23 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       });
     }
 
+    if (this.AllAddFiles.length === 0) {
+      swal('', 'กรุณาแนบเอกสาร', 'error');
+        cansave = false;
+    }
+
+    for (let j = 0; j < this.AllAddFiles.length; j++) {
+      if (this.AllAddFiles[j].DocumentName == null || this.AllAddFiles[j].DocumentName === '' || !this.AllAddFiles[j].DocumentName) {
+        swal('', 'กรุณากรอกข้อมูลชื่อเอกสาร', 'error');
+        cansave = false;
+      }
+
+      if (this.AllAddFiles[j].FilePath == null || this.AllAddFiles[j].FilePath === '' || !this.AllAddFiles[j].FilePath) {
+        swal('', 'กรุณาแนบเอกสาร', 'error');
+        cansave = false;
+      }
+    }
+
     if (!cansave) {
       return;
     }
@@ -804,7 +822,10 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     let reports = [];
     try {
-      reports = await this.apiService.post('/XCS60/MasDocumentMaingetAll', {CompareID: this.compareID}, '8777').toPromise();
+      reports = await this.apiService.post('/XCS60/MasDocumentMaingetAll', {
+        'DocumentType': '3',
+        'ReferenceCode': this.adjustArrest.ArrestCode
+      }, '8777').toPromise();
       if (reports.length === 0) {
         throw new Error('no data');
       }
@@ -841,12 +862,14 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   }
 
   async MasDocumentMaingetAll() {
+    console.log('stet');
     try {
       const data: any = {
         'DocumentType': '3',
-        'ReferenceCode': 'TN9011126100002'
+        'ReferenceCode': this.adjustArrest.ArrestCode
       };
-      return await this.apiService.post('MasDocumentMaingetAll', data, '8777');
+      const report = await this.apiService.post('/XCS60/MasDocumentMaingetAll', data, '8777').toPromise();
+      return report;
     } catch (err) {
       return [];
     }
@@ -856,6 +879,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.AllAddFiles = [];
     this.filePath = [];
     const file: any = await this.MasDocumentMaingetAll();
+    console.log(file);
     if (file) {
       for (const ap of file) {
         const fileData: any = this.jsonCopy(ap);
@@ -898,8 +922,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     fileData.IsNewItem = true;
     fileData.FilePath = replaceFakePath(files.target.value);
     fileData.DocumentID = null;
-    fileData.CompareCode = this.compareID;
-    // fileData.ReferenceCode = this.params.ArrestCode;
+    fileData.CompareCode = this.adjustArrest.CompareCode;
+    fileData.ReferenceCode = this.adjustArrest.ArrestCode;
     fileData.IsActive = 1;
     fileData.DocumentType = '3';
     this.AllAddFiles[index] = fileData;
