@@ -278,9 +278,10 @@ export class NoticeService {
         return res[0];
     }
 
-    async getByKeyword(Textsearch: any): Promise<Notice[]> {
+    async getByKeyword(Textsearch: any, OfficeCode: any): Promise<Notice[]> {
         // debugger
         const params = Textsearch.Textsearch == null ? { 'Textsearch': '' } : Textsearch;
+        params.AccountOfficeCode = OfficeCode;
         const url = `${appConfig.api7788}/NoticeListgetByKeyword`;
         const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
         if (res.IsSuccess === 'False') {
