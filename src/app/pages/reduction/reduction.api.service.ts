@@ -14,11 +14,13 @@ const httpOptions = {
 @Injectable()
 export class ReductionApiService {
   private _api = '';
-
+  private _api_port = '';
+;
   constructor(
     private http: HttpClient
   ) {
     this._api = environment.api90;
+    this._api_port = environment.api_port;
     // this._api = '';
   }
 
@@ -44,9 +46,10 @@ export class ReductionApiService {
    * @param param: any
    * @access public
    */
-  public post(url: string, param: any): Observable<any> {
+  public post(url: string, param: any, port: any = null): Observable<any> {
     return this.http
-      .post<any>(this._api + url, JSON.stringify(param), httpOptions)
+      .post<any>(((port == null) ? this._api : this._api_port + port) +
+                   url, JSON.stringify(param), httpOptions)
       .pipe(
         catchError(this.handleError<any>('PostApi'))
       );

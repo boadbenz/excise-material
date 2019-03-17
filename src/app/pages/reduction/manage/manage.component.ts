@@ -9,6 +9,7 @@ import { ReductionModelListComponent } from './reduction-model-list/reduction-mo
 // import { PrintDocumentComponent } from './print-document/print-document.component';///////////
 // import { AddReduceComponent } from './add-reduce/add-reduce.component';
 import { PrintDocModalComponent } from '../print-doc-modal/print-doc-modal.component'
+import swal from 'sweetalert2';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -20,7 +21,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   reductionModelList: ReductionModelListComponent;
 
   private onPrintSubscribe: any
-  modal:any
+  modal: any
 
   // @ViewChild(PrintDocumentComponent) printDocumentComponent: PrintDocumentComponent;///////////////
 
@@ -112,7 +113,6 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   public print_dialog: any;
   public compareID: string;
   public indictmentID: string;
-  
 
   constructor
     (private router: Router,
@@ -123,7 +123,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     ) { }
 
   ngOnInit() {
-    localStorage.setItem('programcode','ILG60-09-00');
+    localStorage.setItem('programcode', 'ILG60-09-00');
     if (this.activeRoute.snapshot.queryParamMap.get('CompareID') == null
       || this.activeRoute.snapshot.queryParamMap.get('CompareID') === '') {
       alert('ไม่สามารถดึงค่าข้อมูลรายการเปรียบเทียบได้');
@@ -149,12 +149,12 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
       if (!this.showField) {
         this.navService.setCancelButton(true);
         this.navService.setSaveButton(true);
-        // this.navService.setPrintButton(false);
+        this.navService.setPrintButton(false);
         this.navService.setSearchBar(false);
         // this.navService.setDeleteButton(false);
         this.navService.setEditButton(false);
       } else {
-        // this.navService.setPrintButton(true);
+        this.navService.setPrintButton(true);
         // this.navService.setDeleteButton(true);
         this.navService.setEditButton(true);
         this.navService.setSearchBar(false);
@@ -168,9 +168,9 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     // this._adjustDetailgetByCon(this.compareID);
     // this._masDocumentMailgetAll(this.compareID);
 
-    console.log("adjustDetailgetByCon : ",this.adjustDetailData)
-    console.log("adjustReceiptgetByCon : ", this.tableData)
-    console.log("adjustArrestgetByCon : ", this.detailData)
+    console.log('adjustDetailgetByCon : ', this.adjustDetailData);
+    console.log('adjustReceiptgetByCon : ', this.tableData);
+    console.log('adjustArrestgetByCon : ', this.detailData);
 
     this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
@@ -179,6 +179,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     });
 
     this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
+      console.log('status print');
       if (status) {
         await this.navService.setOnPrint(false);
         // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
@@ -188,13 +189,29 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
 
   }
   public async buttonPrint() {
-    var tester = [{a:'ada',b:'jyhfdtsd'}]
-    var ReportAll = []
 
-    console.log("++++detailData : ",this.detailData)
-    const test: any[] = tester.map(m => ({
+    let reports = [];
+    try {
+      reports = await this.apiServer.post('/XCS60/MasDocumentMaingetAll', {CompareID: this.compareID}, '8777').toPromise();
+      if (reports.length === 0) {
+        throw new Error('no data');
+      }
+    } catch (e) {
+      console.log(e.message);
+      if (e.message === 'no data') {
+        swal('', 'ไม่มีข้อมูลรายงาน', 'error');
+      } else {
+        swal('', e.message, 'error');
+      }
+
+      return;
+    }
+    let ReportAll = [];
+
+    console.log('++++detailData : ', this.detailData);
+    const test: any[] = reports.map(m => ({
       DocName: `xxx `,
-      DocType: 'แบบฟอร์ม', CompareDetailID: `xxx `, checked: false, TypeName: "xxx"
+      DocType: 'แบบฟอร์ม', CompareDetailID: `xxx `, checked: false, TypeName: 'xxx'
     }));
 
     ReportAll = [...test]

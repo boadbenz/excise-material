@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormArray, FormGroupName } from '@angular/forms';
-import { PreloaderService } from "../../../shared/preloader/preloader.component";
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { ReductionService } from '../reduction.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NgbModalRef, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -19,20 +19,20 @@ export class PrintDocModalComponent implements OnInit {
   sort = SORTING.ASC;
   sorting = SORTING;
 
-  constructor(private preLoaderService: PreloaderService,
-    private fb: FormBuilder,
-    private reductionService: ReductionService,
-    private ActiveModal: NgbActiveModal,) { }
-
-  isCheck = ''
+  isCheck = '';
   // printDoc = [];
   // printDocData = [];
-  printDoc: any[]
+  printDoc: any[];
   // sort = 'asc';
-  public data: any
+  public data: any;
 
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
+
+  constructor(private preLoaderService: PreloaderService,
+    private fb: FormBuilder,
+    private reductionService: ReductionService,
+    private ActiveModal: NgbActiveModal, ) { }
 
   // FG: FormGroup;
   // get PrintDoc(): FormArray {
@@ -42,7 +42,7 @@ export class PrintDocModalComponent implements OnInit {
   async ngOnInit() {
 
     this.printDoc = this.data;
-    console.log("Adjust printDoc : ", this.printDoc)
+    console.log('Adjust printDoc : ', this.printDoc);
     // this.preLoaderService.setShowPreloader(true);
     // this.FG = this.fb.group({
     //   PrintDoc: this.fb.array([
@@ -133,7 +133,7 @@ export class PrintDocModalComponent implements OnInit {
     //     }
     //   }
     // }
-    console.log("onPrint eiei")
+    console.log('onPrint eiei');
 
   }
 

@@ -7,6 +7,7 @@ import { ManageDetailComponent } from './manage-detail.component';
 import { ReductionApiService } from '../reduction.api.service';
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MyDatePickerModule } from 'mydatepicker';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 const routes: Routes = [
   {
@@ -34,11 +35,13 @@ const routes: Routes = [
     CardActionsModule,
     RouterModule.forChild(routes),
     MyDatePickerTHModule,
-    MyDatePickerModule
+    MyDatePickerModule,
+    MatAutocompleteModule
   ],
   declarations: [
     ManageDetailComponent,
   ],
-  providers: [ReductionApiService]
+  providers: [ReductionApiService],
+  exports: [MatAutocompleteModule]
 })
 export class ManageDetailModule { }
