@@ -357,19 +357,15 @@ export class ProveService {
     }
   }
 
-  ProveReport2getByCon(ArrestCode: string, ProveID: string, IndictmentID: string) {
+  ProveReport2getByCon(ProveID: string) {
     let pValue = {
-      "ArrestCode": ArrestCode,
+      // "ArrestCode": ArrestCode,
       "ProveID": ProveID,
-      "IndictmentID": IndictmentID
+      // "IndictmentID": IndictmentID
     }
-
-    console.log("ArrestCode : ", ArrestCode)
-    console.log("ProveID : ", ProveID)
-    console.log("IndictmentID : ", IndictmentID)
     debugger
     const params = JSON.stringify(pValue);
-    const url = `${appConfig.apiReport}//ILG60_00_05_002.aspx`;
+    const url = `${appConfig.apiReport}/ILG60_00_05_002.aspx`;
     return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
       .catch(this.onCatch)
       .do((res: Response) => {
@@ -384,7 +380,7 @@ export class ProveService {
     }
     debugger
     const params = JSON.stringify(pValue);
-    const url = `${appConfig.apiReport}//ILG60_00_05_001.aspx`;
+    const url = `${appConfig.apiReport}/ILG60_00_05_001.aspx`;
     return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
       .catch(this.onCatch)
       .do((res: Response) => {
@@ -399,7 +395,7 @@ export class ProveService {
     }
     debugger
     const params = JSON.stringify(pValue);
-    const url = `${appConfig.apiReport}//ILG60_00_05_003.aspx`;
+    const url = `${appConfig.apiReport}/ILG60_00_05_003.aspx`;
     return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
       .catch(this.onCatch)
       .do((res: Response) => {
