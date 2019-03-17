@@ -219,7 +219,7 @@
               <!-- <div [hidden]="true">{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? startList.push(i): ''}}}</div> -->
               <tr class="footable">
                 <td>{{i == 0 || item.LawbreakerName != adjustFine[i - 1].LawbreakerName ? item.LawbreakerName : ''}}</td>
-                <td style="max-width: 490px;">{{item.ProductDesc}}</td>
+                <td style="max-width: 490px; overflow-x: scroll;">{{item.ProductDesc}}</td>
                 <td>{{item.ProductFine}}</td>
                 <td>
                   <input type="number" [(ngModel)]="item.CompareFine" name="CompareFine" class="form-control" [disabled]="showField" (keyup)="enterNewValue($event, i)" value="0">
