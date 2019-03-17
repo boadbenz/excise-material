@@ -1048,6 +1048,7 @@ export class BribeComponent extends BribeConfig implements OnInit, OnDestroy {
       // 1.1.2(1)
       // 1.1.2(1.1)
       swal('', 'ลบข้อมูลสำเร็จ', 'success');
+      this.navService.setNextPageButton(false);
       this.router.navigate([
         '/reward/manage/',
         localStorage.getItem('IndictmentID'),
