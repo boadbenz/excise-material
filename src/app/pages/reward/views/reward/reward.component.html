@@ -306,25 +306,28 @@
                     </td>
                     <td>
                       <input class="form-control form-control-sm" type="number" formControlName="FirstPart" #FirstPart
-                        (change)="calChangeAll()">
-                    </td>
-                    <td>
-                      <input class="form-control form-control-sm" type="number" formControlName="SecondPart" #SecondPart
-                        (change)="calChangeAll()"
+                        (change)="calChangeAll()" [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'"
                         >
                     </td>
                     <td>
-                      <input class="form-control form-control-sm" type="text" formControlName="FirstMoney" #FirstMoney
+                      <input class="form-control form-control-sm" type="number" formControlName="SecondPart" #SecondPart
+                        (change)="calChangeAll()" [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'"
+                        >
+                    </td>
+                    <td>
+                      <input class="form-control form-control-sm" type="text"
                         [value]="RequestRewardStaff.at(i).get('FirstMoney').value | currency:' '"
+                        [attr.disabled]="'disabled'"
                        >
                     </td>
                     <td>
-                      <input class="form-control form-control-sm" type="text" formControlName="SecondMoney" #SecondMoney
+                      <input class="form-control form-control-sm" type="text"
                         [value]="RequestRewardStaff.at(i).get('SecondMoney').value | currency:' '"
+                        [attr.disabled]="'disabled'"
                        >
                     </td>
                     <td>
-                      <input class="form-control form-control-sm" type="text" formControlName="ToTalMoney" #ToTalMoney
+                      <input class="form-control form-control-sm" type="text"
                         [value]="RequestRewardStaff.at(i).get('ToTalMoney').value | currency:' '"
                         [attr.disabled]="'disabled'">
                     </td>
@@ -393,12 +396,12 @@
                 <label class="col-form-label col-sm-3 col-md-4">แบ่งเป็นส่วนๆละ : </label>
                 <div class="col-md-3">
                   <input class="form-control form-control-sm" type="text"
-                    [value]="(SumFirstMoneyPerPart() || 0) | currency:' '" [attr.disabled]="'disabled'">
+                    [value]="(SumFirstMoneyPerPartView() || 0) | number:''" [attr.disabled]="'disabled'">
                 </div>
                 <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
                 <div class="col-md-3">
                   <input class="form-control form-control-sm" type="text"
-                    [value]="(FirstRemainder() || 0) | currency:' '" [attr.disabled]="'disabled'">
+                    [value]="(FirstRemainder() || 0)" [attr.disabled]="'disabled'">
                 </div>
               </div>
             </div>
@@ -418,12 +421,12 @@
                 <label class="col-form-label col-sm-3 col-md-4">แบ่งเป็นส่วนๆละ : </label>
                 <div class="col-md-3">
                   <input class="form-control form-control-sm" type="text"
-                    [value]="(SumSecondMoneyPerPart() || 0) | currency:' '" [attr.disabled]="'disabled'">
+                    [value]="(SumSecondMoneyPerPartView() || 0) | number:''" [attr.disabled]="'disabled'">
                 </div>
                 <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
                 <div class="col-md-3">
                   <input class="form-control form-control-sm" type="text"
-                    [value]="(SecondRemainder() || 0) | currency:' '" [attr.disabled]="'disabled'">
+                    [value]="(SecondRemainder() || 0)" [attr.disabled]="'disabled'">
                 </div>
               </div>
             </div>
