@@ -194,7 +194,7 @@
         <thead>
           <tr>
             <th class="footable-sortable">ชื่อผู้ต้องหา</th>
-            <th class="footable-sortable">ของกลาง</th>
+            <th class="footable-sortable" style="max-width: 490px;">ของกลาง</th>
             <th class="footable-sortable">ค่าปรับเดิม</th>
             <th class="footable-sortable">ค่าปรับใหม่</th>
             <th class="footable-sortable">ผลต่าง</th>
@@ -219,7 +219,7 @@
               <!-- <div [hidden]="true">{{(i !== 0 && item.LawbreakerName !== adjustFine[i - 1].LawbreakerName) ? startList.push(i): ''}}}</div> -->
               <tr class="footable">
                 <td>{{i == 0 || item.LawbreakerName != adjustFine[i - 1].LawbreakerName ? item.LawbreakerName : ''}}</td>
-                <td>{{item.ProductDesc}}</td>
+                <td style="max-width: 490px; overflow-x: scroll;">{{item.ProductDesc}}</td>
                 <td>{{item.ProductFine}}</td>
                 <td>
                   <input type="number" [(ngModel)]="item.CompareFine" name="CompareFine" class="form-control" [disabled]="showField" (keyup)="enterNewValue($event, i)" value="0">
@@ -293,7 +293,7 @@
             <td>{{item.ReceiptBookNo}}</td>
             <td>{{item.ReceiptBookNo}}</td>
             <td>{{item.RevenueStatus === 0 ? 'ยังไม่ส่งรายได้' : 'ส่งารายได้แล้ว'}}</td>
-            <td>
+            <td [hidden]="true">
               <a href="javaScript:void(0);" class="text-secondary" (click)="viewData()" data-toggle="modal" [hidden]="mode === 'A'" data-target="#finePopup">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
@@ -537,15 +537,17 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">เขียนที่ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="fullName" [disabled]="viewMode">
+                  <input class="form-control" type="text" name="fullName" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveStation" [disabled]="viewMode">
                 </div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่จัดทำรายงานฯ : </label>
-                <div class="col-md-8">
-                  <input class="form-control" type="text" [disabled]="viewMode">
+                <div class="form-group input-group col-md-8">
+                  <div style="width: 100%">
+                    <my-date-picker class="form-control date-setting" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveReportDate" [disabled]="viewMode"></my-date-picker>
+                  </div>
                 </div>
               </div>
             </div>
@@ -574,7 +576,21 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้เสนอพิจารณาเห็นชอบ : </label>
                 <div class="col-md-8">
-                  <input class="form-control" type="text" [disabled]="viewMode">
+                  <input type="text" class="form-control"
+                          [(ngModel)]="EditApproveCaseComparisonPopUp.offerstaff" name="offerstaff"
+                          placeholder="พิมพ์ข้อความ" aria-label="Number"
+                          matInput [matAutocomplete]="autoStaff1"
+                          (input)="StaffonAutoChange($event.target.value)"
+                          (focus)="StaffonAutoFocus($event.target.value)"
+                          [disabled]="showField || (EditApproveCaseComparisonPopUp.ApproveType) == 1" [required]="(EditApproveCaseComparisonPopUp.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1)">
+                  <mat-autocomplete #autoStaff1="matAutocomplete">
+                    <mat-option *ngFor="let sOption of Staffoptions"
+                                [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                (click)="StaffonAutoSelecteWord(sOption, 1)" (onSelectionChange)="StaffonAutoSelecteWord(sOption, 1)">
+                      {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <!-- <input class="form-control" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.proponentsName" [disabled]="viewMode"> -->
                 </div>
               </div>
             </div>
@@ -582,7 +598,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="postion" disabled>
+                  <input class="form-control" [(ngModel)]="EditApproveCaseComparisonPopUp.offerPosition" type="text" name="postion" disabled>
                 </div>
               </div>
             </div>
@@ -593,7 +609,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="deparment" disabled>
+                  <input class="form-control" [(ngModel)]="EditApproveCaseComparisonPopUp.offerDepartment" type="text" name="deparment" disabled>
                 </div>
               </div>
             </div>
@@ -604,7 +620,21 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้พิจารณาเห็นชอบ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="reviewer" [disabled]="viewMode">
+                  <input type="text" class="form-control"
+                          [(ngModel)]="EditApproveCaseComparisonPopUp.staff" name="staff"
+                          placeholder="พิมพ์ข้อความ" aria-label="Number"
+                          matInput [matAutocomplete]="autoStaff2"
+                          (input)="StaffonAutoChange($event.target.value)"
+                          (focus)="StaffonAutoFocus($event.target.value)"
+                          [disabled]="showField || (EditApproveCaseComparisonPopUp.ApproveType) == 1" [required]="(EditApproveCaseComparisonPopUp.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 2)">
+                  <mat-autocomplete #autoStaff2="matAutocomplete">
+                    <mat-option *ngFor="let sOption of Staffoptions"
+                                [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                                (click)="StaffonAutoSelecteWord(sOption, 2)" (onSelectionChange)="StaffonAutoSelecteWord(sOption, 2)">
+                      {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <!-- <input class="form-control" type="text" name="reviewer" [disabled]="viewMode"> -->
                 </div>
               </div>
             </div>
@@ -613,7 +643,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="rank" disabled>
+                  <input class="form-control" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.position" name="rank" disabled>
                 </div>
               </div>
             </div>
@@ -624,7 +654,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="deparment" disabled>
+                  <input class="form-control" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.department" name="deparment" disabled>
                 </div>
               </div>
             </div>
@@ -635,7 +665,21 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ผู้มีอำนาจอนุมัติ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="approver" [disabled]="viewMode">
+                  <input type="text" class="form-control"
+                    [(ngModel)]="EditApproveCaseComparisonPopUp.approveStaff" name="staff"
+                    placeholder="พิมพ์ข้อความ" aria-label="Number"
+                    matInput [matAutocomplete]="autoStaff3"
+                    (input)="StaffonAutoChange($event.target.value)"
+                    (focus)="StaffonAutoFocus($event.target.value)"
+                    [disabled]="showField || (EditApproveCaseComparisonPopUp.ApproveType) == 1" [required]="(EditApproveCaseComparisonPopUp.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 3)">
+                <mat-autocomplete #autoStaff3="matAutocomplete">
+                  <mat-option *ngFor="let sOption of Staffoptions"
+                    [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
+                    (click)="StaffonAutoSelecteWord(sOption, 3)" (onSelectionChange)="StaffonAutoSelecteWord(sOption, 3)">
+                    {{ sOption.TitleName }}{{ sOption.FirstName }} {{ sOption.LastName }}
+                  </mat-option>
+                </mat-autocomplete>
+                  <!-- <input class="form-control" type="text" name="approver" [disabled]="viewMode"> -->
                 </div>
               </div>
             </div>
@@ -644,7 +688,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="rank" disabled>
+                  <input class="form-control" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.approvePosition" name="rank" disabled>
                 </div>
               </div>
             </div>
@@ -654,7 +698,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="department" disabled>
+                  <input class="form-control" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.approveDepartment" name="department" disabled>
                 </div>
               </div>
             </div>
@@ -662,7 +706,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">คำสั่งกรมฯ ที่ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="departOrder" [disabled]="viewMode">
+                  <input class="form-control" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.departmentOrders" name="departOrder" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -673,7 +717,10 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่ออกคำสั่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" name="dateOfIssue" [disabled]="viewMode">
+                  <!-- <input class="form-control" type="text" name="dateOfIssue" [disabled]="viewMode"> -->
+                  <div style="width: 100%">
+                    <my-date-picker class="form-control date-setting" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.CommandDate" locale="th" locale="th" [disabled]="viewMode"></my-date-picker>
+                  </div>
                 </div>
               </div>
             </div>
@@ -684,7 +731,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ข้อเท็จจริงเกี่ยวกับความผิดโดยละเอียด : </label>
                 <div class="col-md-8">
-                  <textarea class="form-control" [disabled]="viewMode" rows="5"></textarea>
+                  <textarea class="form-control" [disabled]="viewMode" [(ngModel)]="EditApproveCaseComparisonPopUp.Fact" rows="5"></textarea>
                 </div>
               </div>
             </div>
@@ -695,7 +742,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">เหตุผลที่ควรเปรียบเทียบคดีและ/หรือจัดการของกลาง :</label>
                 <div class="col-md-8">
-                  <textarea class="form-control" [disabled]="viewMode" rows="5"></textarea>
+                  <textarea class="form-control" [disabled]="viewMode" [(ngModel)]="EditApproveCaseComparisonPopUp.AdjustReason" rows="5"></textarea>
                 </div>
               </div>
             </div>
@@ -704,14 +751,14 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="approvePopup" (click)="checkPopUp()">บันทึก</button>
+        <button type="submit" class="btn waves-effect waves-light btn-navy" data-toggle="modal" data-target="#approvePopup" (click)="checkPopUp(EditApproveCaseComparisonPopUp.CompareDetailID)">บันทึก</button>
       </div>
     </div>
   </div>
 </div>
 
 
-<div class="card card-outline-bluish unset-radius">
+<!-- <div class="card card-outline-bluish unset-radius">
   <div class="card-header unset-radius">
     <app-card-actions-collapse></app-card-actions-collapse>
     <h5 class="card-title m-b-0">เอกสารแนบภายใน</h5>
@@ -745,6 +792,73 @@
               </a>
             </td>
           </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> -->
+
+<div class="card ">
+  <div class="card-header  unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h4 class="card-title m-b-0">เอกสารแนบภายใน</h4>
+  </div>
+  <div class="card-body">
+    <div class="text-right">
+      <button for="btn-browse" [ngClass]="{disabled : showField}"
+             class="btn waves-effect waves-light btn-navy" (click)="addNewFile()" [disabled]="showField">
+        เพิ่มเอกสารแนบ </button>
+    </div>
+    <div class="table-responsive">
+      <table class="dataTable table table-sm table-striped table-hover">
+        <thead>
+        <tr>
+          <th class="footable-sortable text-center">ลำดับ</th>
+          <th class="footable-sortable">ชื่อเอกสารแนบ</th>
+          <th class="footable-sortable">ที่อยู่เอกสารแนบ</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="footable" *ngFor="let item of AllAddFiles; let i=index;">
+
+            <td class="text-center">{{ (i+1) }}</td>
+            <td>
+                <input class="form-control" type="text" name="fileName" [(ngModel)]="item.DocumentName"
+                [disabled]="showField">
+            </td>
+            <td>
+              <div class="input-group">
+                  <input class="form-control" type="text" name="filePath" [(ngModel)]="item.FilePath"
+                  [disabled]="true">
+                <div class="input-group-append">
+                  <input [id]="'arrestAttach'+i" type="file" (change)="handleFileInput($event, i)" hidden
+                    [attr.disabled]="showField ? '' : null">
+                  <label [for]="'arrestAttach'+i" class="input-group-text custom-file-upload text-secondary">
+                    <i class="ti-more-alt"></i>
+                  </label>
+                </div>
+              </div>
+            </td>
+            <td>
+              <a href="javaScript:void(0)" class="text-warning" *ngIf="!showField" (click)="deleteFile(item.DocumentID, i)">
+                <i class="fa fa-trash-o fa-lg"></i>
+              </a>
+            </td>
+<!-- 
+          <td class="text-center">{{ (i+1) }}</td>
+          <td>
+            <input class="form-control" type="text" name="fileName" [(ngModel)]="item.DocumentName"
+                   [disabled]="showEditField">
+          </td>
+          <td>
+            <input class="form-control" type="text" name="filePath" [(ngModel)]="item.FilePath"
+                   [disabled]="true">
+          </td>
+          <td>
+            <i class="ti-trash btn-action" [hidden]="showEditField"
+               (click)="deleteFile(item.DocumentID, i)"></i>
+          </td> -->
+        </tr>
         </tbody>
       </table>
     </div>

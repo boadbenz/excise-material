@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormArray, FormGroupName } from '@angular/forms';
-import { PreloaderService } from "../../../shared/preloader/preloader.component";
+import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { ReductionService } from '../reduction.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NgbModalRef, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -19,30 +19,30 @@ export class PrintDocModalComponent implements OnInit {
   sort = SORTING.ASC;
   sorting = SORTING;
 
-  constructor(private preLoaderService: PreloaderService,
-    private fb: FormBuilder,
-    private reductionService: ReductionService,
-    private ActiveModal: NgbActiveModal,) { }
-
-  isCheck = ''
+  isCheck = '';
   // printDoc = [];
   // printDocData = [];
-  printDoc: any[]
+  printDoc: any[];
   // sort = 'asc';
-  public data: any
+  public data: any;
+
+  FG: FormGroup;
+    get PrintDoc(): FormArray {
+      return this.FG.get('printDoc') as FormArray;
+    }
 
   @Output() d = new EventEmitter();
   @Output() c = new EventEmitter();
 
-  // FG: FormGroup;
-  // get PrintDoc(): FormArray {
-  //   return this.FG.get('PrintDoc') as FormArray;
-  // }
+  constructor(private preLoaderService: PreloaderService,
+    private fb: FormBuilder,
+    private reductionService: ReductionService,
+    private ActiveModal: NgbActiveModal, ) { }
 
   async ngOnInit() {
 
     this.printDoc = this.data;
-    console.log("Adjust printDoc : ", this.printDoc)
+    console.log('Adjust printDoc : ', this.printDoc);
     // this.preLoaderService.setShowPreloader(true);
     // this.FG = this.fb.group({
     //   PrintDoc: this.fb.array([
@@ -86,14 +86,25 @@ export class PrintDocModalComponent implements OnInit {
   }
 
   onPrint(form) {
-    // this.preLoaderService.setShowPreloader(true);
-    // let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
+    this.preLoaderService.setShowPreloader(true);
+    const _print = this.printDoc.filter(x => x.checked === true);
+    console.log(_print);
+
+    for (let i = 0; i < _print.length; i++ ) {
+      this.reductionService.ReductionReport(1).subscribe(x => {
+        const file = new Blob([x], { type: 'application/pdf' });
+        const fileURL = URL.createObjectURL(file);
+        window.open(fileURL);
+        this.preLoaderService.setShowPreloader(false);
+      })
+    }
+
     // if (_print.length) {
-    //   var tempChkbox = this.FG.value.PrintDoc
-    //   for (var i = 0; i < tempChkbox.length; i++) {
-    //     if (tempChkbox[i].IsChecked == true) {
-    //       var selected = tempChkbox[i].chkbox;
-    //       let RequestBribeID = ''
+    //   const tempChkbox = this.FG.value.printDoc
+    //   for (let i = 0; i < tempChkbox.length; i++) {
+    //     if (tempChkbox[i].checked === true) {
+    //       const selected = tempChkbox[i].chkbox;
+    //       const RequestBribeID = ''
     //       if (selected == 1) {
     //         console.log("1")
     //         this.reductionService.ReductionReport(RequestBribeID).subscribe(x => {
@@ -133,8 +144,14 @@ export class PrintDocModalComponent implements OnInit {
     //     }
     //   }
     // }
-    console.log("onPrint eiei")
+    console.log('onPrint eiei');
 
+  }
+
+  onSelect(index) {
+    this.printDoc[index].checked = !this.printDoc[index].checked;
+
+    console.log(this.printDoc);
   }
 
   dismiss(e: any) {
