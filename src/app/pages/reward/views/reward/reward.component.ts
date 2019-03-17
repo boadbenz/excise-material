@@ -1195,8 +1195,12 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             this.RequestRewardStaff.value
               .filter(f => f.check === true && f.StaffID)
               .forEach(async RequestRewardStaff => {
+                const staff = RequestRewardStaffModel;
+                Object.keys(staff).forEach(x => {
+                  staff[x] = RequestRewardStaff[x] || '';
+                });
                 await this.requestRewardStaffService
-                  .RequestRewardStaffupdByCon(RequestRewardStaff)
+                  .RequestRewardStaffupdByCon(staff)
                   .toPromise();
               });
 
