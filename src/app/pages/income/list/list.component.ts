@@ -59,7 +59,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(true);
         this.navService.setNewButton(true);
 
-        this.sidebarService.setVersion('Revenue 0.0.0.30');
+        this.sidebarService.setVersion('Revenue 0.0.0.31');
         this.RevenueStatus = "";
         //this.advSearch.next(true);
         //this.preloader.setShowPreloader(true);
@@ -67,16 +67,16 @@ export class ListComponent implements OnInit, OnDestroy {
         //this.getDepartmentRevenue();
         //this.onSearch({ Textsearch: "" });
 
-        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            if (Textsearch) {               
+        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async TextSearch => {
+            if (TextSearch) {               
                 await this.navService.setOnSearch('');
 
                 let ts;
-                ts = { Textsearch: "" }
-                ts = Textsearch;
+                ts = { TextSearch: "", AccountOfficeCode: localStorage.getItem("officeCode") }
+                ts = TextSearch;
 
-                if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
-                else { this.onSearch(Textsearch); }
+                if (ts.TextSearch == null) { this.onSearch({ TextSearch: "" }); }
+                else { this.onSearch(TextSearch); }
 
             }
         })
@@ -104,10 +104,15 @@ export class ListComponent implements OnInit, OnDestroy {
         });
     }
 
-    onSearch(Textsearch: any) {
+    onSearch(p: any) {
+        var paramsOther = {
+            TextSearch: p.TextSearch,
+            AccountOfficeCode: localStorage.getItem("officeCode")
+        }
+
         this.preloader.setShowPreloader(true);
 
-        this.incomeService.getByKeyword(Textsearch).subscribe(list => {
+        this.incomeService.getByKeyword(paramsOther).then(list => {
             this.onSearchComplete(list)
 
             this.preloader.setShowPreloader(false);
@@ -145,6 +150,8 @@ export class ListComponent implements OnInit, OnDestroy {
         if(form.value.RevenueStatus == ""){
             form.value.RevenueStatus = null;
         }
+
+        form.value.AccountOfficeCode = localStorage.getItem("officeCode");
 
         await this.incomeService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list);

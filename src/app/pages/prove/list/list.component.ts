@@ -75,16 +75,16 @@ export class ListComponent implements OnInit {
         //this.preLoaderService.setShowPreloader(true);
         //this.onSearch({ Textsearch: "" });
 
-        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            if (Textsearch) {
+        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async TextSearch => {
+            if (TextSearch) {
                 await this.navService.setOnSearch('');
 
                 let ts;
-                ts = { Textsearch: "" }
-                ts = Textsearch;
+                ts = { TextSearch: "", AccountOfficeCode: localStorage.getItem("officeCode") }
+                ts = TextSearch;
 
-                if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
-                else { this.onSearch(Textsearch); }
+                if (ts.TextSearch == null) { this.onSearch({ TextSearch: "" }); }
+                else { this.onSearch(TextSearch); }
             }
         })
     }
@@ -103,10 +103,15 @@ export class ListComponent implements OnInit {
         });
     }
 
-    async onSearch(Textsearch: any) {
+    async onSearch(p: any) {
+        var paramsOther = {
+            TextSearch: p.TextSearch,
+            AccountOfficeCode: localStorage.getItem("officeCode")
+        }
+
         this.preLoaderService.setShowPreloader(true);
 
-        await this.proveService.getByKeyword(Textsearch).subscribe(list => {
+        await this.proveService.getByKeyword(paramsOther).then(list => {
             this.onSearchComplete(list)
 
             this.preLoaderService.setShowPreloader(false);
@@ -165,10 +170,10 @@ export class ListComponent implements OnInit {
         // form.value.ProveProgramCode = "XCS05";
         // form.value.ProveProcessCode = "01";
 
+        form.value.AccountOfficeCode = localStorage.getItem("officeCode");
 
         this.preLoaderService.setShowPreloader(true);
 
-        debugger
         await this.proveService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list);
             this.preLoaderService.setShowPreloader(false);
