@@ -305,22 +305,22 @@
     </div>
     <div *ngIf="ILG60_03_02_00_00_E20 | async" class="card-body">
       <div class="row">
-        <label for="" class="col-md-2 col-sm-4 control-label">พฤติกรรมในการจับ :</label>
-        <div class="col-md-4 col-sm-8 form-group ">
-          <textarea formControlName="Behaviour" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"
-            [ngClass]="{'ng-touched':isRequired}" required></textarea>
-        </div>
-
         <label for="" class="col-md-2 col-sm-4 control-label">คำให้การของผู้ต้องหา :</label>
         <div class="col-md-4 col-sm-8 form-group ">
           <textarea formControlName="Testimony" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"
             [ngClass]="{'ng-touched':isRequired}" required></textarea>
         </div>
+
+        <label for="" class="col-md-2 col-sm-4 control-label">การแจ้งสิทธิ :</label>
+        <div class="col-md-4 col-sm-8 form-group ">
+          <textarea formControlName="Prompt" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"
+            [ngClass]="{'ng-touched':isRequired}" required></textarea>
+        </div>
       </div>
       <div class="row">
-        <label for="" class="col-lg-2 col-sm-4 control-label">การแจ้งสิทธิ :</label>
-        <div class="col-lg-10 col-sm-8 form-group ">
-          <textarea formControlName="Prompt" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"
+        <label for="" class="col-md-2 col-sm-4 control-label">พฤติกรรมในการจับ :</label>
+        <div class="col-md-10 col-sm-8 form-group ">
+          <textarea formControlName="Behaviour" cols="" rows="3" class="form-control form-control-sm" [readonly]="showEditField"
             [ngClass]="{'ng-touched':isRequired}" required></textarea>
         </div>
       </div>
