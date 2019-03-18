@@ -37,7 +37,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
     @ViewChild('arrestTable') arrestTable: ElementRef;
     @ViewChild('advForm') advForm: FormGroup;
 
-    AccountOfficeCode = localStorage.getItem('');
+    AccountOfficeCode = localStorage.getItem('officeCode');
 
     myDatePickerOptions = MyDatePickerOptions;
 
@@ -97,7 +97,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
     onSearch(Textsearch: any) {
         const form = {
             Textsearch,
-            AccountOfficeCode: localStorage.getItem('')
+            AccountOfficeCode: this.AccountOfficeCode
         }
         this.arrestService
             .ArrestgetByKeyword(form)
