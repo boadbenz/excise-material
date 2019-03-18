@@ -104,6 +104,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       sum: 0
     }
   };
+  public caseRStaffRemoveRow: any[] = [];
   SumTotalMoney = () => this.FirstMoneyTotal + this.SecondMoneyTotal;
   SumMoney = () =>
     this.aggregate.BribeMoney.sum + this.aggregate.RewardMoney.sum;
@@ -536,6 +537,9 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
   public deleteHandle(rowItem) {
     // remove the chosen row
+    if (this.mode == 'R') {
+      this.caseRStaffRemoveRow.push(this.RequestRewardStaff.value[rowItem]);      
+    }
     this.RequestRewardStaff.removeAt(rowItem);
     this.calChangeAll(); //g
   }
@@ -916,6 +920,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           );
         });
 
+        this.caseRStaffRemoveRow = [];
         this.selectChange();
         
         this.navService.setSaveButton(false);
@@ -1191,12 +1196,27 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                   .toPromise();
               });
 
+            // 2.2.3-1
+            this.caseRStaffRemoveRow
+            .filter(f => f.StaffID)
+            .forEach(async StaffID => {
+              await this.requestRewardStaffService
+                .RequestRewardStaffupdDelete({
+                  StaffID: StaffID.StaffID
+                })
+                .toPromise();
+            });
+
             // 2.2.4
             this.RequestRewardStaff.value
               .filter(f => f.check === true && f.StaffID)
               .forEach(async RequestRewardStaff => {
+                const staff = RequestRewardStaffModel;
+                Object.keys(staff).forEach(x => {
+                  staff[x] = RequestRewardStaff[x] || '';
+                });
                 await this.requestRewardStaffService
-                  .RequestRewardStaffupdByCon(RequestRewardStaff)
+                  .RequestRewardStaffupdByCon(staff)
                   .toPromise();
               });
 
@@ -1231,6 +1251,17 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             // 2.2.6 'WAIT'
             // 2.2.7 'WAIT'
             // 2.2.8 'WAIT'
+            
+            this.navService.setSaveButton(false);
+            this.navService.setCancelButton(false);
+            this.navService.setPrintButton(true);
+            this.navService.setEditButton(true);
+            this.navService.setDeleteButton(true);
+            this.navService.setSearchBar(false);
+            this.navService.setNewButton(false);
+            this.navService.setEditField(false);
+            this.navService.setNextPageButton(true);
+            this.navService.setPrevPageButton(false);
             break;
         }
         swal('', 'บันทึกสำเร็จ', 'success');

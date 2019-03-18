@@ -32,7 +32,8 @@ export class RequestRewardStaffService extends HelperService {
   }
 
   public RequestRewardStaffupdByCon(
-    param: IRequestRewardStaffupdByCon
+    // param: IRequestRewardStaffupdByCon
+    param
   ): Observable<any> {
     return this.http.post(
       `${this.ApiPrefixUrl}/RequestRewardStaffupdByCon`,

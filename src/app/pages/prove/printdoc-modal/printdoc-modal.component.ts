@@ -96,7 +96,7 @@ export class PrintDocModalComponent implements OnInit {
         if (_print.length) {
             _print.filter(x => x.DocName == "บัญชีของกลางและรายการการตรวจพิสูจน์ของกลาง ส.ส 2/4").map(item => {
                 this.preloader.setShowPreloader(true);
-                this.proveService.ProveReport2getByCon(this.ArrestCode, this.ProveID, this.IndictmentID)
+                this.proveService.ProveReport2getByCon( this.ProveID)
                     .subscribe(x => {
                         // const blob = new Blob([x], { type: "application/pdf" });
                         // const link = document.createElement('a');
