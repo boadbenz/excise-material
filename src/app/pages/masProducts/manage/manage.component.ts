@@ -89,7 +89,10 @@ export class ManageComponent implements OnInit {
 
     this.navService.showFieldEdit.subscribe(p => {
       this.showEditField = p;
-      this.OnPageloadModeC();
+      // if (!p) {
+        // console.log('edit p :',p)
+        // this.OnPageloadModeC();
+      // }
     });
 
     this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
@@ -107,7 +110,7 @@ export class ManageComponent implements OnInit {
         } else if (this.mode === 'R') {
           this.activeRoute.params.subscribe(p => { this.ProductID = p['code'] });
 
-          await this.SetDataUpdMasPro();
+          await this.SetDataUpdMasPro();  
           await this.onUpdMasProd(this.ParamsUpd);
         }
       }
@@ -121,6 +124,8 @@ export class ManageComponent implements OnInit {
     this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
       if (status) {
         await this.navService.setOnDelete(false);
+        this.activeRoute.params.subscribe(p => { this.ProductID = p['code'] });
+        await this.onDeleteMasProd();
       }
     });
   }
@@ -130,7 +135,7 @@ export class ManageComponent implements OnInit {
       console.log('active route mode ; ', this.mode)
       //alert(this.mode);
       if (p['mode'] === 'C') {
-        console.log('in mode C')
+        console.log('in active_route mode C')
         // set false
         this.navService.setPrintButton(false);
         this.navService.setEditButton(false);
@@ -158,7 +163,9 @@ export class ManageComponent implements OnInit {
       }
     })
   }
+
   async OnpageloadModeR(ProductID) {
+    await this.preLoaderService.setShowPreloader(true);
 
     await this.masProdService.MasProductgetByCon(ProductID).subscribe(list => {
       // this.DutyGroup = list
@@ -169,36 +176,37 @@ export class ManageComponent implements OnInit {
       this.BrandSecondENG = list.SubBrandNameTH;
       this.ModelName = list.ModelName;
       this.Size = list.Size;
-      this.DutyCode = list.SizeUnitName
-      this.Degree = list.Degree
-      console.log('MasProductgetByCon : ', list)
+      this.DutyCode = list.SizeUnitName;
+      this.Degree = list.Degree;
+      this.ProductDesc = list.ProductDesc;
+      console.log('MasProductgetByCon R : ', list)
+      this.preLoaderService.setShowPreloader(false);
     });
   }
+
   async OnPageloadModeC() {
-    this.loaderService.show();
-    this.preLoaderService.setShowPreloader(true);
+    console.log('OnPageload mode C')
+     this.preLoaderService.setShowPreloader(true);
     await this.masProdService.DutyGroupgetAll().subscribe(list => {
-      this.DutyGroup = list
-      console.log('DutyGroup : ', this.DutyGroup)
+      this.DutyGroup = list;
+      console.log('DutyGroup C : ', this.DutyGroup)
     });
 
     // console.log('DutyGroup : ',this.DutyGroup)
     // await this.masProdService.MasProductgetByCon(Textsearch).subscribe(list => {});
     await this.masProdService.BrandMaingetAll().subscribe(list => {
-      this.BrandMain = list, console.log('BrandMaingetAll : ', list)
+      this.BrandMain = list, console.log('BrandMaingetAll C : ', list)
     });
 
     await this.masProdService.BrandSecondgetAll().subscribe(list => {
-      this.BrandSecond = list, console.log('BrandSecondgetAll : ', list)
+      this.BrandSecond = list, console.log('BrandSecondgetAll C : ', list)
     });
 
     await this.masProdService.DutyUnitgetAll().subscribe(list => {
-      this.DutyUnit = list, console.log('DutyUnitgetAll : ', list)
+      this.DutyUnit = list, console.log('DutyUnitgetAll C : ', list)
+      this.preLoaderService.setShowPreloader(false);
     });
     // await this.masProdService.SizePackagegetAll().subscribe(list => {});
-
-    this.preLoaderService.setShowPreloader(false);
-    this.loaderService.hide();
   }
 
 
@@ -360,7 +368,6 @@ export class ManageComponent implements OnInit {
   }
 
   async onInsMasProd(params) {
-    this.preLoaderService.setShowPreloader(true);
     await this.masProdService.MasProductinsAll(params).subscribe(list => {
       console.log('MasProductinsAll: ', list)
       if (list.IsSuccess == "True") {
@@ -372,7 +379,6 @@ export class ManageComponent implements OnInit {
         swal('', Message.saveFail, 'error')
       }
     });
-    this.preLoaderService.setShowPreloader(false);
   }
 
   async onUpdMasProd(params) {
@@ -385,6 +391,19 @@ export class ManageComponent implements OnInit {
         this.router.navigate([`/masProducts/manage/R/${this.ProductID}`]);
       } else {
         swal('', Message.saveFail, 'error')
+      }
+    });
+  }
+
+  async onDeleteMasProd() {
+    console.log('onDel this.ProductID ', this.ProductID)
+    await this.masProdService.MasProductupdDelete(this.ProductID).subscribe(list => {
+      console.log('del res : ', list)
+      if (list.IsSuccess == "True") {
+        swal('', Message.delComplete, 'success')
+        this.router.navigate([`/masProducts/list`]);
+      } else {
+        swal('', Message.delFail, 'error')
       }
     });
   }

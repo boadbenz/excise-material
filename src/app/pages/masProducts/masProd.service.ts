@@ -1,11 +1,13 @@
 import { Injectable, HostListener } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { appConfig } from '../../app.config';
+import { PreloaderService } from '../../shared/preloader/preloader.component';
 
 @Injectable()
 export class MasProdService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private preloaderService: PreloaderService) { }
 
   private httpOptions = {
     headers: new HttpHeaders(
@@ -15,6 +17,7 @@ export class MasProdService {
   };
 
   DutyGroupgetAll() {
+    // this.preloaderService.setShowPreloader(true);
     const params = '';
     const url = `${appConfig.api7777}/DutyGroupgetAll`;
     return this.http.post<any>(url, params, this.httpOptions);
@@ -58,6 +61,12 @@ export class MasProdService {
 
   MasProductupdByCon(params) {
     const url = `${appConfig.api7777}/MasProductupdByCon`;
+    return this.http.post<any>(url, params, this.httpOptions);
+  }
+
+  MasProductupdDelete(ProductID) {
+    const params = {ProductID: ProductID}
+    const url = `${appConfig.api7777}/MasProductupdDelete`;
     return this.http.post<any>(url, params, this.httpOptions);
   }
 

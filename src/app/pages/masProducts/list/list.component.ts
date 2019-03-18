@@ -35,7 +35,7 @@ export class ListComponent implements OnInit {
   BrandSecondoptions = [];
 
   //after sreach
-  listOfsreach =[];
+  listOfsreach = [];
 
   constructor(private navService: NavigationService,
     private preLoaderService: PreloaderService,
@@ -43,13 +43,17 @@ export class ListComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder, ) {
     this.advSearch = this.navService.showAdvSearch;
+    // if (this.advSearch != undefined) {
+    //     console.log('onAdv')
+    //   this.Pageload();
+    // }
   }
 
   async ngOnInit() {
 
     this.listOfsreach = [
-      {prodCode:'175',GroupName:'ยาสูบ',BrandMain:'LM',BrandSecond:'LM',model:'LM 7.1',size:'20',Alcohol:''},
-      {prodCode:'100',GroupName:'สุรา',BrandMain:'รวงข้าว',BrandSecond:'รวงข้าวเขียว',model:'smallsize',size:'0.700',Alcohol:'40%'}
+      { prodCode: '98', GroupName: 'ยาสูบ', BrandMain: 'LM', BrandSecond: 'LM', model: 'LM 7.1', size: '20', Alcohol: '' },
+      { prodCode: '99', GroupName: 'สุรา', BrandMain: 'รวงข้าว', BrandSecond: 'รวงข้าวเขียว', model: 'smallsize', size: '0.700', Alcohol: '40%' }
     ]
 
     localStorage.setItem('programcode', 'ILG60-99-01');
@@ -66,8 +70,8 @@ export class ListComponent implements OnInit {
     this.navService.setSearchBar(true);
     this.navService.setNewButton(true);
 
-    this.Pageload();
     await this.navigate_service();
+    this.Pageload();
   }
 
   private navigate_service() {
@@ -92,35 +96,28 @@ export class ListComponent implements OnInit {
     })
   }
 
-  async Pageload() {
-    this.preLoaderService.setShowPreloader(true);
-    await this.masProdService.DutyGroupgetAll().subscribe(list => {
+ async Pageload() {
+  //  await this.preLoaderService.setShowPreloader(true);
+    this.masProdService.DutyGroupgetAll().subscribe(list => {
       this.DutyGroup = list
-      console.log('DutyGroup : ', this.DutyGroup)
+      // console.log('DutyGroup list : ', this.DutyGroup)
     });
 
     // console.log('DutyGroup : ',this.DutyGroup)
     // await this.masProdService.MasProductgetByCon(Textsearch).subscribe(list => {});
-    await this.masProdService.BrandMaingetAll().subscribe(list => {
-      this.BrandMain = list, console.log('BrandMaingetAll : ', list)
+   await this.masProdService.BrandMaingetAll().subscribe(list => {
+      this.BrandMain = list 
+      // console.log('BrandMaingetAll list: ', list)
     });
 
-    await this.masProdService.BrandSecondgetAll().subscribe(list => {
-      this.BrandSecond = list, console.log('BrandSecondgetAll : ', list)
+   await this.masProdService.BrandSecondgetAll().subscribe(list => {
+      this.BrandSecond = list
+      // console.log('BrandSecondgetAll list : ', list)
+      // this.preLoaderService.setShowPreloader(false);
     });
 
-    // await this.masProdService.DutyUnitgetAll().subscribe(list => {});
-    // await this.masProdService.SizePackagegetAll().subscribe(list => {});
-    
-    this.preLoaderService.setShowPreloader(false);
+    // this.preLoaderService.setShowPreloader(false);
   }
-
-  // setGroup(GroupCode: string) {
-  //   this.afBrandMain = this.BrandMain.filter(f => f.GroupID == GroupCode);
-  //   // this.afBrandSecond = this.BrandSecond.filter(f => f.GroupID == GroupCode);
-  //   console.log('afBrandMain : ', this.afBrandMain)
-  //   console.log('afBrandSecond : ', this.afBrandSecond)
-  // }
 
   //*********************************DutyGroup******************************** */
   onAutoChange(value: string) { //พิม
@@ -189,7 +186,6 @@ export class ListComponent implements OnInit {
   }
 
   async onSearch(Textsearch) {
-    this.preLoaderService.setShowPreloader(true);
     // await this.masProdService.DutyGroupgetAll().subscribe(list => {
     //   this.onSearchComplete(list)
 
