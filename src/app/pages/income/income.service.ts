@@ -18,10 +18,22 @@ export class IncomeService {
       })
   };
 
-  getByKeyword(Textsearch: string) {
-    const params = Textsearch;
+  // getByKeyword(Textsearch: string) {
+  //   const params = Textsearch;
+  //   const url = `${appConfig.api8777}/RevenuegetByKeyword`;
+  //   return this.http.post<Revenue[]>(url, params, this.httpOptions);
+  // }
+
+  async getByKeyword(Textsearch: any): Promise<any> {
+    const params = JSON.stringify(Textsearch);
     const url = `${appConfig.api8777}/RevenuegetByKeyword`;
-    return this.http.post<Revenue[]>(url, params, this.httpOptions);
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res as any;
+    } catch (error) {
+      return [];
+    }
   }
 
   async getByCon(RevenueID: string): Promise<any> {
