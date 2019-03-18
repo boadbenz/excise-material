@@ -49,11 +49,11 @@ export class ListComponent implements OnInit {
     // }
   }
 
-  async ngOnInit() {
-
+  ngOnInit() {
+    // await this.navService.showAdvSearch.next(false); ?????????
     this.listOfsreach = [
-      { prodCode: '98', GroupName: 'ยาสูบ', BrandMain: 'LM', BrandSecond: 'LM', model: 'LM 7.1', size: '20', Alcohol: '' },
-      { prodCode: '99', GroupName: 'สุรา', BrandMain: 'รวงข้าว', BrandSecond: 'รวงข้าวเขียว', model: 'smallsize', size: '0.700', Alcohol: '40%' }
+      { prodCode: '96', GroupName: 'ยาสูบ', BrandMain: 'LM', BrandSecond: 'LM', model: 'LM 7.1', size: '20', Alcohol: '' },
+      { prodCode: '97', GroupName: 'สุรา', BrandMain: 'รวงข้าว', BrandSecond: 'รวงข้าวเขียว', model: 'smallsize', size: '0.700', Alcohol: '40%' }
     ]
 
     localStorage.setItem('programcode', 'ILG60-99-01');
@@ -70,14 +70,14 @@ export class ListComponent implements OnInit {
     this.navService.setSearchBar(true);
     this.navService.setNewButton(true);
 
-    await this.navigate_service();
+    this.navigate_service();
     this.Pageload();
   }
 
   private navigate_service() {
-    this.subOnSearch = this.navService.searchByKeyword.subscribe(async Textsearch => {
+    this.subOnSearch = this.navService.searchByKeyword.subscribe(Textsearch => {
       if (Textsearch) {
-        await this.navService.setOnSearch('');
+        this.navService.setOnSearch('');
 
         let ts;
         ts = { Textsearch: "" }
@@ -88,35 +88,32 @@ export class ListComponent implements OnInit {
       }
     })
 
-    this.onNextPageSubscribe = this.navService.onNextPage.subscribe(async status => {
+    this.onNextPageSubscribe = this.navService.onNextPage.subscribe(status => {
       if (status) {
-        await this.navService.setOnNextPage(false);
+        this.navService.setOnNextPage(false);
         this.router.navigate(['/masProducts/manage', 'C', 'NEW']);
       }
     })
   }
 
- async Pageload() {
-  //  await this.preLoaderService.setShowPreloader(true);
-    this.masProdService.DutyGroupgetAll().subscribe(list => {
+  async Pageload() {
+    this.preLoaderService.setShowPreloader(true); ////
+    await this.masProdService.DutyGroupgetAll().subscribe(list => {
       this.DutyGroup = list
       // console.log('DutyGroup list : ', this.DutyGroup)
     });
 
-    // console.log('DutyGroup : ',this.DutyGroup)
-    // await this.masProdService.MasProductgetByCon(Textsearch).subscribe(list => {});
-   await this.masProdService.BrandMaingetAll().subscribe(list => {
-      this.BrandMain = list 
+    await this.masProdService.BrandMaingetAll().subscribe(list => {
+      this.BrandMain = list
       // console.log('BrandMaingetAll list: ', list)
     });
 
-   await this.masProdService.BrandSecondgetAll().subscribe(list => {
+    await this.masProdService.BrandSecondgetAll().subscribe(list => {
       this.BrandSecond = list
       // console.log('BrandSecondgetAll list : ', list)
-      // this.preLoaderService.setShowPreloader(false);
+      this.preLoaderService.setShowPreloader(false); ////
     });
 
-    // this.preLoaderService.setShowPreloader(false);
   }
 
   //*********************************DutyGroup******************************** */

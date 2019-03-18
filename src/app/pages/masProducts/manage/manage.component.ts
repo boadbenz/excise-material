@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { MasProdService } from '../masProd.service';
-import { LoaderService } from 'app/core/loader/loader.service';
 import swal from 'sweetalert2'
 import { Message } from 'app/config/message';
 import { FormGroup, FormBuilder, FormArray, FormControl, ValidatorFn } from '@angular/forms';
@@ -73,69 +72,81 @@ export class ManageComponent implements OnInit {
     private navService: NavigationService,
     private preLoaderService: PreloaderService,
     private masProdService: MasProdService,
-    private loaderService: LoaderService,
     private router: Router,
     private fb: FormBuilder) { }
 
   ngOnInit() {
+    console.log('Mas manage ngOnInit')
     // this.couForm = this.fb.group({
     //   couControl: [this.ProductType]
     // });
 
-    this.active_route();
+    this.setButton();
     this.navigate_service();
+    this.active_route();
   }
   private navigate_service() {
 
     this.navService.showFieldEdit.subscribe(p => {
       this.showEditField = p;
       // if (!p) {
-        // console.log('edit p :',p)
-        // this.OnPageloadModeC();
+      // console.log('edit p :',p)
+      // this.OnPageloadModeC();
       // }
     });
 
-    this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
+    this.onPrintSubscribe = this.navService.onPrint.subscribe(status => {
       if (status) {
-        await this.navService.setOnPrint(false);
+        this.navService.setOnPrint(false);
         // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
       }
     });
-    this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
+    this.onSaveSubscribe = this.navService.onSave.subscribe(status => {
       if (status) {
-        await this.navService.setOnSave(false);
+        this.navService.setOnSave(false);
         if (this.mode === 'C') {
-          await this.SetDataInsMasProd();
-          await this.onInsMasProd(this.ParamsIns);
+          this.SetDataInsMasProd();
+          this.onInsMasProd(this.ParamsIns);
         } else if (this.mode === 'R') {
           this.activeRoute.params.subscribe(p => { this.ProductID = p['code'] });
-
-          await this.SetDataUpdMasPro();  
-          await this.onUpdMasProd(this.ParamsUpd);
+          this.OnpageloadModeR(this.ProductID);
+          this.SetDataUpdMasPro();
+          this.onUpdMasProd(this.ParamsUpd);
         }
       }
     });
-    this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
+    this.onCancelSubscribe = this.navService.onCancel.subscribe(status => {
       if (status) {
         this.navService.setOnCancel(false);
-        await this.onCancel();
+        swal({
+          title: '',
+          text: Message.confirmAction,
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm!'
+        }).then((result) => {
+          if (result.value) {
+            this.onCancel();
+          }
+        })
       }
     });
-    this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
+    this.onDeleSubscribe = this.navService.onDelete.subscribe(status => {
       if (status) {
-        await this.navService.setOnDelete(false);
+        this.navService.setOnDelete(false);
         this.activeRoute.params.subscribe(p => { this.ProductID = p['code'] });
-        await this.onDeleteMasProd();
+        this.onDeleteMasProd();
       }
     });
   }
-  private active_route() {
+  setButton() {
+    console.log('setButton')
     this.sub = this.activeRoute.params.subscribe(p => {
       this.mode = p['mode'];
-      console.log('active route mode ; ', this.mode)
-      //alert(this.mode);
       if (p['mode'] === 'C') {
-        console.log('in active_route mode C')
+        console.log('setButton C')
         // set false
         this.navService.setPrintButton(false);
         this.navService.setEditButton(false);
@@ -146,9 +157,8 @@ export class ManageComponent implements OnInit {
         // set true
         this.navService.setSaveButton(true);
         this.navService.setCancelButton(true);
-        this.OnPageloadModeC();
       } else if (p['mode'] === 'R') {
-        console.log('in mode R')
+        console.log('setButton R')
         // set false
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
@@ -158,6 +168,19 @@ export class ManageComponent implements OnInit {
         this.navService.setEditButton(true);
         this.navService.setDeleteButton(true);
         this.navService.setEditField(true);
+      }
+    });
+  }
+  private active_route() {
+    this.sub = this.activeRoute.params.subscribe(p => {
+      this.mode = p['mode'];
+      console.log('active route mode ; ', this.mode)
+      //alert(this.mode);
+      if (p['mode'] === 'C') {
+        console.log('in active_route mode C')
+        this.OnPageloadModeC();
+      } else if (p['mode'] === 'R') {
+        console.log('in active_route mode R')
         console.log(' p:[code] : ', p['code'])
         this.OnpageloadModeR(p['code'])
       }
@@ -165,7 +188,7 @@ export class ManageComponent implements OnInit {
   }
 
   async OnpageloadModeR(ProductID) {
-    await this.preLoaderService.setShowPreloader(true);
+    this.preLoaderService.setShowPreloader(true);////
 
     await this.masProdService.MasProductgetByCon(ProductID).subscribe(list => {
       // this.DutyGroup = list
@@ -180,35 +203,31 @@ export class ManageComponent implements OnInit {
       this.Degree = list.Degree;
       this.ProductDesc = list.ProductDesc;
       console.log('MasProductgetByCon R : ', list)
-      this.preLoaderService.setShowPreloader(false);
+      this.preLoaderService.setShowPreloader(false);////
     });
   }
 
-  async OnPageloadModeC() {
+  async  OnPageloadModeC() {
     console.log('OnPageload mode C')
-     this.preLoaderService.setShowPreloader(true);
+    this.preLoaderService.setShowPreloader(true);////
     await this.masProdService.DutyGroupgetAll().subscribe(list => {
       this.DutyGroup = list;
       console.log('DutyGroup C : ', this.DutyGroup)
     });
 
-    // console.log('DutyGroup : ',this.DutyGroup)
-    // await this.masProdService.MasProductgetByCon(Textsearch).subscribe(list => {});
+    await this.masProdService.DutyUnitgetAll().subscribe(list => {
+      this.DutyUnit = list, console.log('DutyUnitgetAll C : ', list)
+    });
+
     await this.masProdService.BrandMaingetAll().subscribe(list => {
       this.BrandMain = list, console.log('BrandMaingetAll C : ', list)
     });
 
     await this.masProdService.BrandSecondgetAll().subscribe(list => {
       this.BrandSecond = list, console.log('BrandSecondgetAll C : ', list)
+      this.preLoaderService.setShowPreloader(false);////
     });
-
-    await this.masProdService.DutyUnitgetAll().subscribe(list => {
-      this.DutyUnit = list, console.log('DutyUnitgetAll C : ', list)
-      this.preLoaderService.setShowPreloader(false);
-    });
-    // await this.masProdService.SizePackagegetAll().subscribe(list => {});
   }
-
 
 
   //*********************************DutyGroup******************************** */
@@ -305,10 +324,10 @@ export class ManageComponent implements OnInit {
     isChecked == true ? this.IsActive = 1 : this.IsActive = 0;
   }
 
-  async SetDataUpdMasPro() {
+  SetDataUpdMasPro() {
     this.ParamsUpd = {
       "IsActive": this.IsActive,
-      "ProductID": '',
+      "ProductID": this.ProductID,
       "GroupCode": this.GroupCode,
       "IsDomestic": this.ProductType,
       "ProductCode": this.ProductCode,
@@ -335,7 +354,7 @@ export class ManageComponent implements OnInit {
       "EventDatetime": ''
     }
   }
-  async SetDataInsMasProd() {
+  SetDataInsMasProd() {
     this.ParamsIns = {
       "IsActive": this.IsActive,
       "ProductID": null,
@@ -385,10 +404,11 @@ export class ManageComponent implements OnInit {
     await this.masProdService.MasProductupdByCon(params).subscribe(list => {
       console.log(' MasProductupdByCon : ', list)
       if (list.IsSuccess == "True") {
-        // this.ProductID = list.ProductID
         swal('', Message.saveComplete, 'success')
-        // this.ProductID == undefined ? console.log('undefined.ProductID : ', this.ProductID) :
-        this.router.navigate([`/masProducts/manage/R/${this.ProductID}`]);
+        this.ClearData();
+        this.setButton();
+        this.OnpageloadModeR(this.ProductID);
+        // this.router.navigate([`/masProducts/manage/R/${this.ProductID}`]);
       } else {
         swal('', Message.saveFail, 'error')
       }
@@ -408,7 +428,7 @@ export class ManageComponent implements OnInit {
     });
   }
 
-  async onCancel() {
+  onCancel() {
     this.ParamsIns = '';
     this.IsActive = '';
     this.ProductCode = '';
@@ -429,6 +449,24 @@ export class ManageComponent implements OnInit {
     this.router.navigate(['/masProducts/list']);
   }
 
+  ClearData() {
+    this.IsActive = '';
+    this.ProductCode = '';
+    this.GroupCode = '';
+    this.BrandCode = '';
+    this.BrandMainENG = '';
+    this.BrandMainThai = '';
+    this.BrandSecondCode = '';
+    this.BrandSecondENG = '';
+    this.BrandSecondThai = '';
+    this.ModelName = '';
+    this.Degree = '';
+    this.Size = '';
+    this.DutyUnitCode = '';
+    this.DutyCode = '';
+    this.ProductDesc = '';
+    this.ProductType = '';
+  }
 
   ngOnDestroy(): void {
     if (this.onPrintSubscribe) { this.onPrintSubscribe.unsubscribe(); }
