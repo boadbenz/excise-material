@@ -46,7 +46,7 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit() {
-    localStorage.setItem('programcode','ILG60-09-00');
+    localStorage.setItem('programcode', 'ILG60-09-00');
     this.navService.setSearchBar(true);
     this.navService.setPrintButton(false);
     this.navService.setDeleteButton(false);
@@ -105,8 +105,10 @@ export class ListComponent implements OnInit {
   }
 
   public onSearch(text: string): void {
+    const AccountOfficeCode = localStorage.getItem('officeCode');
     const param = {
-      TextSearch: text || ''
+      TextSearch: text || '',
+      AccountOfficeCode: AccountOfficeCode
     };
     this.preloaderService.setShowPreloader(true);
     this.apiServer.post('/XCS60/AdjustCompareListgetByKeyword', param)
@@ -134,10 +136,14 @@ export class ListComponent implements OnInit {
 
   public onAdvSearch() {
     console.log(this.lawsuitDateStart);
-    const date_from = this.lawsuitDateStart.date.year + '-' + this.autoZero(this.lawsuitDateStart.date.month) + '-'
+    let date_from = '1970-01-01 00:00:00';
+    let date_to = '1970-01-01 01:00:00';
+    if (this.lawsuitDateStart != null) {
+      date_from = this.lawsuitDateStart.date.year + '-' + this.autoZero(this.lawsuitDateStart.date.month) + '-'
                     + this.autoZero(this.lawsuitDateStart.date.day) + ' 00:00:00';
-    const date_to = this.lawsuitDateEnd.date.year + '-' + this.autoZero(this.lawsuitDateEnd.date.month) + '-'
-                  + this.autoZero(this.lawsuitDateEnd.date.day)  + ' 00:00:00';
+      date_to = this.lawsuitDateEnd.date.year + '-' + this.autoZero(this.lawsuitDateEnd.date.month) + '-'
+                    + this.autoZero(this.lawsuitDateEnd.date.day)  + ' 00:00:00';
+    }
 
     if (Date.parse(date_from) > Date.parse(date_to)) {
       swal('', 'วันที่เริ่มต้นต้องไม่มากกว่าวันที่สุดท้าย', 'warning');
