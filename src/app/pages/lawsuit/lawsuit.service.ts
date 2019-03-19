@@ -15,7 +15,7 @@ export class LawsuitService {
   constructor(
     private http: HttpClient,
     private loaderService: LoaderService
-    ) { }
+  ) { }
 
   private async responsePromiseGetWithStatus(params: string, url: string) {
     const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -53,8 +53,8 @@ export class LawsuitService {
     const url = `${appConfig.apiUrl}/LawsuitgetByKeyword`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)
   }
-  async LawsuitArrestGetByKeyword(Textsearch: any): Promise<Lawsuit[]> {
-    const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;
+  async LawsuitArrestGetByKeyword(Textsearch: any, AccountOfficeCode: any): Promise<Lawsuit[]> {
+    const params = Textsearch === '' ? { 'Textsearch': '', 'AccountOfficeCode': '' } : { Textsearch: Textsearch, AccountOfficeCode: AccountOfficeCode };
     const url = `${appConfig.apiUrl}/LawsuitArrestgetByKeyword`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)
   }

@@ -125,7 +125,7 @@ export class ListComponent implements OnInit, OnDestroy {
   async onSearch(Textsearch: any) {
     if (Textsearch) {
       this.preLoaderService.setShowPreloader(true);
-      let LawsuitArrestList = await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch);
+      let LawsuitArrestList = await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch.Textsearch, localStorage.officeCode);
       this.resultsPerPage = await this.setLawsuitArrestList(LawsuitArrestList)
       this.results = this.resultsPerPage
       // return await this.navService.setOnSearch('');
@@ -159,9 +159,9 @@ export class ListComponent implements OnInit, OnDestroy {
       return false;
     }
     this.preLoaderService.setShowPreloader(true);
+    form.value.AccountOfficeCode = localStorage.officeCode
     let ArrestGetByCon = await this.lawsuitService.LawsuitArrestGetByConAdv(form.value);
     this.resultsPerPage = await this.setLawsuitArrestList(ArrestGetByCon)
-    console.log(ArrestGetByCon)
     this.results = this.resultsPerPage
     this.advSearch = this.navService.showAdvSearch;
     this.preLoaderService.setShowPreloader(false);
