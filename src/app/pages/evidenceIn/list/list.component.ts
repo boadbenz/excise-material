@@ -66,19 +66,19 @@ export class ListComponent implements OnInit, OnDestroy {
         // set true
         this.navService.setSearchBar(true);
         this.navService.setNewButton(true);
-        this.sidebarService.setVersion('evidenceIn 0.0.0.19');
+        this.sidebarService.setVersion('evidenceIn 0.0.0.20');
         this.RevenueStatus = "";
 
-        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async Textsearch => {
-            if (Textsearch) {
+        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async TextSearch => {
+            if (TextSearch) {
                 await this.navService.setOnSearch('');
 
                 let ts;
-                ts = { Textsearch: "" }
-                ts = Textsearch;
+                ts = { TextSearch: "", OfficeCode: localStorage.getItem("officeCode") }
+                ts = TextSearch;
 
-                if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
-                else { this.onSearch(Textsearch); }
+                if (ts.TextSearch == null) { this.onSearch({ TextSearch: "" }); }
+                else { this.onSearch(TextSearch); }
 
             }
         })
@@ -106,10 +106,15 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
 
-    onSearch(Textsearch: any) {
+    onSearch(p: any) {
         this.preloader.setShowPreloader(true);
 
-        this.edidenceService.getByKeyword(Textsearch).subscribe(list => {
+        var paramsOther = {
+            TextSearch: p.TextSearch,
+            AccountOfficeCode: localStorage.getItem("officeCode")
+        }
+
+        this.edidenceService.getByKeyword(paramsOther).then(list => {
             this.onSearchComplete(list)
 
             this.preloader.setShowPreloader(false);
@@ -252,6 +257,8 @@ export class ListComponent implements OnInit, OnDestroy {
         } else {
             form.value.IsReceive = "";
         }
+
+        form.value.AccountOfficeCode = localStorage.getItem("officeCode");
 
         await this.edidenceService.getByConAdv(form.value).then(async list => {
             this.onSearchComplete(list);
