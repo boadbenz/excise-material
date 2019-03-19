@@ -16,6 +16,17 @@
         <label for="" class="col-lg-2 col-sm-3 control-label">กลุ่มสินค้า :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
+              <!-- <ng-template #rt let-items="DutyGroup" let-t="term">
+                  {{items.GroupName }}
+              </ng-template>
+              <input type="text" class="form-control form-control-sm "
+              [ngbTypeahead]="searchRegion"
+              [resultTemplate]="rt"
+              (blur)="blurSelectItemLocaleRegion(localeRegion)" 
+              [ngClass]="{'ng-touched':isRequired}"    
+              #localeRegion
+              /> -->
+
               <input type="text" name="group" class="form-control form-control-sm" 
               placeholder=""
               aria-label="Number" 
@@ -41,7 +52,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row">          
         <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อหลัก :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
@@ -74,6 +85,7 @@
         <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อรอง :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
+              
               <input name="BrandSecond" type="text" class="form-control form-control-sm" 
               value="{{BrandSecondENG}}"
               placeholder=""

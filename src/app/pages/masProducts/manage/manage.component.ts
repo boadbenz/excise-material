@@ -6,6 +6,8 @@ import { MasProdService } from '../masProd.service';
 import swal from 'sweetalert2'
 import { Message } from 'app/config/message';
 import { FormGroup, FormBuilder, FormArray, FormControl, ValidatorFn } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 @Component({
   selector: 'app-manage',
@@ -231,6 +233,19 @@ export class ManageComponent implements OnInit {
       this.preLoaderService.setShowPreloader(false);////
     });
   }
+
+  // searchRegion = (text3$: Observable<string>) =>
+  // text3$.debounceTime(200).distinctUntilChanged()
+  //     .map(term => term === '' ? []
+  //         : this.DutyGroup
+  //             .filter(v =>
+  //                 (`${v.GroupName}`)
+  //                     .toLowerCase()
+  //                     .indexOf(term.toLowerCase()) > -1
+  //             ).slice(0, 10));
+  // blurSelectItemLocaleRegion(ele: any){
+  //   console.log('ele : ',ele);
+  // }
 
 
   //*********************************DutyGroup******************************** */
