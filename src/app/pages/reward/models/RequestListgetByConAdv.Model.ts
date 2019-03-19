@@ -6,5 +6,6 @@ export const RequestListgetByConAdvModel = {
   LawsuitDateFrom: '',
   LawsuitDateTo: '',
   StaffName: '',
-  OfficeName: ''
+  OfficeName: '',
+  AccountOfficeCode: ''
 };

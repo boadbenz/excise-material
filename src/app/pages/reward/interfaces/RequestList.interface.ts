@@ -18,6 +18,7 @@ export interface IRequestList {
 }
 export interface IRequestListgetByKeyword {
   Textsearch: string;
+  AccountOfficeCode: string;
 }
 export interface IRequestListgetByConAdv {
   ArrestCode: string;
@@ -28,4 +29,5 @@ export interface IRequestListgetByConAdv {
   LawsuitDateTo: string;
   StaffName: string;
   OfficeName: string;
+  AccountOfficeCode: string;
 }
