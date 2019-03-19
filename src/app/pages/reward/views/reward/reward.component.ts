@@ -109,12 +109,10 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   SumMoney = () =>
     this.aggregate.BribeMoney.sum + this.aggregate.RewardMoney.sum;
   SumFirstMoney = () =>
-    Number(((this.SumMoney() || 0) / 3).toFixed(2));
+    Number(( Math.floor(((this.SumMoney() || 0) / 3) * 100 ) / 100 ).toFixed(2));
   SumFirstMoneyPerPart = () =>
     Number(
-      (
-        (this.SumFirstMoney() || 0) / (this.aggregate.FirstPart.sum || 0)
-      ).toFixed(2)
+      ( Math.floor(((this.SumFirstMoney() || 0) / (this.aggregate.FirstPart.sum || 0) ) * 100 ) / 100 ).toFixed(2)
     ) || 0;
   SumFirstMoneyPerPartView = () => parseInt(this.SumFirstMoneyPerPart().toString()) || 0;
   // FirstRemainder = () =>
@@ -124,10 +122,10 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       (this.SumFirstMoneyPerPart() - this.SumFirstMoneyPerPartView()).toFixed(2)
     ) || 0;
   SumSecondMoney = () =>
-    Number(((this.SumMoney() / 3) * 2).toFixed(2));
+    Number(( Math.floor(((this.SumMoney() / 3) * 2) * 100 ) / 100 ).toFixed(2));
   SumSecondMoneyPerPart = () =>
     Number(
-      (this.SumSecondMoney() / (this.aggregate.SecondPart.sum || 0)).toFixed(2)
+      (Math.floor(((this.SumSecondMoney() || 0) / (this.aggregate.SecondPart.sum || 0) ) * 100 ) / 100 ).toFixed(2)
     ) || 0;
   SumSecondMoneyPerPartView = () => parseInt(this.SumSecondMoneyPerPart().toString()) || 0;
   // SecondRemainder = () =>
@@ -269,7 +267,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             : 0;
 
         // tslint:disable-next-line:max-line-length
-        this.aggregate.FirstMoney.sum = sumFirst;
+        this.aggregate.FirstMoney.sum = Number(sumFirst);
 
         const sumSecond =
           selectedValue.filter(f => f.check === true).map(m => parseFloat(m.SecondMoney))
@@ -280,7 +278,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               .reduce((a, b) => (a += b))
             : 0;
 
-        this.aggregate.SecondMoney.sum = Number(sumSecond.toFixed(2));
+        this.aggregate.SecondMoney.sum = Number(sumSecond);
 
         const sumTotal =
           selectedValue.filter(f => f.check === true).map(m => parseFloat(m.ToTalMoney))
@@ -1372,19 +1370,19 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     // 1 START
     // if (confirm('ยืนยันการทำรายการหรือไม่')) {
     // 1.1
-    this.router.navigate([
-      '/reward/manage/',
-      localStorage.getItem('IndictmentID'),
-      localStorage.getItem('ArrestCode'),
-    ]);
-    // switch (this.mode) {
-    //   case 'C':
-    //     this._location.back();
-    //     break;
-    //   case 'R':
-    //     this.pageLoad();
-    //     break;
-    // }
+    // this.router.navigate([
+    //   '/reward/manage/',
+    //   localStorage.getItem('IndictmentID'),
+    //   localStorage.getItem('ArrestCode'),
+    // ]);
+    switch (this.mode) {
+      case 'C':
+        this._location.back();
+        break;
+      case 'R':
+        this.pageLoad();
+        break;
+    }
     // }
     // 2 END
   }

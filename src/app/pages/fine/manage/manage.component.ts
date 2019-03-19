@@ -139,7 +139,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.52');
+    this.sidebarService.setVersion('0.0.0.53');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -547,7 +547,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     if (this.receipt.CompareNo && this.receipt.CompareYear) {
       this.receipt.isHaveData = true;
     }
-    console.log(this.receipt);
+    // console.log(this.receipt);
   }
   searchStaffByContributorID(ContributorID) {
 
@@ -1729,9 +1729,9 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log(d);
       // const PaymentFineAppointDate: any = new Date(this.accused.list[index].PaymentFineAppointDate.date.year,(+this.accused.list[index].PaymentFineAppointDate.date.month) - 1, this.accused.list[index].PaymentFineAppointDate.date.day);
       const PaymentFineAppointDate: any = new Date(d.date.year, (+d.date.month) - 1, d.date.day);
-      console.log(accuseDate);
-      console.log(PaymentFineAppointDate);
-      console.log(accuseDate < PaymentFineAppointDate);
+      // console.log(accuseDate);
+      // console.log(PaymentFineAppointDate);
+      // console.log(accuseDate < PaymentFineAppointDate);
       this.accused.list[index].cancheck = accuseDate < PaymentFineAppointDate;
       // if (accuseDate < PaymentFineAppointDate) {
       //   this.accused.list[index].cancheck = true;
@@ -1742,13 +1742,13 @@ export class ManageComponent implements OnInit, OnDestroy {
       //   this.accused.list[index].cancheck = false;
       // }
     } else {
-      console.log(index);
+      // console.log(index);
       const accuseDate: any = new Date(this.accused.CompareDate.date.year, (+this.accused.CompareDate.date.month) - 1, this.accused.CompareDate.date.day);
       const d: any = event;
-      console.log(d);
+      // console.log(d);
       const PaymentFineAppointDate: any = new Date(d.date.year, (+d.date.month) - 1, d.date.day);
-      console.log(accuseDate);
-      console.log(PaymentFineAppointDate);
+      // console.log(accuseDate);
+      // console.log(PaymentFineAppointDate); 
       this.editUser.cancheck = accuseDate < PaymentFineAppointDate;
       // console.log(this.accused.list[index].cancheck);
       // if (accuseDate < PaymentFineAppointDate) {

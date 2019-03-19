@@ -1,6 +1,6 @@
 export class UacConfig{
     private static readonly API_URL : string = "http://103.233.193.94:8103/XCS60/";
-    // private static readonly API_URL : string = "http://192.168.3.158:8013/XCS60/";
+    // private static readonly API_URL : string = "http://192.168.3.158:8103/XCS60/";
 
     public static readonly UserAccountgetByCon : string = UacConfig.API_URL + "UserAccountgetByCon";
     public static readonly UserAccountListgetByKeyword : string = UacConfig.API_URL + "UserAccountListgetByKeyword";

@@ -75,7 +75,7 @@ export class ManageComponent implements OnInit {
   private LawsuitID: any;
   private IndictmentID: string;
   private ArrestCode: string;
-  @ViewChild('printDocModalLaw') printDocModel: ElementRef;
+  @ViewChild('printDocModal') printDocModel: ElementRef;
   @ViewChild('indicmetModal') indicmetModal: ElementRef;
 
   MasStaff = new Array<MasStaff>();

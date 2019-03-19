@@ -412,7 +412,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
 
     private createForm(): FormGroup {
         let ArrestDate = setDateMyDatepicker(new Date());
-        let ArrestTime = `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.`;
+        let ArrestTime = `${setZero((new Date).getHours())}:${setZero((new Date).getMinutes())} น.`;
         return new FormGroup({
             ArrestCode: new FormControl(this.arrestCode, Validators.required),
             ArrestDate: new FormControl(ArrestDate, Validators.required),

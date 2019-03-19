@@ -48,9 +48,10 @@ export class ListComponent extends ListConfig implements OnInit {
     this.navService.showAdvSearch.next(false);
   }
 
-  public fetchData(Textsearch) {
+  public async fetchData(Textsearch) {
+    let AccountOfficeCode = await localStorage.getItem('officeCode');
     this.requestListService
-      .RequestListgetByKeyword({ Textsearch: Textsearch })
+      .RequestListgetByKeyword({ Textsearch: Textsearch, AccountOfficeCode: AccountOfficeCode })
       .subscribe((res: IRequestList[]) => {
         if (res.length > 0 ) {
           this.gridData = this.newData(res);
@@ -79,7 +80,7 @@ export class ListComponent extends ListConfig implements OnInit {
       StaffName: `${m.TitleName}${m.FirstName} ${m.LastName}`
     }));
   }
-  public submitAdvSearch($event: FormGroup) {
+  public async submitAdvSearch($event: FormGroup) {
     // console.log(' $event.value', $event.value);
 
     if ($event.value) {
@@ -128,6 +129,7 @@ export class ListComponent extends ListConfig implements OnInit {
 
       if (check === 1) {
         const formData: IRequestListgetByConAdv = $event.value;
+        formData.AccountOfficeCode = await localStorage.getItem('officeCode');
         const newMap = RequestListgetByConAdvModel;
         for (const key in newMap) {
           if (newMap.hasOwnProperty(key)) {
