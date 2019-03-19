@@ -414,7 +414,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     private createForm() {
         let noticeDate = this.mode == 'C' ? setDateMyDatepicker(new Date()) : null;
-        let noticeTime = this.mode == 'C' ? `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.` : null;
+        let noticeTime = this.mode == 'C' ? `${setZero((new Date).getHours())}:${setZero((new Date).getMinutes())} น.` : null;
         let noticeDueDate = noticeDate;
         this.noticeForm = this.fb.group({
             NoticeCode: new FormControl(this.noticeCode, Validators.required),
@@ -424,7 +424,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeTime: new FormControl(noticeTime, Validators.required),
             NoticeDue: new FormControl(1, Validators.required),
             NoticeDueDate: new FormControl(noticeDueDate, Validators.required),
-            NoticeDueTime: new FormControl("23.59 น."),
+            NoticeDueTime: new FormControl("23:59 น."),
             GroupNameDesc: new FormControl('N/A'),
             CommunicationChanelID: new FormControl(null),
             DataSource: new FormControl(null),
@@ -586,7 +586,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             NoticeStation: res.NoticeStation,
             NoticeDate: setDateMyDatepicker(new Date(res.NoticeDate)),
             NoticeTime: res.NoticeTime,
-            NoticeDueTime: "23.59 น.",
+            NoticeDueTime: "23:59 น.",
             NoticeDue: res.NoticeDue,
             NoticeDueDate: setDateMyDatepicker(new Date(res.NoticeDueDate)),
             GroupNameDesc: res.GroupNameDesc || 'N/A',
@@ -1150,7 +1150,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         if (!this.noticeForm.value.NoticeDate) {
             this.noticeForm.patchValue({
                 NoticeDate: setDateMyDatepicker(_date),
-                NoticeTime: `${setZero((new Date).getHours())}.${setZero((new Date).getMinutes())} น.`
+                NoticeTime: `${setZero((new Date).getHours())}:${setZero((new Date).getMinutes())} น.`
             })
         }
 
@@ -1160,7 +1160,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         noticeDate.setDate(noticeDate.getDate() + parseInt(dueDate));
         this.noticeForm.patchValue({
             NoticeDueDate: setDateMyDatepicker(noticeDate),
-            NoticeDueTime: "23.59 น."
+            NoticeDueTime: "23:59 น."
         })
     }
 
