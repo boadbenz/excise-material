@@ -85,7 +85,7 @@ export class ListComponent implements OnInit, OnDestroy {
         // set true
         this.navService.setSearchBar(true);
         this.navService.setNewButton(true);
-        this.sidebarService.setVersion('evidenceOut 0.0.0.4');
+        this.sidebarService.setVersion('evidenceOut 0.0.0.5');
         this.RevenueStatus = "";
         this.EvidenceOutList = [];
         this.active_Route();
@@ -205,7 +205,7 @@ export class ListComponent implements OnInit, OnDestroy {
         var paramsOther = {
             TextSearch: p.TextSearch,
             EvidenceOutType: pOutType,
-            OfficeCode: localStorage.getItem("officeCode")
+            AccountOfficeCode: localStorage.getItem("officeCode")
         }
 
         await this.EvidenceService.getByKeyword(paramsOther).then(async list => {
@@ -338,7 +338,7 @@ export class ListComponent implements OnInit, OnDestroy {
             EvidenceOutNoDateTo: this.EvidenceOutNoDateTo,
             StaffName: this.StaffName,
             StaffOfficeName: this.OfficeName,
-            OfficeCode: localStorage.getItem("officeCode"),
+            AccountOfficeCode: localStorage.getItem("officeCode"),
             EvidenceOutType: pOutType
         }
 
