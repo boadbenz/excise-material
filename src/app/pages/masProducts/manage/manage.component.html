@@ -59,7 +59,7 @@
                   <mat-option *ngFor="let items of BrandMainoptions" [value]="items.BrandMainENG"
                   (click)="BrandMainonAutoSelecteWord(items.BrandMainCode, items.BrandMainThai, items.BrandMainENG)" 
                   (onSelectionChange)="BrandMainonAutoSelecteWord(items.BrandMainCode, items.BrandMainThai, items.BrandMainENG)">
-                      {{items.BrandMainENG }}
+                      {{items.BrandMainENG }} 
                   </mat-option>
               </mat-autocomplete>
             <!-- <div class="form-line">
@@ -163,13 +163,14 @@
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
               <!-- <form [formGroup]="couForm"> -->
-              <select name="ProductType" class="form-control form-control-sm"
-              [(ngModel)]="ProductType"
+              <select name="IsDomestic" class="form-control form-control-sm"
+              (change)="getIsDomestic($event.target.value)"
+              [(ngModel)]="IsDomestic"
                 [disabled]="showEditField">
-                <!-- <option  *ngFor="let item of ProductType">{{item.TypeName}}</option> -->
-                <option value="3" [selected]="ProductType.Selected">ไม่ระบุ</option>
-                <option value="2" [selected]="ProductType.Selected">ต่างประเทศ</option>
-                <option value="1" [selected]="ProductType.Selected">ภายในประเทศ</option>
+                <option  *ngFor="let item of IsDomesticOpt" >{{item.TypeName}}</option>
+                <!-- <option value="3" [selected]="IsDomestic.Selected">ไม่ระบุ</option>
+                <option value="2" [selected]="IsDomestic.Selected">ต่างประเทศ</option>
+                <option value="1" [selected]="IsDomestic.Selected">ภายในประเทศ</option> -->
                 <!-- <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option> -->
               </select>
             <!-- </form> -->

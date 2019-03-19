@@ -72,6 +72,9 @@ export class ListComponent implements OnInit {
 
     this.navigate_service();
     this.Pageload();
+
+    // const control = new FormControl(this.listOfsreach);
+    // console.log('control.value : ',control.value);
   }
 
   private navigate_service() {

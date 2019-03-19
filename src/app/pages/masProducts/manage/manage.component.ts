@@ -48,12 +48,12 @@ export class ManageComponent implements OnInit {
   DutyUnitCode: any = '';
   DutyCode: any = '';
   ProductDesc: any = '';
-  ProductType: any = '';
-  // ProductType= [
-  //   {Selected: false,IsDomestic: 1,TypeName: 'ภายในประเทศ'},
-  //   {Selected: true,IsDomestic: 2,TypeName: 'ต่างประเทศ'},
-  //   {Selected: false,IsDomestic: 3,TypeName: 'ไม่ระบุ'}
-  // ];
+  IsDomestic: any = '';
+  IsDomesticOpt = [
+    { Selected: false, IsDomestic: 1, TypeName: 'ภายในประเทศ' },
+    { Selected: true, IsDomestic: 2, TypeName: 'ต่างประเทศ' },
+    { Selected: false, IsDomestic: 3, TypeName: 'ไม่ระบุ' }
+  ];
 
   //Ins complete
   ProductID: any;
@@ -66,7 +66,7 @@ export class ManageComponent implements OnInit {
   mode: string;
   showEditField: any;
 
-  couForm: FormGroup;
+  // couForm: FormGroup;
 
   constructor(private activeRoute: ActivatedRoute,
     private navService: NavigationService,
@@ -78,7 +78,7 @@ export class ManageComponent implements OnInit {
   ngOnInit() {
     console.log('Mas manage ngOnInit')
     // this.couForm = this.fb.group({
-    //   couControl: [this.ProductType]
+    //   couControl: [this.IsDomestic]
     // });
 
     this.setButton();
@@ -186,7 +186,9 @@ export class ManageComponent implements OnInit {
       }
     })
   }
-
+  getIsDomestic(value) {
+    console.log('value : ',value)
+  }
   async OnpageloadModeR(ProductID) {
     this.preLoaderService.setShowPreloader(true);////
 
@@ -202,6 +204,7 @@ export class ManageComponent implements OnInit {
       this.DutyCode = list.SizeUnitName;
       this.Degree = list.Degree;
       this.ProductDesc = list.ProductDesc;
+      this.IsDomestic = list.IsDomestic;
       console.log('MasProductgetByCon R : ', list)
       this.preLoaderService.setShowPreloader(false);////
     });
@@ -329,7 +332,7 @@ export class ManageComponent implements OnInit {
       "IsActive": this.IsActive,
       "ProductID": this.ProductID,
       "GroupCode": this.GroupCode,
-      "IsDomestic": this.ProductType,
+      "IsDomestic": this.IsDomestic,
       "ProductCode": this.ProductCode,
       "BrandCode": this.BrandCode,
       "BrandNameTH": this.BrandMainThai,
@@ -359,7 +362,7 @@ export class ManageComponent implements OnInit {
       "IsActive": this.IsActive,
       "ProductID": null,
       "GroupCode": this.GroupCode,
-      "IsDomestic": this.ProductType,
+      "IsDomestic": this.IsDomestic,
       "ProductCode": this.ProductCode,
       "BrandCode": this.BrandCode,
       "BrandNameTH": this.BrandMainThai,
@@ -445,7 +448,7 @@ export class ManageComponent implements OnInit {
     this.DutyUnitCode = '';
     this.DutyCode = '';
     this.ProductDesc = '';
-    this.ProductType = '';
+    this.IsDomestic = '';
     this.router.navigate(['/masProducts/list']);
   }
 
@@ -465,7 +468,7 @@ export class ManageComponent implements OnInit {
     this.DutyUnitCode = '';
     this.DutyCode = '';
     this.ProductDesc = '';
-    this.ProductType = '';
+    this.IsDomestic = '';
   }
 
   ngOnDestroy(): void {
