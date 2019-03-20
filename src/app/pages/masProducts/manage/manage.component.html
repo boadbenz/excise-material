@@ -149,7 +149,19 @@
         <label for="" class="col-lg-2 col-sm-3 control-label">หน่วยของขนาด :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
-              <input type="text" [disabled]="showEditField" class="form-control form-control-sm" 
+              <ng-template #rt3 let-item="result" let-t="term">
+                  {{item.DutyCode}}
+              </ng-template>
+              <input type="text" class="form-control form-control-sm "
+              [ngbTypeahead]="searchDutyUnit"
+              [resultTemplate]="rt3"
+              [readOnly]="showEditField"
+              (selectItem)="selectItemDutyUnit($event)"
+              [inputFormatter]="formatterDutyUnit" 
+              [ngClass]="{'ng-touched':isRequired}"
+              #localeRegion 
+               />
+              <!-- <input type="text" [disabled]="showEditField" class="form-control form-control-sm" 
               value="{{DutyCode}}"
               placeholder=""
               aria-label="Number" 
@@ -165,7 +177,7 @@
                   (onSelectionChange)="DutyUnitonAutoSelecteWord(items.DutyUnitCode,items.DutyCode)">
                       {{items.DutyCode }}
                   </mat-option>
-              </mat-autocomplete>
+              </mat-autocomplete> -->
          
           </div>
         </div>

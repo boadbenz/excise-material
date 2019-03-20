@@ -274,7 +274,7 @@ export class ManageComponent implements OnInit {
   selectItemBrandMain(ele: any) {
     console.log('selectItemBrandMain ele.item : ', ele.item);
   }
-  formatterBrandMain = (x: { BrandMainENG: string ,BrandMainThai: string}) =>
+  formatterBrandMain = (x: { BrandMainENG: string, BrandMainThai: string }) =>
     `${x.BrandMainENG} ${x.BrandMainThai}`;
   // BrandMainonAutoChange(value: string) { //พิม
   //   if (value == '') {
@@ -294,13 +294,13 @@ export class ManageComponent implements OnInit {
   //   }
   // }
   //********************************BrandSecond********************************* */
-  searchBrandSecond = (text1$) =>
-    text1$.map(term => term === '' ? []
+  searchBrandSecond = (text2$) =>
+    text2$.map(term => term === '' ? []
       : this.BrandSecondoptions = this.BrandSecond.filter(v => (`${v.BrandSecondNameENG} ${v.BrandSecondNameThai}`).toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
   selectItemBrandSecond(ele: any) {
     console.log('selectItemBrandSecond ele.item : ', ele.item);
   }
-  formatterBrandSecond = (x: { BrandSecondNameENG: string ,BrandSecondNameThai: string}) =>
+  formatterBrandSecond = (x: { BrandSecondNameENG: string, BrandSecondNameThai: string }) =>
     `${x.BrandSecondNameENG} ${x.BrandSecondNameThai}`;
   // BrandSecondonAutoChange(value: string) { //พิม
   //   if (value == '') {
@@ -320,22 +320,30 @@ export class ManageComponent implements OnInit {
   //   }
   // }
   //********************************DutyUnit********************************* */
-  DutyUnitonAutoChange(value: string) { //พิม
-    if (value == '') {
-      this.DutyUnitoptions = [];
-    } else {
-      this.DutyUnitoptions = this.DutyUnit.filter(fil => fil.DutyCode == null ? fil.DutyCode == 'null' : fil.DutyCode.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
-    }
+  searchDutyUnit = (text3$) =>
+    text3$.map(term => term === '' ? []
+      : this.DutyUnitoptions = this.DutyUnit.filter(v => (`${v.DutyCode}`).toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
+  selectItemDutyUnit(ele: any) {
+    console.log('selectItemDutyUnit ele.item : ', ele.item);
   }
-  DutyUnitonAutoSelecteWord(DutyUnitCode: string, DutyCode: string) { //value all select
-    this.DutyUnitCode = DutyUnitCode;
-    this.DutyCode = DutyCode;
-  }
-  DutyUnitonAutoFocus(value: string) { //value in box
-    if (value == '') {
-      this.DutyUnitoptions = [];
-    }
-  }
+  formatterDutyUnit = (x: { DutyCode: string}) =>
+    `${x.DutyCode}`;
+  // DutyUnitonAutoChange(value: string) { //พิม
+  //   if (value == '') {
+  //     this.DutyUnitoptions = [];
+  //   } else {
+  //     this.DutyUnitoptions = this.DutyUnit.filter(fil => fil.DutyCode == null ? fil.DutyCode == 'null' : fil.DutyCode.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
+  //   }
+  // }
+  // DutyUnitonAutoSelecteWord(DutyUnitCode: string, DutyCode: string) { //value all select
+  //   this.DutyUnitCode = DutyUnitCode;
+  //   this.DutyCode = DutyCode;
+  // }
+  // DutyUnitonAutoFocus(value: string) { //value in box
+  //   if (value == '') {
+  //     this.DutyUnitoptions = [];
+  //   }
+  // }
   //********************************End********************************* */
   onChecked(obj: any, isChecked: boolean) {
     isChecked == true ? this.IsActive = 1 : this.IsActive = 0;
