@@ -6,6 +6,7 @@ import { PrintDocModalComponent } from '../print-doc-modal/print-doc-modal.compo
 // import moment = require('moment');
 import * as moment from 'moment';
 import 'moment/locale/th';
+import { toLocalShort } from 'app/config/dateFormat';
 
 import { Subject } from 'rxjs/Subject';
 import { MatAutocomplete, _MatListItemMixinBase } from '@angular/material';
@@ -1024,6 +1025,15 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  toDatePickerFormat(d: any) {
+    return {
+      date: {
+        year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()
+      },
+      formatted: toLocalShort(d.toString()).replace(/ /g, ' ')
+    };
   }
 
 }
