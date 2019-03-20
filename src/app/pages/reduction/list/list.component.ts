@@ -230,4 +230,8 @@ export class ListComponent implements OnInit {
   private autoZero(data: string): string {
     return data.toString().length === 1 ? '0' + data : data;
   }
+
+  public formatDate(date: string, format: string): any {
+    return moment(date).add(543, 'years').format(format);
+  }
 }

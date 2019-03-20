@@ -224,7 +224,7 @@
             <td>{{ i == 0 ? tableData[i].TotalFine : tableData[i-1].TotalFine}}</td>
             <td>{{item.TotalFine}}</td>
             <td>{{item.ReceiptDateShow}}</td>
-            <td>{{item.ReceiptChanel}}</td>
+            <td>{{(item.ReceiptChanel === 1) ? 'เงินสด' : (item.ReceiptChanel === 2) ? 'EDC' : (item.ReceiptChanel === 3) ? 'เครดิต' : (item.ReceiptChanel === 4) ? 'เดบิต' : ''}}</td>
             <td>{{item.ReceiptBookNo}}</td>
             <td>{{item.ReceiptNo}}</td>
             <td>{{item.RevenueStatus === 1 ? 'นำส่งแล้ว' : 'ยังไม่ส่ง'}}</td>
