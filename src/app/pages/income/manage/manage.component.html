@@ -177,8 +177,7 @@
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
-                        <input type="text" [(ngModel)]="DeptStaff" name="DeptStaff" class="form-control" [ngClass]="{'ng-touched':isRequired}"
-                            required readonly>
+                        <input type="text" [(ngModel)]="DeptStaff" name="DeptStaff" class="form-control"readonly>
                     </div>
                 </div>
             </div>
@@ -186,19 +185,18 @@
                 <label for="" class="col-lg-2 col-md-4 control-label">ตำแหน่ง :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <input type="text" [(ngModel)]="PosStaff" name="PosStaff" class="form-control" [ngClass]="{'ng-touched':isRequired}"
-                        required readonly>
+                    <input type="text" [(ngModel)]="PosStaff" name="PosStaff" class="form-control" readonly>
                 </div>
 
                 <label for="" class="col-lg-2 col-md-4 control-label">สถานะนำส่งเงิน :
                 </label>
                 <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                    <!-- [(ngModel)]="RevenueStatus" name="RevenueStatus" -->
-                    <select class="form-control" disabled [(ngModel)]="RevenueStatus" name="RevenueStatus">
+                    <input type="text" [(ngModel)]="RevenueStatusDisplay" name="RevenueStatusDisplay" class="form-control" readonly>
+                    <!-- <select class="form-control" disabled [(ngModel)]="RevenueStatus" name="RevenueStatus">
                         <option value="0"></option>
                         <option value="1">นำส่งเงินรายได้</option>
                         <option value="2">รับรายการนำส่งเงิน</option>
-                    </select>
+                    </select> -->
                 </div>
             </div>
             <div class="row">
