@@ -35,6 +35,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public adjustArrest = {
     ArrestCode: '',
     ArrestDate: '',
+    LawsuitDate: '',
     ArrestTime: '',
     Behaviour: '',
     CompareCode: '',
@@ -311,6 +312,29 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       this.adjustArrest.CompareName = this.adjustArrest.AdjustCompareStaff[0].TitleName + this.adjustArrest.AdjustCompareStaff[0].FirstName
                                     + ' ' + this.adjustArrest.AdjustCompareStaff[0].LastName;
       this.adjustFine = this.adjustArrest.AdjustCompareReceiptCR;
+
+      if (this.adjustArrest.ArrestDate) {
+        Object.assign(this.adjustArrest, ({
+          ArrestDateShow: moment(this.adjustArrest.ArrestDate).add(543, 'years').format('DD MMM YYYY')
+        } || ''));
+      }
+
+      if (this.adjustArrest.LawsuitDate) {
+        Object.assign(this.adjustArrest, ({
+          LawsuitDateShow: moment(this.adjustArrest.LawsuitDate).add(543, 'years').format('DD MMM YYYY')
+        } || ''));
+      }
+
+      if (this.adjustArrest.CompareDate) {
+        Object.assign(this.adjustArrest, ({
+          CompareDateShow: moment(this.adjustArrest.CompareDate).add(543, 'years').format('DD MMM YYYY')
+        } || ''));
+
+        Object.assign(this.adjustArrest, ({
+          CompareTimeShow: moment(this.adjustArrest.CompareDate).format('HH:mm') + ' น.'
+        } || ''));
+      }
+
       this.adjustFine.forEach((e, i) => {
         this.calAdjustFine(i);
       });

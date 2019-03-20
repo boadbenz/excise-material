@@ -16,10 +16,10 @@
         </div>
         <div class="col-md-6">
           <div class="form-group row">
-            <label class="col-form-label text-right col-md-4">วันที่จับกุม : </label>
-            <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="adjustArrest.ArrestDate" name="lawsuitDate" disabled>
-              <label class="col-form-label text-right col-md-2">เวลา</label>
+            <label class="col-form-label col-md-4">วันที่จับกุม : </label>
+            <div class="form-group input-group col-md-8" style="margin-bottom: 0px;">
+              <input class="form-control" type="text" [(ngModel)]="adjustArrest.ArrestDateShow" name="lawsuitDate" disabled>
+              <label class="col-form-label col-md-2">เวลา</label>
               <input class="form-control" type="text" [(ngModel)]="adjustArrest.ArrestTime" name="lawsuitTime" disabled>
             </div>
           </div>
@@ -37,7 +37,7 @@
         </div>
         <div class="col-md-6">
           <div class="form-group row">
-            <label class="col-form-label text-right col-md-4">ตำแหน่ง : </label>
+            <label class="col-form-label col-md-4">ตำแหน่ง : </label>
             <div class="col-md-8">
               <input class="form-control" type="text" [(ngModel)]="adjustArrest.AdjustArrestStaff[0].PositionName" name="positionlawName" disabled>
             </div>
@@ -56,7 +56,7 @@
         </div>
         <div class="col-md-6">
           <div class="form-group row">
-            <label class="col-form-label text-right col-md-4">สถานที่จับกุม : </label>
+            <label class="col-form-label col-md-4">สถานที่จับกุม : </label>
             <div class="col-md-8">
               <input class="form-control" type="text" [(ngModel)]="adjustArrest.Locations" name="locationlawName" disabled>
             </div>
@@ -75,10 +75,10 @@
         </div>
         <div class="col-md-6">
           <div class="form-group row">
-            <label class="col-form-label text-right col-md-4">วันที่รับคดี : </label>
-            <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="adjustArrest.LawsuitDate" name="lawsuitDate" disabled>
-              <label class="col-form-label text-right col-md-2">เวลา</label>
+            <label class="col-form-label col-md-4">วันที่รับคดี : </label>
+            <div class="form-group input-group col-md-8" style="margin-bottom: 0px;">
+              <input class="form-control" type="text" [(ngModel)]="adjustArrest.LawsuitDateShow" name="lawsuitDate" disabled>
+              <label class="col-form-label col-md-2">เวลา</label>
               <input class="form-control" type="text" [(ngModel)]="adjustArrest.LawsuitTime" name="lawsuitTime" disabled>
             </div>
           </div>
@@ -96,7 +96,7 @@
         </div>
         <div class="col-md-6">
           <div class="form-group row">
-            <label class="col-form-label text-right col-md-4">ฐานความผิด : </label>
+            <label class="col-form-label col-md-4">ฐานความผิด : </label>
             <div class="col-md-8">
               <input class="form-control" type="text" [(ngModel)]="adjustArrest.GuiltBaseName" name="faultSubject" disabled>
             </div>
@@ -115,7 +115,7 @@
         </div>
         <div class="col-md-6">
           <div class="form-group row">
-            <label class="col-form-label text-right col-md-4">อัตราโทษ : </label>
+            <label class="col-form-label col-md-4">อัตราโทษ : </label>
             <div class="col-md-8">
               <input class="form-control" type="text" [(ngModel)]="adjustArrest.PenaltyDesc" name="penalty" disabled>
             </div>
@@ -134,11 +134,11 @@
         </div>
         <div class="col-md-6">
           <div class="form-group row">
-            <label class="col-form-label text-right col-md-4">วันที่เปรียบเทียบ : </label>
-            <div class="form-group input-group col-md-8">
-              <input class="form-control" type="text" [(ngModel)]="adjustArrest.CompareDate" name="lawsuitDate" disabled>
-              <label class="col-form-label text-right col-md-2">เวลา</label>
-              <input class="form-control" type="text" [(ngModel)]="adjustArrest.CompareTime" name="lawsuitTime" disabled>
+            <label class="col-form-label col-md-4">วันที่เปรียบเทียบ : </label>
+            <div class="form-group input-group col-md-8" style="margin-bottom: 0px;">
+              <input class="form-control" type="text" [(ngModel)]="adjustArrest.CompareDateShow" name="CompareDate" disabled>
+              <label class="col-form-label col-md-2">เวลา</label>
+              <input class="form-control" type="text" [(ngModel)]="adjustArrest.CompareTimeShow" name="CompareDate" disabled>
             </div>
           </div>
         </div>
@@ -155,7 +155,7 @@
         </div>
         <div class="col-md-6">
           <div class="form-group row">
-            <label class="col-form-label text-right col-md-4">ตำแหน่ง : </label>
+            <label class="col-form-label col-md-4">ตำแหน่ง : </label>
             <div class="col-md-8">
               <input class="form-control" type="text" [(ngModel)]="adjustArrest.AdjustCompareStaff[0].PositionName" name="positionlawName" disabled>
             </div>
@@ -345,7 +345,7 @@
             <div class="col-md-6">
               <div class="form-group row">
                 <label class="col-form-label text-left col-md-4">วันที่ชำระค่าปรับ : </label>
-                <div class="form-group input-group col-md-8">
+                <div class="form-group input-group col-md-8" style="margin-bottom: 0px;">
                   <input class="form-control" type="text" [(ngModel)]="adjustArrest.lawsuitDate" name="" [disabled]="viewMode">
                   <label class="col-form-label text-center col-md-3"> เวลา </label>
                   <input class="form-control" type="text" [(ngModel)]="adjustArrest.lawsuitTime" name="" [disabled]="viewMode">
@@ -544,7 +544,7 @@
             <div class="col-md-6">
               <div class="form-group row">
                 <label class="col-form-label col-md-4">วันที่จัดทำรายงานฯ : </label>
-                <div class="form-group input-group col-md-8">
+                <div class="form-group input-group col-md-8" style="margin-bottom: 0px;">
                   <div style="width: 100%">
                     <my-date-picker class="form-control date-setting" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveReportDate" [disabled]="viewMode"></my-date-picker>
                   </div>

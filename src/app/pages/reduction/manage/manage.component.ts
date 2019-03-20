@@ -10,6 +10,9 @@ import { ReductionModelListComponent } from './reduction-model-list/reduction-mo
 // import { AddReduceComponent } from './add-reduce/add-reduce.component';
 import { PrintDocModalComponent } from '../print-doc-modal/print-doc-modal.component'
 import swal from 'sweetalert2';
+
+import moment = require('moment');
+import 'moment/locale/th';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -45,7 +48,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     FaultSubject: '',
     FaultNo: '',
     Penalty: '',
-    CompareDate: ['', ''],
+    CompareDate: '',
     AdjustArrestStaff: [
       {
         ArrestCode: '',
@@ -260,13 +263,36 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
             this.detailData.CompareCode = 'น' + this.detailData.CompareCode;
           }
 
+          if (this.detailData.ArrestDate) {
+            this.detailData.ArrestDateShow = moment(this.detailData.ArrestDate).add(543, 'years').format('DD MMM YYYY');
+          }
+
+          if (this.detailData.LawsuitDate) {
+            this.detailData.LawsuitDateShow = moment(this.detailData.LawsuitDate).add(543, 'years').format('DD MMM YYYY');
+          }
+
           if (this.detailData.CompareDate) {
-            this.detailData.CompareDate = this.detailData.CompareDate.split(' ');
+            // this.detailData.CompareDate = this.detailData.CompareDate.split(' ');
+            this.detailData.CompareDateShow = moment(this.detailData.CompareDate).add(543, 'years').format('DD MMM YYYY');
+            this.detailData.CompareTimeShow = moment(this.detailData.CompareDate).add(543, 'years').format('HH:mm') + ' น.';
           } else {
             this.detailData.CompareDate = ['', ''];
           }
 
+          this.detailData.LocationlawName =
+          (this.detailData.SubDistrict || '') + ' ' + (this.detailData.District || '') + ' ' + (this.detailData.Province || '');
+
           this.tableData = this.detailData.AdjustCompareReceipt;
+          if (this.tableData.length > 0) {
+            this.tableData = this.tableData.map(e => {
+              if (e.ReceiptDate && moment(e.ReceiptDate).format('HH:mm') === '00:00') {
+                Object.assign(e, {ReceiptDateShow: moment(e.ReceiptDate).add(543, 'years').format('DD MMM YYYY')});
+              } else {
+                Object.assign(e, {ReceiptDateShow: moment(e.ReceiptDate).add(543, 'years').format('DD MMM YYYY HH:mm') + ' น.'});
+              }
+              return e;
+            });
+          }
         }, error => console.log(error));
   }
 

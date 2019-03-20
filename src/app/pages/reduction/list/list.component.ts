@@ -9,6 +9,9 @@ import swal from 'sweetalert2';
 
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 
+import moment = require('moment');
+import 'moment/locale/th';
+
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -34,6 +37,7 @@ export class ListComponent implements OnInit {
   allPageCount = 0;
   numberPage = 5;
   numberSelectPage = [];
+  AccountOfficeCode = '';
 
 
   constructor(
@@ -47,6 +51,7 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     localStorage.setItem('programcode', 'ILG60-09-00');
+    this.AccountOfficeCode = localStorage.getItem('officeCode');
     this.navService.setSearchBar(true);
     this.navService.setPrintButton(false);
     this.navService.setDeleteButton(false);
@@ -105,10 +110,9 @@ export class ListComponent implements OnInit {
   }
 
   public onSearch(text: string): void {
-    const AccountOfficeCode = localStorage.getItem('officeCode');
     const param = {
       TextSearch: text || '',
-      AccountOfficeCode: AccountOfficeCode
+      AccountOfficeCode: '080700'
     };
     this.preloaderService.setShowPreloader(true);
     this.apiServer.post('/XCS60/AdjustCompareListgetByKeyword', param)
@@ -136,23 +140,23 @@ export class ListComponent implements OnInit {
 
   public onAdvSearch() {
     console.log(this.lawsuitDateStart);
-    let date_from = '1970-01-01 00:00:00';
-    let date_to = '1970-01-01 01:00:00';
+    let date_from = '';
+    let date_to = '';
     if (this.lawsuitDateStart != null) {
       date_from = this.lawsuitDateStart.date.year + '-' + this.autoZero(this.lawsuitDateStart.date.month) + '-'
                     + this.autoZero(this.lawsuitDateStart.date.day) + ' 00:00:00';
       date_to = this.lawsuitDateEnd.date.year + '-' + this.autoZero(this.lawsuitDateEnd.date.month) + '-'
                     + this.autoZero(this.lawsuitDateEnd.date.day)  + ' 00:00:00';
-    }
 
-    if (Date.parse(date_from) > Date.parse(date_to)) {
-      swal('', 'วันที่เริ่มต้นต้องไม่มากกว่าวันที่สุดท้าย', 'warning');
-      return;
-    }
+      if (Date.parse(date_from) > Date.parse(date_to)) {
+        swal('', 'วันที่เริ่มต้นต้องไม่มากกว่าวันที่สุดท้าย', 'warning');
+        return;
+      }
 
-    if (Date.now() < Date.parse(date_to)) {
-      swal('', 'วันที่สุดท้ายต้องไม่มากกว่าวันที่ปัจจุบัน', 'warning');
-      return;
+      if (Date.now() < Date.parse(date_to)) {
+        swal('', 'วันที่สุดท้ายต้องไม่มากกว่าวันที่ปัจจุบัน', 'warning');
+        return;
+      }
     }
 
     const param = {
@@ -163,46 +167,47 @@ export class ListComponent implements OnInit {
       CompareDateFrom: date_from || '',
       CompareDateTo: date_to || '',
       StaffName: this.lawName || '',
-      OfficeShortName: this.departmentlawName || ''
+      OfficeName: this.departmentlawName || '',
+      AccountOfficeCode: '080700'
     };
 
     this.preloaderService.setShowPreloader(true);
     this.apiServer.post('/XCS60/AdjustCompareListgetgetByConAdv', param)
-        .subscribe(response => this.adjustListgetByConAdvDone(response), error => this.adjustListgetByConAdvError(error));
+        .subscribe(response => this.adjustListByKeywordDone(response), error => this.adjustListByKeywordError(error));
   }
 
-  public adjustListgetByConAdvDone(data: any): void {
-    console.log(data);
-    if (data) {
-      this.listRealData.push(data);
-    } else {
-      this.listRealData = [];
-      // this.ShowAlertNoRecord();
-      // swal('ไม่พบข้อมูล', 'error')
-      swal({
-        title: '',
-        text: 'ไม่พบข้อมูล',
-        type: 'warning',
-        confirmButtonText : 'ตกลง'
-      });
-    }
+  // public adjustListgetByConAdvDone(data: any): void {
+  //   console.log(data);
+  //   if (data) {
+  //     this.listRealData.push(data);
+  //   } else {
+  //     this.listRealData = [];
+  //     // this.ShowAlertNoRecord();
+  //     // swal('ไม่พบข้อมูล', 'error')
+  //     swal({
+  //       title: '',
+  //       text: 'ไม่พบข้อมูล',
+  //       type: 'warning',
+  //       confirmButtonText : 'ตกลง'
+  //     });
+  //   }
 
-    this.preloaderService.setShowPreloader(false);
-  }
+  //   this.preloaderService.setShowPreloader(false);
+  // }
 
-  public adjustListgetByConAdvError(error: any): void {
-    console.log(error);
-    this.listRealData = [];
-    // this.ShowAlertGetDataError();
-    // swal('ไม่พบข้อมูล', 'error')
-    swal({
-      title: '',
-      text: 'ไม่พบข้อมูล',
-      type: 'warning',
-      confirmButtonText : 'ตกลง'
-    });
-    this.preloaderService.setShowPreloader(false);
-  }
+  // public adjustListgetByConAdvError(error: any): void {
+  //   console.log(error);
+  //   this.listRealData = [];
+  //   // this.ShowAlertGetDataError();
+  //   // swal('ไม่พบข้อมูล', 'error')
+  //   swal({
+  //     title: '',
+  //     text: 'ไม่พบข้อมูล',
+  //     type: 'warning',
+  //     confirmButtonText : 'ตกลง'
+  //   });
+  //   this.preloaderService.setShowPreloader(false);
+  // }
 
   public ShowAlertNoRecord() {
     swal({
