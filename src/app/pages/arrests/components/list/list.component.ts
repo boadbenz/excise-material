@@ -96,7 +96,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
 
     onSearch(Textsearch: any) {
         const form = {
-            Textsearch,
+            ...Textsearch,
             AccountOfficeCode: localStorage.getItem('')
         }
         this.arrestService
