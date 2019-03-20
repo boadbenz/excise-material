@@ -110,7 +110,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.preloader.setShowPreloader(true);
 
         var paramsOther = {
-            TextSearch: p.TextSearch,
+            Textsearch: p.TextSearch,
             AccountOfficeCode: localStorage.getItem("officeCode")
         }
 

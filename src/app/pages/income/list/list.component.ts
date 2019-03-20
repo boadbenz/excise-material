@@ -106,7 +106,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     onSearch(p: any) {
         var paramsOther = {
-            TextSearch: p.TextSearch,
+            Textsearch: p.TextSearch,
             AccountOfficeCode: localStorage.getItem("officeCode")
         }
 
