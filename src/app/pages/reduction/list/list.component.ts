@@ -112,7 +112,7 @@ export class ListComponent implements OnInit {
   public onSearch(text: string): void {
     const param = {
       TextSearch: text || '',
-      AccountOfficeCode: '080700'
+      AccountOfficeCode: this.AccountOfficeCode
     };
     this.preloaderService.setShowPreloader(true);
     this.apiServer.post('/XCS60/AdjustCompareListgetByKeyword', param)
@@ -168,7 +168,7 @@ export class ListComponent implements OnInit {
       CompareDateTo: date_to || '',
       StaffName: this.lawName || '',
       OfficeName: this.departmentlawName || '',
-      AccountOfficeCode: '080700'
+      AccountOfficeCode: this.AccountOfficeCode
     };
 
     this.preloaderService.setShowPreloader(true);

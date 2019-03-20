@@ -241,6 +241,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         this.navService.setPrintButton(false);
         this.navService.setSearchBar(false);
         this.navService.setEditButton(false);
+        this.navService.setSendIncomeButton(false);
         this.mode = 'E';
       } else {
         console.log('ss');
@@ -250,6 +251,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(false);
         this.navService.setCancelButton(false);
         this.navService.setSaveButton(false);
+        this.navService.setSendIncomeButton(true);
         this.mode = 'V';
       }
     });
@@ -303,7 +305,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
       this.adjustArrest.ArrestStaff = this.adjustArrest.AdjustArrestStaff[0].TitleName + this.adjustArrest.AdjustArrestStaff[0].FirstName
                                     + ' ' + this.adjustArrest.AdjustArrestStaff[0].LastName;
-      this.adjustArrest.Locations = this.adjustArrest.SubDistrict + '/' + this.adjustArrest.District + '/' + this.adjustArrest.Province;
+      this.adjustArrest.Locations = this.adjustArrest.SubDistrict + ' ' + this.adjustArrest.District + ' ' + this.adjustArrest.Province;
       this.adjustArrest.CompareCode = this.adjustArrest.IsOutside === 1
                                     ? 'น' + this.adjustArrest.CompareCode
                                     : this.adjustArrest.CompareCode;
@@ -380,7 +382,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.adjustFine[index].CompareFineBribeMoney = 0;
     this.adjustFine[index].CompareFineRewardMoney = 0;
     if (this.adjustFine[index].CompareFine) {
-      this.adjustFine[index].CompareFineDiff = this.adjustFine[index].ProductFine - this.adjustFine[index].CompareFine;
+      this.adjustFine[index].CompareFineDiff = this.adjustFine[index].CompareFine - this.adjustFine[index].ProductFine;
       if (this.adjustFine[index].ProductFine < this.adjustFine[index].CompareFine) {
         this.adjustFine[index].CompareFineStatus = true;
       } else if (this.adjustFine[index].ProductFine > this.adjustFine[index].CompareFine) {
@@ -518,6 +520,13 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.viewMode = true;
     console.log(CompareDetailID);
     await this.GetEditApproveCaseComparisonData(CompareDetailID);
+    if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
+      this.viewMode = false;
+      this.EditApproveCaseComparisonPopUp.departmentOrders = '';
+      this.EditApproveCaseComparisonPopUp.CommandDate = '';
+      this.EditApproveCaseComparisonPopUp.Fact = '';
+      this.EditApproveCaseComparisonPopUp.AdjustReason = '';
+    }
   }
 
   public async EditApproveData(CompareDetailID: any) {
