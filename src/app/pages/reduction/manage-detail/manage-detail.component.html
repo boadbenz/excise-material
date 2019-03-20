@@ -220,8 +220,8 @@
               <tr class="footable">
                 <td>{{i == 0 || item.LawbreakerName != adjustFine[i - 1].LawbreakerName ? item.LawbreakerName : ''}}</td>
                 <td style="max-width: 490px; overflow-x: scroll;">{{item.ProductDesc}}</td>
-                <td>{{item.ProductFine}}</td>
-                <td>
+                <td style="max-width: 120px;">{{item.ProductFine}}</td>
+                <td style="max-width: 120px;">
                   <input type="number" [(ngModel)]="item.CompareFine" name="CompareFine" class="form-control" [disabled]="showField" (keyup)="enterNewValue($event, i)" value="0">
                 </td>
                 <td>{{item.CompareFineDiff}}</td>
@@ -279,7 +279,7 @@
             <th class="footable-sortable">ใบเสร็จเล่มที่</th>
             <th class="footable-sortable">ใบเสร็จเลขที่/เลขอ้างอิง</th>
             <th class="footable-sortable">สถานะคดี</th>
-            <th class="footable-sortable"></th>
+            <!-- <th class="footable-sortable"></th> -->
           </tr>
         </thead>
         <tbody>
@@ -287,20 +287,20 @@
             <td class="text-center">{{i+1}}</td>
             <td>{{((item.LawbreakerTitleName || '')) 
                 + (item.LawbreakerFirstName || '') + ' ' + (item.LawbreakerLastName || '')}}</td>
-            <td>{{item.PaymentDate | date}}</td>
+            <td>{{item.PaymentDate | reductionDatePipe: 'DD MMM YYYY'}}</td>
             <!-- <td>Missing ผู้รับชำระ</td> -->
             <td>{{item.ReceiptChanel}}</td>
             <td>{{item.ReceiptBookNo}}</td>
             <td>{{item.ReceiptBookNo}}</td>
-            <td>{{item.RevenueStatus === 0 ? 'ยังไม่ส่งรายได้' : 'ส่งารายได้แล้ว'}}</td>
-            <td [hidden]="true">
+            <td>{{item.RevenueStatus === 0 ? 'ยังไม่ส่งรายได้' : 'นำส่งรายได้'}}</td>
+            <!-- <td [hidden]="true">
               <a href="javaScript:void(0);" class="text-secondary" (click)="viewData()" data-toggle="modal" [hidden]="mode === 'A'" data-target="#finePopup">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
               <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="editData()" [hidden]="mode === 'V'" data-toggle="modal" data-target="#finePopup">
                 <i class="ti-pencil-alt btn-action"></i>
               </a>
-            </td>
+            </td> -->
           </tr>
         </tbody>
       </table>
@@ -466,7 +466,7 @@
             <td class="text-center">{{i+1}}</td>
             <td>{{(item.AdjustCompareLawbreaker[0].LawbreakerTitleName || '')
               + (item.AdjustCompareLawbreaker[0].LawbreakerFirstName || '') + ' ' + (item.AdjustCompareLawbreaker[0].LawbreakerLastName || '')}}</td>
-            <td>{{item.ApproveReportDate | date}}</td>
+            <td>{{item.ApproveReportDate | reductionDatePipe: 'DD MMM YYYY'}}</td>
             <td>{{'แบบอนุมัติ' + item.ApproveReportType}}</td>
             <td>
               <a href="javaScript:void(0);" class="text-secondary" (click)="ViewApproveData(item.CompareDetailID)" data-toggle="modal" [hidden]="mode === 'A'" data-target="#approvePopup">
@@ -559,13 +559,13 @@
                 <label class="col-form-label col-md-2">แบบอนุมัติ : </label>
                 <div class="custom-control custom-radio col-form-label col-md-8">
                   <input name="FineType" id="typeOne" class="col-form-label with-gap radio-col-indigo" type="radio" [(ngModel)]="EditApproveCaseComparisonPopUp.FineType" value="1">
-                  <label for="typeOne" class="col-4">แบบอนุมัติ 1</label>
+                  <label for="typeOne" class="col-4">แบบอนุมัติ 1 (คด.3)</label>
                   <input name="FineType" id="typeTwo" class="col-form-label with-gap radio-col-indigo" type="radio" [(ngModel)]="EditApproveCaseComparisonPopUp.FineType" value="2">
-                  <label for="typeTwo" class="col-4">แบบอนุมัติ 2</label>
+                  <label for="typeTwo" class="col-4">แบบอนุมัติ 2 (คด.4)</label>
                   <input name="FineType" id="typeThree" class="col-form-label with-gap radio-col-indigo" type="radio" [(ngModel)]="EditApproveCaseComparisonPopUp.FineType" value="3">
-                  <label for="typeThree" class="col-4">แบบอนุมัติ 3</label>
+                  <label for="typeThree" class="col-4">แบบอนุมัติ 3 (คด.5)</label>
                   <input name="FineType" id="typeFour" class="col-form-label with-gap radio-col-indigo" type="radio" [(ngModel)]="EditApproveCaseComparisonPopUp.FineType" value="4">
-                  <label for="typeFour" class="col-4">แบบอนุมัติ 4</label>
+                  <label for="typeFour" class="col-4">แบบอนุมัติ 4 (คด.6)</label>
                 </div>
               </div>
             </div>
