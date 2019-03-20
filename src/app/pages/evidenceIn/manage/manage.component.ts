@@ -591,15 +591,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.EvidenceInCode = "RC" + this.oEviInRecvStaff.OfficeCode + (this.EvidenceInDate.date.year + 543).toString().substring(4, 2) + "00001";
                         this.oEvidenceIn.EvidenceInCode = this.EvidenceInCode;
 
-                        await this.InsEvidenceInExternal();
-
-                        // if (this.evitype == "E") {
-                        //     await this.InsEvidenceInExternal();
-                        // }
-                        // else if (this.evitype == "G") {
-                        //     await this.InsEvidenceInGovernment();
-                        // }
-
+                        if (this.evitype != "I") {
+                            await this.InsEvidenceInExternal();
+                        }
                     }
                 }, (error) => { console.error(error); return false; });
             }
@@ -612,14 +606,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.EvidenceInCode = "RC" + this.oEviInRecvStaff.OfficeCode + (this.EvidenceInDate.date.year + 543).toString().substring(4, 2) + RunningNo;
                         this.oEvidenceIn.EvidenceInCode = this.EvidenceInCode;
 
-                        await this.InsEvidenceInExternal();
-
-                        // if (this.evitype == "E") {
-                        //     await this.InsEvidenceInExternal();
-                        // }
-                        // else if (this.evitype == "G") {
-                        //     await this.InsEvidenceInGovernment();
-                        // }
+                        if (this.evitype != "I") {
+                            await this.InsEvidenceInExternal();
+                        }
                     }
                 }, (error) => { console.error(error); return false; });
             }
