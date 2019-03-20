@@ -61,7 +61,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     RevenueDate: any;       // วันที่นำส่ง
     RevenueTime: string;    // เวลาที่นำส่ง
     RevenueStatus: number;  // สถานะนำส่ง
-
+    RevenueStatusDisplay: string;  // สถานะนำส่ง
 
 
     StaffSendoptions = [];
@@ -440,6 +440,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                 this.InformTo = res[0].InformTo;
                 this.RevenueStatus = res[0].RevenueStatus;
 
+                if (this.RevenueStatus == 0)
+                    this.RevenueStatusDisplay = "";
+                else if (this.RevenueStatus == 1)
+                    this.RevenueStatusDisplay = "นำส่งเงินรายได้";
+                else if (this.RevenueStatus == 2)
+                    this.RevenueStatusDisplay = "รับรายการนำส่งเงิน";
+
                 var RDate = res[0].RevenueDate.toString().split(" ");
                 this.RevenueDate = setDateMyDatepicker(new Date(RDate[0]));
                 this.RevenueTime = res[0].RevenueTime;
@@ -463,11 +470,13 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.oRevenueStaff = Staff[0];
                 }
 
-                await this.ShowRevenueCompare();
+                this.ListRevenueDetail = [];
+                this.ListRevenueDetailPaging = [];
 
-                debugger
+
                 this.preloader.setShowPreloader(true);
                 if (res[0].RevenueDetail.length > 0) {
+
                     for (var a = 0; a < res[0].RevenueDetail.length; a += 1) {
                         await this.IncService.RevenueComparegetByCompareReceiptID(res[0].RevenueDetail[a].CompareReceiptID).then(async item => {
                             this.preloader.setShowPreloader(false);
@@ -543,12 +552,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                     //     p.LawBreaker = p.LawBreaker.Replace("null", "");
                     // });
 
-                    // set total record
-                    this.paginage.TotalItems = this.ListRevenueDetail.length;
-                    this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
+                    // // set total record
+                    // this.paginage.TotalItems = this.ListRevenueDetail.length;
+                    // this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
 
-                    this.checkIfAllChbSelected();
+                    // this.checkIfAllChbSelected();
+                } else {
+                    this.ListRevenueDetail = [];
+                    this.ListRevenueDetailPaging = [];
                 }
+
+                await this.ShowRevenueCompare();
             } else {
                 this.ShowAlertError("พบปัญหาในการติดต่อ Server");
                 //alert("พบปัญหาในการติดต่อ Server");
@@ -573,8 +587,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
             await this.IncService.RevenueComparegetByCon(setZeroHours(cDateRevenue), this.StaffDeptCode).then(async res => {
                 this.preloader.setShowPreloader(false);
-                this.ListRevenueDetail = [];
-                this.ListRevenueDetailPaging = [];
+                // this.ListRevenueDetail = [];
+                // this.ListRevenueDetailPaging = [];
 
                 if (res.length > 0) {
                     for (var j = 0; j < res.length; j += 1) {
@@ -641,15 +655,17 @@ export class ManageComponent implements OnInit, OnDestroy {
                     // }
 
 
-                    // set total record
-                    this.paginage.TotalItems = this.ListRevenueDetail.length;
-                    this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
+                   // set total record
+                   this.paginage.TotalItems = this.ListRevenueDetail.length;
+                   this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
+
+                   this.checkIfAllChbSelected();
 
                 }
-                else {
-                    this.ListRevenueDetail = [];
-                    this.ListRevenueDetailPaging = [];
-                }
+                // else {
+                //     this.ListRevenueDetail = [];
+                //     this.ListRevenueDetailPaging = [];
+                // }
             }, (err: HttpErrorResponse) => {
                 this.ShowAlertError("API RevenueComparegetByCon :: " + err.message);
                 //alert(err.message);
