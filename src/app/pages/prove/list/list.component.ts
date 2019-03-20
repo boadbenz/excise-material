@@ -106,7 +106,7 @@ export class ListComponent implements OnInit {
 
     async onSearch(p: any) {
         var paramsOther = {
-            TextSearch: p.TextSearch,
+            Textsearch: p.TextSearch,
             AccountOfficeCode: localStorage.getItem("officeCode")
         }
 
