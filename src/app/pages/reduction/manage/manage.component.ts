@@ -11,7 +11,8 @@ import { ReductionModelListComponent } from './reduction-model-list/reduction-mo
 import { PrintDocModalComponent } from '../print-doc-modal/print-doc-modal.component'
 import swal from 'sweetalert2';
 
-import moment = require('moment');
+// import moment = require('moment');
+import * as moment from 'moment';
 import 'moment/locale/th';
 @Component({
   selector: 'app-manage',

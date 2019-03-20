@@ -8,8 +8,8 @@ import { Subject } from 'rxjs/Subject';
 import swal from 'sweetalert2';
 
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
-
-import moment = require('moment');
+import * as moment from 'moment';
+// import moment = require('moment');
 import 'moment/locale/th';
 
 @Component({
