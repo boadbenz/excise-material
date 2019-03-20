@@ -16,18 +16,20 @@
         <label for="" class="col-lg-2 col-sm-3 control-label">กลุ่มสินค้า :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
-              <!-- <ng-template #rt let-items="DutyGroup" let-t="term">
-                  {{items.GroupName }}
+              <ng-template #rt let-item="result" let-t="term">
+                  {{item.GroupName}}
               </ng-template>
               <input type="text" class="form-control form-control-sm "
-              [ngbTypeahead]="searchRegion"
+              [ngbTypeahead]="searchDutyGroup"
               [resultTemplate]="rt"
-              (blur)="blurSelectItemLocaleRegion(localeRegion)" 
-              [ngClass]="{'ng-touched':isRequired}"    
+              [readOnly]="showEditField"
+              (selectItem)="selectItemDutyGroup($event)"
+              [inputFormatter]="formatterDutyGroup" 
+              [ngClass]="{'ng-touched':isRequired}"
               #localeRegion
-              /> -->
+              />
 
-              <input type="text" name="group" class="form-control form-control-sm" 
+              <!-- <input type="text" name="group" class="form-control form-control-sm" 
               placeholder=""
               aria-label="Number" 
               matInput [matAutocomplete]="auto1" 
@@ -42,7 +44,7 @@
               (onSelectionChange)="onAutoSelecteWord(item.GroupCode)">
                   {{item.GroupName }}
               </mat-option>
-          </mat-autocomplete>
+          </mat-autocomplete> -->
             <!-- <div class="form-line">
               <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm" [disabled]="showEditField">
                 <option value="" selected disabled></option>
@@ -56,10 +58,22 @@
         <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อหลัก :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
-              <input name="BrandMain" type="text" class="form-control form-control-sm" 
+              <ng-template #rt1 let-item="result" let-t="term">
+                  {{item.BrandMainENG }} {{item.BrandMainThai}}
+              </ng-template>
+              <input type="text" class="form-control form-control-sm "
+              [ngbTypeahead]="searchBrandMain"
+              [resultTemplate]="rt1"
+              [readOnly]="showEditField"
+              (selectItem)="selectItemBrandMain($event)"
+              [inputFormatter]="formatterBrandMain" 
+              [ngClass]="{'ng-touched':isRequired}"
+              #localeRegion
+              />
+              <!-- <input name="BrandMain" type="text" class="form-control form-control-sm" 
               value="{{BrandMainENG}}"
               placeholder=""
-              aria-label="Number" 
+              aria-label="Number"
               matInput [matAutocomplete]="auto2" 
               [ngClass]="{'ng-touched':isRequired}"
               (focus)="BrandMainonAutoFocus($event.target.value)" 
@@ -67,26 +81,30 @@
               [disabled]="showEditField"
               >
               <mat-autocomplete  #auto2="matAutocomplete">
-                  <mat-option *ngFor="let items of BrandMainoptions" [value]="items.BrandMainENG"
+                  <mat-option *ngFor="let items of BrandMain" [value]="items.BrandMainENG"
                   (click)="BrandMainonAutoSelecteWord(items.BrandMainCode, items.BrandMainThai, items.BrandMainENG)" 
                   (onSelectionChange)="BrandMainonAutoSelecteWord(items.BrandMainCode, items.BrandMainThai, items.BrandMainENG)">
                       {{items.BrandMainENG }} 
                   </mat-option>
-              </mat-autocomplete>
-            <!-- <div class="form-line">
-              <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm"
-                [disabled]="showEditField">
-                <option value="" selected disabled></option>
-                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
-              </select>
-            </div> -->
+              </mat-autocomplete> -->
           </div>
         </div>
         <label for="" class="col-lg-2 col-sm-3 control-label">ยี่ห้อรอง :</label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group">
-              
-              <input name="BrandSecond" type="text" class="form-control form-control-sm" 
+              <ng-template #rt2 let-item="result" let-t="term">
+                  {{item.BrandSecondNameENG }} {{item.BrandSecondNameThai}}
+              </ng-template>
+              <input type="text" class="form-control form-control-sm "
+              [ngbTypeahead]="searchBrandSecond"
+              [resultTemplate]="rt2"
+              [readOnly]="showEditField"
+              (selectItem)="selectItemBrandSecond($event)"
+              [inputFormatter]="formatterBrandSecond" 
+              [ngClass]="{'ng-touched':isRequired}"
+              #localeRegion
+              />
+              <!-- <input name="BrandSecond" type="text" class="form-control form-control-sm" 
               value="{{BrandSecondENG}}"
               placeholder=""
               aria-label="Number" 
@@ -102,14 +120,7 @@
                   (onSelectionChange)="BrandSecondonAutoSelecteWord(items.BrandSecondCode,items.BrandSecondNameENG,items.BrandSecondNameThai)">
                       {{items.GroupName }}
                   </mat-option>
-              </mat-autocomplete>
-            <!-- <div class="form-line">
-              <select [(ngModel)]="xxx" name="xxx" class="form-control form-control-sm"
-                [disabled]="showEditField">
-                <option value="" selected disabled></option>
-                <option *ngFor="let item of xxx" [value]="item.value">{{item.text}}</option>
-              </select>
-            </div> -->
+              </mat-autocomplete> -->
           </div>
         </div>
       </div>

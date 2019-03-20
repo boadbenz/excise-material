@@ -8,6 +8,13 @@ import { Message } from 'app/config/message';
 import { FormGroup, FormBuilder, FormArray, FormControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+// import 'rxjs/add/operator/map';
+// import 'rxjs/add/operator/debounceTime';
+// import 'rxjs/add/operator/distinctUntilChanged';
+// import 'rxjs/add/observable/of';
+// import 'rxjs/add/operator/catch';
+// import 'rxjs/add/operator/do';
+// import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'app-manage',
@@ -189,7 +196,7 @@ export class ManageComponent implements OnInit {
     })
   }
   getIsDomestic(value) {
-    console.log('value : ',value)
+    console.log('value : ', value)
   }
   async OnpageloadModeR(ProductID) {
     this.preLoaderService.setShowPreloader(true);////
@@ -234,110 +241,102 @@ export class ManageComponent implements OnInit {
     });
   }
 
-  // searchRegion = (text3$: Observable<string>) =>
-  // text3$.debounceTime(200).distinctUntilChanged()
-  //     .map(term => term === '' ? []
-  //         : this.DutyGroup
-  //             .filter(v =>
-  //                 (`${v.GroupName}`)
-  //                     .toLowerCase()
-  //                     .indexOf(term.toLowerCase()) > -1
-  //             ).slice(0, 10));
-  // blurSelectItemLocaleRegion(ele: any){
-  //   console.log('ele : ',ele);
-  // }
-
-
   //*********************************DutyGroup******************************** */
-  onAutoChange(value: string) { //พิม
-    console.log('onAutoChange : ', value)
-    // console.log('onAutoChange this.DutyGroup.GroupName : ', this.DutyGroup)
-    if (value == '') {
-      this.options = [];
-    } else {
-      this.options = this.DutyGroup.filter(f => f.GroupName.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
-      console.log('onAutoChange options: ', this.options)
-    }
+  searchDutyGroup = (text$) =>
+    text$.map(term => term === '' ? []
+      : this.options = this.DutyGroup.filter(v => (`${v.GroupName}`)
+        .toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
+  selectItemDutyGroup(ele: any) {
+    console.log('selectItemRegion ele.item : ', ele.item);
   }
-  onAutoSelecteWord(event: string) { //value all select
-    console.log('onAutoSelecteWord : ', event)
-    this.GroupCode = event
-  }
-  onAutoFocus(value: string) { //value in box
-    console.log('onAutoFocus : ', value)
-    if (value == '') {
-      this.options = [];
-    }
-  }
+  formatterDutyGroup = (x: { GroupName: string }) =>
+    `${x.GroupName}`;
+  // onAutoChange(value: string) { //พิม
+  //   console.log('onAutoChange : ', value)
+  //   if (value == '') {
+  //     this.options = [];
+  //   } else {
+  //     this.options = this.DutyGroup.filter(f => f.GroupName.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
+  //   }
+  // }
+  // onAutoSelecteWord(event: string) { //value all select
+  //   this.GroupCode = event
+  // }
+  // onAutoFocus(value: string) { //value in box
+  //   if (value == '') {
+  //     this.options = [];
+  //   }
+  // }
   //*********************************BrandMain******************************** */
-
-  BrandMainonAutoChange(value: string) { //พิม
-    console.log('BrandMainonAutoChange : ', value);
-    console.log('BrandMainonAutoChange this.BrandMain : ', this.BrandMain)
-    if (value == '') {
-      this.BrandMainoptions = [];
-    } else {
-      this.BrandMainoptions = this.BrandMain.filter(fil => fil.BrandMainENG == null || fil.BrandMainENG == undefined ? fil.BrandMainENG == 'null' : fil.BrandMainENG.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
-      console.log('BrandMainonAutoChange options: ', this.BrandMainoptions)
-    }
+  searchBrandMain = (text1$) =>
+    text1$.map(term => term === '' ? []
+      : this.BrandMainoptions = this.BrandMain.filter(v => (`${v.BrandMainENG} ${v.BrandMainThai}`).toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
+  selectItemBrandMain(ele: any) {
+    console.log('selectItemBrandMain ele.item : ', ele.item);
   }
-  BrandMainonAutoSelecteWord(BrandCode: string, BrandMainENG: string, BrandMainThai: string) { //value all select
-    console.log('BrandMainonAutoSelecteWord : ', BrandCode)
-    this.BrandCode = BrandCode;
-    this.BrandMainENG = BrandMainENG;
-    this.BrandMainThai = BrandMainThai;
-  }
-  BrandMainonAutoFocus(value: string) { //value in box
-    console.log('BrandMainonAutoFocus : ', value)
-    if (value == '') {
-      this.BrandMainoptions = [];
-    }
-  }
+  formatterBrandMain = (x: { BrandMainENG: string ,BrandMainThai: string}) =>
+    `${x.BrandMainENG} ${x.BrandMainThai}`;
+  // BrandMainonAutoChange(value: string) { //พิม
+  //   if (value == '') {
+  //     this.BrandMainoptions = [];
+  //   } else {
+  //     this.BrandMainoptions = this.BrandMain.filter(fil => fil.BrandMainENG == null || fil.BrandMainENG == undefined ? fil.BrandMainENG == 'null' : fil.BrandMainENG.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
+  //   }
+  // }
+  // BrandMainonAutoSelecteWord(BrandCode: string, BrandMainENG: string, BrandMainThai: string) { //value all select
+  //   this.BrandCode = BrandCode;
+  //   this.BrandMainENG = BrandMainENG;
+  //   this.BrandMainThai = BrandMainThai;
+  // }
+  // BrandMainonAutoFocus(value: string) { //value in box
+  //   if (value == '') {
+  //     this.BrandMainoptions = [];
+  //   }
+  // }
   //********************************BrandSecond********************************* */
-  BrandSecondonAutoChange(value: string) { //พิม
-    console.log('BrandSecondonAutoChange : ', value);
-    console.log('BrandSecondonAutoChange this.BrandSecond : ', this.BrandSecond)
-    if (value == '') {
-      this.BrandSecondoptions = [];
-    } else {
-      this.BrandSecondoptions = this.BrandSecond.filter(fil => fil.GroupName == null ? fil.GroupName == 'null' : fil.GroupName.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
-      console.log('BrandSecondonAutoChange options: ', this.BrandSecondoptions)
-    }
+  searchBrandSecond = (text1$) =>
+    text1$.map(term => term === '' ? []
+      : this.BrandSecondoptions = this.BrandSecond.filter(v => (`${v.BrandSecondNameENG} ${v.BrandSecondNameThai}`).toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
+  selectItemBrandSecond(ele: any) {
+    console.log('selectItemBrandSecond ele.item : ', ele.item);
   }
-  BrandSecondonAutoSelecteWord(BrandSecondCode: string, BrandSecondENG: string, BrandSecondThai: string) { //value all select
-    console.log('BrandSecondonAutoSelecteWord : ', event)
-    this.BrandSecondCode = BrandSecondCode;
-    this.BrandSecondENG = BrandSecondENG;
-    this.BrandSecondThai = BrandSecondThai;
-  }
-  BrandSecondonAutoFocus(value: string) { //value in box
-    console.log('BrandSecondonAutoFocus : ', value)
-    if (value == '') {
-      this.BrandSecondoptions = [];
-    }
-  }
+  formatterBrandSecond = (x: { BrandSecondNameENG: string ,BrandSecondNameThai: string}) =>
+    `${x.BrandSecondNameENG} ${x.BrandSecondNameThai}`;
+  // BrandSecondonAutoChange(value: string) { //พิม
+  //   if (value == '') {
+  //     this.BrandSecondoptions = [];
+  //   } else {
+  //     this.BrandSecondoptions = this.BrandSecond.filter(fil => fil.GroupName == null ? fil.GroupName == 'null' : fil.GroupName.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
+  //   }
+  // }
+  // BrandSecondonAutoSelecteWord(BrandSecondCode: string, BrandSecondENG: string, BrandSecondThai: string) { //value all select
+  //   this.BrandSecondCode = BrandSecondCode;
+  //   this.BrandSecondENG = BrandSecondENG;
+  //   this.BrandSecondThai = BrandSecondThai;
+  // }
+  // BrandSecondonAutoFocus(value: string) { //value in box
+  //   if (value == '') {
+  //     this.BrandSecondoptions = [];
+  //   }
+  // }
   //********************************DutyUnit********************************* */
   DutyUnitonAutoChange(value: string) { //พิม
-    console.log('DutyUnitonAutoChange : ', value);
-    console.log('DutyUnitonAutoChange this.DutyUnit : ', this.DutyUnit)
     if (value == '') {
       this.DutyUnitoptions = [];
     } else {
       this.DutyUnitoptions = this.DutyUnit.filter(fil => fil.DutyCode == null ? fil.DutyCode == 'null' : fil.DutyCode.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 10);
-      console.log('DutyUnitonAutoChange options: ', this.DutyUnitoptions)
     }
   }
   DutyUnitonAutoSelecteWord(DutyUnitCode: string, DutyCode: string) { //value all select
-    console.log('DutyUnitonAutoSelecteWord : ', event)
     this.DutyUnitCode = DutyUnitCode;
     this.DutyCode = DutyCode;
   }
   DutyUnitonAutoFocus(value: string) { //value in box
-    console.log('DutyUnitonAutoFocus : ', value)
     if (value == '') {
       this.DutyUnitoptions = [];
     }
   }
+  //********************************End********************************* */
   onChecked(obj: any, isChecked: boolean) {
     isChecked == true ? this.IsActive = 1 : this.IsActive = 0;
   }

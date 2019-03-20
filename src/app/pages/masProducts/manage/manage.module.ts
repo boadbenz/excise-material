@@ -10,6 +10,7 @@ import { PaginationTableModule } from '../../component/pagination-table/paginati
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MasProdService } from '../masProd.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 const routes: Routes = [
@@ -36,7 +37,8 @@ const routes: Routes = [
         CardActionsModule,
         PaginationTableModule,
         MyDatePickerTHModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        NgbModule.forRoot()
     ],
     declarations: [ManageComponent],
     providers: [MasProdService],
