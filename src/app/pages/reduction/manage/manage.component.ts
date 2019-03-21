@@ -14,6 +14,7 @@ import swal from 'sweetalert2';
 // import moment = require('moment');
 import * as moment from 'moment';
 import 'moment/locale/th';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -123,10 +124,12 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
       private activeRoute: ActivatedRoute,
       private navService: NavigationService,
       private readonly apiServer: ReductionApiService,
+      private sidebarService: SidebarService,
       public ngbModel: NgbModal
     ) { }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.3.21');
     localStorage.setItem('programcode', 'ILG60-09-00');
     if (this.activeRoute.snapshot.queryParamMap.get('CompareID') == null
       || this.activeRoute.snapshot.queryParamMap.get('CompareID') === '') {

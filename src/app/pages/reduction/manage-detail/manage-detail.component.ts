@@ -15,6 +15,7 @@ import swal from 'sweetalert2';
 
 import { replaceFakePath } from 'app/config/dataString';
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-manage-detail',
@@ -211,10 +212,11 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     private readonly apiService: ReductionApiService,
     public ngbModel: NgbModal,
     private masDocumentMainService: MasDocumentMainService,
+    private sidebarService: SidebarService
   ) { }
 
   public async ngOnInit() {
-
+    this.sidebarService.setVersion('0.0.3.21');
     this.mode = this.activeRoute.snapshot.paramMap.get('mode');
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
