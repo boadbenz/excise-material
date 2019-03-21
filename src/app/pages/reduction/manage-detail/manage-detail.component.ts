@@ -718,6 +718,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     const Fine = [];
 
     let cansave = true;
+    let document = true;
+    let document_name = true;
     let TreasuryMoney = 0;
     let BribeMoney = 0;
     let RewardMoney = 0;
@@ -757,25 +759,46 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       });
     }
 
-    // if (this.AllAddFiles.length === 0) {
-    //   swal('', 'กรุณาแนบเอกสาร', 'error');
-    //     cansave = false;
-    // }
+    if (this.AllAddFiles.length === 0) {
+      // swal('', 'กรุณาแนบเอกสาร', 'error');
+      document = false;
+    }
 
-    // for (let j = 0; j < this.AllAddFiles.length; j++) {
-    //   if (this.AllAddFiles[j].DocumentName == null || this.AllAddFiles[j].DocumentName === '' || !this.AllAddFiles[j].DocumentName) {
-    //     swal('', 'กรุณากรอกข้อมูลชื่อเอกสาร', 'error');
-    //     cansave = false;
-    //   }
+    for (let j = 0; j < this.AllAddFiles.length; j++) {
+      if (this.AllAddFiles[j].DocumentName == null || this.AllAddFiles[j].DocumentName === '' || !this.AllAddFiles[j].DocumentName) {
+        // swal('', 'กรุณากรอกข้อมูลชื่อเอกสาร', 'error');
+        document_name = false;
+      }
 
-    //   if (this.AllAddFiles[j].FilePath == null || this.AllAddFiles[j].FilePath === '' || !this.AllAddFiles[j].FilePath) {
-    //     swal('', 'กรุณาแนบเอกสาร', 'error');
-    //     cansave = false;
-    //   }
-    // }
+      if (this.AllAddFiles[j].FilePath == null || this.AllAddFiles[j].FilePath === '' || !this.AllAddFiles[j].FilePath) {
+        // swal('', 'กรุณาแนบเอกสาร', 'error');
+        document = false;
+      }
+    }
 
     if (!cansave) {
       return;
+    }
+
+    if (!document || !document_name) {
+      if (!document) {
+        swal({
+          title: 'ไม่มีเอกสารแนบ?',
+          text: 'ต้องการบันทึกข้อมูลจริงหรือไม่!',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'ลบ',
+          cancelButtonText: 'ยกเลิก'
+        }).then(result => {
+          if (result.value) {
+            console.log('go to save');
+          } else {
+            return;
+          }
+        });
+      }
     }
 
     console.log(adjustData);
