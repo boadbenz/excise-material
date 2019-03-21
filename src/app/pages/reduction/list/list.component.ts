@@ -11,6 +11,7 @@ import { PreloaderService } from '../../../shared/preloader/preloader.component'
 
 import moment = require('moment');
 import 'moment/locale/th';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-list',
@@ -44,7 +45,8 @@ export class ListComponent implements OnInit {
     private navService: NavigationService,
     private router: Router,
     private apiServer: ReductionApiService,
-    private preloaderService: PreloaderService
+    private preloaderService: PreloaderService,
+    private sidebarService: SidebarService,
     ) {
     this.advSearch = this.navService.showAdvSearch;
   }
@@ -52,6 +54,7 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     localStorage.setItem('programcode', 'ILG60-09-00');
     this.AccountOfficeCode = localStorage.getItem('officeCode');
+    this.sidebarService.setVersion('0.0.3.21');
     this.navService.setSearchBar(true);
     this.navService.setPrintButton(false);
     this.navService.setDeleteButton(false);

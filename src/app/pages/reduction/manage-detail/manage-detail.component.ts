@@ -14,6 +14,7 @@ import swal from 'sweetalert2';
 
 import { replaceFakePath } from 'app/config/dataString';
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-manage-detail',
@@ -210,10 +211,11 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     private readonly apiService: ReductionApiService,
     public ngbModel: NgbModal,
     private masDocumentMainService: MasDocumentMainService,
+    private sidebarService: SidebarService
   ) { }
 
   public async ngOnInit() {
-
+    this.sidebarService.setVersion('0.0.3.21');
     this.mode = this.activeRoute.snapshot.paramMap.get('mode');
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
@@ -774,6 +776,31 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         // swal('', 'กรุณาแนบเอกสาร', 'error');
         document = false;
       }
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.offerstaff === '' || this.EditApproveCaseComparisonPopUp.offerstaff === null) {
+      cansave = false;
+      swal('', 'กรุณากรอกผู้เสนอพิจารณาเห็นชอบ', 'error');
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.staff === '' || this.EditApproveCaseComparisonPopUp.staff == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกผู้พิจารณาเห็นชอบ', 'error');
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.approveStaff === '' || this.EditApproveCaseComparisonPopUp.approveStaff == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกผู้มีอำนาจอนุมัติ', 'error');
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.Fact === '' || this.EditApproveCaseComparisonPopUp.Fact == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกข้อเท็จจริงเกี่ยวกับความผิดโดยละเอียด', 'error');
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.AdjustReason === '' || this.EditApproveCaseComparisonPopUp.AdjustReason == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกเหตุผลที่ควรเปรียบเทียบคดีและ/หรือจัดการของกลาง', 'error');
     }
 
     if (!cansave) {
