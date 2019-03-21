@@ -10,7 +10,7 @@
         </label>
         <div class="col-lg-4 col-md-7 col-sm-9">
           <div class="form-group ">
-            <input type="text"  [(ngModel)]="ProductCode" name="ProductCode" [disabled]="showEditField" class="form-control">
+            <input type="text"  [(value)]="ProductCode" name="ProductCode" [disabled]="showEditField" class="form-control">
           </div>
         </div>
         <label for="" class="col-lg-2 col-sm-3 control-label">กลุ่มสินค้า :</label>
@@ -22,7 +22,7 @@
               <input type="text" class="form-control form-control-sm "
               [ngbTypeahead]="searchDutyGroup"
               [resultTemplate]="rt"
-              [readOnly]="showEditField"
+              [disabled]="showEditField"
               (selectItem)="selectItemDutyGroup($event)"
               [inputFormatter]="formatterDutyGroup" 
               [ngClass]="{'ng-touched':isRequired}"
@@ -62,9 +62,10 @@
                   {{item.BrandMainENG }} {{item.BrandMainThai}}
               </ng-template>
               <input type="text" class="form-control form-control-sm "
+              [(value)]="BrandMainENG +' '+ BrandMainThai"
               [ngbTypeahead]="searchBrandMain"
               [resultTemplate]="rt1"
-              [readOnly]="showEditField"
+              [disabled]="showEditField"
               (selectItem)="selectItemBrandMain($event)"
               [inputFormatter]="formatterBrandMain" 
               [ngClass]="{'ng-touched':isRequired}"
@@ -96,9 +97,10 @@
                   {{item.BrandSecondNameENG }} {{item.BrandSecondNameThai}}
               </ng-template>
               <input type="text" class="form-control form-control-sm "
+              [(value)]="BrandSecondENG+ ' '+BrandSecondThai"
               [ngbTypeahead]="searchBrandSecond"
               [resultTemplate]="rt2"
-              [readOnly]="showEditField"
+              [disabled]="showEditField"
               (selectItem)="selectItemBrandSecond($event)"
               [inputFormatter]="formatterBrandSecond" 
               [ngClass]="{'ng-touched':isRequired}"
@@ -153,9 +155,10 @@
                   {{item.DutyCode}}
               </ng-template>
               <input type="text" class="form-control form-control-sm "
+              [(value)]="DutyCode"
               [ngbTypeahead]="searchDutyUnit"
               [resultTemplate]="rt3"
-              [readOnly]="showEditField"
+              [disabled]="showEditField"
               (selectItem)="selectItemDutyUnit($event)"
               [inputFormatter]="formatterDutyUnit" 
               [ngClass]="{'ng-touched':isRequired}"

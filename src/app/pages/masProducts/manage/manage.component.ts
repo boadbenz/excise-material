@@ -100,7 +100,7 @@ export class ManageComponent implements OnInit {
       this.showEditField = p;
       // if (!p) {
       // console.log('edit p :',p)
-      // this.OnPageloadModeC();
+      this.OnPageloadModeC();
       // }
     });
 
