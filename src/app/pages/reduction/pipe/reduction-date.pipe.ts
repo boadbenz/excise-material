@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import moment = require('moment');
+import * as moment from 'moment';
+// import moment = require('moment');
 import 'moment/locale/th';
 
 @Pipe({name: 'reductionDatePipe'})
