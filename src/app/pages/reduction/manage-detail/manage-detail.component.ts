@@ -774,6 +774,31 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     //   }
     // }
 
+    if (this.EditApproveCaseComparisonPopUp.offerstaff === '' || this.EditApproveCaseComparisonPopUp.offerstaff === null) {
+      cansave = false;
+      swal('', 'กรุณากรอกผู้เสนอพิจารณาเห็นชอบ', 'error');
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.staff === '' || this.EditApproveCaseComparisonPopUp.staff == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกผู้พิจารณาเห็นชอบ', 'error');
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.approveStaff === '' || this.EditApproveCaseComparisonPopUp.approveStaff == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกผู้มีอำนาจอนุมัติ', 'error');
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.Fact === '' || this.EditApproveCaseComparisonPopUp.Fact == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกข้อเท็จจริงเกี่ยวกับความผิดโดยละเอียด', 'error');
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.AdjustReason === '' || this.EditApproveCaseComparisonPopUp.AdjustReason == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกเหตุผลที่ควรเปรียบเทียบคดีและ/หรือจัดการของกลาง', 'error');
+    }
+
     if (!cansave) {
       return;
     }
