@@ -203,7 +203,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async getByKeyword(p: any, pOutType: string) {
         var paramsOther = {
-            Textsearch: p.TextSearch,
+            TextSearch: p.TextSearch,
             EvidenceOutType: pOutType,
             AccountOfficeCode: localStorage.getItem("officeCode")
         }
