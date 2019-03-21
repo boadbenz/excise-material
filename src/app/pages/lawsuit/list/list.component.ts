@@ -126,7 +126,8 @@ export class ListComponent implements OnInit, OnDestroy {
   async onSearch(Textsearch: any) {
     if (Textsearch) {
       this.preLoaderService.setShowPreloader(true);
-      let LawsuitArrestList = await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch.Textsearch, localStorage.officeCode);
+      let officeCode = localStorage.getItem("officeCode") 
+      let LawsuitArrestList = await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch.Textsearch, officeCode);
       this.resultsPerPage = await this.setLawsuitArrestList(LawsuitArrestList)
       this.results = this.resultsPerPage
       // return await this.navService.setOnSearch('');
