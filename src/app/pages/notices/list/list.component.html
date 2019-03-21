@@ -38,7 +38,7 @@
                     <label for="" class="col-lg-2 col-sm-3">หน่วยงาน :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
-                            <input type="text" name="DepartmentName" ngModel class="form-control form-control-sm">
+                            <input type="text" name="OfficeName" ngModel class="form-control form-control-sm">
                         </div>
                     </div>
                 </div>
@@ -50,6 +50,19 @@
                             <input type="text" name="SuspectName" ngModel class="form-control form-control-sm">
                         </div>
                     </div>
+                    <!-- <label for="" class="col-lg-2 col-sm-3">สินค้า :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <select name="dutyGroupCode"
+                                (keypress)="onKDutyGroup()"
+                                [(ngModel)]="dutyGroupCode"
+                                class="form-control form-control-sm">
+                                <option *ngFor="let g of dutyGroupNameOptions" [value]="g.value">
+                                {{ g.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div> -->
                 </div>
 
                 <div class="row form-group">
@@ -81,18 +94,12 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of noticeList; let i=index;">
-                        <td class="text-center">{{item.RowId}}</td>
+                        <td class="text-center">{{item.index}}</td>
                         <td>{{item.NoticeCode}}</td>
-                        <td>{{item.NoticeDate}}</td>
-                        <td>
-                            <div *ngFor="let staff of item.NoticeStaff;">{{staff.StaffFullName}}</div>
-                        </td>
-                        <td>
-                            <div *ngFor="let staff of item.NoticeStaff;">{{staff.DepartmentName}}</div>
-                        </td>
-                        <td>
-                            <div *ngFor="let suspect of item.NoticeSuspect;">{{suspect.SuspectFullName}}</div>
-                        </td>
+                        <td>{{formatDate(item.NoticeDate)}}</td>
+                        <td>{{item.StaffTitleName}}{{item.StaffFirstName}} {{item.StaffLastName}}</td>
+                        <td>{{item.StaffOfficeName}}</td>
+                        <td [innerHTML]="item.SuspectFullname"></td>
                         <td class="text-center">
                             <a href="javaScript:void(0);" class="text-secondary" (click)="view(item.NoticeCode)">
                                 <i class="fa fa-eye fa-lg"></i>
@@ -109,3 +116,16 @@
         </app-pagination-table>
     </div>
 </div>
+
+<swal
+  #alertSwal
+  text=""
+  type=""
+  [showConfirmButton]="false"
+  [showCancelButton]="true"
+  buttonsStyling="false"
+  cancelButtonText="OK"
+  cancelButtonClass="swal2-confirm"
+  cancelButtonColor="#3085d6"
+  [focusCancel]="true">
+</swal>

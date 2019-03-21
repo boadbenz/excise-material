@@ -30,7 +30,7 @@ export class ArrestProduct {
     public QtyUnit = '';
     public NetVolume = '';
     public NetVolumeUnit = '';
-    
+
     public IsActive: number;
     public IsChecked: boolean;
     public IsNewItem: boolean;
@@ -43,60 +43,21 @@ export class ArrestProduct {
 
 export class ArrestProductDetail {
     ProductID: number;
-    ProductDetailID: number;
-    IsProdcutCo: string;
-    Qty: string;
-    QtyUnit: string;
-    Size: string;
-    SizeUnit: string;
-    Volume: string;
-    VolumeUnit: string;
-    MistreatRate: string;
-    Fine: string;
-    IndictmentDetailID: number;
-    ProductDesc: string;
-    IsActive: number;
+    ProductDetailID?: number;
+    IsProdcutCo?: string;
+    Qty?: number;
+    QtyUnit?: string;
+    Size?: string;
+    SizeUnit?: string;
+    Volume?: string;
+    VolumeUnit?: string;
+    MistreatRate?: string;
+    Fine?: string;
+    IndictmentDetailID?: number;
+    ProductDesc?: string;
+    IsActive?: number;
 
-//    public ProductDetailID: number;
-//    public ProductID: number;
-//    public IsProdcutCo: string;
-//    public ProductDetailQty: number;
-//    public ProductDetailQtyUnit: string;
-//    public ProductDetailSize: number;
-//    public ProductDetailSizeUnit: string;
-//    public ProductDetailVolume: number;
-//    public ProductDetailVolumeUnit: string;
-//    public ProductDetailMistreatRate: string;
-//    public ProductDetailFine: string;
-//    public IndicmentDetailID: number;
-//    public ProductDetailIsActive: number;
-//    public ProductType: number;
-//    public ArrestCode: string;
-//    public ProductGroupCode: string;
-//    public ProductIsDomestic: number;
-//    public ProductCode: string;
-//    public ProductBrandCode: string;
-//    public ProductBrandNameTH: string;
-//    public ProductBrandNameEN: string;
-//    public ProductSubBrandCode: string;
-//    public ProductSubBrandNameTH: string;
-//    public ProductSubBrandNameEN: string;
-//    public ProductModelCode: string;
-//    public ProductModelName: string;
-//    public ProductFixNo1: number;
-//    public ProductDegreeCode: string;
-//    public ProductDegree: string;
-//    public ProductSizeCode: string;
-//    public ProductSize: string;
-//    public ProductSizeUnitCode: string;
-//    public ProductSizeUnitName: string;
-//    public ProductFixNo2: number;
-//    public ProductSequenceNo: string;
-//    public ProductDesc: string;
-//    public ProductCarNo: string;
-//    public ProductQty: string;
-//    public ProductQtyUnit: string;
-//    public ProductNetVolume: number;
-//    public ProductNetVolumeUnit: string;
-//    public ProductIsActive: number;
+    IsChecked: boolean;
+    IsModify: string;
+    RowId: number;
 }

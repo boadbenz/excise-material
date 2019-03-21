@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { appConfig } from "../../app.config";
 
 @Injectable()
 export class NavigationService {
@@ -17,6 +19,7 @@ export class NavigationService {
     showProofButton = new BehaviorSubject<Boolean>(false);
     showSearchBar = new BehaviorSubject<Boolean>(false);
     showFieldEdit = new BehaviorSubject<Boolean>(true);
+    showSendIncomeButton = new BehaviorSubject<Boolean>(false);
 
     onEdit = new BehaviorSubject<Boolean>(false);
     onSave = new BehaviorSubject<Boolean>(false);
@@ -26,12 +29,26 @@ export class NavigationService {
     onPrint = new BehaviorSubject<Boolean>(false);
     onNextPage = new BehaviorSubject<Boolean>(false);
     onPrevPage = new BehaviorSubject<Boolean>(false);
+    onSendIncome = new BehaviorSubject<Boolean>(false);
 
     innerTextNextPageButton = new BehaviorSubject<string>(null);
     innerTextPrevPageButton = new BehaviorSubject<string>(null);
-    searchByKeyword = new BehaviorSubject<string>(null);
+    searchByKeyword = new BehaviorSubject<any>(null);
 
-    constructor() { }
+    constructor(private httpClient: HttpClient,) { }
+
+    private httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
+    
+     PermissionCheck(params: any): Promise<any> {
+        const paramss = JSON.stringify(params);
+        const url = `${appConfig.api8778}/UserAccountPermissionCheckPermission`;
+        try {
+          const res =  this.httpClient.post<any>(url, paramss, this.httpOptions).toPromise();
+          return res;
+        } catch (error) {
+        //   return [];
+        }
+      }
 
     setInnerTextNextPageButton(text: string) {
         this.innerTextNextPageButton.next(text);
@@ -90,6 +107,10 @@ export class NavigationService {
         this.showPrevPageButton.next(status);
     }
 
+    setSendIncomeButton(status: boolean) {
+        this.showSendIncomeButton.next(status);
+    }
+
     // -- End Set Element --
 
     // -- Set Event --
@@ -127,6 +148,10 @@ export class NavigationService {
 
     setOnPrevPage(status: boolean) {
         this.onPrevPage.next(status);
+    }
+
+    setOnSendIncome(status: boolean): void {
+        this.onSendIncome.next(status);
     }
 
     // -- End Set Event

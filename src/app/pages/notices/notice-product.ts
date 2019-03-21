@@ -35,6 +35,7 @@ export class NoticeProduct {
     ProductFullName: string;
     public BrandFullName = '';
     public IsNewItem: boolean;
+    public DutyCode = "";
 }
 
 export const NoticeProductFormControl = {
@@ -64,11 +65,12 @@ export const NoticeProductFormControl = {
     CarNo: new FormControl(null),
     Qty: new FormControl(null, Validators.required),
     QtyUnit: new FormControl(null, Validators.required),
-    NetWeight: new FormControl(null),
-    NetWeightUnit: new FormControl(null),
+    NetVolume: new FormControl(0),
+    NetVolumeUnit: new FormControl(null),
     Remarks: new FormControl(null),
-    IsActive: new FormControl(null),
+    IsActive: new FormControl(1),
 
-    BrandFullName: new FormControl(null),
-    IsNewItem: new FormControl(false)
+    BrandFullName: new FormControl(null, Validators.required),
+    IsNewItem: new FormControl(false),
+    DutyCode: new FormControl(null, Validators.required)
 }

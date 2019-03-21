@@ -1,18 +1,18 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, Injectable } from '@angular/core';
 import { MainMasterService } from 'app/services/main-master.service';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
-import { LoaderService } from 'app/core/loader/loader.service';
 import { ArrestService } from '../../services';
+enum SORTING { ASC, DESC }
+
 @Component({
-  selector: 'app-print-doc-modal',
+  selector: 'app-Arrestprint-doc-modal',
   templateUrl: './print-doc-modal.component.html',
   styleUrls: ['./print-doc-modal.component.scss']
 })
 export class PrintDocModalComponent implements OnInit {
 
-  printDoc: any[];
-
-  sort = 'asc';
+  sort = SORTING.ASC;
+  sorting = SORTING;
 
   @Input() ArrestCode: string;
 
@@ -20,50 +20,68 @@ export class PrintDocModalComponent implements OnInit {
   @Output() c = new EventEmitter();
 
   FG: FormGroup;
+
   get PrintDoc(): FormArray {
     return this.FG.get('PrintDoc') as FormArray;
   }
+
   constructor(
     private s_masmain: MainMasterService,
     private s_arrest: ArrestService,
-    private loaderService: LoaderService
+    private fb: FormBuilder
   ) { }
 
   ngOnInit() {
-    this.printDoc = [
-      {
-        DocName: 'บันทึกจับกุม (ส.ส. 2/39)',
-        DocType: 'แบบฟอร์ม'
-      }]
+    this.FG = this.fb.group({
+      PrintDoc: this.fb.array([
+        this.fb.group({
+          IsChecked: new FormControl(false),
+          DocName: new FormControl('บันทึกจับกุม (ส.ส. 2/39)'),
+          DocType: 0,
+          DocTypeName: new FormControl('แบบฟอร์ม')
+        })
+      ])
+    })
+
     this.s_masmain.MasDocumentMaingetAll('3', this.ArrestCode).then(x => {
       x.filter(y => y.IsActive == 1)
         .map(y => {
-          this.printDoc.push({
-            DocName: y.DataSource,
-            DocType: 'เอกสารแนบภายใน'
-          })
+          this.PrintDoc.push(
+            this.fb.group({
+              IsChecked: false,
+              DocName: y.DataSource,
+              DocType: 3,
+              DocTypeName: 'เอกสารแนบภายใน'
+            })
+          )
         })
     })
   }
 
-  sortPrintDoc() {
-    this.sort = (this.sort == 'asc' ? 'desc' : 'asc');
-    this.printDoc.sort((a, b) => {
-      return -1; // asc
-    });
-  }
+  private setItemFormArray(array: any[], formControl: string) {
+    if (array !== undefined && array.length) {
+        const itemFGs = array.map(item => this.fb.group(item));
+        const itemFormArray = this.fb.array(itemFGs);
+        this.FG.setControl(formControl, itemFormArray);
+    }
+}
+
+sortPrintDoc() {
+    this.sort = (this.sort == SORTING.ASC ? SORTING.DESC : SORTING.ASC);
+    let sort = this.PrintDoc.value.sort(() =>  -1);
+    this.PrintDoc.value.map(() => this.PrintDoc.removeAt(0));
+    this.setItemFormArray(sort, 'PrintDoc');
+}
 
   onPrint() {
     let _print = this.PrintDoc.value.filter(x => x.IsChecked == true && x.DocType == 0)
     if (_print.length) {
-      // this.s_arrest.ArrestReportgetByCon(this.ArrestCode)
-      //   .subscribe(x => {
-      //     const blob = new Blob([x], { type: "application/pdf" });
-      //     const link = document.createElement('a');
-      //     link.href = window.URL.createObjectURL(blob);
-      //     link.download = `${this.ArrestCode}.pdf`;
-      //     link.click();
-      //   })
+      this.s_arrest.ArrestReportgetByCon(this.ArrestCode)
+        .subscribe(x => {
+          const file = new Blob([x], {type: 'application/pdf'});
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
+        })
     }
   }
 

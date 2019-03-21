@@ -4,16 +4,23 @@ import { PrintDocModalComponent } from './printdoc-modal.component';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {ManageComponent} from '../manage/manage.component'
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
-    CardActionsModule
+    CardActionsModule,
+    FormsModule,
+    NgbModule.forRoot(),
   ],
-  declarations: [PrintDocModalComponent],
+  declarations: [
+      PrintDocModalComponent
+  ],  
   exports: [
     PrintDocModalComponent
-  ]
+  ],
+  entryComponents:[PrintDocModalComponent],
 })
 export class PrintDocModalModule { }

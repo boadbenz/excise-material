@@ -17,19 +17,19 @@ export class TransactionRunningService {
     
     async TransactionRunninggetByCon(RunningTable: string, RunningOfficeCode: string) {
         const params = { RunningTable, RunningOfficeCode };
-        const url = `${appConfig.api8087}/TransactionRunninggetByCon`;
+        const url = `${appConfig.api8777}/TransactionRunninggetByCon`;
         return await this.http.post<any>(url, params, this.httpOptions).toPromise();
     }
 
     async TransactionRunninginsAll(RunningOfficeCode: string, RunningTable: string, RunningPrefix: string) {
         const params = { RunningTable, RunningOfficeCode, RunningPrefix };
-        const url = `${appConfig.api8087}/TransactionRunninginsAll`;
+        const url = `${appConfig.api8777}/TransactionRunninginsAll`;
         return await this.http.post<any>(url, params, this.httpOptions).toPromise();
     }
 
     async TransactionRunningupdByCon(RunningID: string) {
         const params = { RunningID };
-        const url = `${appConfig.api8087}/TransactionRunningupdByCon`;
+        const url = `${appConfig.api8777}/TransactionRunningupdByCon`;
         return await this.http.post<any>(url, params, this.httpOptions).toPromise();
     }
 

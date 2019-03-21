@@ -1,6 +1,7 @@
 import { RewardHelper } from '../../reward.helper';
 import { Input, EventEmitter, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { MyDatePickerOptions } from 'app/config/dateFormat';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IFormGroup {
@@ -8,6 +9,7 @@ export interface IFormGroup {
 }
 
 export class FormGroupConfig extends RewardHelper {
+  public myDatePickerOptions = MyDatePickerOptions;
   @Input()
   public options: IFormGroup;
 

@@ -9,6 +9,8 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
 import { ContributorPipe } from '../../../shared/pipe/ContributorPipe';
+import { MyDatePickerTHModule } from 'mydatepicker-th';
+import { MyDatePickerModule } from 'mydatepicker';
 
 const routes: Routes = [
     {
@@ -17,7 +19,8 @@ const routes: Routes = [
             // title: 'ค้นหาข้อมูล',
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหางานเปรียบเทียบและชำระค่าปรับ' }],
             pageType: 'list',
-            nextPage: { title: 'แจ้งความ', url: '/fine/manage' }
+            nextPage: { title: 'แจ้งความ', url: '/fine/manage' },
+            codePage: 'ILG60-06-01-00-00'
         },
         component: ListComponent
     }
@@ -31,9 +34,11 @@ const routes: Routes = [
       FormsModule,
       RouterModule.forChild(routes),
       CardActionsModule,
-      PaginationTableModule
+      PaginationTableModule,
+      MyDatePickerTHModule,
+      MyDatePickerModule
     ],
-    declarations: [ListComponent,ContributorPipe],
+    declarations: [ListComponent, ContributorPipe],
     providers: [FineService]
 })
 export class ListModule { }

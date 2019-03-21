@@ -1953,7 +1953,7 @@ Layouts
 
 .fix-width {
   width: 100%;
-  max-width: 1170px;
+  max-width: 0px; /* change value to zero for mini sidebar (old value is 1170) */
   margin: 0 auto; }
 
 /*
@@ -2148,6 +2148,8 @@ File: scss
     .page-titles .breadcrumb .breadcrumb-item.active {
       /* color: #99abb4;  */
       color: #005c9a;
+      font-size: .95rem;
+      font-weight: 500;
     }
 
 /*******************

@@ -46,4 +46,9 @@ export class BreadcrumbComponent implements OnInit {
         }
     }
 
+    back() {
+        // console.log('back');
+        window.history.back();
+    }
+
 }

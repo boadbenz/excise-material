@@ -8,7 +8,7 @@ export class ArrestLawGuitbase {
     IsActive: number;
     IsCompare: number;
     SubSectionRuleID: number;
-    ArrestLawSubSectionRule: ArrestLawSubSectionRule[]
+    ArrestLawSubSectionRule: Array<ArrestLawSubSectionRule>
 
     RowId: number;
     IsChecked: boolean;
@@ -19,8 +19,8 @@ export class ArrestLawSubSectionRule {
     SubSectionID: number;
     SectionNo: number;
     IsActive: number;
-    ArrestLawSubSection: ArrestLawSubSection[];
-    ArrestLawSection: ArrestLawSection[];
+    ArrestLawSubSection: Array<ArrestLawSubSection>;
+    ArrestLawSection: Array<ArrestLawSection>;
 }
 
 export class ArrestLawSubSection {
@@ -40,7 +40,7 @@ export class ArrestLawSection {
     IsActive: number;
     SectionDesc2: string;
     SectionDesc3: string;
-    ArrestLawPenalty: ArrestLawPenalty[]
+    ArrestLawPenalty: Array<ArrestLawPenalty>
 }
 
 export class ArrestLawPenalty {

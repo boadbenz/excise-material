@@ -240,19 +240,19 @@ export class ArrestsService {
     //-- Document --//
     async MasDocumentMaingetAll(DocumentType: string, ReferenceCode: string) {
         const params = { DocumentType, ReferenceCode };
-        const url = `${appConfig.api7789}/MasDocumentMaingetAll`;
+        const url = `${appConfig.api8777}/MasDocumentMaingetAll`;
         return this.resposePromisGetList(JSON.stringify(params), url);
     }
 
     async MasDocumentMainupdByCon(form: any) {
         const params = JSON.stringify(form);
-        const url = `${appConfig.api7789}/MasDocumentMainupdByCon`;
+        const url = `${appConfig.api8777}/MasDocumentMainupdByCon`;
         return this.responsePromisModify(params, url)
     }
 
     async MasDocumentMainupdDelete(DocumentID: string) {
         const params = JSON.stringify({ DocumentID });
-        const url = `${appConfig.api7789}/MasDocumentMainupdDelete`;
+        const url = `${appConfig.api8777}/MasDocumentMainupdDelete`;
         return this.responsePromisModify(params, url)
     }
     // async getDocument(ReferenceCode: string): Promise<ArrestDocument[]> {

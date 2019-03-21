@@ -8,35 +8,40 @@ import { Arrest } from '../model/arrest';
 import { Lawsuit } from '../model/lawsuit-model';
 import { GuiltBase } from '../model/guiltBase-model';
 import { ICompareIns, ICompareMistreat, IRateMistreat } from './condition-model';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class FineService {
 
     constructor(private http: HttpClient) { }
-
+    defaultPort = '7777';
     private httpOptions = {
         headers: new HttpHeaders(
             {
                 'Content-Type': 'application/json'
             })
     };
-
-
+    postMethod(url: string, data: any, port: string = '7777') {
+        const params = data;
+        const full_url = `${appConfig[`api${port}`]}/${url}`;
+        return this.http.post<any>(full_url, params, this.httpOptions).toPromise();
+    }
     getByKeyword(Textsearch: string) {
         const params = Textsearch;
-        const url = `${appConfig.api8881}/ComparegetByKeyword`;
+        const url = `${appConfig.api7777}/CompareListgetByKeyword`;
+        // return this.postMethod('CompareListgetByKeyword', )
         return this.http.post<Compare[]>(url, params, this.httpOptions);
     }
 
     // getByCon(form: any) {
     //     const params = JSON.stringify(form);
-    //     const url = `${appConfig.api8881}/ComparegetByCon`;
+    //     const url = `${appConfig.api7777}/ComparegetByCon`;
     //     return this.http.post<Compare[]>(url, params, this.httpOptions);
     // }
 
     async getByCon(CompareID: string): Promise<any> {
         const params = { CompareID };
-        const url = `${appConfig.api8881}/ComparegetByCon`;
+        const url = `${appConfig.api7777}/ComparegetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -46,18 +51,50 @@ export class FineService {
         }
     }
 
-
-    async getByConAdv(form: any): Promise<any> {
+    getByConAdv(form: any) {
         const params = JSON.stringify(form);
-        const url = `${appConfig.api8881}/ComparegetByConAdv`;
+        const url = `${appConfig.api7777}/CompareListgetByConAdv`;
 
         try {
-            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-            return res as any;
+            console.log(this.http.post<Compare[]>(url, params, this.httpOptions));
+            return this.http.post<Compare[]>(url, params, this.httpOptions);
         } catch (error) {
-            await alert(error);
+            alert(error);
         }
+
     }
+    async compareArrestGetByCon(ArrestCode: string) {
+      // http://192.168.3.158:8881/XCS60/CompareListgetByConAdv
+      const params = { 'ArrestCode' : ArrestCode };
+      const url = `${appConfig.api7777}/CompareListgetByConAdv`;
+
+      try {
+        return await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      } catch (error) {
+        await alert(error);
+      }
+    }
+    // async getByConAdv(form: any): Promise<any> {
+    //     const params = JSON.stringify(form);
+    //     const url = `${appConfig.api7777}/CompareListgetByConAdv`;
+
+    //     try {
+    //         // const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+    //         // return res as any;
+    //         return this.http.post<any>(url, params, this.httpOptions)
+    //             .map(res => res.json())
+    //             .catch(res => {
+    //                 // Handle it here, on status code code
+    //                 if (res.status === 404) {
+    //                     return Observable.throw('We cannot find that requested resource');
+    //                 } // etc
+
+    //                 return Observable.throw(res); // default
+    //             })
+    //     } catch (error) {
+    //         await alert(error);
+    //     }
+    // }
 
 
     async getByArrestCon(ArrestCode: string): Promise<Arrest> {
@@ -74,7 +111,7 @@ export class FineService {
 
     async getByDoc(ReferenceCode: string): Promise<Arrest> {
         const params = { ReferenceCode };
-        const url = `${appConfig.api8881}/CompareDocumentgetByCon`;
+        const url = `${appConfig.api7777}/CompareDocumentgetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -86,19 +123,19 @@ export class FineService {
 
     async LawsuitegetByCon(LawsuitID: string): Promise<Lawsuit> {
         const params = { LawsuitID };
-        const url = `${appConfig.api8083}/LawsuitgetByCon`;
+        const url = `${appConfig.api8777}/LawsuitgetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
             return res.ResponseData as Lawsuit;
         } catch (error) {
-            await alert(error);
+            console.log(error);
         }
     }
 
     async MistreatgetByCon(Misterat: ICompareMistreat): Promise<any> {
         const params = JSON.stringify(Misterat);
-        const url = `${appConfig.api8881}/CompareCountMistreatgetByCon`;
+        const url = `${appConfig.api7777}/CompareCountMistreatgetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -110,7 +147,7 @@ export class FineService {
 
     async RateMistreatgetByCon(Misterat: IRateMistreat): Promise<any> {
         const params = JSON.stringify(Misterat);
-        const url = `${appConfig.api8881}/CompareCountRateMistreatgetByCon`;
+        const url = `${appConfig.api7777}/CompareCountRateMistreatgetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -123,7 +160,7 @@ export class FineService {
 
     async DivisionRategetByCon(): Promise<any> {
         const params = {};
-        const url = `${appConfig.api8881}/CompareMasDivisionRategetByCon`;
+        const url = `${appConfig.api7777}/CompareMasDivisionRategetByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -135,7 +172,7 @@ export class FineService {
 
     async insAll(Compare: ICompareIns): Promise<any> {
         const params = Compare;
-        const url = `${appConfig.api8881}/CompareinsAll`;
+        const url = `${appConfig.api7777}/CompareinsAll`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -147,7 +184,19 @@ export class FineService {
 
     async CompareupdByCon(oCompare: Compare): Promise<any> {
         const params = JSON.stringify(oCompare);
-        const url = `${appConfig.api8881}/CompareupdByCon`;
+        const url = `${appConfig.api7777}/CompareupdByCon`;
+
+        try {
+            const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+            return res;
+        } catch (error) {
+            await alert(error);
+        }
+    }
+
+    async CompareUpdDelete(oCompare: Compare): Promise<any> {
+        const params = JSON.stringify(oCompare);
+        const url = `${appConfig.api7777}/CompareUpdDelete`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -160,7 +209,7 @@ export class FineService {
     async insDetailAll(Compare: CompareDetail): Promise<any> {
         debugger
         const params = JSON.stringify(Compare);
-        const url = `${appConfig.api8881}/CompareDetailinsAll`;
+        const url = `${appConfig.api7777}/CompareDetailinsAll`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -172,7 +221,7 @@ export class FineService {
 
     async updDetailAll(Compare: CompareDetail): Promise<any> {
         const params = JSON.stringify(Compare);
-        const url = `${appConfig.api8881}/CompareDetailupdByCon`;
+        const url = `${appConfig.api7777}/CompareDetailupdByCon`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -185,7 +234,7 @@ export class FineService {
     async getStation(): Promise<any> {
         debugger
         const params = {};
-        const url = `${appConfig.api8881}/CompareMasOfficegetByKeyword`;
+        const url = `${appConfig.api7777}/CompareMasOfficegetByKeyword`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
@@ -197,7 +246,7 @@ export class FineService {
 
     async getStaff(Textsearch: string): Promise<any> {
         const params = { Textsearch };
-        const url = `${appConfig.api8881}/CompareMasStaffgetByKeyword`;
+        const url = `${appConfig.api7777}/CompareMasStaffgetByKeyword`;
 
         try {
             const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();

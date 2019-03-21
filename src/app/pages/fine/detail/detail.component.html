@@ -74,7 +74,8 @@
                 <div class="form-group row">
                   <label class="col-form-label  col-md-3">วันที่จับกุม : </label>
                   <div class="col-md-4">
-                    <input class="form-control" type="text" name="lawsuitDate" disabled>
+                      <my-date-picker-th ngModel name="lawsuitDate" placeholder="" locale="th" [options]="LawsuitDateOptions"
+                        (dateChanged)="onDateFromChanged($event)"></my-date-picker-th>
                   </div>
                   <label class="col-form-label text-center col-md-2">เวลา</label>
                   <div class="col-md-3">

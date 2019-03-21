@@ -1,0 +1,55 @@
+<div class="card card-outline-bluish unset-radius">
+  <div class="card-header unset-radius">
+    <app-card-actions-collapse></app-card-actions-collapse>
+    <h5 class="card-title m-b-0">รายงานผลคดี ส.ส. 2/55</h5>
+  </div>
+  <div class="card-body">
+    <div class="form-body">
+      <div class="row" style="font-weight: normal; margin-left: 0px; margin-bottom: 10px;">กรุณาระบุเงื่อนไข</div>
+      <div class="col-md-6">
+        <div class="row">
+          <label class="control-label col-sm-3">วันที่ทำรายงาน : </label>
+          <div class="form-group col-md-4">
+            <my-date-picker-th ngModel name="DateFrom" placeholder="" locale="th" class="form-control form-control-sm unset-form-control"></my-date-picker-th>
+          </div>
+          <label class="control-label col-sm-1 px-0">ถึง : </label>
+          <div class="col-md-4">
+            <my-date-picker-th ngModel name="DateTo" placeholder="" locale="th" class="form-control form-control-sm unset-form-control"></my-date-picker-th>
+          </div>
+        </div>
+      </div>
+      <div class="row;" style="font-weight: normal; margin-left: 0px;">ประเถทรายงาน</div>
+      <div style="margin-left: 18px; margin-bottom: 20px; " class="row">
+        <div class="col-md-1" style="text-align: right;">ภาค :</div>
+        <div class="col-md-5">
+          <select class="form-control form-control-sm">
+            <option value="" disabled selected>เลือก</option>
+            <option *ngFor="let x of xxx;" [value]="x.value"></option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-left: 18px; margin-bottom: 20px;" class="row">
+        <div class="col-md-1" style="text-align: right;">พื้นที่ :</div>
+        <div class="col-md-5">
+          <select class="form-control form-control-sm">
+            <option value="" disabled selected>เลือก</option>
+            <option *ngFor="let x of xxx;" [value]="x.value"></option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-left: 18px; margin-bottom: 20px;" class="row">
+        <div class="col-md-1" style="text-align: right;">สาขา :</div>
+        <div class="col-md-5">
+          <select class="form-control form-control-sm">
+            <option value="" disabled selected>เลือก</option>
+            <option *ngFor="let x of xxx;" [value]="x.value"></option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-1"></div>
+          <button style="margin-right: 30px; margin-left: 45px;" type="submit" class="btn waves-effect waves-light text-white btn-search">รายงาน</button>
+          <button type="submit" class="btn waves-effect waves-light text-white btn-search">รายงาน Excel</button>
+      </div>
+    </div>
+  </div>

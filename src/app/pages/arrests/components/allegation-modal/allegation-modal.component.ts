@@ -1,11 +1,14 @@
 import { Component, OnInit, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
 // import { ArrestsService } from '../arrests.service';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl, ValidatorFn } from '@angular/forms';
 import { pagination } from 'app/config/pagination';
 import { Message } from 'app/config/message';
 import * as fromServices from '../../services'
 import * as fromModels from '../../models';
 import { Subject } from 'rxjs/Subject';
+import swal from 'sweetalert2'
+
+enum SORTING { ASC, DESC }
 
 @Component({
     selector: 'app-allegation-modal',
@@ -24,17 +27,15 @@ export class AllegationModalComponent implements OnInit, OnDestroy {
     private destroy$: Subject<boolean> = new Subject<boolean>();
 
     lawGroupFG: FormGroup;
-
     @Output() d = new EventEmitter();
     @Output() c = new EventEmitter();
-    @Output() outputArrestLawGuiltbase = new EventEmitter<fromModels.ArrestLawGuitbase>();
+    @Output() outputArrestIndictment = new EventEmitter<fromModels.ArrestIndictment[]>();
+    // @Output() outputIndexIndictment = new EventEmitter<number>();
+    @Input() inputArrestIndictment: fromModels.ArrestIndictment;
+    // @Input() inputIndexIndictment: number;
 
     get LawGuiltbase(): FormArray {
         return this.lawGroupFG.get('LawGuiltbase') as FormArray
-    }
-
-    get IndictmentLawbreaker(): FormArray {
-        return this.lawGroupFG.get('IndictmentLawbreaker') as FormArray
     }
 
     // --- 1
@@ -57,13 +58,14 @@ export class AllegationModalComponent implements OnInit, OnDestroy {
     constructor(
         private fb: FormBuilder,
         private s_lawGuiltbase: fromServices.ArrestLawGuiltbaseService
-    ) { }
+    ) {
+
+    }
 
     ngOnInit() {
         this.lawGroupFG = this.fb.group({
-            LawGuiltbase: this.fb.array([]),
-            IndictmentLawbreaker: this.fb.array([])
-        })
+            LawGuiltbase: this.fb.array([])
+        });
     }
 
     ngOnDestroy(): void {
@@ -80,11 +82,16 @@ export class AllegationModalComponent implements OnInit, OnDestroy {
 
     async onSearchComplete(list: fromModels.ArrestLawGuitbase[]) {
         if (!list.length) {
-            alert(Message.noRecord);
+            swal('', Message.noRecord, 'warning');
             return
         }
-
-        this.arrestLawGuitbase = list;
+        this.arrestLawGuitbase = list.map(x => {
+            x.IsChecked = false;
+            return x;
+        });
+        const __list = await this.arrestLawGuitbase.slice(0, 5);
+        const lawGuitbase = await this.setArrestLawGuitbase(__list);
+        this.lawGroupFG.setControl('LawGuiltbase', lawGuitbase);
         this.paginage.TotalItems = list.length;
     }
 
@@ -168,23 +175,33 @@ export class AllegationModalComponent implements OnInit, OnDestroy {
         return arr;
     }
 
-    setIsChecked(i: number) {
-        this.LawGuiltbase.value.map((item, index) => {
-            item.IsChecked = i == index ? true : false;
-        })
-    }
-
     dismiss(e: any) {
         this.d.emit(e);
     }
 
     async close(e: any) {
-        let lawGuitbase = this.LawGuiltbase.value.filter(x => x.IsChecked);
-        if (!lawGuitbase.length) {
-            alert(Message.alertSelectGuiltbase);
+        let g = this.LawGuiltbase.value.filter(x => x.IsChecked);
+        if (!g.length) {
+            swal('', Message.alertSelectGuiltbase, 'warning');
             return
         }
-        this.outputArrestLawGuiltbase.emit(...lawGuitbase);
+        
+        let indictment = [];
+        g.map((lg: fromModels.ArrestLawGuitbase, index) => {
+            indictment.push({
+                IsModify: index == 0 ? this.inputArrestIndictment.IsModify : 'c',
+                RowId: index == 0 ? this.inputArrestIndictment.RowId : null,
+                ArrestCode: this.inputArrestIndictment.ArrestCode,
+                IndictmentID: index == 0 ? this.inputArrestIndictment.IndictmentID : null,
+                GuiltBaseID: lg.GuiltBaseID,
+                IsProve: index == 0 ? this.inputArrestIndictment.IsProve : 1,
+                IsActive: 1,
+                IsLawsuitComplete: index == 0 ? this.inputArrestIndictment.IsLawsuitComplete : 0,
+                ArrestLawGuitbase: [lg],
+                ArrestIndicmentDetail: index == 0 ? this.inputArrestIndictment.ArrestIndicmentDetail : []
+            })
+        })
+        this.outputArrestIndictment.emit(indictment);
         this.c.emit(e);
     }
 
@@ -193,4 +210,16 @@ export class AllegationModalComponent implements OnInit, OnDestroy {
         const lawGuitbase = await this.setArrestLawGuitbase(list);
         this.lawGroupFG.setControl('LawGuiltbase', lawGuitbase);
     }
+}
+
+function minSelectedCheckboxes(min = 0) {
+    const validator: ValidatorFn = (formArray: FormArray) => {
+        const totalSelected = formArray.controls
+            .map(control => control.value)
+            .reduce((prev, next) => next ? prev + next : prev, 0);
+
+        return totalSelected >= min ? null : { required: true };
+    };
+
+    return validator;
 }
