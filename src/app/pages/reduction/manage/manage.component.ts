@@ -324,11 +324,11 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   viewData(CompareID: string = '', CompareDetailID: string = '') {
-    this.router.navigate(['/reduction/manage', 'V', this.compareID]);
+    this.router.navigate(['/reduction/manage', 'V', this.compareID, CompareDetailID]);
   }
 
   editData(CompareID: string, CompareDetailID: string) {
-    this.router.navigate(['/reduction/manage', 'E', this.compareID]);
+    this.router.navigate(['/reduction/manage', 'E', this.compareID, CompareDetailID]);
   }
 
   attachFile(file) {

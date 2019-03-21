@@ -229,10 +229,10 @@
             <td>{{item.ReceiptNo}}</td>
             <td>{{item.RevenueStatus === 1 ? 'นำส่งแล้ว' : 'ยังไม่ส่ง'}}</td>
             <td>
-              <a href="javaScript:void(0);" class="text-secondary" (click)="viewData()">
+              <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(compareID, i)">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
-              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="editData()" [hidden]="showField || item.RevenueStatus === 1">
+              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="editData(compareID, i)" [hidden]="showField || item.RevenueStatus === 1">
                 <i class="ti-pencil-alt btn-action"></i>
               </a>
             </td>

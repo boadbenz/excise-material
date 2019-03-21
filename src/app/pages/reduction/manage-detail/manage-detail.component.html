@@ -525,7 +525,7 @@
                 <div class="col-md-4">
                   <!-- <input class="form-control" type="text" name="payDate" [(ngModel)]="EditApproveCaseComparisonPopUp.PaymentFineDate[0]"> -->
                   <div style="width: 100%">
-                    <my-date-picker class="form-control date-setting" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.PaymentFineDate[0]"></my-date-picker>
+                    <my-date-picker class="form-control date-setting" type="text" locale="th" [options]="DateOption" [(ngModel)]="EditApproveCaseComparisonPopUp.PaymentFineDate[0]"></my-date-picker>
                   </div>
                 </div>
                 <label class="col-form-label text-center col-md-1">เวลา</label>
@@ -558,7 +558,7 @@
                 <label class="col-form-label col-md-4">วันที่จัดทำรายงานฯ : </label>
                 <div class="form-group input-group col-md-8" style="margin-bottom: 0px;">
                   <div style="width: 100%">
-                    <my-date-picker class="form-control date-setting" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveReportDate"></my-date-picker>
+                    <my-date-picker class="form-control date-setting" type="text" locale="th" [options]="DateOption" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveReportDate"></my-date-picker>
                   </div>
                 </div>
               </div>

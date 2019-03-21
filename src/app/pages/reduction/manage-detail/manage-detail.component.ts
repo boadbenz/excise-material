@@ -15,6 +15,8 @@ import swal from 'sweetalert2';
 import { replaceFakePath } from 'app/config/dataString';
 import { MasDocumentMainService } from 'app/services/mas-document-main.service';
 import { SidebarService } from 'app/shared/sidebar/sidebar.component';
+import { IMyDpOptions } from 'mydatepicker';
+import { PreloaderService } from 'app/shared/preloader/preloader.component';
 
 @Component({
   selector: 'app-manage-detail',
@@ -204,6 +206,16 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public sinbon = 0;
   public rangwan = 20;
   public songkrang = 80;
+
+  // Date
+  DateOption: IMyDpOptions = {
+    // other options...
+    dateFormat: 'dd mmm yyyy'
+  };
+  YearOption: IMyDpOptions = {
+    // other options...
+    dateFormat: 'yyyy'
+  };
   constructor(
     private router: Router,
     private activeRoute: ActivatedRoute,
@@ -211,10 +223,12 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     private readonly apiService: ReductionApiService,
     public ngbModel: NgbModal,
     private masDocumentMainService: MasDocumentMainService,
-    private sidebarService: SidebarService
+    private sidebarService: SidebarService,
+    private preloaderService: PreloaderService,
   ) { }
 
   public async ngOnInit() {
+    this.preloaderService.setShowPreloader(true);
     this.sidebarService.setVersion('0.0.3.21');
     this.mode = this.activeRoute.snapshot.paramMap.get('mode');
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
@@ -233,8 +247,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.navServiceSub = this.navService.onCancel.subscribe(status => {
       if (status) {
         swal({
-          title: 'ยืนยันการยกเลิกรายการ?',
-          text: 'ต้องการยกเลิกการทำรายการหรือไม่!',
+          title: '',
+          text: 'ยืนยันการทำรายการหรือไม่',
           type: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -292,7 +306,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     await this.MasStaffMaingetAll();
     await this.GetAdjustCompareCRgetByCon(this.compareID);
-    await this.GetAdjustCompareDetailgetByCon (this.compareID);
+    await this.GetAdjustCompareDetailgetByCon (this.compareID, this.compareIdDetail);
     await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
     await this.setDocument();
     await this.GetAdjustNoticegetByArrestCode();
@@ -302,7 +316,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
-          this.saveData();
+          this.checkSave();
       }
     });
 
@@ -367,27 +381,27 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   }
 
   // ดึงข้อมูลการปรับเพิ่มหรือปรับลด
-  public async GetAdjustCompareDetailgetByCon(CompareID: any = null): Promise<void> {
-    if (this.adjustArrest.AdjustCompareReceiptCR.length === 0
-        && this.adjustArrest.AdjustCompareReceiptCR[0].CompareDetailID === 0) {
-      return;
-    }
+  public async GetAdjustCompareDetailgetByCon(CompareID: any = null, compareIdDetail: any = null): Promise<void> {
+    // console.log(compareIdDetail);
+    // console.log(this.adjustArrest.AdjustCompareReceiptCR[0].CompareDetailID);
 
-    for (let i = 0; i < this.adjustArrest.AdjustCompareReceiptCR.length; i++) {
-      try {
-        const response = await this.apiService.post('/XCS60/AdjustCompareDetailgetByCon',
-                                    {CompareDetailID: this.adjustArrest.AdjustCompareReceiptCR[0].CompareDetailID})
-                             .toPromise();
-        this.AdjustCompareDetail.push(response);
-      } catch (e) {
-        console.log(e);
-      }
+    // for (let i = 0; i < this.adjustArrest.AdjustCompareReceiptCR.length; i++) {
+    try {
+      const response = await this.apiService.post('/XCS60/AdjustCompareDetailgetByCon',
+                                  {CompareDetailID: this.adjustArrest.AdjustCompareReceiptCR[compareIdDetail].CompareDetailID})
+                            .toPromise();
+                            console.log(response);
+      this.AdjustCompareDetail.push(response);
+    } catch (e) {
+      console.log(e);
     }
+    // console.log(this.AdjustCompareDetail);
+    // }
 
     if (this.AdjustCompareDetail.length > 0) {
       this.CompareReason = this.AdjustCompareDetail[0].CompareReason;
     }
-    console.log(this.AdjustCompareDetail);
+    // console.log(this.AdjustCompareDetail);
   }
 
   // คำนวณปรับเพิ่ม-ลด ใหม่
@@ -713,7 +727,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  public async saveData(): Promise<void> {
+  public async checkSave(): Promise<void> {
     console.log(this.adjustFine);
     const adjustData = [];
 
@@ -761,6 +775,39 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       });
     }
 
+    if (!cansave) {
+      return;
+    }
+
+
+    if (this.EditApproveCaseComparisonPopUp.offerstaff === '' || this.EditApproveCaseComparisonPopUp.offerstaff == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกผู้เสนอพิจารณาเห็นชอบ', 'error');
+      return;
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.staff === '' || this.EditApproveCaseComparisonPopUp.staff == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกผู้พิจารณาเห็นชอบ', 'error');
+      return;
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.approveStaff === '' || this.EditApproveCaseComparisonPopUp.approveStaff == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกผู้มีอำนาจอนุมัติ', 'error');
+      return;
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.Fact === '' || this.EditApproveCaseComparisonPopUp.Fact == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกข้อเท็จจริงเกี่ยวกับความผิดโดยละเอียด', 'error');
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.AdjustReason === '' || this.EditApproveCaseComparisonPopUp.AdjustReason == null) {
+      cansave = false;
+      swal('', 'กรุณากรอกเหตุผลที่ควรเปรียบเทียบคดีและ/หรือจัดการของกลาง', 'error');
+    }
+
     if (this.AllAddFiles.length === 0) {
       // swal('', 'กรุณาแนบเอกสาร', 'error');
       document = false;
@@ -775,36 +822,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       if (this.AllAddFiles[j].FilePath == null || this.AllAddFiles[j].FilePath === '' || !this.AllAddFiles[j].FilePath) {
         // swal('', 'กรุณาแนบเอกสาร', 'error');
         document = false;
+        break;
       }
-    }
-
-    if (this.EditApproveCaseComparisonPopUp.offerstaff === '' || this.EditApproveCaseComparisonPopUp.offerstaff === null) {
-      cansave = false;
-      swal('', 'กรุณากรอกผู้เสนอพิจารณาเห็นชอบ', 'error');
-    }
-
-    if (this.EditApproveCaseComparisonPopUp.staff === '' || this.EditApproveCaseComparisonPopUp.staff == null) {
-      cansave = false;
-      swal('', 'กรุณากรอกผู้พิจารณาเห็นชอบ', 'error');
-    }
-
-    if (this.EditApproveCaseComparisonPopUp.approveStaff === '' || this.EditApproveCaseComparisonPopUp.approveStaff == null) {
-      cansave = false;
-      swal('', 'กรุณากรอกผู้มีอำนาจอนุมัติ', 'error');
-    }
-
-    if (this.EditApproveCaseComparisonPopUp.Fact === '' || this.EditApproveCaseComparisonPopUp.Fact == null) {
-      cansave = false;
-      swal('', 'กรุณากรอกข้อเท็จจริงเกี่ยวกับความผิดโดยละเอียด', 'error');
-    }
-
-    if (this.EditApproveCaseComparisonPopUp.AdjustReason === '' || this.EditApproveCaseComparisonPopUp.AdjustReason == null) {
-      cansave = false;
-      swal('', 'กรุณากรอกเหตุผลที่ควรเปรียบเทียบคดีและ/หรือจัดการของกลาง', 'error');
-    }
-
-    if (!cansave) {
-      return;
     }
 
     if (!document || !document_name) {
@@ -816,18 +835,22 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'ลบ',
+          confirmButtonText: 'ตกลง',
           cancelButtonText: 'ยกเลิก'
-        }).then(result => {
+        }).then(async result => {
           if (result.value) {
-            console.log('go to save');
+            await this.saveData(adjustData, CompareFine, TreasuryMoney, BribeMoney, RewardMoney, Fine);
           } else {
             return;
           }
         });
       }
+    } else {
+      await this.saveData(adjustData, CompareFine, TreasuryMoney, BribeMoney, RewardMoney, Fine);
     }
+  }
 
+  public async saveData(adjustData, CompareFine, TreasuryMoney, BribeMoney, RewardMoney, Fine): Promise<void> {
     console.log(adjustData);
 
     const param = {
@@ -868,10 +891,10 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     Object.assign(param, this.adjustArrest);
 
-    this.CompareReceipt = this.CompareReceipt.filter(element => {
+    this.CompareReceipt = this.CompareReceipt.filter((element, i) => {
       if (element.LawbreakerFirstName) {
         Object.assign(element, {
-          CompareReceiptID: '',
+          CompareReceiptID: this.AdjustCompareDetail[0].AdjustCompareDetailReceipt[i].CompareReceiptID,
           ReceiptType: this.mode,
           ReceiptDate: moment().format('YYYY-MM-DD HH:mm:ss') + ' +00:00',
           StationCode: this.EditApproveCaseComparisonPopUp.ApproveStationCode,
@@ -911,9 +934,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
             this.navService.setEditField(true);
             this.navService.setSendIncomeButton(true);
 
-            await this.GetAdjustCompareCRgetByCon(this.compareID);
-            await this.GetAdjustCompareDetailgetByCon (this.compareID);
-            await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
+            // await this.GetAdjustCompareCRgetByCon(this.compareID);
+            // await this.GetAdjustCompareDetailgetByCon (this.compareID);
+            // await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
 
             console.log('success');
           }
@@ -937,6 +960,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     const res = await this.apiService.post('/XCS60/AdjustCompareNoticegetByArrestCode', {
       ArrestCode: this.adjustArrest.ArrestCode
     }).toPromise();
+
+    this.preloaderService.setShowPreloader(false);
 
     console.log(res);
     if (res) {
