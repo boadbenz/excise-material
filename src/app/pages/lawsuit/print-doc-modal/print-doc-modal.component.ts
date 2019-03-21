@@ -138,7 +138,7 @@ export class PrintLawsuitModalComponent implements OnInit {
           var selected = tempChkbox[i].chkbox;
           console.log("selected : ", selected)
           if (selected == 1) {
-            this.lawsuitService.LawsuitReportArrestgetByCon(this.IndictmentID).subscribe(x => {
+            this.lawsuitService.LawsuitReportArrestgetByCon(this.lawsuitID).subscribe(x => {
               const file = new Blob([x], { type: 'application/pdf' });
               const fileURL = URL.createObjectURL(file);
               window.open(fileURL);

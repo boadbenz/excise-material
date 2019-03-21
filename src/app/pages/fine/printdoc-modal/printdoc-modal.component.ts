@@ -1,5 +1,4 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
-import { Router } from '@angular/router';
 import { FineService } from '../fine.service';
 import { ICompareCon } from '../condition-model';
 import { Arrest } from '../../model/arrest';
@@ -9,6 +8,7 @@ import { PreloaderService } from 'app/shared/preloader/preloader.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NgbModalRef, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
 // import { ManageComponent } from '../manage/manage.component';
 
 @Component({
@@ -22,6 +22,7 @@ export class PrintDocModalComponent implements OnInit {
     printDoc: any[]
     sort = 'asc';
     public data: any
+    CompareID: string;
 
     condtion: ICompareCon = {};
 
@@ -29,7 +30,7 @@ export class PrintDocModalComponent implements OnInit {
     FirstName: String;
     LastName: String;
 
-    @Input() pCompareID: string;
+    @Input() dataForCompare: string;
     @Input() ArrestCode: string;
 
     @Output() d = new EventEmitter();
@@ -43,7 +44,7 @@ export class PrintDocModalComponent implements OnInit {
         private preloader: PreloaderService,
         private http: HttpClient,
         // private manageComponent: ManageComponent,
-        private httpClient: HttpClient,
+        private httpClient: HttpClient
     ) { }
 
 
@@ -104,7 +105,6 @@ export class PrintDocModalComponent implements OnInit {
     }
 
     onSelect(index) {
-        console.log("onSelect")
         if (this.printDoc[index].checked == false) {
             this.printDoc[index].checked = true;
         } else if (this.printDoc[index].checked == true) {
@@ -117,6 +117,7 @@ export class PrintDocModalComponent implements OnInit {
 
         for (var i = 0; i < this.printDoc.length; i++) {
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == '2/53') {
+                this.preloader.setShowPreloader(true);
                 console.log("onSelect : ",this.printDoc[i])
                 this.ReportForm06_001(this.printDoc[i].CompareDetailID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
@@ -126,6 +127,7 @@ export class PrintDocModalComponent implements OnInit {
                 })
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'Receipt') {
+                this.preloader.setShowPreloader(true);
                 console.log("onSelect : ",this.printDoc[i])
                 this.ReportForm06_002(this.printDoc[i].CompareDetailID, this.printDoc[i].CompareReceiptID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
@@ -135,6 +137,7 @@ export class PrintDocModalComponent implements OnInit {
                 })
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == '2/52') {
+                this.preloader.setShowPreloader(true);
                 console.log("onSelect : ",this.printDoc[i])
                 this.ReportForm06_003(this.printDoc[i].CompareID, this.printDoc[i].IndictmentID, this.printDoc[i].ArrestCode).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
@@ -144,8 +147,9 @@ export class PrintDocModalComponent implements OnInit {
                 })
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD2') {
-                console.log("onSelect : ",this.printDoc[i])
-                this.ReportForm06_005(this.printDoc[i].CompareDetailID).subscribe(x => {
+                this.preloader.setShowPreloader(true);
+                console.log("onSelect KD2 : ",this.printDoc[i])
+                this.ReportForm06_005(this.printDoc[i].CompareID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
                     const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
@@ -153,6 +157,7 @@ export class PrintDocModalComponent implements OnInit {
                 })
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD3') {
+                this.preloader.setShowPreloader(true);
                 console.log("onSelect : ",this.printDoc[i])
                 this.ReportForm06_006(this.printDoc[i].CompareDetailID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
@@ -162,6 +167,7 @@ export class PrintDocModalComponent implements OnInit {
                 })
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD4') {
+                this.preloader.setShowPreloader(true);
                 console.log("onSelect : ",this.printDoc[i])
                 this.ReportForm06_007(this.printDoc[i].CompareDetailID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
@@ -171,6 +177,7 @@ export class PrintDocModalComponent implements OnInit {
                 })
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD5') {
+                this.preloader.setShowPreloader(true);
                 console.log("onSelect : ",this.printDoc[i])
                 this.ReportForm06_008(this.printDoc[i].CompareDetailID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
@@ -180,6 +187,7 @@ export class PrintDocModalComponent implements OnInit {
                 })
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD6') {
+                this.preloader.setShowPreloader(true);
                 console.log("onSelect : ",this.printDoc[i])
                 this.ReportForm06_009(this.printDoc[i].CompareDetailID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
@@ -416,9 +424,10 @@ export class PrintDocModalComponent implements OnInit {
             .finally(() => this.onEnd());
     }
 
-    ReportForm06_005(CompareDetailID: string) {
+    ReportForm06_005(CompareID: string) {
+        console.log(' ReportForm06_005 CompareID : ' ,CompareID)
         const params = {
-            CompareDetailID: CompareDetailID
+            CompareID: CompareID
         };
         const url = `${appConfig.apiReport}/ILG60_00_06_005.aspx`;
         return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })

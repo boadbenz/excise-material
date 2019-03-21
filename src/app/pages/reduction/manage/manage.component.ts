@@ -362,5 +362,6 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     // this.getDataFromListPage.unsubscribe();
     this.navService.setEditField(false);
     this.navServiceSub.unsubscribe();
+    this.onPrintSubscribe.unsubscribe();
   }
 }
