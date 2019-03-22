@@ -60,9 +60,9 @@ export class ManageComponent implements OnInit {
   IsDomestic: any = '';
   IsDomesticvalue: any = '';
   IsDomesticOpt = [
-    { Selected: false, IsDomestic: 1, TypeName: 'ภายในประเทศ' },
-    { Selected: false, IsDomestic: 2, TypeName: 'ต่างประเทศ' },
-    { Selected: false, IsDomestic: 3, TypeName: 'ไม่ระบุ' }
+    { IsDomestic: 1, TypeName: 'ภายในประเทศ' },
+    { IsDomestic: 2, TypeName: 'ต่างประเทศ' },
+    { IsDomestic: 3, TypeName: 'ไม่ระบุ' }
   ];
 
   //Ins complete
@@ -204,32 +204,36 @@ export class ManageComponent implements OnInit {
       }
     })
   }
- 
+
   async OnpageloadModeR(ProductID) {
     this.preLoaderService.setShowPreloader(true);////
 
     await this.masProdService.MasProductgetByCon(ProductID).subscribe(list => {
       // this.DutyGroup = list
-      this.ProductCode = list.ProductCode==null? '':list.ProductCode;
-      this.BrandMainENG = list.BrandNameEN==null? '':list.BrandNameEN;
-      this.BrandMainThai = list.BrandNameTH==null? '':list.BrandNameTH;
-      this.BrandSecondThai = list.SubBrandNameEN==null? '':list.SubBrandNameEN;
-      this.BrandSecondENG = list.SubBrandNameTH==null? '':list.SubBrandNameTH;
-      this.ModelName = list.ModelName==null? '':list.ModelName;
-      this.Size = list.Size==null? '':list.Size;
-      this.DutyCode = list.SizeUnitName==null? '':list.SizeUnitName;
-      this.Degree = list.Degree==null? '':list.Degree;
-      this.ProductDesc = list.ProductDesc==null? '':list.ProductDesc;
-      this.IsDomestic = list.IsDomestic==null? '':list.IsDomestic;
-      
+      this.ProductCode = list.ProductCode == null ? '' : list.ProductCode;
+      this.BrandMainENG = list.BrandNameEN == null ? '' : list.BrandNameEN;
+      this.BrandMainThai = list.BrandNameTH == null ? '' : list.BrandNameTH;
+      this.BrandSecondThai = list.SubBrandNameEN == null ? '' : list.SubBrandNameEN;
+      this.BrandSecondENG = list.SubBrandNameTH == null ? '' : list.SubBrandNameTH;
+      this.ModelName = list.ModelName == null ? '' : list.ModelName;
+      this.Size = list.Size == null ? '' : list.Size;
+      this.DutyCode = list.SizeUnitName == null ? '' : list.SizeUnitName;
+      this.Degree = list.Degree == null ? '' : list.Degree;
+      this.ProductDesc = list.ProductDesc == null ? '' : list.ProductDesc;
+      this.IsDomestic = list.IsDomestic == null ? '' : list.IsDomestic;
+
+      this.IsDomesticvalue = this.IsDomesticOpt.filter(f =>  f.IsDomestic ==  this.IsDomestic )
+      console.log('this.IsDomesticOpt : ',this.IsDomesticOpt);
+      console.log('this.IsDomestic : ',this.IsDomestic);
+      console.log('this.IsDomesticvalue : ',this.IsDomesticvalue);
       console.log('MasProductgetByCon R : ', list)
       this.preLoaderService.setShowPreloader(false);////
     });
   }
-  setIsDomestic(IsDomestic){
-    console.log('setIsDomestic : ',IsDomestic)
-    this.IsDomesticvalue = this.IsDomesticOpt.filter(f => {f.IsDomestic == IsDomestic})
-    console.log('this.IsDomesticvalue : ',this.IsDomesticvalue);
+  setIsDomestic(IsDomestic) {
+    console.log('setIsDomestic : ', IsDomestic)
+    this.IsDomesticvalue = this.IsDomesticOpt.filter(f => { f.IsDomestic == IsDomestic })
+    console.log('this.IsDomesticvalue : ', this.IsDomesticvalue);
   }
   getIsDomestic(value) {
     console.log('value : ', value)
@@ -255,6 +259,8 @@ export class ManageComponent implements OnInit {
       this.BrandSecond = list, console.log('BrandSecondgetAll C : ', list)
       this.preLoaderService.setShowPreloader(false);////
     });
+
+    this.IsDomesticvalue = this.IsDomesticOpt;
   }
 
   //*********************************DutyGroup******************************** */

@@ -54,8 +54,8 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     // await this.navService.showAdvSearch.next(false); ?????????
     this.listOfsreach = [
-      { prodCode: '20', GroupName: 'ยาสูบ', BrandMain: 'LM', BrandSecond: 'LM', model: 'LM 7.1', size: '20', Alcohol: '' },
-      { prodCode: '21', GroupName: 'สุรา', BrandMain: 'รวงข้าว', BrandSecond: 'รวงข้าวเขียว', model: 'smallsize', size: '0.700', Alcohol: '40%' }
+      { prodCode: '070101000000T007MG00002228',ProductID:'75', GroupName: 'รถจักรยานยนต์', BrandMain: 'VESPA', BrandSecond: '', model: 'PX 125 WHITE', size: '125 ซีซี', Alcohol: '' },
+      { prodCode: '070104000001P007f800023428',ProductID:'76', GroupName: 'รถจักรยานยนต์', BrandMain: 'Harley-Davidson', BrandSecond: '', model: 'FLHXS ANX/2018', size: '1745 ซีซี', Alcohol: '' }
     ]
 
     localStorage.setItem('programcode', 'ILG60-99-01');

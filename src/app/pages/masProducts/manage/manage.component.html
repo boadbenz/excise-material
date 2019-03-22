@@ -203,8 +203,9 @@
               <!-- <form [formGroup]="couForm"> -->
               <select name="IsDomestic" class="form-control form-control-sm"
               (change)="getIsDomestic($event.target.value)"
-              [(ngModel)]="IsDomestic"
-                [disabled]="showEditField">
+              [(ngModel)]="IsDomesticvalue.TypeName"
+              [disabled]="showEditField">
+                <!-- <option value=""  disabled></option> -->
                 <option  *ngFor="let item of IsDomesticvalue" >{{item.TypeName}}</option>
                 <!-- <option value="3" [selected]="IsDomestic.Selected">ไม่ระบุ</option>
                 <option value="2" [selected]="IsDomestic.Selected">ต่างประเทศ</option>
