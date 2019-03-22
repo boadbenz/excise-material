@@ -58,9 +58,10 @@ export class ManageComponent implements OnInit {
   DutyCode: any = '';
   ProductDesc: any = '';
   IsDomestic: any = '';
+  IsDomesticvalue: any = '';
   IsDomesticOpt = [
     { Selected: false, IsDomestic: 1, TypeName: 'ภายในประเทศ' },
-    { Selected: true, IsDomestic: 2, TypeName: 'ต่างประเทศ' },
+    { Selected: false, IsDomestic: 2, TypeName: 'ต่างประเทศ' },
     { Selected: false, IsDomestic: 3, TypeName: 'ไม่ระบุ' }
   ];
 
@@ -98,9 +99,18 @@ export class ManageComponent implements OnInit {
 
     this.navService.showFieldEdit.subscribe(p => {
       this.showEditField = p;
+      switch (p) {
+        case false: {
+          this.OnPageloadModeC();
+          break;
+        } default: {
+          break;
+        }
+      }
+
       // if (!p) {
-      // console.log('edit p :',p)
-      this.OnPageloadModeC();
+      //   console.log('edit p :', p)
+      //   this.OnPageloadModeC();
       // }
     });
 
@@ -189,34 +199,40 @@ export class ManageComponent implements OnInit {
         console.log('in active_route mode C')
         this.OnPageloadModeC();
       } else if (p['mode'] === 'R') {
-        console.log('in active_route mode R')
         console.log(' p:[code] : ', p['code'])
         this.OnpageloadModeR(p['code'])
       }
     })
   }
-  getIsDomestic(value) {
-    console.log('value : ', value)
-  }
+ 
   async OnpageloadModeR(ProductID) {
     this.preLoaderService.setShowPreloader(true);////
 
     await this.masProdService.MasProductgetByCon(ProductID).subscribe(list => {
       // this.DutyGroup = list
-      this.ProductCode = list.ProductCode;
-      this.BrandMainENG = list.BrandNameEN;
-      this.BrandMainThai = list.BrandNameTH;
-      this.BrandSecondThai = list.SubBrandNameEN;
-      this.BrandSecondENG = list.SubBrandNameTH;
-      this.ModelName = list.ModelName;
-      this.Size = list.Size;
-      this.DutyCode = list.SizeUnitName;
-      this.Degree = list.Degree;
-      this.ProductDesc = list.ProductDesc;
-      this.IsDomestic = list.IsDomestic;
+      this.ProductCode = list.ProductCode==null? '':list.ProductCode;
+      this.BrandMainENG = list.BrandNameEN==null? '':list.BrandNameEN;
+      this.BrandMainThai = list.BrandNameTH==null? '':list.BrandNameTH;
+      this.BrandSecondThai = list.SubBrandNameEN==null? '':list.SubBrandNameEN;
+      this.BrandSecondENG = list.SubBrandNameTH==null? '':list.SubBrandNameTH;
+      this.ModelName = list.ModelName==null? '':list.ModelName;
+      this.Size = list.Size==null? '':list.Size;
+      this.DutyCode = list.SizeUnitName==null? '':list.SizeUnitName;
+      this.Degree = list.Degree==null? '':list.Degree;
+      this.ProductDesc = list.ProductDesc==null? '':list.ProductDesc;
+      this.IsDomestic = list.IsDomestic==null? '':list.IsDomestic;
+      
       console.log('MasProductgetByCon R : ', list)
       this.preLoaderService.setShowPreloader(false);////
     });
+  }
+  setIsDomestic(IsDomestic){
+    console.log('setIsDomestic : ',IsDomestic)
+    this.IsDomesticvalue = this.IsDomesticOpt.filter(f => {f.IsDomestic == IsDomestic})
+    console.log('this.IsDomesticvalue : ',this.IsDomesticvalue);
+  }
+  getIsDomestic(value) {
+    console.log('value : ', value)
   }
 
   async  OnPageloadModeC() {
@@ -326,7 +342,7 @@ export class ManageComponent implements OnInit {
   selectItemDutyUnit(ele: any) {
     console.log('selectItemDutyUnit ele.item : ', ele.item);
   }
-  formatterDutyUnit = (x: { DutyCode: string}) =>
+  formatterDutyUnit = (x: { DutyCode: string }) =>
     `${x.DutyCode}`;
   // DutyUnitonAutoChange(value: string) { //พิม
   //   if (value == '') {
@@ -433,7 +449,6 @@ export class ManageComponent implements OnInit {
         this.ClearData();
         this.setButton();
         this.OnpageloadModeR(this.ProductID);
-        // this.router.navigate([`/masProducts/manage/R/${this.ProductID}`]);
       } else {
         swal('', Message.saveFail, 'error')
       }

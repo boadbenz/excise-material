@@ -54,8 +54,8 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     // await this.navService.showAdvSearch.next(false); ?????????
     this.listOfsreach = [
-      { prodCode: '01', GroupName: 'ยาสูบ', BrandMain: 'LM', BrandSecond: 'LM', model: 'LM 7.1', size: '20', Alcohol: '' },
-      { prodCode: '02', GroupName: 'สุรา', BrandMain: 'รวงข้าว', BrandSecond: 'รวงข้าวเขียว', model: 'smallsize', size: '0.700', Alcohol: '40%' }
+      { prodCode: '20', GroupName: 'ยาสูบ', BrandMain: 'LM', BrandSecond: 'LM', model: 'LM 7.1', size: '20', Alcohol: '' },
+      { prodCode: '21', GroupName: 'สุรา', BrandMain: 'รวงข้าว', BrandSecond: 'รวงข้าวเขียว', model: 'smallsize', size: '0.700', Alcohol: '40%' }
     ]
 
     localStorage.setItem('programcode', 'ILG60-99-01');
