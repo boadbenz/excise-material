@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map';
 import { NavigationService } from 'app/shared/header-navigation/navigation.service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subject } from 'rxjs/Subject';
-import { MyDatePickerOptions, setDateMyDatepicker, compareDate, getDateMyDatepicker, setZeroHours } from 'app/config/dateFormat';
+import { MyDatePickerOptions, setDateMyDatepicker, compareDate, getDateMyDatepicker, setZeroHours, toLocalNumeric } from 'app/config/dateFormat';
 import { IMyDateModel } from 'mydatepicker-th';
 import { Message } from 'app/config/message';
 import * as fromGobalModels from 'app/models';
@@ -61,13 +61,14 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     showEditField: boolean;
     investigateFG: FormGroup;
 
+    readonly SysdateStrat = setDateMyDatepicker(new Date());
+    readonly SysdateEnd = setDateMyDatepicker(new Date());
     readonly myDatePickerOptions = MyDatePickerOptions;
     readonly lawbreakerType = fromGobalModels.LawbreakerTypes;
     readonly entityType = fromGobalModels.EntityTypes;
     readonly contributorInvestType = fromGobalModels.ContributorInvestType;
     readonly valueofNews = fromGobalModels.ValueofNews;
     readonly costofNews = fromGobalModels.CostofNews;
-
     readonly runningTable = 'ops_investigate';
     readonly runningOfficeCode = localStorage.getItem('officeCode');
     readonly runningPrefix = 'AI';
@@ -233,6 +234,9 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                 }
             })
     }
+    ngAfterViewInit(): void {
+        this.addStaff();
+    }
 
     private resetConfig() {
         let routerConfig = this.router['config'];
@@ -306,9 +310,20 @@ export class DetailManageComponent implements OnInit, OnDestroy {
                         })
                     )
                 );
+                const staff = this.typeheadStaff.find(x => x.StaffCode == localStorage.getItem('staffCode'));
+                if (staff) {
+                    const _staff = { item: staff };
+                    this.selectItemStaff(_staff, 0);
+                    this.InvestigateDetailStaff.at(0).patchValue({
+                        ContributorID: '2',
+                    })
+                }
             }).catch((error) => this.catchError(error));
         this.loaderService.hide();
     }
+
+
+
 
     async onPageLoad() {
         this.loaderService.show();
@@ -321,6 +336,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
             x.InvestigateDateStart = setDateMyDatepicker(x.InvestigateDateStart);
             x.InvestigateDateEnd = setDateMyDatepicker(x.InvestigateDateEnd);
             // x.InvestigateSeq = this.investigateSeq;
+
 
             await this.pageRefreshStaff(x.InvestigateDetailStaff);
 
@@ -472,7 +488,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
         item.OfficeCode = null;
         item.OfficeName = null;
         item.OfficeShortName = null;
-        item.ContributorID = null;
+        item.ContributorID = lastIndex >= 0 ? '1' : '2';
         item.IsActive = null;
         item.IsModify = 'c';
 
@@ -946,7 +962,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     }
 
     private async onSave() {
-        
+
         if (this.investigateFG.invalid) {
             swal('', Message.checkData, 'warning');
             this.isRequired = true;
@@ -1095,7 +1111,7 @@ export class DetailManageComponent implements OnInit, OnDestroy {
     private async insertInvestigateDetail(investCode: string) {
         this.loaderService.show();
         let form: fromModels.InvestigateDetail = this.investigateFG.value;
-
+        console.log('form : ', form)
         form.InvestigateCode = investCode;
         const dateStart = getDateMyDatepicker(form.InvestigateDateStart);
         const dateEnd = getDateMyDatepicker(form.InvestigateDateEnd);

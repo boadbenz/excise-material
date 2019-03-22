@@ -27,12 +27,12 @@
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group input-group">
                         <my-date-picker-th class="form-control form-control-sm unset-form-control" formControlName="InvestigateDateStart"
-                            [disabled]="showEditField" [options]="myDatePickerOptions" (dateChanged)="onSDateChange($event)"
+                            [disabled]="showEditField" [options]="myDatePickerOptions" (dateChanged)="onSDateChange($event)" [(ngModel)]="SysdateStrat"
                             ngModel [required]="true"></my-date-picker-th>
 
                         <label for="DateEnd">&nbsp;ถึง&nbsp;</label>
 
-                        <my-date-picker-th class="form-control form-control-sm unset-form-control" id="DateEnd"
+                        <my-date-picker-th class="form-control form-control-sm unset-form-control" id="DateEnd" [(ngModel)]="SysdateEnd"
                             [disabled]="showEditField" formControlName="InvestigateDateEnd" [options]="myDatePickerOptions"
                             (dateChanged)="onEDateChange($event)"></my-date-picker-th>
                     </div>
@@ -128,7 +128,7 @@
                                         readonly>
                                 </td>
                                 <td>
-                                    <select formControlName="ContributorID" class="form-control form-control-sm"
+                                    <select (change)="onChangeContributer($event, i)" formControlName="ContributorID" class="form-control form-control-sm"
                                         [attr.disabled]="showEditField ? '' : null" [required]="item.value.IsModify != 'd'" [ngClass]="{'ng-touched':isRequired}">
                                         <option value="" disabled selected></option>
                                         <option *ngFor="let c of contributorInvestType;" [value]="c.value">{{c.text}}</option>

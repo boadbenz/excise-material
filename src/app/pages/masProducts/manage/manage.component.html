@@ -205,7 +205,7 @@
               (change)="getIsDomestic($event.target.value)"
               [(ngModel)]="IsDomesticvalue.TypeName"
               [disabled]="showEditField">
-                <!-- <option value=""  disabled></option> -->
+                <option value="" selected disabled></option>
                 <option  *ngFor="let item of IsDomesticvalue" >{{item.TypeName}}</option>
                 <!-- <option value="3" [selected]="IsDomestic.Selected">ไม่ระบุ</option>
                 <option value="2" [selected]="IsDomestic.Selected">ต่างประเทศ</option>
