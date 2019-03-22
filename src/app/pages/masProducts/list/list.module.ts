@@ -19,7 +19,7 @@ const routes: Routes = [
             // title: 'ค้นหาข้อมูล',
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาของกลาง', url: '/masProducts/list' }],
             // nextPage: { title: 'xxx', url: '/masProducts/list' },
-            codePage: 'ILG60-99-01-00-00'
+            codePage: 'ILG60-99-03-00-00'
         },
         component: ListComponent
     }

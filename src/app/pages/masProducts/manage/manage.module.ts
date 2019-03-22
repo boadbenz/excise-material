@@ -21,7 +21,7 @@ const routes: Routes = [
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาของกลาง', url: '/masProducts/list' }, 
             { title: 'จัดการของกลาง', url: '/masProducts/manage' }],
             // nextPage: { title: 'xxx', url: '/masProducts/list' },
-            codePage: 'ILG60-99-02-00-00'
+            codePage: 'ILG60-99-03-01-00'
         },
         component: ManageComponent
     }
