@@ -86,6 +86,7 @@ export class ManageComponent implements OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit() {
+    localStorage.setItem('programcode', 'ILG60-99-01');
     console.log('Mas manage ngOnInit')
     // this.couForm = this.fb.group({
     //   couControl: [this.IsDomestic]
@@ -115,13 +116,13 @@ export class ManageComponent implements OnInit {
     });
 
     this.onPrintSubscribe = this.navService.onPrint.subscribe(status => {
-      if (status) {
+      if (status && localStorage.programcode == 'ILG60-99-01') {
         this.navService.setOnPrint(false);
         // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
       }
     });
     this.onSaveSubscribe = this.navService.onSave.subscribe(status => {
-      if (status) {
+      if (status && localStorage.programcode == 'ILG60-99-01') {
         this.navService.setOnSave(false);
         if (this.mode === 'C') {
           this.SetDataInsMasProd();
@@ -135,7 +136,7 @@ export class ManageComponent implements OnInit {
       }
     });
     this.onCancelSubscribe = this.navService.onCancel.subscribe(status => {
-      if (status) {
+      if (status && localStorage.programcode == 'ILG60-99-01') {
         this.navService.setOnCancel(false);
         swal({
           title: '',
@@ -153,7 +154,7 @@ export class ManageComponent implements OnInit {
       }
     });
     this.onDeleSubscribe = this.navService.onDelete.subscribe(status => {
-      if (status) {
+      if (status && localStorage.programcode == 'ILG60-99-01') {
         this.navService.setOnDelete(false);
         this.activeRoute.params.subscribe(p => { this.ProductID = p['code'] });
         this.onDeleteMasProd();

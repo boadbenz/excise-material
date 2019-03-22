@@ -94,7 +94,7 @@ export class ListComponent implements OnInit {
     })
 
     this.onNextPageSubscribe = this.navService.onNextPage.subscribe(status => {
-      if (status) {
+      if (status && localStorage.programcode == 'ILG60-99-01') {
         this.navService.setOnNextPage(false);
         this.router.navigate(['/masProducts/manage', 'C', 'NEW']);
       }
