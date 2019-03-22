@@ -89,16 +89,16 @@ export class ListComponent implements OnInit, OnDestroy {
         this.EvidenceOutList = [];
         this.active_Route();
 
-        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async TextSearch => {
-            if (TextSearch) {
+        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async res => {
+            if (res) {
                 await this.navService.setOnSearch('');
 
                 let ts;
-                ts = { TextSearch: "", OfficeCode: localStorage.getItem("officeCode") }
-                ts = TextSearch;
+                ts = { TextSearch: "", AccountOfficeCode: localStorage.getItem("officeCode") }
+                ts = res;
 
-                if (ts.TextSearch == null) { this.onSearch({ TextSearch: "" }); }
-                else { this.onSearch(TextSearch); }
+                if (ts.Textsearch == null) { this.onSearch({ TextSearch: "" }); }
+                else { this.onSearch(res); }
             }
         })
 
@@ -202,7 +202,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     async getByKeyword(p: any, pOutType: string) {
         var paramsOther = {
-            TextSearch: p.TextSearch,
+            TextSearch: p.Textsearch,
             EvidenceOutType: pOutType,
             AccountOfficeCode: localStorage.getItem("officeCode")
         }

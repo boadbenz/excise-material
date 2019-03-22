@@ -67,16 +67,16 @@ export class ListComponent implements OnInit, OnDestroy {
         //this.getDepartmentRevenue();
         //this.onSearch({ Textsearch: "" });
 
-        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async TextSearch => {
-            if (TextSearch) {               
+        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async res => {
+            if (res) {
                 await this.navService.setOnSearch('');
 
                 let ts;
                 ts = { TextSearch: "", AccountOfficeCode: localStorage.getItem("officeCode") }
-                ts = TextSearch;
+                ts = res;
 
-                if (ts.TextSearch == null) { this.onSearch({ TextSearch: "" }); }
-                else { this.onSearch(TextSearch); }
+                if (ts.Textsearch == null) { this.onSearch({ TextSearch: "" }); }
+                else { this.onSearch(res); }
 
             }
         })
@@ -106,7 +106,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     onSearch(p: any) {
         var paramsOther = {
-            Textsearch: p.TextSearch,
+            Textsearch: p.Textsearch,
             AccountOfficeCode: localStorage.getItem("officeCode")
         }
 
