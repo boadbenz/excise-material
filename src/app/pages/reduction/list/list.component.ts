@@ -76,7 +76,7 @@ export class ListComponent implements OnInit {
   public viewData(compareID: string = '', indictmentID: string = '') {
     // this.router.navigate(['/reduction/manage', 'R'], { queryParams: { code: arrestCode } });
     this.router.navigate(['/reduction/manage', 'R'],
-                         { queryParams: {CompareID: compareID, IndictmentID:  indictmentID} }
+                         { queryParams: {CompareID: compareID} }
                         );
   }
 
