@@ -478,10 +478,10 @@
             <td>{{item.ApproveReportDate | reductionDatePipe: 'DD MMM YYYY'}}</td>
             <td>{{(item.ApproveReportType === '') ? '' : 'แบบอนุมัติ' + (item.ApproveReportType)}}</td>
             <td>
-              <a href="javaScript:void(0);" class="text-secondary" (click)="ViewApproveData(item.CompareDetailID)" data-toggle="modal" [hidden]="mode === 'A'" data-target="#approvePopup">
+              <a href="javaScript:void(0);" class="text-secondary" (click)="ViewApproveData(item.CompareDetailID, i)" data-toggle="modal" [hidden]="mode === 'A'" data-target="#approvePopup">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
-              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="EditApproveData(item.CompareDetailID)" [hidden]="mode === 'V'" data-toggle="modal" data-target="#approvePopup">
+              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="EditApproveData(item.CompareDetailID, i)" [hidden]="mode === 'V'" data-toggle="modal" data-target="#approvePopup">
                 <i class="ti-pencil-alt btn-action"></i>
               </a>
             </td>
@@ -595,7 +595,8 @@
                           matInput [matAutocomplete]="autoStaff1"
                           (input)="StaffonAutoChange($event.target.value)"
                           (focus)="StaffonAutoFocus($event.target.value)"
-                          [required]="(EditApproveCaseComparisonPopUp.ApproveReportType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1)">
+                          [required]="(EditApproveCaseComparisonPopUp.ApproveReportType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1)"
+                          [disabled]="(EditApproveCaseComparisonPopUp.ApproveReportType) == 1 || showField">
                   <mat-autocomplete #autoStaff1="matAutocomplete">
                     <mat-option *ngFor="let sOption of Staffoptions"
                                 [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -611,7 +612,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ตำแหน่ง : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" [(ngModel)]="EditApproveCaseComparisonPopUp.offerPosition" type="text" name="postion" [disabled]="(EditApproveCaseComparisonPopUp.ApproveReportType) == 1 || showField">
+                  <input class="form-control" [(ngModel)]="EditApproveCaseComparisonPopUp.offerPosition" type="text" name="postion" [disabled]="true">
                 </div>
               </div>
             </div>
@@ -622,7 +623,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">หน่วยงาน : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" [(ngModel)]="EditApproveCaseComparisonPopUp.offerDepartment" type="text" name="deparment" [disabled]="(EditApproveCaseComparisonPopUp.ApproveReportType) == 1 || showField">
+                  <input class="form-control" [(ngModel)]="EditApproveCaseComparisonPopUp.offerDepartment" type="text" name="deparment" [disabled]="true">
                 </div>
               </div>
             </div>
