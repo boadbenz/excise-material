@@ -238,6 +238,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     } else if (this.activeRoute.snapshot.paramMap.get('mode') === 'E') {
       this.navService.setEditField(false);
       this.navService.setSendIncomeButton(false);
+    } else if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
+      this.navService.setEditField(false);
+      this.navService.setSendIncomeButton(false);
     }
 
     this.compareID = this.activeRoute.snapshot.paramMap.get('compareid');
@@ -269,7 +272,6 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.navServiceSub = this.navService.showFieldEdit.subscribe(status => {
       this.showField = status;
       if (!this.showField) {
-        console.log('s');
         this.navService.setDeleteButton(false);
         this.navService.setSaveButton(true);
         this.navService.setCancelButton(true);
@@ -279,7 +281,6 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         this.navService.setSendIncomeButton(false);
         this.mode = 'E';
       } else {
-        console.log('ss');
         this.navService.setDeleteButton(true);
         this.navService.setPrintButton(true);
         this.navService.setEditButton(true);
@@ -292,14 +293,12 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     });
 
     this.navServiceSub = this.navService.onSendIncome.subscribe(status => {
-      console.log(status);
       if (status) {
         this.sentInCome();
       }
     });
 
     this.navServiceSub = this.navService.onDelete.subscribe(async status => {
-      console.log(status);
       if (status) {
         await this.DeletData();
       }
@@ -307,13 +306,13 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     await this.MasStaffMaingetAll();
     await this.GetAdjustCompareCRgetByCon(this.compareID);
-    await this.GetAdjustCompareDetailgetByCon (this.compareID, this.compareIdDetail);
     await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
+    await this.GetAdjustCompareDetailgetByCon (this.compareIdDetail);
     await this.setDocument();
     await this.GetAdjustNoticegetByArrestCode();
-    this.getAdjustDetailgetByCompareDetailId(this.compareIdDetail);
+    // this.getAdjustDetailgetByCompareDetailId(this.compareIdDetail);
     // this.getMasDocumentMaingetAll(this.compareID);
-    this.getAdjustFinecheckComplete(this.compareIdDetail);
+    // this.getAdjustFinecheckComplete(this.compareIdDetail);
 
     this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
@@ -322,10 +321,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     });
 
     this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
-      console.log('status print');
       if (status) {
         await this.navService.setOnPrint(false);
-        // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
         this.buttonPrint()
       }
     })
@@ -378,31 +375,24 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     } catch (e) {
       console.log(e);
     }
-    console.log(this.adjustArrest);
+    console.log('ข้อมูลกล่องแรก -> ', this.adjustArrest);
   }
 
   // ดึงข้อมูลการปรับเพิ่มหรือปรับลด
-  public async GetAdjustCompareDetailgetByCon(CompareID: any = null, compareIdDetail: any = null): Promise<void> {
-    // console.log(compareIdDetail);
-    // console.log(this.adjustArrest.AdjustCompareReceiptCR[0].CompareDetailID);
-
-    // for (let i = 0; i < this.adjustArrest.AdjustCompareReceiptCR.length; i++) {
+  public async GetAdjustCompareDetailgetByCon(compareIdDetail: any = null): Promise<void> {
     try {
       const response = await this.apiService.post('/XCS60/AdjustCompareDetailgetByCon',
-                                  {CompareDetailID: this.adjustArrest.AdjustCompareReceiptCR[compareIdDetail].CompareDetailID})
+                                  {CompareDetailID: compareIdDetail})
                             .toPromise();
-                            console.log(response);
+                            console.log('กล่องสาม -> ', response);
       this.AdjustCompareDetail.push(response);
     } catch (e) {
       console.log(e);
     }
-    // console.log(this.AdjustCompareDetail);
-    // }
 
     if (this.AdjustCompareDetail.length > 0) {
       this.CompareReason = this.AdjustCompareDetail[0].CompareReason;
     }
-    // console.log(this.AdjustCompareDetail);
   }
 
   // คำนวณปรับเพิ่ม-ลด ใหม่
@@ -429,8 +419,6 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       this.adjustFine[index].CompareFineBribeMoney = (this.rangwan * this.adjustFine[index].CompareFine) / 100;
       this.adjustFine[index].CompareFineRewardMoney = (this.songkrang * this.adjustFine[index].CompareFine) / 100;
     }
-
-    console.log(this.adjustFine);
   }
 
   public sumAllAdjustFine(column, start = 0, end = this.adjustFine.length): any {
@@ -454,6 +442,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       const response = await this.apiService.post('/XCS60/AdjustCompareReciptConfirmgetByCon', {
         CompareID: CompareID
       }).toPromise();
+      console.log('กล่องสอง -> ', response);
       this.CompareReceipt = response;
       this.CompareReceipt = this.CompareReceipt.filter(element => {
         if (element.LawbreakerFirstName) {
@@ -476,18 +465,6 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
           console.log(error);
         });
   }
-
-  // ดึงข้อมูลเอกสารแนบภายใน
-  // public getMasDocumentMaingetAll(CompareID: any = null) {
-  //   if (CompareID == null) { return; }
-  //   this.apiService.post('/XCS60/MasDocumentMaingetAll', {
-  //     DocumentType: 10,
-  //     ReferenceCode: CompareID
-  //   })
-  //   .subscribe(response => {
-  //     console.log(response);
-  //   }, error => console.log(error));
-  // }
 
   // ดึงข้อมูลตรวจสอบข้อมูล
   public getAdjustFinecheckComplete(CompareDetailID: any = null) {
@@ -663,13 +640,11 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   }
 
   public async MasStaffMaingetAll(): Promise<void> {
-    console.log('get staff master');
     try {
-      console.log('get');
       this.rawStaffOptions = await this.apiService.post('/XCS60/MasStaffMaingetAll', {}, '8777').toPromise();
-      console.log('staff');
+      console.log('ข้อมูล staff ทั้งหมด -> ', this.rawStaffOptions);
     } catch (e) {
-      console.log(e);
+      console.log('ดึง staff error -> ', e);
     }
   }
 
@@ -964,7 +939,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     this.preloaderService.setShowPreloader(false);
 
-    console.log(res);
+    console.log('ข้อมูล % -> ', res);
     if (res) {
       this.sinbon = 20;
       this.rangwan = 20;
@@ -1016,7 +991,6 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   }
 
   async MasDocumentMaingetAll() {
-    console.log('stet');
     try {
       const data: any = {
         'DocumentType': '3',
@@ -1033,7 +1007,6 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.AllAddFiles = [];
     this.filePath = [];
     const file: any = await this.MasDocumentMaingetAll();
-    console.log(file);
     if (file) {
       for (const ap of file) {
         const fileData: any = this.jsonCopy(ap);

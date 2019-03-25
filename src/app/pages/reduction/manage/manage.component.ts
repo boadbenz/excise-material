@@ -139,7 +139,6 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
 
     const param = this.activeRoute.snapshot.queryParams;
     this.compareID = param.CompareID;
-    this.indictmentID = param.IndictmentID;
 
     this.navService.setEditField(true);
     // set show button
@@ -300,22 +299,6 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
         }, error => console.log(error));
   }
 
-  // private _adjustReceiptgetByCon(compareID) {
-  //   this.apiServer.post('/XCS60/AdjustReceiptgetByCon', {CompareID: compareID})
-  //       .subscribe(response => {
-  //         this.tableData = response;
-  //       }, error => {
-  //         console.log(error);
-  //       }
-  //   );
-  // }
-
-
-  // private  _adjustDetailgetByCon(compareID) {
-  //   this.apiServer.post('/XCS60/AdjustCompareDetailgetByCon', {CompareID: compareID})
-  //       .subscribe(response => this.adjustDetailData =  response, error => console.log(error));
-  // }
-
   private _masDocumentMailgetAll(compareID) {
     this.apiServer.post('/XCS60/MasDocumentMaingetAll', {DocumentType: 10, ReferenceCode: compareID})
         .subscribe(response => response.length > 0
@@ -324,12 +307,16 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
                   , error => console.log(error));
   }
 
-  viewData(CompareID: string = '', CompareDetailID: string = '') {
+  viewData(CompareDetailID: any = '') {
     this.router.navigate(['/reduction/manage', 'V', this.compareID, CompareDetailID]);
   }
 
-  editData(CompareID: string, CompareDetailID: string) {
+  editData(CompareDetailID: any) {
     this.router.navigate(['/reduction/manage', 'E', this.compareID, CompareDetailID]);
+  }
+
+  addData(CompareDetailID: any) {
+    this.router.navigate(['/reduction/manage', 'A', this.compareID, '']);
   }
 
   attachFile(file) {
