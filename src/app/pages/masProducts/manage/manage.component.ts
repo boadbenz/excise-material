@@ -222,11 +222,12 @@ export class ManageComponent implements OnInit {
       this.Degree = list.Degree == null ? '' : list.Degree;
       this.ProductDesc = list.ProductDesc == null ? '' : list.ProductDesc;
       this.IsDomestic = list.IsDomestic == null ? '' : list.IsDomestic;
+      this.IsActive = list.IsActive == 1 ? true : false;
 
-      this.IsDomesticvalue = this.IsDomesticOpt.filter(f =>  f.IsDomestic ==  this.IsDomestic )
-      console.log('this.IsDomesticOpt : ',this.IsDomesticOpt);
-      console.log('this.IsDomestic : ',this.IsDomestic);
-      console.log('this.IsDomesticvalue : ',this.IsDomesticvalue);
+      this.IsDomesticvalue = this.IsDomesticOpt.filter(f => f.IsDomestic == this.IsDomestic)
+      console.log('this.IsDomesticOpt : ', this.IsDomesticOpt);
+      console.log('this.IsDomestic : ', this.IsDomestic);
+      console.log('this.IsDomesticvalue : ', this.IsDomesticvalue);
       console.log('MasProductgetByCon R : ', list)
       this.preLoaderService.setShowPreloader(false);////
     });
@@ -369,6 +370,7 @@ export class ManageComponent implements OnInit {
   // }
   //********************************End********************************* */
   onChecked(obj: any, isChecked: boolean) {
+    console.log('isChecked : ',isChecked)
     isChecked == true ? this.IsActive = 1 : this.IsActive = 0;
   }
 

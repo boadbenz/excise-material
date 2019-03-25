@@ -227,8 +227,8 @@
       </div>
       <div class="row">
         <div class="custom-control custom-checkbox col-form-label col-md-6">
-          <input class="filled-in chk-col-indigo" name="Isactive" id="Isactive" type="checkbox" 
-            ngModel (ngModelChange)="onChecked(obj, $event)">
+          <input class="filled-in chk-col-indigo" [checked]="IsActive" name="Isactive" id="Isactive" type="checkbox" 
+            ngModel (ngModelChange)="onChecked(obj, $event)" [disabled]="showEditField">
           <label class="m-t-10 m-b-0" for="Isactive">ใช้งาน</label>
         </div>
       </div>
