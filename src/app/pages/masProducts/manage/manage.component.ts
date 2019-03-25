@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
@@ -22,11 +22,12 @@ import 'rxjs/add/observable/of';
   styleUrls: ['./manage.component.scss'],
   encapsulation: ViewEncapsulation.Emulated
 })
-export class ManageComponent implements OnInit {
+export class ManageComponent implements OnInit, OnDestroy {
   private onPrintSubscribe: any;
   private onSaveSubscribe: any;
   private onCancelSubscribe: any;
   private onDeleSubscribe: any;
+  private onEditSubscribe: any;
 
   //var of api
   DutyGroup: any;
@@ -100,20 +101,24 @@ export class ManageComponent implements OnInit {
 
     this.navService.showFieldEdit.subscribe(p => {
       this.showEditField = p;
-      switch (p) {
-        case false: {
-          this.OnPageloadModeC();
-          break;
-        } default: {
-          break;
-        }
-      }
-
-      // if (!p) {
-      //   console.log('edit p :', p)
-      //   this.OnPageloadModeC();
-      // }
     });
+
+    this.onEditSubscribe = this.navService.onEdit.subscribe(status => {
+      if (status && localStorage.programcode == 'ILG60-99-01') {
+        this.navService.setOnEdit(false);
+        console.log('onEdit.sub : ', status)
+        console.log('this.mode in edit : ', this.mode)
+        switch (this.mode) {
+          case 'R': {
+            this.OnPageloadModeC();
+            break;
+          } default: {
+            break;
+          }
+        }
+
+      }
+    })
 
     this.onPrintSubscribe = this.navService.onPrint.subscribe(status => {
       if (status && localStorage.programcode == 'ILG60-99-01') {
@@ -370,7 +375,7 @@ export class ManageComponent implements OnInit {
   // }
   //********************************End********************************* */
   onChecked(obj: any, isChecked: boolean) {
-    console.log('isChecked : ',isChecked)
+    console.log('isChecked : ', isChecked)
     isChecked == true ? this.IsActive = 1 : this.IsActive = 0;
   }
 
@@ -522,5 +527,6 @@ export class ManageComponent implements OnInit {
     if (this.onSaveSubscribe) { this.onSaveSubscribe.unsubscribe(); }
     if (this.onCancelSubscribe) { this.onCancelSubscribe.unsubscribe(); }
     if (this.onDeleSubscribe) { this.onDeleSubscribe.unsubscribe(); }
+    if (this.onEditSubscribe) { this.onEditSubscribe.unsubscribe(); }
   }
 }
