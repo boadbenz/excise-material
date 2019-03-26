@@ -30,6 +30,8 @@ export class PrintDocModalComponent implements OnInit {
     FirstName: String;
     LastName: String;
 
+    isSelectedAll: boolean = false;
+
     @Input() dataForCompare: string;
     @Input() ArrestCode: string;
 
@@ -111,9 +113,13 @@ export class PrintDocModalComponent implements OnInit {
             this.printDoc[index].checked = false;
         }
     }
+    toggleAll(selected, items){
+        console.log('toggleAll')
+        console.log('selected :',selected)
+        console.log('item :',items)
+    }
 
     async onPrint(form: any) {
-
 
         for (var i = 0; i < this.printDoc.length; i++) {
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == '2/53') {
