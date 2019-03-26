@@ -312,7 +312,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   editData(CompareDetailID: any) {
-    this.router.navigate(['/reduction/manage', 'E', this.compareID, CompareDetailID]);
+    this.router.navigate(['/reduction/manage', 'E', this.compareID, '']);
   }
 
   addData(CompareDetailID: any) {
