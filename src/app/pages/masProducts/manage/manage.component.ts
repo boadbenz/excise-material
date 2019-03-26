@@ -303,7 +303,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log('selectItemBrandMain ele.item : ', ele.item);
   }
   formatterBrandMain = (x: { BrandMainENG: string, BrandMainThai: string }) =>
-    `${x.BrandMainENG} ${x.BrandMainThai}`;
+    `${x.BrandMainENG == null ? '' : x.BrandMainENG} ${x.BrandMainThai == null ? '' : x.BrandMainThai}`;
   // BrandMainonAutoChange(value: string) { //พิม
   //   if (value == '') {
   //     this.BrandMainoptions = [];
@@ -329,7 +329,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log('selectItemBrandSecond ele.item : ', ele.item);
   }
   formatterBrandSecond = (x: { BrandSecondNameENG: string, BrandSecondNameThai: string }) =>
-    `${x.BrandSecondNameENG} ${x.BrandSecondNameThai}`;
+    `${x.BrandSecondNameENG == null ? '' : x.BrandSecondNameENG} ${x.BrandSecondNameThai == null ? '' : x.BrandSecondNameThai}`;
   // BrandSecondonAutoChange(value: string) { //พิม
   //   if (value == '') {
   //     this.BrandSecondoptions = [];
