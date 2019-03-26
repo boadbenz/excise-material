@@ -200,7 +200,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.sub = this.activeRoute.params.subscribe(p => {
       this.mode = p['mode'];
       console.log('active route mode ; ', this.mode)
-      //alert(this.mode);
       if (p['mode'] === 'C') {
         console.log('in active_route mode C')
         this.OnPageloadModeC();
