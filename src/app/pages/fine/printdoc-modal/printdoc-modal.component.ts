@@ -106,25 +106,40 @@ export class PrintDocModalComponent implements OnInit {
         }
     }
 
-    onSelect(index) {
-        if (this.printDoc[index].checked == false) {
-            this.printDoc[index].checked = true;
-        } else if (this.printDoc[index].checked == true) {
-            this.printDoc[index].checked = false;
+    onSelect(index, all) {
+        if (index > -1 && index != null) {
+            if (this.printDoc[index].checked == false) {
+                this.printDoc[index].checked = true;
+            } else if (this.printDoc[index].checked == true) {
+                this.printDoc[index].checked = false;
+            }
+        } else if (all.length > 0) {
+            if (this.isSelectedAll == true) {
+                this.isSelectedAll = false;
+                for (let i = 0; i < all.length; i++) {
+                    this.printDoc[i].checked = false;
+                }
+            }
+            else if (this.isSelectedAll == false) {
+                this.isSelectedAll = true;
+                for (let i = 0; i < all.length; i++) {
+                    this.printDoc[i].checked = true;
+                }
+            }
         }
     }
-    toggleAll(selected, items){
-        console.log('toggleAll')
-        console.log('selected :',selected)
-        console.log('item :',items)
-    }
+    // toggleAll(selected, items) {
+    //     console.log('toggleAll')
+    //     console.log('selected :', selected)
+    //     console.log('item :', items)
+    // }
 
     async onPrint(form: any) {
 
         for (var i = 0; i < this.printDoc.length; i++) {
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == '2/53') {
                 this.preloader.setShowPreloader(true);
-                console.log("onSelect : ",this.printDoc[i])
+                console.log("onSelect : ", this.printDoc[i])
                 this.ReportForm06_001(this.printDoc[i].CompareDetailID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
                     const fileURL = URL.createObjectURL(file);
@@ -134,7 +149,7 @@ export class PrintDocModalComponent implements OnInit {
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'Receipt') {
                 this.preloader.setShowPreloader(true);
-                console.log("onSelect : ",this.printDoc[i])
+                console.log("onSelect : ", this.printDoc[i])
                 this.ReportForm06_002(this.printDoc[i].CompareDetailID, this.printDoc[i].CompareReceiptID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
                     const fileURL = URL.createObjectURL(file);
@@ -144,7 +159,7 @@ export class PrintDocModalComponent implements OnInit {
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == '2/52') {
                 this.preloader.setShowPreloader(true);
-                console.log("onSelect : ",this.printDoc[i])
+                console.log("onSelect : ", this.printDoc[i])
                 this.ReportForm06_003(this.printDoc[i].CompareID, this.printDoc[i].IndictmentID, this.printDoc[i].ArrestCode).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
                     const fileURL = URL.createObjectURL(file);
@@ -154,7 +169,7 @@ export class PrintDocModalComponent implements OnInit {
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD2') {
                 this.preloader.setShowPreloader(true);
-                console.log("onSelect KD2 : ",this.printDoc[i])
+                console.log("onSelect KD2 : ", this.printDoc[i])
                 this.ReportForm06_005(this.printDoc[i].CompareID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
                     const fileURL = URL.createObjectURL(file);
@@ -164,7 +179,7 @@ export class PrintDocModalComponent implements OnInit {
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD3') {
                 this.preloader.setShowPreloader(true);
-                console.log("onSelect : ",this.printDoc[i])
+                console.log("onSelect : ", this.printDoc[i])
                 this.ReportForm06_006(this.printDoc[i].CompareDetailID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
                     const fileURL = URL.createObjectURL(file);
@@ -174,7 +189,7 @@ export class PrintDocModalComponent implements OnInit {
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD4') {
                 this.preloader.setShowPreloader(true);
-                console.log("onSelect : ",this.printDoc[i])
+                console.log("onSelect : ", this.printDoc[i])
                 this.ReportForm06_007(this.printDoc[i].CompareDetailID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
                     const fileURL = URL.createObjectURL(file);
@@ -184,7 +199,7 @@ export class PrintDocModalComponent implements OnInit {
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD5') {
                 this.preloader.setShowPreloader(true);
-                console.log("onSelect : ",this.printDoc[i])
+                console.log("onSelect : ", this.printDoc[i])
                 this.ReportForm06_008(this.printDoc[i].CompareDetailID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
                     const fileURL = URL.createObjectURL(file);
@@ -194,7 +209,7 @@ export class PrintDocModalComponent implements OnInit {
             }
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'KD6') {
                 this.preloader.setShowPreloader(true);
-                console.log("onSelect : ",this.printDoc[i])
+                console.log("onSelect : ", this.printDoc[i])
                 this.ReportForm06_009(this.printDoc[i].CompareDetailID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
                     const fileURL = URL.createObjectURL(file);
@@ -431,7 +446,7 @@ export class PrintDocModalComponent implements OnInit {
     }
 
     ReportForm06_005(CompareID: string) {
-        console.log(' ReportForm06_005 CompareID : ' ,CompareID)
+        console.log(' ReportForm06_005 CompareID : ', CompareID)
         const params = {
             CompareID: CompareID
         };
