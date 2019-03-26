@@ -1021,7 +1021,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.oStockBalance = {
                 StockID: item.StockID,
                 WarehouseID: this.WarehouseID,
-                EvidenceInItemID: item.EvidenceOutStockBalance[0].EvidenceInItemID,
+                EvidenceInItemID: item.EvidenceInItemID,
                 BalanceQty: item.BalanceQty,
                 IsFinish: flg,
             }
@@ -2005,6 +2005,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                             LawsuitNo: LawsuitNo,
                             DeliveryNo: f.DeliveryNo,
                             EvidenceInItemCode: element.EvidenceInItemCode,
+                            EvidenceInItemID: element.EvidenceInItemID,
                             ProductDesc: element.ProductDesc,
                             GroupCode: element.GroupCode,
                             IsDomestic: element.IsDomestic,
@@ -2076,6 +2077,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             StockID: event.StockID,
             EvidenceOutItemID: ItemID,
             EvidenceInItemCode: event.EvidenceInItemCode,
+            EvidenceInItemID: event.EvidenceInItemID,
             ProductSeq: aIndex,
             EvidenceOutID: EviOutID,
             ProductDesc: event.ProductDesc,
@@ -2108,7 +2110,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             QtyUnit: event.BalanceQtyUnit,
             IsNewItem: IsNewItem,
             IsDelItem: IsDelItem,
-            EvidenceStockBalance: []
+            EvidenceOutStockBalance: []
         }
     }
 
