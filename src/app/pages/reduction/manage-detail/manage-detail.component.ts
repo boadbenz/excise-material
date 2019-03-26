@@ -239,6 +239,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     } else if (this.activeRoute.snapshot.paramMap.get('mode') === 'E') {
       this.navService.setEditField(false);
       this.navService.setSendIncomeButton(false);
+    } else if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
+      this.navService.setEditField(false);
+      this.navService.setSendIncomeButton(false);
     }
 
     this.compareID = this.activeRoute.snapshot.paramMap.get('compareid');
@@ -508,7 +511,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.viewMode = true;
     this.fineIdex = index;
     await this.GetEditApproveCaseComparisonData(CompareDetailID);
-    if (this.activeRoute.snapshot.paramMap.get('mode') === 'V' && this.mode === 'E') {
+    if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
       this.viewMode = false;
       this.EditApproveCaseComparisonPopUp.departmentOrders = '';
       this.EditApproveCaseComparisonPopUp.CommandDate = '';
@@ -557,6 +560,44 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       (this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareLawbreaker[0].LawbreakerFirstName || '') + ' ' +
       (this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareLawbreaker[0].LawbreakerLastName || '');
 
+      if (this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareStaff.length > 0) {
+        const staffs = this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareStaff;
+        const offerstaff = staffs.find(st => {
+          return st.ContributorID === 39;
+        });
+        this.AdjustCompareStaff[0] = offerstaff || {};
+        if (offerstaff != null) {
+          this.EditApproveCaseComparisonData[CompareDetailID].offerstaff
+              = offerstaff.TitleName + offerstaff.FirstName + ' ' + offerstaff.LastName || '';
+          this.EditApproveCaseComparisonData[CompareDetailID].offerPosition = offerstaff.PositionName || '';
+          this.EditApproveCaseComparisonData[CompareDetailID].offerDepartment = offerstaff.DepartmentName || '';
+        }
+
+        const staff = staffs.find(st => {
+          return st.ContributorID === 40;
+        });
+        this.AdjustCompareStaff[1] = staff || {};
+        if (staff != null) {
+          this.EditApproveCaseComparisonData[CompareDetailID].staff
+              = staff.TitleName + staff.FirstName + ' ' + staff.LastName || '';
+          this.EditApproveCaseComparisonData[CompareDetailID].position = staff.PositionName || '';
+          this.EditApproveCaseComparisonData[CompareDetailID].department = staff.DepartmentName || '';
+        }
+
+        const approveStaff = staffs.find(st => {
+          return st.ContributorID === 41;
+        });
+        this.AdjustCompareStaff[2] = approveStaff || {};
+        if (approveStaff != null) {
+          this.EditApproveCaseComparisonData[CompareDetailID].approveStaff
+              = approveStaff.TitleName + approveStaff.FirstName + ' ' + approveStaff.LastName || '';
+          this.EditApproveCaseComparisonData[CompareDetailID].approvePosition = approveStaff.PositionName || '';
+          this.EditApproveCaseComparisonData[CompareDetailID].approveDepartment = approveStaff.DepartmentName || '';
+        }
+      }
+
+      console.log(this.AdjustCompareStaff);
+
       this.EditApproveCaseComparisonPopUp = this.EditApproveCaseComparisonData[CompareDetailID];
       console.log(this.EditApproveCaseComparisonData);
       console.log(this.EditApproveCaseComparisonPopUp);
@@ -579,13 +620,6 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   }
 
   public checkPopUp(detailID: any): any {
-    const _AdjustCompareStaff = this.AdjustCompareStaff.filter((elemet, i) => {
-      if (i === 0 || elemet.ContibutorID !== this.AdjustCompareStaff[i - 1].ContibutorID) {
-        return elemet;
-      }
-    });
-
-    this.AdjustCompareStaff = _AdjustCompareStaff;
     this.adjustArrest.Fact = this.EditApproveCaseComparisonPopUp.Fact;
     console.log(this.EditApproveCaseComparisonPopUp.PaymentFineDate[0]);
     this.adjustArrest.PaymentFineDate = moment(this.EditApproveCaseComparisonPopUp.PaymentFineDate[0].jsdate).format('YYYY-MM-DD') + ' '
@@ -813,7 +847,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     console.log(adjustData);
 
     const param = {
-      CompareDetailID: this.activeRoute.snapshot.paramMap.get('mode') === 'V' ? this.compareIdDetail : '',
+      CompareDetailID: this.activeRoute.snapshot.paramMap.get('mode') === 'A' ? '' : this.compareIdDetail,
       CompareID: this.compareID,
       IndictmentDetailID: 0,
       CompareAction: '',
@@ -860,7 +894,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.CompareReceipt = this.CompareReceipt.filter((element, i) => {
       if (element.LawbreakerFirstName) {
         Object.assign(element, {
-          CompareReceiptID: this.AdjustCompareDetail[0].AdjustCompareDetailReceipt[i].CompareReceiptID,
+          CompareReceiptID: this.activeRoute.snapshot.paramMap.get('mode') === 'A' ? '' :
+          this.AdjustCompareDetail[0].AdjustCompareDetailReceipt[0].CompareReceiptID,
           ReceiptType: this.mode,
           ReceiptDate: moment().format('YYYY-MM-DD HH:mm:ss') + ' +00:00',
           StationCode: this.EditApproveCaseComparisonPopUp.ApproveStationCode,
@@ -880,12 +915,11 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     param.AdjustCompareStaff = this.AdjustCompareStaff;
     // tslint:disable-next-line:radix
     param.CompareID = this.compareID;
-    // param. = this.CompareReason;
     console.log(param);
-
+return;
     try {
       let data;
-      if (this.activeRoute.snapshot.paramMap.get('mode') === 'E') {
+      if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
         data = await this.apiService.post('/XCS60/AdjustCompareDetailinsAll', param).toPromise();
       } else {
         data = await this.apiService.post('/XCS60/AdjustCompareDetailupdByCon', param).toPromise();
