@@ -641,7 +641,42 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     return 0;
   }
 
-  public checkPopUp(detailID: any): any {
+  public async checkPopUp(detailID: any): Promise<any> {
+    let checked = true;
+    if (this.EditApproveCaseComparisonPopUp.offerstaff === '' || this.EditApproveCaseComparisonPopUp.offerstaff == null) {
+      await document.getElementById('offerstaff').focus();
+      await document.getElementById('offerstaff').blur();
+      checked = false;
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.staff === '' || this.EditApproveCaseComparisonPopUp.staff == null) {
+      await document.getElementById('staff').focus();
+      await document.getElementById('staff').blur();
+      checked = false;
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.approveStaff === '' || this.EditApproveCaseComparisonPopUp.approveStaff == null) {
+      await document.getElementById('approveStaff').focus();
+      await document.getElementById('approveStaff').blur();
+      checked = false;
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.Fact === '' || this.EditApproveCaseComparisonPopUp.Fact == null) {
+      await document.getElementById('Fact').focus();
+      await document.getElementById('Fact').blur();
+      checked = false;
+    }
+
+    if (this.EditApproveCaseComparisonPopUp.AdjustReason === '' || this.EditApproveCaseComparisonPopUp.AdjustReason == null) {
+      await document.getElementById('AdjustReason').focus();
+      await document.getElementById('AdjustReason').blur();
+      checked = false;
+    }
+
+    if (!checked) {
+      return;
+    }
+
     this.adjustArrest.Fact = this.EditApproveCaseComparisonPopUp.Fact;
     console.log(this.EditApproveCaseComparisonPopUp.PaymentFineDate[0]);
     this.adjustArrest.PaymentFineDate = moment(this.EditApproveCaseComparisonPopUp.PaymentFineDate[0].jsdate).format('YYYY-MM-DD') + ' '
@@ -739,8 +774,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     const Fine = [];
 
     let cansave = true;
-    let document = true;
-    let document_name = true;
+    let docs = true;
+    let docs_name = true;
     let TreasuryMoney = 0;
     let BribeMoney = 0;
     let RewardMoney = 0;
@@ -748,15 +783,20 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     let ProductFine = 0;
     for (let i = 0; i < this.adjustFine.length; i++) {
       console.log(this.adjustFine[i].CompareFine);
+      const fieldId = document.getElementById('fineText' + i);
       if (this.adjustFine[i].CompareFine == null || this.adjustFine[i].CompareFine === '') {
         swal('', 'ไม่ได้กรอกข้อมูลการปรับเพิ่ม-ลด กรุณากรอกข้อมูล', 'error');
         cansave = false;
+        await fieldId.focus();
+        await fieldId.blur();
         break;
       }
 
       if (isNaN(this.adjustFine[i].CompareFine)) {
         swal('', 'ข้อมูลการปรับเพิ่ม-ลด ต้องเป็นตัวเลขเท่านั้น', 'error');
         cansave = false;
+        await fieldId.focus();
+        await fieldId.blur();
         break;
       }
 
@@ -815,24 +855,24 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     if (this.AllAddFiles.length === 0) {
       // swal('', 'กรุณาแนบเอกสาร', 'error');
-      document = false;
+      docs = false;
     }
 
     for (let j = 0; j < this.AllAddFiles.length; j++) {
       if (this.AllAddFiles[j].DocumentName == null || this.AllAddFiles[j].DocumentName === '' || !this.AllAddFiles[j].DocumentName) {
         // swal('', 'กรุณากรอกข้อมูลชื่อเอกสาร', 'error');
-        document_name = false;
+        docs_name = false;
       }
 
       if (this.AllAddFiles[j].FilePath == null || this.AllAddFiles[j].FilePath === '' || !this.AllAddFiles[j].FilePath) {
         // swal('', 'กรุณาแนบเอกสาร', 'error');
-        document = false;
+        docs = false;
         break;
       }
     }
 
-    if (!document || !document_name) {
-      if (!document) {
+    if (!docs || !docs_name) {
+      if (!docs) {
         swal({
           title: 'ไม่มีเอกสารแนบ?',
           text: 'ต้องการบันทึกข้อมูลจริงหรือไม่!',
@@ -928,7 +968,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     // tslint:disable-next-line:radix
     param.CompareID = this.compareID;
     console.log(param);
-return;
+
     try {
       let data;
       if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {

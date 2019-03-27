@@ -222,7 +222,11 @@
                 <td style="max-width: 490px; overflow-x: scroll;">{{item.ProductDesc}}</td>
                 <td style="max-width: 120px;">{{item.ProductFine}}</td>
                 <td style="max-width: 120px;">
-                  <input type="number" [(ngModel)]="item.CompareFine" name="CompareFine" class="form-control" [disabled]="showField" (keyup)="enterNewValue($event, i)" value="0">
+                  <input type="number" [(ngModel)]="item.CompareFine" name="CompareFine" 
+                    class="form-control" [attr.id]="'fineText' + i" [disabled]="showField"
+                    (keyup)="enterNewValue($event, i)" value="0"
+                    required="true"
+                  >
                 </td>
                 <td>{{item.CompareFineDiff}}</td>
                 <td class="status-increase" *ngIf="item.CompareFineStatus">ปรับเพิ่ม</td>
@@ -590,6 +594,7 @@
                 <label class="col-form-label col-md-4">ผู้เสนอพิจารณาเห็นชอบ : </label>
                 <div class="col-md-8">
                   <input type="text" class="form-control"
+                          id="offerstaff"
                           [(ngModel)]="EditApproveCaseComparisonPopUp.offerstaff" name="offerstaff"
                           placeholder="พิมพ์ข้อความ" aria-label="Number"
                           matInput [matAutocomplete]="autoStaff1"
@@ -635,12 +640,14 @@
                 <label class="col-form-label col-md-4">ผู้พิจารณาเห็นชอบ : </label>
                 <div class="input-group col-md-8">
                   <input type="text" class="form-control"
+                          id="staff"
                           [(ngModel)]="EditApproveCaseComparisonPopUp.staff" name="staff"
                           placeholder="พิมพ์ข้อความ" aria-label="Number"
                           matInput [matAutocomplete]="autoStaff2"
                           (input)="StaffonAutoChange($event.target.value)"
                           (focus)="StaffonAutoFocus($event.target.value)"
-                          [disabled]="showField || (EditApproveCaseComparisonPopUp.ApproveType) == 1" [required]="(EditApproveCaseComparisonPopUp.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 2)">
+                          [disabled]="showField || (EditApproveCaseComparisonPopUp.ApproveReportType) == 1" 
+                          [required]="(EditApproveCaseComparisonPopUp.ApproveReportType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 2)">
                   <mat-autocomplete #autoStaff2="matAutocomplete">
                     <mat-option *ngFor="let sOption of Staffoptions"
                                 [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -680,12 +687,14 @@
                 <label class="col-form-label col-md-4">ผู้มีอำนาจอนุมัติ : </label>
                 <div class="input-group col-md-8">
                   <input type="text" class="form-control"
-                    [(ngModel)]="EditApproveCaseComparisonPopUp.approveStaff" name="staff"
+                    id="approveStaff"
+                    [(ngModel)]="EditApproveCaseComparisonPopUp.approveStaff" name="approveStaff"
                     placeholder="พิมพ์ข้อความ" aria-label="Number"
                     matInput [matAutocomplete]="autoStaff3"
                     (input)="StaffonAutoChange($event.target.value)"
                     (focus)="StaffonAutoFocus($event.target.value)"
-                    [disabled]="showField || (EditApproveCaseComparisonPopUp.ApproveType) == 1" [required]="(EditApproveCaseComparisonPopUp.ApproveType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 3)">
+                    [disabled]="showField || (EditApproveCaseComparisonPopUp.ApproveReportType) == 1" 
+                    [required]="(EditApproveCaseComparisonPopUp.ApproveReportType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 3)">
                 <mat-autocomplete #autoStaff3="matAutocomplete">
                   <mat-option *ngFor="let sOption of Staffoptions"
                     [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -745,7 +754,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">ข้อเท็จจริงเกี่ยวกับความผิดโดยละเอียด : </label>
                 <div class="col-md-8">
-                  <textarea class="form-control" [disabled]="viewMode" [(ngModel)]="EditApproveCaseComparisonPopUp.Fact" rows="5"></textarea>
+                  <textarea class="form-control" id="Fact" [disabled]="viewMode" [(ngModel)]="EditApproveCaseComparisonPopUp.Fact" rows="5" [required]="true"></textarea>
                 </div>
               </div>
             </div>
@@ -756,7 +765,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">เหตุผลที่ควรเปรียบเทียบคดีและ/หรือจัดการของกลาง :</label>
                 <div class="col-md-8">
-                  <textarea class="form-control" [disabled]="viewMode" [(ngModel)]="EditApproveCaseComparisonPopUp.AdjustReason" rows="5"></textarea>
+                  <textarea class="form-control" id="AdjustReason" [disabled]="viewMode" [(ngModel)]="EditApproveCaseComparisonPopUp.AdjustReason" rows="5" [required]="true"></textarea>
                 </div>
               </div>
             </div>
@@ -766,7 +775,7 @@
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn waves-effect waves-light btn-navy" 
-                data-toggle="modal" data-target="#approvePopup" 
+                [attr.data-toggle]="EditApproveCaseComparisonPopUp.AdjustReason != '' && EditApproveCaseComparisonPopUp.Fact != '' && EditApproveCaseComparisonPopUp.approveStaff != '' && EditApproveCaseComparisonPopUp.staff != '' && EditApproveCaseComparisonPopUp.offerstaff != '' ? 'modal' : 'on-model'" data-target="#approvePopup" 
                 (click)="checkPopUp(EditApproveCaseComparisonPopUp.CompareDetailID)"
         >
                 บันทึก
