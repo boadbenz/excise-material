@@ -218,6 +218,15 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   };
 
   public fineIdex;
+
+  public unsub = {
+    cancel: null,
+    edit: null,
+    incame: null,
+    save: null,
+    delete: null,
+    print: null
+  }
   constructor(
     private router: Router,
     private activeRoute: ActivatedRoute,
@@ -231,6 +240,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   public async ngOnInit() {
     this.preloaderService.setShowPreloader(true);
+    this.navService.setOnCancel(false);
     this.sidebarService.setVersion('0.0.3.21');
     this.mode = this.activeRoute.snapshot.paramMap.get('mode');
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
@@ -249,9 +259,10 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.indictmentID = this.activeRoute.snapshot.paramMap.get('compareid'); // shoud it differren
 
     // set show button
-    this.navServiceSub = this.navService.onCancel.subscribe(status => {
+    this.unsub.cancel = this.navService.onCancel.subscribe(async status => {
+      console.log('cancel status -> ', status);
       if (status) {
-        swal({
+        await swal({
           title: '',
           text: 'ยืนยันการทำรายการหรือไม่',
           type: 'warning',
@@ -265,12 +276,19 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
             this.mode = 'V';
             this.navService.setEditField(true);
             this.navService.setDeleteButton(true);
+            if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
+              this.router.navigate(['/reduction/manage', 'R'], { queryParams: {CompareID: this.compareID} });
+            }
+          } else {
+            this.mode = 'E';
+            this.navService.setEditField(false);
+            this.navService.setDeleteButton(false);
           }
         });
       }
     });
 
-    this.navServiceSub = this.navService.showFieldEdit.subscribe(status => {
+    this.unsub.edit = this.navService.showFieldEdit.subscribe(status => {
       this.showField = status;
       if (!this.showField) {
         this.navService.setDeleteButton(false);
@@ -293,13 +311,13 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.navServiceSub = this.navService.onSendIncome.subscribe(status => {
+    this.unsub.incame = this.navService.onSendIncome.subscribe(status => {
       if (status) {
         this.sentInCome();
       }
     });
 
-    this.navServiceSub = this.navService.onDelete.subscribe(async status => {
+    this.unsub.delete = this.navService.onDelete.subscribe(async status => {
       if (status) {
         await this.DeletData();
       }
@@ -312,13 +330,13 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     await this.setDocument();
     await this.GetAdjustNoticegetByArrestCode();
 
-    this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
+    this.unsub.save = this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
       if (status) {
           this.checkSave();
       }
     });
 
-    this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
+    this.unsub.print = this.navService.onPrint.subscribe(async status => {
       if (status) {
         await this.navService.setOnPrint(false);
         this.buttonPrint()
@@ -477,16 +495,12 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     }).then(async (result) => {
       if (result.value) {
         let isDelete = false;
-        for (let i = 0; i < this.adjustArrest.AdjustCompareReceiptCR.length; i++) {
-          const deleteData = await this.apiService.post('/XCS60/AdjustCompareDetailUpdDelete', {
-            CompareDetailID: this.adjustArrest.AdjustCompareReceiptCR[i].CompareDetailID
-          }).toPromise();
+        const deleteData = await this.apiService.post('/XCS60/AdjustCompareDetailUpdDelete', {
+          CompareDetailID: this.compareIdDetail
+        }).toPromise();
 
-          if (deleteData) {
-            isDelete = true;
-          } else {
-            break;
-          }
+        if (deleteData) {
+          isDelete = true;
         }
 
         if (isDelete) {
@@ -651,16 +665,6 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   public sentInCome(): void {
     this.router.navigate(['/income/manage', 'R', this.compareID]);
-  }
-
-  public ngOnDestroy() {
-    // hind ส่งรายได้
-    this.navService.setSendIncomeButton(false);
-    // hide ปุ่มลบ
-    this.navService.setDeleteButton(false);
-
-    this.navServiceSub.unsubscribe();
-    this.onPrintSubscribe.unsubscribe();
   }
 
   public async MasStaffMaingetAll(): Promise<void> {
@@ -1181,6 +1185,24 @@ return;
 
   changeReceiptChanel(event, i) {
     this.CompareReceipt[i].ReceiptChanel = event.target.value;
+  }
+
+  public ngOnDestroy() {
+    // hind ส่งรายได้
+    this.navService.setSendIncomeButton(false);
+    // hide ปุ่มลบ
+    this.navService.setDeleteButton(false);
+    // hide ปุ่มยกเลิก
+    this.navService.setCancelButton(false);
+
+    this.navService.setOnCancel(false);
+
+    this.unsub.cancel.unsubscribe();
+    this.unsub.delete.unsubscribe();
+    this.unsub.edit.unsubscribe();
+    this.unsub.incame.unsubscribe();
+    this.unsub.print.unsubscribe();
+    this.unsub.save.unsubscribe();
   }
 
 }
