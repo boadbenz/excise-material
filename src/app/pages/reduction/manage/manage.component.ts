@@ -129,7 +129,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     ) { }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.3.21');
+    this.sidebarService.setVersion('0.0.3.27');
     localStorage.setItem('programcode', 'ILG60-09-00');
     if (this.activeRoute.snapshot.queryParamMap.get('CompareID') == null
       || this.activeRoute.snapshot.queryParamMap.get('CompareID') === '') {
@@ -312,11 +312,13 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   editData(CompareDetailID: any) {
-    this.router.navigate(['/reduction/manage', 'E', this.compareID, '']);
+    this.router.navigate(['/reduction/manage', 'E', this.compareID, CompareDetailID]);
   }
 
-  addData(CompareDetailID: any) {
-    this.router.navigate(['/reduction/manage', 'A', this.compareID, '']);
+  addData() {
+    const dataLength = this.detailData.AdjustCompareReceipt.length;
+    const compareDetailID = this.detailData.AdjustCompareReceipt[dataLength - 1 ].CompareDetailID;
+    this.router.navigate(['/reduction/manage', 'A', this.compareID, compareDetailID]);
   }
 
   attachFile(file) {
