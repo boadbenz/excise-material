@@ -437,6 +437,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
 
   public async GetAdjustCompareDetailgetByCon(compareIdDetail: any = null): Promise<void> {
+    this.AdjustCompareDetail = [];
     try {
       if (compareIdDetail !== '') {
         const response = await this.apiService.post('/XCS60/AdjustCompareDetailgetByCon',
@@ -526,6 +527,13 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.viewMode = false;
     this.fineIdex = index;
     await this.GetEditApproveCaseComparisonData(CompareDetailID);
+    if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
+      this.viewMode = false;
+      this.EditApproveCaseComparisonPopUp.departmentOrders = '';
+      this.EditApproveCaseComparisonPopUp.CommandDate = '';
+      this.EditApproveCaseComparisonPopUp.Fact = '';
+      this.EditApproveCaseComparisonPopUp.AdjustReason = '';
+    }
     this.changApproveReportType();
   }
 
@@ -758,7 +766,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
       adjustData.push({
         CompareFineID: '',
-        CompareDetailID: this.adjustFine[i].CompareDetailID,
+        CompareDetailID: this.activeRoute.snapshot.paramMap.get('mode') === 'A' ? '' : this.adjustFine[i].CompareDetailID,
         ProductID: this.adjustFine[i].ProductID,
         ProductFine: this.adjustFine[i].CompareFine,
         VatValue: 500,
@@ -939,9 +947,9 @@ return;
             this.navService.setEditField(true);
             this.navService.setSendIncomeButton(true);
 
-            // await this.GetAdjustCompareCRgetByCon(this.compareID);
-            // await this.GetAdjustCompareDetailgetByCon (this.compareID);
-            // await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
+            await this.GetAdjustCompareCRgetByCon(this.compareID);
+            await this.GetAdjustCompareDetailgetByCon (this.compareID);
+            await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
 
             console.log('success');
           }
