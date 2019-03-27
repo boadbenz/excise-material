@@ -241,7 +241,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public async ngOnInit() {
     this.preloaderService.setShowPreloader(true);
     this.navService.setOnCancel(false);
-    this.sidebarService.setVersion('0.0.3.21');
+    this.sidebarService.setVersion('0.0.3.27');
     this.mode = this.activeRoute.snapshot.paramMap.get('mode');
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
@@ -385,6 +385,11 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         } || ''));
       }
 
+      this.adjustFine = this.adjustFine.filter(el => {
+        // tslint:disable-next-line:triple-equals
+        return el.CompareDetailID == this.compareIdDetail;
+      });
+
       this.adjustFine.forEach((e, i) => {
         this.calAdjustFine(i);
       });
@@ -444,9 +449,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       console.log('กล่องสอง -> ', response);
       this.CompareReceipt = response;
       this.CompareReceipt = this.CompareReceipt.filter(element => {
-        if (element.LawbreakerFirstName) {
-          return element;
-        }
+        // tslint:disable-next-line:triple-equals
+        return element.CompareDetailID == this.compareIdDetail;
       });
     } catch (e) {
       console.log(e);
