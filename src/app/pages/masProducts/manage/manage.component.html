@@ -65,7 +65,7 @@
               [(value)]="BrandMainENG +' '+ BrandMainThai"
               [ngbTypeahead]="searchBrandMain"
               [resultTemplate]="rt1"
-              [disabled]="showEditField"
+              [disabled]="showEditField || disableBrandMain"
               (selectItem)="selectItemBrandMain($event)"
               [inputFormatter]="formatterBrandMain" 
               [ngClass]="{'ng-touched':isRequired}"

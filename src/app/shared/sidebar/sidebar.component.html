@@ -7,12 +7,17 @@
 
         <!-- User profile -->
 
-        <!-- <div class="user-profile" style="background: url(assets/images/background/user-info.jpg) no-repeat;">
+        <div class="user-profile" style="background: url(assets/images/background/user-info.jpg) no-repeat;">
 
-            <div class="profile-img">
-                <img src="assets/images/users/1.jpg" alt="user" /> </div>
+            <!-- <div class="row"> -->
+                <div class="profile-img">
+                    <img src="assets/images/users/1.jpg" alt="user" />
+                </div>
+                <!-- <span class="hide-menu"> test testtest</span> -->
+            <!-- </div> -->
+           
 
-            <div class="profile-text" style="margin-top: -32px; padding-bottom: 0px;">
+            <!-- <div class="profile-text" style="margin-top: -32px; padding-bottom: 0px;">
                 <a href="#" class="dropdown-toggle link u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true"
                     aria-expanded="true" style="padding: 10px;">
                     <span class="caret"></span>
@@ -29,9 +34,9 @@
                         <i class="ti-settings"></i> Account Setting</a>
                     <div class="dropdown-divider"></div>
                 </div>
-            </div>
-        </div> -->
-        
+            </div> -->
+        </div>
+
         <!-- End User profile text-->
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
@@ -41,14 +46,16 @@
                         <strong>1</strong>
                         <span class="hide-menu">งานปราบปราม</span>
                     </a>
-                    <ul aria-expanded="false" class="collapse">
+                    <ul aria-expanded="false" class="collapse ">
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/suppression/investigation/list">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                routerLink="/suppression/investigation/list">
                                 <span>1.1 รายงานการสืบสวน</span>
                             </a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/notice/list']">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                [routerLink]="['/notice/list']">
                                 <!-- <i class="mdi mdi-account-alert"></i> -->
                                 <span>1.2 ใบแจ้งความนำจับ</span>
                             </a>
@@ -145,7 +152,7 @@
                         </li>
                     </ul>
                 </li> -->
-<!-- 
+                <!-- 
                 <li>
                     <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/">
                         
@@ -160,42 +167,50 @@
                     </a>
                     <ul aria-expanded="false" class="collapse">
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/evidenceIn/list">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                routerLink="/evidenceIn/list">
                                 <span>9.1 ตรวจรับของกลางเพื่อเก็บรักษา</span>
                             </a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/evidenceOut/list/11/']">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                [routerLink]="['/evidenceOut/list/11/']">
                                 <span>9.2 คืนของกลาง</span>
                             </a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/evidenceOut/list/12/']">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                [routerLink]="['/evidenceOut/list/12/']">
                                 <span>9.3 จัดเก็บเข้าพิพิธภัณฑ์</span>
                             </a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/evidenceOut/list/13/']">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                [routerLink]="['/evidenceOut/list/13/']">
                                 <span>9.4 ขายทอดตลาด</span>
                             </a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/evidenceOut/list/14/']">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                [routerLink]="['/evidenceOut/list/14/']">
                                 <span>9.5 ทำลายของกลาง</span>
                             </a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/evidenceOut/list/15/']">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                [routerLink]="['/evidenceOut/list/15/']">
                                 <span>9.6 นำของกลางออกจากคลัง</span>
                             </a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/evidenceOut/list/16/']">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                [routerLink]="['/evidenceOut/list/16/']">
                                 <span>9.7 โอนย้ายของกลาง</span>
                             </a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/evidenceStock/list/']">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                [routerLink]="['/evidenceStock/list/']">
                                 <span>9.8 ทะเบียนบัญชีสินค้าและของกลาง</span>
                             </a>
                         </li>
@@ -203,27 +218,29 @@
                 </li>
                 <li>
                     <!-- <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/uac/list"> -->
-                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"> 
-                    <!-- <i class="mdi mdi-account-alert"></i> -->
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                        <!-- <i class="mdi mdi-account-alert"></i> -->
                         <strong>10</strong>
                         <span class="hide-menu">การจัดการสิทธิเข้าถึงข้อมูลระบบผู้กระทำผิด</span>
                     </a>
                     <ul aria-expanded="false" class="collapse">
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/uac/role/list">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                routerLink="/uac/role/list">
                                 <span>10.1 จัดการสิทธิ์ระดับบทบาท</span>
                             </a>
                         </li>
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" [routerLink]="['/uac/useraccount/list']">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                [routerLink]="['/uac/useraccount/list']">
                                 <span>10.2 จัดการสิทธิ์ระดับผู้ใช้</span>
                             </a>
                         </li>
-                        
+
                     </ul>
                 </li>
                 <li>
-                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/report/list">              
+                    <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/report/list">
                         <strong>11</strong>
                         <span class="hide-menu">รายงานส่วนคดี</span>
                     </a>
@@ -235,16 +252,17 @@
                     </a>
                 </li> -->
                 <li>
-                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"> 
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
                         <strong>12</strong>
                         <span class="hide-menu">ข้อมูลหลัก</span>
                     </a>
                     <ul aria-expanded="false" class="collapse">
                         <li>
-                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink="/masProducts/list">
+                            <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active"
+                                routerLink="/masProducts/list">
                                 <span>12.1 ของกลาง</span>
                             </a>
-                        </li>                            
+                        </li>
                     </ul>
                 </li>
                 <a href="javascript:void(0)" class="dropdown-item" [routerLink]="['/logout']">
@@ -259,9 +277,16 @@
     <!-- Bottom points-->
     <div class="sidebar-footer">
         <!-- item-->
-        <span class="link p-3">
-            เวอร์ชั่น {{this.textVersion | async}}
-        </span>
+        <div class="row">
+            <span style="font-size: 11px; float: left; margin-left: 25px">
+                ระบบงานผู้กระทำผิดกฎหมายภาษีสรรพสามิต <br> พ.ร.บ.ภาษีสรรพสามิต พ.ศ. 2560 <br>เวอร์ชั่น 0.0.2.161  
+                | {{this.textVersion | async}}
+            </span>
+        </div>
+        
+        <!-- <span class="link p-3">
+            เวอร์ชั่น 0.0.2.199 | {{this.textVersion | async}}   
+        </span> -->
         <!-- item-->
         <!-- <a href="" class="link" data-toggle="tooltip" title="Email">
             <i class="mdi mdi-gmail"></i>

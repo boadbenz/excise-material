@@ -72,6 +72,8 @@ export class ManageComponent implements OnInit, OnDestroy {
   //dataSet for Upd
   ParamsUpd: any;
 
+  //disable
+  disableBrandMain: boolean;
 
   private sub: any;
   mode: string;
@@ -214,7 +216,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.preLoaderService.setShowPreloader(true);////
 
     await this.masProdService.MasProductgetByCon(ProductID).subscribe(list => {
-      // this.DutyGroup = list
+      console.log('MasProductgetByCon R : ', list)
       this.ProductCode = list.ProductCode == null ? '' : list.ProductCode;
       this.BrandMainENG = list.BrandNameEN == null ? '' : list.BrandNameEN;
       this.BrandMainThai = list.BrandNameTH == null ? '' : list.BrandNameTH;
@@ -229,10 +231,6 @@ export class ManageComponent implements OnInit, OnDestroy {
       this.IsActive = list.IsActive == 1 ? true : false;
 
       this.IsDomesticvalue = this.IsDomesticOpt.filter(f => f.IsDomestic == this.IsDomestic)
-      console.log('this.IsDomesticOpt : ', this.IsDomesticOpt);
-      console.log('this.IsDomestic : ', this.IsDomestic);
-      console.log('this.IsDomesticvalue : ', this.IsDomesticvalue);
-      console.log('MasProductgetByCon R : ', list)
       this.preLoaderService.setShowPreloader(false);////
     });
   }
@@ -258,16 +256,18 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
 
     await this.masProdService.BrandMaingetAll().subscribe(list => {
-      this.BrandMain = list, console.log('BrandMaingetAll C : ', list)
+      this.BrandMain = list, 
+      console.log('BrandMaingetAll C : ', list)
     });
 
     await this.masProdService.BrandSecondgetAll().subscribe(list => {
       this.BrandSecond = list, console.log('BrandSecondgetAll C : ', list)
-      this.preLoaderService.setShowPreloader(false);////
+    this.preLoaderService.setShowPreloader(false);////
     });
 
     this.IsDomesticvalue = this.IsDomesticOpt;
   }
+
 
   //*********************************DutyGroup******************************** */
   searchDutyGroup = (text$) =>
@@ -275,10 +275,25 @@ export class ManageComponent implements OnInit, OnDestroy {
       : this.options = this.DutyGroup.filter(v => (`${v.GroupName}`)
         .toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
   selectItemDutyGroup(ele: any) {
-    console.log('selectItemRegion ele.item : ', ele.item);
+    console.log('selectItemRegion ele.item.GroupCode : ', ele.item.GroupCode);
+    // const GroupCode = ele.item.GroupCode;
+    // this.getBrandMain(GroupCode);
   }
   formatterDutyGroup = (x: { GroupName: string }) =>
     `${x.GroupName}`;
+
+  getBrandMain(GroupCode) {
+    // this.masProdService.BrandMaingetAll(GroupCode).subscribe(list => {
+    //   this.preLoaderService.setShowPreloader(true);////
+    //   this.BrandMain = list.ResponseData, 
+    //   console.log('list.ResponseData : ', list.ResponseData)
+    //   console.log('this.BrandMain : ', list.ResponseCode)
+    //   if(list.ResponseCode == 'OK'){
+    //     console.log('ResponseCode : ', list.ResponseCode)
+    //   }
+    //   this.preLoaderService.setShowPreloader(false);////
+    // });
+  }
   // onAutoChange(value: string) { //พิม
   //   console.log('onAutoChange : ', value)
   //   if (value == '') {

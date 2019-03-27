@@ -40,6 +40,20 @@ export class MasProdService {
     const url = `${appConfig.api7777}/BrandMaingetAll`;
     return this.http.post<BrandMainset>(url, params, this.httpOptions);
   }
+  // BrandMaingetAll(GroupCode) {
+  //   const params = 	{
+  //     "SystemId" : "WSS",
+  //     "Username" : "wss001",
+  //     "Password" : "123456",
+  //     "IpAddress" : "10.11.1.10",
+  //     "RequestData"  : {
+  //       "DUTY_CODE" : `${GroupCode}`,
+  //       "BRAND_MAIN_CODE" : ""
+  //     }
+  //   };
+  //   const url = `http://webtest.excise.go.th/EDRestServicesUAT/prc/InquiryBrandMain`;
+  //   return this.http.post<any>(url, params, this.httpOptions);
+  // }
 
   DutyUnitgetAll() {
     const params = '';
