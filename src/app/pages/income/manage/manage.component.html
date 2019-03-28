@@ -106,7 +106,7 @@
             </div>
 
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">เขียนที่ :
+                <label for="" class="col-lg-2 col-md-4 control-label">ส่วนราชการ :
                 </label>
                 <div class="col-lg-4 col-md-7 col-sm-8">
                     <div class="form-group ">
@@ -226,21 +226,27 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>
+                                        <th style="text-align: center">
                                             <input type="checkbox" id="H_0" class="filled-in chk-col-indigo" name="selectAllChb" [(ngModel)]="selectAllChb" (change)="selectedChkAll();"
                                                 [disabled]="showEditField">
                                             <label for="H_0" class="m-0"></label>
                                         </th>
                                         <th style="text-align: center">ลำดับ</th>
-                                        <th>คดีเปรียบเทียบ</th>
-                                        <th style="text-align: center;">เลขที่ใบเสร็จ</th>
+                                        <th>คดีเปรียบเทียบ
+                                            <i class="mdi mdi-filter-variant fa-lg" style="margin-left: 5px;" (click)="SortBy('Compare', isSortCompareAsc)"></i>
+                                        </th>
+                                        <th style="text-align: center;">ใบเสร็จ
+                                            <i class="mdi mdi-filter-variant fa-lg" style="margin-left: 5px;" (click)="SortBy('Receipt', isSortReceiptAsc)"></i>
+                                        </th>
                                         <th>ผู้ต้องหา</th>
                                         <!-- <th>ผู้รับชำระค่าปรับ</th> -->
-                                        <th>วันที่ชำระ</th>
-                                        <th>ค่าปรับ</th>
-                                        <th>เงินสินบน</th>
-                                        <th>เงินรางวัล</th>
-                                        <th>เงินส่งคลัง</th>
+                                        <th>วันที่ชำระ
+                                            <i class="mdi mdi-filter-variant fa-lg" style="margin-left: 5px;" (click)="SortBy('PaymentDate', isSortPaymentDateAsc)"></i>
+                                        </th>
+                                        <th style="text-align: right;">ค่าปรับ</th>
+                                        <th style="text-align: right;">เงินสินบน</th>
+                                        <th style="text-align: right;">เงินรางวัล</th>
+                                        <th style="text-align: right;">เงินส่งคลัง</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -256,18 +262,18 @@
                                         <!-- <th style="text-align: center">{{item.RevenueIndex}}</th> -->
                                         <th style="text-align: center">{{ i + 1 }}</th>
                                         <th>{{ item.CompareCode }}</th>
-                                        <th style="text-align: center;">{{ item.ReceiptNo }}</th>
+                                        <th style="text-align: center;">{{ item.ReceiptBookNo + '/' + item.ReceiptNo }}</th>
                                         <th>{{ item.LawBreaker }}
                                             <br> {{ item.SurnameLawBreaker}}</th>
                                         <!-- <th>{{ item.StaffReceip }}</th> -->
                                         <th>{{ item.PaymentDate }}</th>
-                                        <th>{{ item.TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits:
+                                        <th style="text-align: right;">{{ item.TotalFine.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits:
                                             2}) }}</th>
-                                        <th>{{ item.BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits:
+                                        <th style="text-align: right;">{{ item.BribeMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits:
                                             2}) }}</th>
-                                        <th>{{ item.RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits:
+                                        <th style="text-align: right;">{{ item.RewardMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits:
                                             2}) }}</th>
-                                        <th>{{ item.TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits:
+                                        <th style="text-align: right;">{{ item.TreasuryMoney.toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits:
                                             2}) }}</th>
                                     </tr>
                                     <tr>
@@ -277,10 +283,10 @@
                                         <th></th>
                                         <th></th>
                                         <th></th>
-                                        <th>{{CompareFine}}</th>
-                                        <th>{{BribeMoney}}</th>
-                                        <th>{{RewardMoney}}</th>
-                                        <th>{{TreasuryMoney}}</th>
+                                        <th style="text-align: right;">{{CompareFine}}</th>
+                                        <th style="text-align: right;">{{BribeMoney}}</th>
+                                        <th style="text-align: right;">{{RewardMoney}}</th>
+                                        <th style="text-align: right;">{{TreasuryMoney}}</th>
                                     </tr>
                                 </tbody>
                             </table>
