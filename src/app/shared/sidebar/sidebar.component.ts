@@ -20,10 +20,17 @@ export class SidebarService {
 })
 export class SidebarComponent implements OnInit {
   textVersion: any;
+
+  fName: string = "";
+  opName: string = "";
+  offName: string = "";
   constructor(
     private sidebarService: SidebarService,
     private router: Router
-    ) {}
+    ) { 
+      this.fName = localStorage.getItem('fullName');
+      this.opName = localStorage.getItem('operationPosName');
+      this.offName = localStorage.getItem('officeShortName');}
 
   ngOnInit() {
    this.textVersion = this.sidebarService.programVersion;

@@ -7,13 +7,23 @@
 
         <!-- User profile -->
 
-        <div class="user-profile" style="background: url(assets/images/background/user-info.jpg) no-repeat;">
+        <div class="user-profile" style="background: url(assets/images/background/pre_law_main.jpg) no-repeat; padding-bottom: 8px;"> 
+            <!-- url(assets/images/background/user-info.jpg) #ccdeea-->
 
             <!-- <div class="row"> -->
                 <div class="profile-img">
                     <img src="assets/images/users/1.jpg" alt="user" />
                 </div>
-                <!-- <span class="hide-menu"> test testtest</span> -->
+                <div class="col-sm-12 " style="padding-left: 8px; font-size: 11px; color: aliceblue;">
+                    <span class="hide-menu user-text">{{fName}}</span>
+                </div>
+                <div class="col-sm-12 " style="padding-left: 8px; font-size: 11px;">
+                    <span class="hide-menu">ตำแหน่ง {{opName}}</span>
+                </div>
+                <div class="col-sm-12 " style="padding-left: 8px; font-size: 11px;">
+                    <span class="hide-menu">หน่วยงาน {{offName}}</span>
+                </div>
+                
             <!-- </div> -->
            
 
@@ -39,7 +49,7 @@
 
         <!-- End User profile text-->
         <!-- Sidebar navigation-->
-        <nav class="sidebar-nav">
+        <nav class="sidebar-nav" style="padding-left: 2px; padding-right: 2px">
             <ul id="sidebarnav">
                 <li [ngClass]="{'active': activeRoute('suppression')}">
                     <a class="has-arrow" href="javascript:void(0)">

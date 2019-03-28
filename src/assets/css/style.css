@@ -5547,7 +5547,8 @@ use profile section
   background-size: cover; }
   .user-profile .profile-img {
     width: 50px;
-    margin-left: 30px;
+    margin-left: 17px;
+    margin-top: -22px;
     padding: 35px 0;
     border-radius: 100%; }
     .user-profile .profile-img::before {
