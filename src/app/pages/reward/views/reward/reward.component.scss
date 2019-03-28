@@ -1,1 +1,7 @@
 @import "../views.component.scss";
+
+#staffTable tr.footable .form-control-sm:disabled {
+  padding: 0.25rem .25rem !important;
+  // display: inline-table;
+  // white-space: nowrap;
+}
