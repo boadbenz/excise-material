@@ -84,7 +84,7 @@ export class ListComponent implements OnInit, OnDestroy {
         // set true
         this.navService.setSearchBar(true);
         this.navService.setNewButton(true);
-        this.sidebarService.setVersion('evidenceOut 0.0.0.5');
+        this.sidebarService.setVersion('evidenceOut 0.0.0.6');
         this.RevenueStatus = "";
         this.EvidenceOutList = [];
         this.active_Route();
