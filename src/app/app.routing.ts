@@ -186,7 +186,6 @@ export const routes: Routes = [
         children: [
             { path: 'list', loadChildren: './pages/evidenceStock/list/list.module#ListModule' },
             { path: 'manage/:code', loadChildren: './pages/evidenceStock/manage/manage.module#ManageModule' },
-            { path: 'managedetail/:code', loadChildren: './pages/evidenceStock/managedetail/managedetail.module#ManageDetailModule' }
         ]
     }
 ];
