@@ -45,7 +45,12 @@ export class LoginComponent implements OnInit {
       if (this.authService.signin(from)) {
         
         // await this.authService.getTest()
-      
+        // await this.authService.userAndPrivilegeInfo(User).subscribe(async res => {
+        //   console.log("ssoService res++++ : ", res);
+        // })
+        // await this.authService.testGet().then(async res => {
+        //   console.log("ssoService testGet res++++ : ", res);
+        // })
         //***********************************Used with in the Excise Only (Don't Delete)********************************** */
 
         // const params = {

@@ -171,7 +171,7 @@
                     <input type="number" [(ngModel)]="ProveYear" name="ProveYear" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
                         required>
                 </div>
-                <label for="" class="col-lg-2 col-md-4 control-label">เขียนที่ :</label>
+                <label for="" class="col-lg-2 col-md-4 control-label">ที่ทำการ :</label>
                 <div class="col-lg-4 col-md-7">
                     <input type="text" class="form-control" [(ngModel)]="ProveStation" name="ProveStation" placeholder="" aria-label="Number"
                         matInput [matAutocomplete]="auto" (input)="onAutoChange($event.target.value)" (focus)="onAutoFocus($event.target.value)"
@@ -238,7 +238,7 @@
             </div>
 
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+                <label for="" class="col-lg-2 col-md-4 control-label">สังกัด :</label>
                 <div class="form-group col-lg-4 col-md-7">
                     <input type="text" [(ngModel)]="DeptExaminer" name="DeptExaminer" class="form-control" disabled>
                 </div>
@@ -365,10 +365,15 @@
                                 <tr>
                                     <th style="text-align: center">ลำดับ</th>
                                     <th>ของกลาง</th>
+
+                                    <th style="text-align: center">จำนวน</th>
+                                    <th style="text-align: center">หน่วย</th>
+                                    <th style="text-align: center">ปริมาณสุทธิ</th>
+                                    <th style="text-align: center">หน่วย</th>
                                     <!-- <th style="text-align: center">ตามปริมาณ</th>
                                     <th style="text-align: center">ตามมูลค่า</th> -->
-                                    <th style="text-align: center">พิสูจน์ทางเคมีหรือวิทยาศาสตร์</th>
                                     <th style="text-align: right">มูลค่าภาษีพิสูจน์</th>
+                                    <th style="text-align: center">พิสูจน์ทางเคมีหรือวิทยาศาสตร์</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -376,8 +381,14 @@
                                 <tr *ngFor="let lsPD of lsProveProduct; let i=index;">
                                     <td style="text-align: center">{{i+1}}</td>
                                     <td>{{lsPD.ProductDesc}}</td>
-                                    <td style="text-align: center">{{lsPD.IsProdScience == '1' ?'/':''}} </td>
+
+                                    <td class="text-center">{{lsPD.Qty}}</td>
+                                    <td class="text-center">{{lsPD.QtyUnit}}</td>
+                                    <td class="text-center">{{lsPD.NetVolume}}</td>
+                                    <td class="text-center">{{lsPD.NetVolumeUnit}}</td>
+
                                     <td style="text-align: right;">{{lsPD.VatProve }}</td>
+                                    <td style="text-align: center">{{lsPD.IsProdScience == '1' ?'/':''}} </td>
                                     <td>
                                         <a *ngIf="showEditField" (click)="OpenPopupProduct(i)" class="text-secondary" data-toggle="modal" data-target="#SciencePopup">
                                             <i class="mdi mdi-eye fa-lg"></i>
@@ -482,7 +493,7 @@
             </div>
 
             <div class="row">
-                <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
+                <label for="" class="col-lg-2 col-md-4 control-label">สังกัด :</label>
                 <div class="col-lg-4 col-md-7 form-group ">
                     <input type="text" [(ngModel)]="DeptStaffSend" name="DeptStaffSend" class="form-control" disabled>
                 </div>

@@ -11,7 +11,7 @@ import { promise } from 'protractor';
 export class AuthService {
 
   constructor(private httpClient: HttpClient,
-    private HttpService: HttpService,
+    private httpService: HttpService,
     private http: Http) { }
 
 
@@ -47,11 +47,11 @@ export class AuthService {
       .catch(this.handleErrorObservable);
   }
 
-  userAndPrivilegeInfo(User){
+  userAndPrivilegeInfo(User): Observable<any>{
     // console.log('User : ',User)
-    let options = new RequestOptions({ headers: this.getHeaderstest() });
-    const url = `${appConfig.exciseService}/edssows/ldap/userAndPrivilegeInformation?userID=${User}&systemID=Test010"`
-    return this.http.get(url,options)
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    const url = `${appConfig.exciseService}/edssows/ldap/userAndPrivilegeInformation?userID=${User}&systemID=Test010`
+    return this.http.get(url)
       .map((res: Response) => res.json())
       .catch(this.handleErrorObservable);
   }
@@ -63,6 +63,8 @@ export class AuthService {
       .map((res: Response) => res.json())
       .catch(this.handleErrorObservable);
   }
+
+  //---------------------------------TEST---------------------------------------
 
   // private httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
   // getTest() {
@@ -76,14 +78,27 @@ export class AuthService {
   //   const url = `${appConfig.exciseService}/edssows/ldap/userAndPrivilegeInformation?userID=${User}&systemID=Test010"`;
   //   return this.httpClient.get<any>(url, this.httpOptions);
   // }
+  // testGet(){
+  //   const url = `http://webtest.excise.go.th/edssows/ldap/userAndPrivilegeInformation?userID=rod&systemID=Test010`;
+  //   return this.responseGetMethod(url);
+  // }
+  //  async testGet() {
+  //   const getUrl = `http://webtest.excise.go.th/edssows/ldap/userAndPrivilegeInformation?userID=rod&systemID=Test010`
 
+  //   return await this.httpClient.get<Response>(getUrl).toPromise() ;
+  // }
 
+  // private getHeaderstest() {
+  //   let headers = new Headers();
+  //   headers.append('Content-Type','application/json; ');
+  //   headers.append('Access-Control-Allow-Origin','https://developer.mozilla.org')
+  //   headers.append( "cache-control", "no-cache")
+  //   // headers.append('Accept', '	text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8');
+  //   // headers.append('Access-Control-Allow-Origin', '*');
+  //   return headers;
+  // }
   /****************************(End Used with in the Excise Only)***************************** */
-  private getHeaderstest() {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json; charset=utf-8');
-    return headers;
-  }
+ 
 
   private getHeaders() {
     let headers = new Headers();
