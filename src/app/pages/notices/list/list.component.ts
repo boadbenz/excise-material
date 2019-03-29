@@ -30,6 +30,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     notice = [];
     noticeList = [];
+    isArrest: string;
 
     dateStartFrom: any;
     dateStartTo: any;
@@ -125,6 +126,8 @@ export class ListComponent implements OnInit, OnDestroy {
         this.monthsTh = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
 
         // this.preLoaderService.setShowPreloader(false);
+
+        this.isArrest="";
     }
 
     ngOnDestroy(): void {
@@ -179,6 +182,10 @@ export class ListComponent implements OnInit, OnDestroy {
         // }
 
         form.value.AccountOfficeCode = localStorage.getItem("officeCode");
+
+        if(form.value.isArrest == ""){
+            form.value.isArrest = null;
+        }
 
         this.preLoaderService.setShowPreloader(true);
 

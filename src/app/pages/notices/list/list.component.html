@@ -17,13 +17,11 @@
                     <label for="" class="col-lg-2 col-sm-3">วันที่รับแจ้งความ :</label>
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group input-group">
-                            <my-date-picker-th class="form-control form-control-sm unset-form-control" 
-                            name="DateStartFrom" [options]="myDatePickerOptions"
-                            (dateChanged)="onSDateChange($event)" [(ngModel)]="dateStartFrom"></my-date-picker-th>
+                            <my-date-picker-th class="form-control form-control-sm unset-form-control" name="DateStartFrom" [options]="myDatePickerOptions"
+                                (dateChanged)="onSDateChange($event)" [(ngModel)]="dateStartFrom"></my-date-picker-th>
                             <label for="">&nbsp;ถึง&nbsp;</label>
-                            <my-date-picker-th class="form-control form-control-sm unset-form-control"
-                            name="DateStartTo" [options]="myDatePickerOptions"
-                            (dateChanged)="onEDateChange($event)" [(ngModel)]="dateStartTo"></my-date-picker-th>
+                            <my-date-picker-th class="form-control form-control-sm unset-form-control" name="DateStartTo" [options]="myDatePickerOptions"
+                                (dateChanged)="onEDateChange($event)" [(ngModel)]="dateStartTo"></my-date-picker-th>
                         </div>
                     </div>
                 </div>
@@ -48,6 +46,17 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="form-group">
                             <input type="text" name="SuspectName" ngModel class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <label for="" class="col-lg-2 col-sm-3 control-label">สถานะใบแจ้งความ :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <div class="form-line">
+                                <select [(ngModel)]="isArrest" name="isArrest" class="form-control form-control-sm" [disabled]="showEditField">
+                                    <option value="0">ยังไม่ได้จับกุม</option>
+                                    <option value="1">จับกุมแล้ว</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <!-- <label for="" class="col-lg-2 col-sm-3">สินค้า :</label>
@@ -117,15 +126,6 @@
     </div>
 </div>
 
-<swal
-  #alertSwal
-  text=""
-  type=""
-  [showConfirmButton]="false"
-  [showCancelButton]="true"
-  buttonsStyling="false"
-  cancelButtonText="OK"
-  cancelButtonClass="swal2-confirm"
-  cancelButtonColor="#3085d6"
-  [focusCancel]="true">
+<swal #alertSwal text="" type="" [showConfirmButton]="false" [showCancelButton]="true" buttonsStyling="false" cancelButtonText="OK"
+    cancelButtonClass="swal2-confirm" cancelButtonColor="#3085d6" [focusCancel]="true">
 </swal>
