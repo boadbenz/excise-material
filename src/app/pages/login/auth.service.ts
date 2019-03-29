@@ -5,6 +5,7 @@ import { HttpService } from "app/core/http.service";
 import { Observable } from 'rxjs';
 import { Http, Response, RequestOptions, Headers, Jsonp, ResponseContentType } from '@angular/http'
 import { stringify } from '@angular/compiler/src/util';
+import { promise } from 'protractor';
 
 @Injectable()
 export class AuthService {
@@ -46,13 +47,15 @@ export class AuthService {
       .catch(this.handleErrorObservable);
   }
 
-  userAndPrivilegeInfo(User) {
+  userAndPrivilegeInfo(User){
+    // console.log('User : ',User)
+    let options = new RequestOptions({ headers: this.getHeaderstest() });
     const url = `${appConfig.exciseService}/edssows/ldap/userAndPrivilegeInformation?userID=${User}&systemID=Test010"`
-    return this.http.get(url)
+    return this.http.get(url,options)
       .map((res: Response) => res.json())
       .catch(this.handleErrorObservable);
   }
-
+  
   eofficeInfo(params): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeaders() });
     const url = `http://uat.eoffice.excise.go.th:7003/EOfficeWS/HrstPersonInformation `
@@ -60,11 +63,30 @@ export class AuthService {
       .map((res: Response) => res.json())
       .catch(this.handleErrorObservable);
   }
-  /****************************(End Used with in the Excise Only)***************************** */
 
+  // private httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
+  // getTest() {
+  //   this.httpClient.get(`${appConfig.exciseService}/edssows/ldap/userAndPrivilegeInformation?userID=rod&systemID=Test010`).subscribe((res:any) => {
+  //     console.log('getTest :', res);
+  //   });
+  // }
+
+  // userAndPrivilegeInfo(User): Observable<any> {
+  //   const params = '';
+  //   const url = `${appConfig.exciseService}/edssows/ldap/userAndPrivilegeInformation?userID=${User}&systemID=Test010"`;
+  //   return this.httpClient.get<any>(url, this.httpOptions);
+  // }
+
+
+  /****************************(End Used with in the Excise Only)***************************** */
+  private getHeaderstest() {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json; charset=utf-8');
+    return headers;
+  }
 
   private getHeaders() {
-    let headers = new Headers();  
+    let headers = new Headers();
     headers.append('Content-Type', 'application/json; charset=utf-8');
     return headers;
   }
