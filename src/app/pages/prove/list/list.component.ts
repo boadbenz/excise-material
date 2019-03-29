@@ -67,7 +67,7 @@ export class ListComponent implements OnInit {
         this.navService.setSearchBar(true);
         this.navService.setNewButton(false);
 
-        this.sidebarService.setVersion('Prove 0.0.0.34');
+        this.sidebarService.setVersion('Prove 0.0.0.35');
 
         //this.advSearch.next(true);
         this.DeliveryDateTo = null;
@@ -236,6 +236,7 @@ export class ListComponent implements OnInit {
         }
 
         // set total record
+        this.Prove = this.Prove.sort((a, b) => a.ProveReportNo.localeCompare(b.ProveReportNo));
         this.paginage.TotalItems = this.Prove.length;
         this.ListProve = this.Prove.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
