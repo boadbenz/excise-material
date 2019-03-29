@@ -230,7 +230,7 @@
               <button (click)="addRow()" class="btn waves-effect waves-light btn-navy"
                 [attr.disabled]="(RequestRewardStaff.invalid || (mode ==='R' && isEdit === false)) ? 'disabled' : null">เพิ่มจนท.สนับสนุน</button>
             </div>
-            <table class="dataTable table table-sm table-striped table-hover">
+            <table id="staffTable" class="dataTable table table-sm table-striped table-hover">
               <thead>
                 <tr>
                   <th class="footable-sortable" colspan="1"></th>
@@ -265,33 +265,33 @@
 
                 <ng-container *ngFor="let item of RequestRewardStaff.controls | sortFormArray: 'sort'; let i=index;">
                   <tr class="footable" [formGroupName]="i">
-                    <td>
+                    <td width="1%">
                       <input type="checkbox" [id]="'tdsec2'+i" name="ischeck" formControlName="check"
                         class="filled-in chk-col-indigo"
                         [attr.disabled]="(mode === 'R' && isEdit === false) ? 'disabled':null">
                       <label [for]="'tdsec2'+i" class="m-0"></label>
                       <!-- <mat-checkbox class="filled-in chk-col-indigo" formControlName="check"></mat-checkbox> -->
                     </td>
-                    <td class="text-center">{{(i+1)}}</td>
-                    <td>
+                    <td width="1%" class="text-center">{{(i+1)}}</td>
+                    <td width="5.8%">
                       <input class="form-control form-control-sm" type="text" formControlName="TitleName"
                         [ngbTypeahead]="searchTitleName"
                         [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
                     </td>
-                    <td>
+                    <td width="11.5%">
                       <input class="form-control form-control-sm" type="text" formControlName="FullName" #FullName
                         [ngbTypeahead]="searchFullName" (keyup)="changeFullName(FullName.value, i)"
                         [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
                     </td>
-                    <td>
+                    <td width="19.7%" class="scroll">
                       <input class="form-control form-control-sm" type="text" formControlName="PositionName"
                         [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
                     </td>
-                    <td>
+                    <td width="19.3%" class="scroll">
                       <input class="form-control form-control-sm" type="text" formControlName="PosLevelName"
                         [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
                     </td>
-                    <td>
+                    <td width="10%">
                       <input *ngIf="!(RequestRewardStaff.at(i).get('sort').value == '4')"
                         class="form-control form-control-sm" formControlName="ContributorName"
                         [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'">
@@ -304,30 +304,30 @@
                         </ng-container>
                       </select>
                     </td>
-                    <td>
-                      <input class="form-control form-control-sm" type="number" formControlName="FirstPart" #FirstPart
+                    <td width="5.2%">
+                      <input class="form-control form-control-sm text-right" type="number" formControlName="FirstPart" #FirstPart
                         (change)="calChangeAll()" [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'"
                         >
                     </td>
-                    <td>
-                      <input class="form-control form-control-sm" type="number" formControlName="SecondPart" #SecondPart
+                    <td width="5.2%">
+                      <input class="form-control form-control-sm text-right" type="number" formControlName="SecondPart" #SecondPart
                         (change)="calChangeAll()" [attr.disabled]="RequestRewardStaff.at(i).get('sort').value == '4' ? null : 'disabled'"
                         >
                     </td>
-                    <td>
-                      <input class="form-control form-control-sm" type="text"
+                    <td width="7.1%">
+                      <input class="form-control form-control-sm text-right" type="text"
                         [value]="RequestRewardStaff.at(i).get('FirstMoney').value | currency:' '"
                         [attr.disabled]="'disabled'"
                        >
                     </td>
-                    <td>
-                      <input class="form-control form-control-sm" type="text"
+                    <td  width="7.1%">
+                      <input class="form-control form-control-sm text-right" type="text"
                         [value]="RequestRewardStaff.at(i).get('SecondMoney').value | currency:' '"
                         [attr.disabled]="'disabled'"
                        >
                     </td>
-                    <td>
-                      <input class="form-control form-control-sm" type="text"
+                    <td width="7.1%">
+                      <input class="form-control form-control-sm text-right" type="text"
                         [value]="RequestRewardStaff.at(i).get('ToTalMoney').value | currency:' '"
                         [attr.disabled]="'disabled'">
                     </td>
@@ -346,23 +346,23 @@
                   <td></td>
                   <td class="text-right">รวมทั้งสิ้น:</td>
                   <td>
-                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'"
+                    <input class="form-control form-control-sm text-right" type="text" [attr.disabled]="'disabled'"
                       [value]="aggregate.FirstPart.sum">
                   </td>
                   <td>
-                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'"
+                    <input class="form-control form-control-sm text-right" type="text" [attr.disabled]="'disabled'"
                       [value]="aggregate.SecondPart.sum">
                   </td>
                   <td>
-                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'"
+                    <input class="form-control form-control-sm text-right" type="text" [attr.disabled]="'disabled'"
                       [value]="aggregate.FirstMoney.sum | currency:' '">
                   </td>
                   <td>
-                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'"
+                    <input class="form-control form-control-sm text-right" type="text" [attr.disabled]="'disabled'"
                       [value]="aggregate.SecondMoney.sum | currency:' '">
                   </td>
                   <td>
-                    <input class="form-control form-control-sm" type="text" [attr.disabled]="'disabled'"
+                    <input class="form-control form-control-sm text-right" type="text" [attr.disabled]="'disabled'"
                       [value]="aggregate.ToTalMoney.sum | currency:' '">
                   </td>
                   <td></td>
