@@ -186,7 +186,7 @@
     <div class="form-group row">
       <label class="col-form-label text-left col-md-2">เหตุผลในการปรับ : </label>
       <div class="col-md-10">
-        <textarea class="form-control" type="text" rows="5" [(ngModel)]="CompareReason" name="positionLawName" [disabled]="showField"></textarea>
+        <textarea class="form-control" type="text" rows="5" [(ngModel)]="AdjustReason" name="positionLawName" [disabled]="showField"></textarea>
       </div>
     </div>
     <div class="table-responsive table-striped no-wrap">
@@ -229,8 +229,9 @@
                   >
                 </td>
                 <td>{{item.CompareFineDiff}}</td>
-                <td class="status-increase" *ngIf="item.CompareFineStatus">ปรับเพิ่ม</td>
-                <td class="status-decrease" *ngIf="!item.CompareFineStatus">ปรับลด</td>
+                <td class="status-increase" *ngIf="item.CompareFineStatus == 1">ปรับเพิ่ม</td>
+                <td class="status-decrease" *ngIf="item.CompareFineStatus == 0">ปรับลด</td>
+                <td class="status-decrease" *ngIf="item.CompareFineStatus == 2">-</td>
                 <td>{{item.CompareFineBribeMoney}}</td>
                 <td>{{item.CompareFineRewardMoney}}</td>
                 <td>{{item.CompareFineTreasuryMoney}}</td>
@@ -282,6 +283,7 @@
             <th class="footable-sortable">ช่องทางชำระ</th>
             <th class="footable-sortable">ใบเสร็จเล่มที่</th>
             <th class="footable-sortable">ใบเสร็จเลขที่/เลขอ้างอิง</th>
+            <th class="footable-sortable">เลขที่อ้างอิง</th>
             <th class="footable-sortable">สถานะคดี</th>
             <!-- <th class="footable-sortable"></th> -->
           </tr>
@@ -305,6 +307,7 @@
             </td>
             <td>{{item.ReceiptBookNo}}</td>
             <td>{{item.ReceiptNo}}</td>
+            <td>{{item.ReferenceNo}}</td>
             <td>{{item.RevenueStatus === 0 ? 'ยังไม่ส่งรายได้' : 'นำส่งรายได้'}}</td>
             <!-- <td [hidden]="true">
               <a href="javaScript:void(0);" class="text-secondary" (click)="viewData()" data-toggle="modal" [hidden]="mode === 'A'" data-target="#finePopup">
@@ -574,13 +577,13 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-2">แบบอนุมัติ : </label>
                 <div class="custom-control custom-radio col-form-label col-md-8">
-                  <input name="FineType" id="typeOne" class="col-form-label with-gap radio-col-indigo" type="radio" (change)="changApproveReportType()" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveReportType" value="1">
+                  <input name="FineType" id="typeOne" class="col-form-label with-gap radio-col-indigo" type="radio" (change)="changApproveReportType()" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveReportType" value="1" [disabled]="showField">
                   <label for="typeOne" class="col-4">แบบอนุมัติ 1 (คด.3)</label>
-                  <input name="FineType" id="typeTwo" class="col-form-label with-gap radio-col-indigo" type="radio" (change)="changApproveReportType()" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveReportType" value="2">
+                  <input name="FineType" id="typeTwo" class="col-form-label with-gap radio-col-indigo" type="radio" (change)="changApproveReportType()" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveReportType" value="2" [disabled]="showField">
                   <label for="typeTwo" class="col-4">แบบอนุมัติ 2 (คด.4)</label>
-                  <input name="FineType" id="typeThree" class="col-form-label with-gap radio-col-indigo" type="radio" (change)="changApproveReportType()" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveReportType" value="3">
+                  <input name="FineType" id="typeThree" class="col-form-label with-gap radio-col-indigo" type="radio" (change)="changApproveReportType()" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveReportType" value="3" [disabled]="showField">
                   <label for="typeThree" class="col-4">แบบอนุมัติ 3 (คด.5)</label>
-                  <input name="FineType" id="typeFour" class="col-form-label with-gap radio-col-indigo" type="radio" (change)="changApproveReportType()" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveReportType" value="4">
+                  <input name="FineType" id="typeFour" class="col-form-label with-gap radio-col-indigo" type="radio" (change)="changApproveReportType()" [(ngModel)]="EditApproveCaseComparisonPopUp.ApproveReportType" value="4" [disabled]="showField">
                   <label for="typeFour" class="col-4">แบบอนุมัติ 4 (คด.6)</label>
                 </div>
               </div>
@@ -729,7 +732,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">คำสั่งกรมฯ ที่ : </label>
                 <div class="input-group col-md-8">
-                  <input class="form-control" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.departmentOrders" name="departOrder" [disabled]="viewMode">
+                  <input class="form-control" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.CommandNo" name="CommandNo" [disabled]="viewMode">
                 </div>
               </div>
             </div>
@@ -742,7 +745,7 @@
                 <div class="input-group col-md-8">
                   <!-- <input class="form-control" type="text" name="dateOfIssue" [disabled]="viewMode"> -->
                   <div style="width: 100%">
-                    <my-date-picker class="form-control date-setting" type="text" [(ngModel)]="EditApproveCaseComparisonPopUp.CommandDate" locale="th" locale="th" [disabled]="viewMode"></my-date-picker>
+                    <my-date-picker class="form-control date-setting" type="text" locale="th" [options]="DateOption" [(ngModel)]="EditApproveCaseComparisonPopUp.CommandDate" [disabled]="viewMode"></my-date-picker>
                   </div>
                 </div>
               </div>
@@ -765,7 +768,7 @@
               <div class="form-group row">
                 <label class="col-form-label col-md-4">เหตุผลที่ควรเปรียบเทียบคดีและ/หรือจัดการของกลาง :</label>
                 <div class="col-md-8">
-                  <textarea class="form-control" id="AdjustReason" [disabled]="viewMode" [(ngModel)]="EditApproveCaseComparisonPopUp.AdjustReason" rows="5" [required]="true"></textarea>
+                  <textarea class="form-control" id="CompareReason" [disabled]="viewMode" [(ngModel)]="EditApproveCaseComparisonPopUp.CompareReason" rows="5" [required]="true"></textarea>
                 </div>
               </div>
             </div>
@@ -775,8 +778,9 @@
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn waves-effect waves-light btn-navy" 
-                [attr.data-toggle]="EditApproveCaseComparisonPopUp.AdjustReason != '' && EditApproveCaseComparisonPopUp.Fact != '' && EditApproveCaseComparisonPopUp.approveStaff != '' && EditApproveCaseComparisonPopUp.staff != '' && EditApproveCaseComparisonPopUp.offerstaff != '' ? 'modal' : 'on-model'" data-target="#approvePopup" 
-                (click)="checkPopUp(EditApproveCaseComparisonPopUp.CompareDetailID)"
+          [attr.data-toggle]="EditApproveCaseComparisonPopUp.CompareReason != '' && EditApproveCaseComparisonPopUp.Fact != '' && EditApproveCaseComparisonPopUp.approveStaff != '' && EditApproveCaseComparisonPopUp.staff != '' && EditApproveCaseComparisonPopUp.offerstaff != '' ? 'modal' : 'on-model'" data-target="#approvePopup" 
+          (click)="checkPopUp(EditApproveCaseComparisonPopUp.CompareDetailID)"
+          [disabled]="showField"
         >
                 บันทึก
         </button>

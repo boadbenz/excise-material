@@ -66,6 +66,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     Fact: '',
     ApproveStation: '',
     AdjustReason: '',
+    CompareReason: '',
     ApproveReportType: '',
     PaymentFineDate: moment().format('YYYY-MM-DD HH:mm:ss'),
     PaymentFineAppointDate: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -127,7 +128,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   }
 
   public AdjustCompareDetail: any = [];
-  public CompareReason = '';
+  public AdjustReason = '';
 
   public CompareReceipt: any = [];
 
@@ -151,7 +152,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     approvePosition: '',
     approveDepartment: '',
     approveCode: '',
-    departmentOrders: '',
+    CommandNo: '',
     orderDate: '',
     fact: '',
     reason: ''
@@ -241,7 +242,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public async ngOnInit() {
     this.preloaderService.setShowPreloader(true);
     this.navService.setOnCancel(false);
-    this.sidebarService.setVersion('0.0.3.27');
+    this.sidebarService.setVersion('0.0.3.30');
     this.mode = this.activeRoute.snapshot.paramMap.get('mode');
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
@@ -411,9 +412,11 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     if (this.adjustFine[index].CompareFine) {
       this.adjustFine[index].CompareFineDiff = this.adjustFine[index].CompareFine - this.adjustFine[index].ProductFine;
       if (this.adjustFine[index].ProductFine < this.adjustFine[index].CompareFine) {
-        this.adjustFine[index].CompareFineStatus = true;
+        this.adjustFine[index].CompareFineStatus = 1;
       } else if (this.adjustFine[index].ProductFine > this.adjustFine[index].CompareFine) {
-        this.adjustFine[index].CompareFineStatus = false;
+        this.adjustFine[index].CompareFineStatus = 0;
+      } else {
+        this.adjustFine[index].CompareFineStatus = 2;
       }
 
       this.adjustFine[index].CompareFineBribeMoney = (this.sinbon * this.adjustFine[index].CompareFine) / 100;
@@ -476,8 +479,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       console.log(e);
     }
 
-    if (this.AdjustCompareDetail.length > 0) {
-      this.CompareReason = this.AdjustCompareDetail[0].CompareReason;
+    if (this.AdjustCompareDetail.length > 0 && this.mode === 'V') {
+      this.AdjustReason = this.AdjustCompareDetail[0].AdjustReason;
     }
   }
 
@@ -530,10 +533,10 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public async ViewApproveData(CompareDetailID: any, index: any) {
     this.viewMode = true;
     this.fineIdex = index;
-    await this.GetEditApproveCaseComparisonData(CompareDetailID);
+    await this.GetEditApproveCaseComparisonData(CompareDetailID, 0);
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
       this.viewMode = false;
-      this.EditApproveCaseComparisonPopUp.departmentOrders = '';
+      this.EditApproveCaseComparisonPopUp.CommandNo = '';
       this.EditApproveCaseComparisonPopUp.CommandDate = '';
       this.EditApproveCaseComparisonPopUp.Fact = '';
       this.EditApproveCaseComparisonPopUp.AdjustReason = '';
@@ -545,10 +548,10 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public async EditApproveData(CompareDetailID: any, index: any) {
     this.viewMode = false;
     this.fineIdex = index;
-    await this.GetEditApproveCaseComparisonData(CompareDetailID);
+    await this.GetEditApproveCaseComparisonData(CompareDetailID, 1);
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
       this.viewMode = false;
-      this.EditApproveCaseComparisonPopUp.departmentOrders = '';
+      this.EditApproveCaseComparisonPopUp.CommandNo = '';
       this.EditApproveCaseComparisonPopUp.CommandDate = '';
       this.EditApproveCaseComparisonPopUp.Fact = '';
       this.EditApproveCaseComparisonPopUp.AdjustReason = '';
@@ -556,7 +559,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.changApproveReportType();
   }
 
-  public async GetEditApproveCaseComparisonData(CompareDetailID: any) {
+  public async GetEditApproveCaseComparisonData(CompareDetailID: any, ve: number) {
     if (this.EditApproveCaseComparison.indexOf(CompareDetailID) === (-1)) {
       this.EditApproveCaseComparison.push(CompareDetailID);
 
@@ -565,10 +568,6 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       }).toPromise();
 
       this.EditApproveCaseComparisonData[CompareDetailID] = response;
-      this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineDate =
-      [this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))), '15:25 น.', '+12:15'];
-      this.EditApproveCaseComparisonData[CompareDetailID].ApproveReportDate =
-      this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD')));
 
       if (this.EditApproveCaseComparisonData[CompareDetailID].ApproveReportType === 1) {
         this.EditApproveCaseComparisonData[CompareDetailID].ApproveReportType = '1';
@@ -597,7 +596,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
           this.EditApproveCaseComparisonData[CompareDetailID].offerstaff
               = offerstaff.TitleName + offerstaff.FirstName + ' ' + offerstaff.LastName || '';
           this.EditApproveCaseComparisonData[CompareDetailID].offerPosition = offerstaff.PositionName || '';
-          this.EditApproveCaseComparisonData[CompareDetailID].offerDepartment = offerstaff.DepartmentName || '';
+          this.EditApproveCaseComparisonData[CompareDetailID].offerDepartment = offerstaff.OfficeName || '';
         }
 
         const staff = staffs.find(st => {
@@ -608,7 +607,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
           this.EditApproveCaseComparisonData[CompareDetailID].staff
               = staff.TitleName + staff.FirstName + ' ' + staff.LastName || '';
           this.EditApproveCaseComparisonData[CompareDetailID].position = staff.PositionName || '';
-          this.EditApproveCaseComparisonData[CompareDetailID].department = staff.DepartmentName || '';
+          this.EditApproveCaseComparisonData[CompareDetailID].department = staff.OfficeName || '';
         }
 
         const approveStaff = staffs.find(st => {
@@ -619,15 +618,42 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
           this.EditApproveCaseComparisonData[CompareDetailID].approveStaff
               = approveStaff.TitleName + approveStaff.FirstName + ' ' + approveStaff.LastName || '';
           this.EditApproveCaseComparisonData[CompareDetailID].approvePosition = approveStaff.PositionName || '';
-          this.EditApproveCaseComparisonData[CompareDetailID].approveDepartment = approveStaff.DepartmentName || '';
+          this.EditApproveCaseComparisonData[CompareDetailID].approveDepartment = approveStaff.OfficeName || '';
         }
       }
 
 
       this.EditApproveCaseComparisonPopUp = this.EditApproveCaseComparisonData[CompareDetailID];
+
+      this.EditApproveCaseComparisonPopUp.PaymentFineDate = ve === 1 ?
+      [this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))), '15:25 น.', '+12:15'] :
+      // tslint:disable-next-line:max-line-length
+      [this.toDatePickerFormat(new Date(moment(this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineAppointDate).format('YYYY-MM-DD'))), '00:00 น.', '+00:00'];
+
+
+      this.EditApproveCaseComparisonPopUp.ApproveReportDate = ve === 1 ?
+      this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))) :
+      this.toDatePickerFormat(new Date(moment(this.EditApproveCaseComparisonData[CompareDetailID].ApproveReportDate).format('YYYY-MM-DD')));
+
+      this.EditApproveCaseComparisonPopUp.CommandDate = ve === 1 ?
+      this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))) :
+      this.toDatePickerFormat(new Date(moment(this.EditApproveCaseComparisonData[CompareDetailID].CommandDate).format('YYYY-MM-DD')));
     } else {
       console.log('has data alredy');
       this.EditApproveCaseComparisonPopUp = this.EditApproveCaseComparisonData[CompareDetailID];
+
+      this.EditApproveCaseComparisonPopUp.PaymentFineDate = ve === 1 ?
+      [this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))), '15:25 น.', '+12:15'] :
+      // tslint:disable-next-line:max-line-length
+      [this.toDatePickerFormat(new Date(moment(this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineAppointDate).format('YYYY-MM-DD'))), '00:00 น.', '+00:00'];
+
+      this.EditApproveCaseComparisonPopUp.ApproveReportDate = ve === 1 ?
+      this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))) :
+      this.EditApproveCaseComparisonData[CompareDetailID].ApproveReportDate;
+
+      this.EditApproveCaseComparisonPopUp.CommandDate = ve === 1 ?
+      this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))) :
+      this.EditApproveCaseComparisonData[CompareDetailID].CommandDate;
     }
   }
 
@@ -667,9 +693,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       checked = false;
     }
 
-    if (this.EditApproveCaseComparisonPopUp.AdjustReason === '' || this.EditApproveCaseComparisonPopUp.AdjustReason == null) {
-      await document.getElementById('AdjustReason').focus();
-      await document.getElementById('AdjustReason').blur();
+    if (this.EditApproveCaseComparisonPopUp.CompareReason === '' || this.EditApproveCaseComparisonPopUp.CompareReason == null) {
+      await document.getElementById('CompareReason').focus();
+      await document.getElementById('CompareReason').blur();
       checked = false;
     }
 
@@ -682,7 +708,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
                                       + this.EditApproveCaseComparisonPopUp.PaymentFineDate[1].replace(' น.', '') + ':00.000000 +00:00'
     this.adjustArrest.PaymentFineAppointDate = this.EditApproveCaseComparisonPopUp.PaymentFineAppointDate;
     this.adjustArrest.ApproveStation = this.EditApproveCaseComparisonPopUp.ApproveStation;
-    this.adjustArrest.AdjustReason = this.EditApproveCaseComparisonPopUp.AdjustReason;
+    this.adjustArrest.CompareReason = this.EditApproveCaseComparisonPopUp.CompareReason;
 
     // tslint:disable-next-line:max-line-length
     this.adjustArrest.ApproveReportDate = moment(this.EditApproveCaseComparisonPopUp.ApproveReportDate.jsdate).format('YYYY-MM-DD HH:mm:ss') + ' +00:00';
@@ -842,7 +868,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       swal('', 'กรุณากรอกข้อเท็จจริงเกี่ยวกับความผิดโดยละเอียด', 'error');
     }
 
-    if (this.EditApproveCaseComparisonPopUp.AdjustReason === '' || this.EditApproveCaseComparisonPopUp.AdjustReason == null) {
+    if (this.EditApproveCaseComparisonPopUp.CompareReason === '' || this.EditApproveCaseComparisonPopUp.CompareReason == null) {
       cansave = false;
       swal('', 'กรุณากรอกเหตุผลที่ควรเปรียบเทียบคดีและ/หรือจัดการของกลาง', 'error');
     }
@@ -900,7 +926,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       Fact: '',
       IsRequest: '',
       RequestForAction: '',
-      CompareReason: '',
+      CompareReason: this.EditApproveCaseComparisonPopUp.CompareReason,
       IsProvisionalAcquittal: 0,
       Bail: '',
       Guaruntee: '',
@@ -926,6 +952,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       AdjustCompareDetailReceipt: [],
       AdjustCompareStaff: []
     };
+
+    this.adjustArrest.AdjustReason = this.AdjustReason;
 
     for (const key in this.adjustArrest) {
       if (key in param) {
