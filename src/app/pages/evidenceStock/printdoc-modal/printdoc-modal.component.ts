@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { EvidenceOutService } from '../evidenceOut.service';
+import { EvidenceStockService } from '../evidenceStock.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import swal from 'sweetalert2';
@@ -33,7 +33,7 @@ export class PrintDocModalComponent implements OnInit {
     @Output() c = new EventEmitter();
 
     constructor(
-        private EviOutService: EvidenceOutService,
+        private EviStockService: EvidenceStockService,
         private preloader: PreloaderService
     ) { }
 

@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute, Routes } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-import { EvidenceOutService } from '../evidenceOut.service';
+import { EvidenceStockService } from '../evidenceStock.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { EvidenceOut } from '../evidenceOut';
+// import { EvidenceOut } from '../evidenceOut';
 import { pagination } from '../../../config/pagination';
 import { Message } from '../../../config/message';
 import { toLocalShort, compareDate, setZeroHours } from '../../../config/dateFormat';
@@ -25,32 +25,11 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
     advSearch: any;
-    evidenceOut = new Array<EvidenceOut>();
-    EvidenceOutList = new Array<EvidenceOut>();
-    paginage = pagination;
-    DateStartTo: any;
-    _dateEviStartFrom: any;
-    _dateEviStartTo: any;
-    _dateEviNoStartFrom: any;
-    _dateEviNoStartTo: any;
-
-    StatusOption = [];
-    options = [];
-    rawOptions = [];
-
-    RevenueStatus: string;
-    EvidenceOutType: string;
-    EvidenceOutCode: string;
-    EvidenceOutDateStart: any;
-    EvidenceOutDateTo: any;
-    EvidenceOutNo: string;
-    EvidenceOutNoDateStart: any;
-    EvidenceOutNoDateTo: any;
-    StaffName: string;
     OfficeName: string;
-
-    private subOnSearch: any;
-
+    WarehouseName: string;
+    evidenceSt = [];
+    evidenceStList = [];
+    paginage = pagination;
     modal: any;
 
     constructor(
@@ -58,7 +37,7 @@ export class ListComponent implements OnInit, OnDestroy {
         private _router: Router,
         private navService: NavigationService,
         private sidebarService: SidebarService,
-        private EvidenceService: EvidenceOutService,
+        private EvidenceService: EvidenceStockService,
         private preloader: PreloaderService,
         private ngbModel: NgbModal
 
@@ -76,54 +55,21 @@ export class ListComponent implements OnInit, OnDestroy {
         this.navService.setCancelButton(false);
         this.navService.setNextPageButton(false);
         // set true
-        this.navService.setSearchBar(true);
+        this.navService.setSearchBar(false);
         this.navService.setNewButton(false);
         this.sidebarService.setVersion('evidenceStock 0.0.0.1');
-        this.RevenueStatus = "";
-        this.EvidenceOutList = [];
-        this.active_Route();
 
-        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async TextSearch => {
-            if (TextSearch) {
-                await this.navService.setOnSearch('');
+        this.OfficeName = "";
+        this.WarehouseName = "";
 
-                let ts;
-                ts = { TextSearch: "", OfficeCode: localStorage.getItem("officeCode") }
-                ts = TextSearch;
-
-                if (ts.TextSearch == null) { this.onSearch({ TextSearch: "" }); }
-                else { this.onSearch(TextSearch); }
-            }
-        })
+        this.onAdvSearch();
     }
 
 
-    ngOnDestroy(): void {
-        this.subOnSearch.unsubscribe();
-    }
+    ngOnDestroy(): void { }
 
-    private active_Route() {
-        this.sub = this.activeRoute.params.subscribe(p => {
-            this.evitype = p['type'];
-        });
-    }
-
-    clickView(EvidenceOutID: string) {
-        this._router.navigate(['/evidenceStock/manage', '1']);
-    }
-
-    async onSearch(p: any) {
-        var paramsOther = {
-            TextSearch: p.TextSearch,
-            EvidenceOutType: this.EvidenceOutType,
-            OfficeCode: localStorage.getItem("officeCode")
-        }
-
-        this.EvidenceService.getByKeyword(paramsOther).subscribe(list => {
-            this.onSearchComplete(list)
-
-            this.preloader.setShowPreloader(false);
-        });
+    clickView(WarehouseID: string) {
+        this._router.navigate(['/evidenceStock/manage', WarehouseID]);
     }
 
     ShowAlertNoRecord() {
@@ -136,61 +82,40 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     async onSearchComplete(list: any) {
-        this.evidenceOut = [];
+        this.evidenceSt = [];
 
         if (!list.length) {
             this.ShowAlertNoRecord();
-            this.EvidenceOutList = [];
+            this.evidenceSt = [];
 
             return false;
         }
 
-        await list.map((item) => {
-            item.EvidenceOutDate = toLocalShort(item.EvidenceOutDate);
-            item.EvidenceOutNoDate = toLocalShort(item.EvidenceOutNoDate);
-
-            // หน่วยงาน
-            item.EvidenceOutStaff.filter(f => f.ContributorID == 43).map(s => {
-                item.EvidenceStaffName = `${s.TitleName == 'null' || s.TitleName == null ? '' : s.TitleName}`
-                    + `${s.FirstName == 'null' || s.FirstName == null ? '' : s.FirstName}` + ' '
-                    + `${s.LastName == 'null' || s.LastName == null ? '' : s.LastName}`;
-                item.DeptName = s.OfficeName;
-            });
-        })
-
         if (Array.isArray(list)) {
-            this.evidenceOut = list;
+            this.evidenceSt = list;
         } else {
-            this.evidenceOut.push(list);
+            this.evidenceSt.push(list);
         }
 
         // set total record
-        this.paginage.TotalItems = this.evidenceOut.length;
-        this.EvidenceOutList = this.evidenceOut.slice(0, this.paginage.RowsPerPageOptions[0]);
+        this.paginage.TotalItems = this.evidenceSt.length;
+        this.evidenceStList = this.evidenceSt.slice(0, this.paginage.RowsPerPageOptions[0]);
     }
 
     async pageChanges(event) {
-        this.EvidenceOutList = await this.evidenceOut.slice(event.startIndex - 1, event.endIndex);
+         this.evidenceStList = await this.evidenceSt.slice(event.startIndex - 1, event.endIndex);
     }
 
-    async onAdvSearch() {
+    onAdvSearch() {
         this.preloader.setShowPreloader(true);
         
-        let oEvidenceOut = {
-            EvidenceOutCode: this.EvidenceOutCode,
-            EvidenceOutDateFrom: this.EvidenceOutDateStart,
-            EvidenceOutDateTo: this.EvidenceOutDateTo,
-            EvidenceOutNo: this.EvidenceOutNo,
-            EvidenceOutNoDateFrom: this.EvidenceOutNoDateStart,
-            EvidenceOutNoDateTo: this.EvidenceOutNoDateTo,
-            StaffName: this.StaffName,
-            StaffOfficeName: this.OfficeName,
-            OfficeCode: localStorage.getItem("officeCode"),
-            EvidenceOutType: this.EvidenceOutType
+        let oEvidenceInventory = {
+            OfficeName: this.OfficeName,
+            WarehouseName: this.WarehouseName,
+            AccountOfficeCode: localStorage.getItem("officeCode")
         }
 
-
-        await this.EvidenceService.getByConAdv(oEvidenceOut).then(async list => {
+        this.EvidenceService.getByConAdv(oEvidenceInventory).then(async list => {
             this.onSearchComplete(list);
             this.preloader.setShowPreloader(false);
         }, (err: HttpErrorResponse) => {

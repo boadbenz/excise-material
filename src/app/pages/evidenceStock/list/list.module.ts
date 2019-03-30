@@ -4,7 +4,7 @@ import { ListComponent } from './list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CardActionsModule } from '../../component/card-actions/card-actions.module';
-import { EvidenceOutService } from '../evidenceOut.service';
+import { EvidenceStockService } from '../evidenceStock.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PaginationTableModule } from '../../component/pagination-table/pagination-table.module';
@@ -38,7 +38,7 @@ const routes: Routes = [
       MatAutocompleteModule,
     ],
     declarations: [ListComponent],
-    providers: [EvidenceOutService],
+    providers: [EvidenceStockService],
     exports: [MatAutocompleteModule]
   })
   export class ListModule { }

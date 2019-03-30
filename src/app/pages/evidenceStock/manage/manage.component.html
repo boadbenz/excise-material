@@ -51,39 +51,13 @@
         <div class="row">
             <label for="" class="col-lg-2 col-md-4 control-label">หน่วยงาน :</label>
             <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control" readonly>
+                <input type="text" [(ngModel)]="OfficeName" name="OfficeName" class="form-control" readonly>
             </div>
 
-            <label for="" class="col-lg-2 col-md-4 control-label">ระหว่างดำเนินคดี :</label>
+            <label for="" class="col-lg-2 col-md-4 control-label">คลังสินค้า :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control" readonly>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">รอคืน :</label>
-            <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control" readonly>
-            </div>
-
-            <label for="" class="col-lg-2 col-md-4 control-label">รอทำลาย :</label>
-            <div class="col-lg-4 col-md-7 col-sm-8">
-                <div class="form-group ">
-                    <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control" readonly>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <label for="" class="col-lg-2 col-md-4 control-label">รอขาย :</label>
-            <div class="form-group col-lg-4 col-md-7 col-sm-8">
-                <input type="text" [(ngModel)]="EvidenceOutNo" name="EvidenceOutNo" class="form-control" readonly>
-            </div>
-
-            <label for="" class="col-lg-2 col-md-4 control-label">ทั้งหมด :</label>
-            <div class="col-lg-4 col-md-7 col-sm-8">
-                <div class="form-group ">
-                    <input type="text" [(ngModel)]="PosRequest" name="PosRequest" class="form-control" readonly>
+                    <input type="text" [(ngModel)]="WarehouseName" name="WarehouseName" class="form-control" readonly>
                 </div>
             </div>
         </div>
@@ -98,41 +72,35 @@
                             <tr>
                                 <th style="text-align: center;width:7%">ลำดับ</th>
                                 <th style="width:14%">เลขทะเบียนบัญชี</th>
-                                <th>ของกลาง</th>
+                                <th style="width:14%">กลุ่มสินค้า</th>
+                                <th>ชื่อของกลาง</th>
                                 <th style="width:10%">จำนวน</th>
                                 <th style="width:10%">หน่วย</th>
-                                <th style="width:10%">สถานะรายการ</th>
-                                <th></th>
+                                <th style="width:10%">ปริมาณ</th>
+                                <th>หน่วย</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr *ngFor="let item of EvidenceInventoryPagging; let i=index;">
                                 <th style="text-align: center">1</th>
-                                <th>
-                                    <input type="text" name="item.DeliveryNo" class="form-control form-control-sm" readonly>
-                                </th>
-                                <th>
-                                    <input type="text" name="item.DeliveryNo" class="form-control form-control-sm" readonly>
-                                </th>
-                                <th>
-                                    <input type="text" name="item.DeliveryNo" class="form-control form-control-sm" readonly>
-                                </th>
-                                <th>
-                                    <input type="text" name="item.DeliveryNo" class="form-control form-control-sm" readonly>
-                                </th>
-                                <th>
-                                    <input type="text" name="item.DeliveryNo" class="form-control form-control-sm" readonly>
-                                </th>
-                                <th>
-                                    <a href="javaScript:void(0);" class="text-secondary" (click)="clickView('')">
-                                        <i class="mdi mdi-eye fa-lg"></i>
-                                    </a>
-                                </th>
+                                <th>{{item.EvidenceInItemCode}}</th>
+                                <th>{{item.GroupName}}</th>
+                                <th>{{item.ProductDesc}}</th>
+                                <th>{{item.BalanceQty}}</th>
+                                <th>{{item.BalanceQtyUnit}}</th>
+                                <th>{{item.BalanceNetVolumn}}</th>
+                                <th>{{item.BalanceNetVolumnUnit}}</th>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
+
+        <div class="card-footer card-footer-unset">
+            <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+                [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+            </app-pagination-table>
         </div>
     </div>
 </div>
