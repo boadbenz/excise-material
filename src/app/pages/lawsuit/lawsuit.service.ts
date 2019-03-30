@@ -54,7 +54,7 @@ export class LawsuitService {
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)
   }
   async LawsuitArrestGetByKeyword(Textsearch: any, AccountOfficeCode: any): Promise<Lawsuit[]> {
-    const params = Textsearch === '' ? { 'Textsearch': '', 'AccountOfficeCode': '' } : { Textsearch: Textsearch, AccountOfficeCode: AccountOfficeCode };
+    const params = Textsearch === '' ? { 'Textsearch': '', 'AccountOfficeCode': AccountOfficeCode } : { Textsearch: Textsearch, AccountOfficeCode: AccountOfficeCode };
     const url = `${appConfig.apiUrl}/LawsuitArrestgetByKeyword`;
     return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)
   }
