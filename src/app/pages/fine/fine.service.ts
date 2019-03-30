@@ -26,8 +26,9 @@ export class FineService {
         const full_url = `${appConfig[`api${port}`]}/${url}`;
         return this.http.post<any>(full_url, params, this.httpOptions).toPromise();
     }
-    getByKeyword(Textsearch: string) {
+    getByKeyword(Textsearch: any) {
         const params = Textsearch;
+        params.AccountOfficeCode = localStorage.getItem('officeCode');
         const url = `${appConfig.api7777}/CompareListgetByKeyword`;
         // return this.postMethod('CompareListgetByKeyword', )
         return this.http.post<Compare[]>(url, params, this.httpOptions);
@@ -52,8 +53,10 @@ export class FineService {
     }
 
     getByConAdv(form: any) {
+        form.AccountOfficeCode = localStorage.getItem('officeCode');
         const params = JSON.stringify(form);
-        const url = `${appConfig.api8887}/CompareListgetByConAdv`;
+        console.log(params);
+        const url = `${appConfig.api7777}/CompareListgetByConAdv`;
 
         try {
             console.log(this.http.post<Compare[]>(url, params, this.httpOptions));
