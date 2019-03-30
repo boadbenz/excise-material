@@ -186,6 +186,7 @@
       <table class="dataTable table table-sm table-striped table-hover">
         <thead>
         <tr>
+            <th class="footable-sortable" style="width:15%">ลำดับ</th>
           <th class="footable-sortable" style="width:15%">ชื่อผู้ต้องหา</th>
           <th class="footable-sortable" style="width:7%;">จำนวนครั้ง</th>
           <th class="footable-sortable" style="width:10%">ของกลาง</th>
@@ -202,13 +203,14 @@
         <tbody *ngIf="ListCompareDetail?.length > 0">
         <tr *ngFor="let item of ListCompareDetail; let i=index;" class="footable"
             [style]="item.sum ? 'font-weight: bold' : '' ">
-          <td *ngIf="!item.isSum && item.isFirstLoop"><p>{{ item.LawbreakerName }}</p></td>
+            <td *ngIf="!item.isSum && item.isFirstLoop"><p>{{ (+item.userNo) + 1 }}</p></td>
+          <td *ngIf="!item.isSum && item.isFirstLoop" data-toggle="tooltip" [title]="item.LawbreakerName"><p>{{ item.LawbreakerName }}</p></td>
           <td *ngIf="!item.isSum && item.isFirstLoop">{{ item.Mistreat }}</td>
           <!-- <td>{{ item.isFirstLoop + ' ' + item.isSum }}</td> -->
           <td *ngIf="!item.isSum && !item.isFirstLoop" colspan="2"></td>
-          <td *ngIf="item.isSum && accused.list?.length > 1" colspan="6"></td>
+          <td *ngIf="item.isSum && accused.list?.length > 1" colspan="7"></td>
 
-          <td *ngIf="!item.isSum && item.product"><p>{{ item.product.BrandNameTH }}</p></td>
+          <td *ngIf="!item.isSum && item.product" data-toggle="tooltip" [title]="item.product.BrandNameTH ? item.product.BrandNameTH : '-'"><p>{{ item.product.BrandNameTH }}</p></td>
           <td *ngIf="!item.isSum">{{ item.multi }}</td>
           <td *ngIf="!item.isSum && item.product">{{ formatMoney(roundDigit(item.FineAmount)) }}</td>
           <td *ngIf="!item.isSum && item.product">{{ formatMoney(roundDigit(item.all)) }}</td>
@@ -225,7 +227,7 @@
           <td *ngIf="item.product && item.isSum && accused.list?.length > 1"><b>{{ formatMoney(roundDigit(item.TreasuryMoney)) }}</b></td>
         </tr>
         <tr>
-          <td colspan="5"></td>
+          <td colspan="6"></td>
           <td><b>รวม</b></td>
           <td><b>{{ formatMoney(roundDigit(sumAllCompare.sum)) }}</b></td>
           <td><b>{{ formatMoney(roundDigit(sumAllCompare.sum1)) }}</b></td>
@@ -268,7 +270,7 @@
           </div>
           <div class="col-md-6">
             <div class="form-group row">
-              <label class="col-form-label col-md-3">เขียนที่ : </label>
+              <label class="col-form-label col-md-3">ที่ทำการเปรียบเทียบคดี สส. 2/58 : </label>
               <div class="col-md-9">
                 <input type="text" class="form-control" [(ngModel)]="accused.StationName" name="StationName"
                        placeholder="พิมพ์ข้อความ" aria-label="Number"
@@ -531,7 +533,7 @@
               name="ReferenceNo"
               [disabled]="showEditField || !(item.ReceiptChanel > 1) || (item.CompareReceiptID)" [required]="item.ReceiptChanel > 1">
           </td>
-          <td></td>
+          <td>{{ item.RevenueStatus ? 'นำส่งแล้ว' : 'ยังไม่นำส่ง' }}</td>
           <td>
             <!-- <a *ngIf="isFilledReceipt(i)" (click)="editReceipt(item, i, 0)" class="text-secondary" data-toggle="modal"
                data-target="#payPopup">
@@ -576,7 +578,7 @@
           <td class="text-center">{{ item.ApproveType ? 'แบบอนุมัติ ' + item.ApproveType : '' }}</td>
           <td>
             <a (click)="editApproveReport(item, i, 0)" class="text-secondary" data-toggle="modal"
-               data-target="#approvePopup" *ngIf="receipt.list[i].PaymentDate">
+               data-target="#approvePopup" *ngIf="receipt.list[i]?.PaymentDate">
               <i class="mdi mdi-eye fa-lg"></i>
             </a>
             <a (click)="editApproveReport(item, i, 1)" *ngIf="item.PaymentDate" class="text-warning" [hidden]="showEditField"
