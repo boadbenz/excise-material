@@ -109,30 +109,30 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   SumMoney = () =>
     this.aggregate.BribeMoney.sum + this.aggregate.RewardMoney.sum;
   SumFirstMoney = () =>
-    Number(( Math.floor(((this.SumMoney() || 0) / 3) * 100 ) / 100 ).toFixed(2));
+    Number(((this.SumMoney() || 0) / 3).toFixed(2));
   SumFirstMoneyPerPart = () =>
     Number(
       ( Math.floor(((this.SumFirstMoney() || 0) / (this.aggregate.FirstPart.sum || 0) ) * 100 ) / 100 ).toFixed(2)
     ) || 0;
-  SumFirstMoneyPerPartView = () => parseInt(this.SumFirstMoneyPerPart().toString()) || 0;
+  // SumFirstMoneyPerPartView = () => parseInt(this.SumFirstMoneyPerPart().toString()) || 0;
   // FirstRemainder = () =>
   //   (this.SumFirstMoney() || 0) - this.aggregate.FirstMoney.sum;
   FirstRemainder = () =>
     Number(
-      (this.SumFirstMoneyPerPart() - this.SumFirstMoneyPerPartView()).toFixed(2)
+      (this.SumFirstMoney() - (this.SumFirstMoneyPerPart() * (this.aggregate.FirstPart.sum || 0))).toFixed(2)
     ) || 0;
   SumSecondMoney = () =>
-    Number(( Math.floor(((this.SumMoney() / 3) * 2) * 100 ) / 100 ).toFixed(2));
+    Number(((this.SumMoney() / 3) * 2).toFixed(2));
   SumSecondMoneyPerPart = () =>
     Number(
       (Math.floor(((this.SumSecondMoney() || 0) / (this.aggregate.SecondPart.sum || 0) ) * 100 ) / 100 ).toFixed(2)
     ) || 0;
-  SumSecondMoneyPerPartView = () => parseInt(this.SumSecondMoneyPerPart().toString()) || 0;
+  // SumSecondMoneyPerPartView = () => parseInt(this.SumSecondMoneyPerPart().toString()) || 0;
   // SecondRemainder = () =>
   //   this.SumSecondMoney() - this.aggregate.SecondMoney.sum;
   SecondRemainder = () => 
   Number(
-    (this.SumSecondMoneyPerPart() - this.SumSecondMoneyPerPartView()).toFixed(2)
+    (this.SumSecondMoney() - (this.SumSecondMoneyPerPart() * (this.aggregate.SecondPart.sum || 0))).toFixed(2)
   ) || 0;
   searchStation = (text$: Observable<string>) =>
     text$.pipe(
@@ -362,7 +362,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.15');
+    this.sidebarService.setVersion('0.0.1.16');
     localStorage.setItem('programcode', 'ILG60-08-02');
     this.pageLoad();
   }
@@ -737,7 +737,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               this.RequestRewardStaff.setControl(i,newGroup);
             });
           }
-        }, 1500);
+        }, 500);
         // console.log('forEach PosLevel : ', this.PosLeveltemp)
 
         // 1.1.9
@@ -752,28 +752,30 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         // const control_RequestBribeRewardForm: FormArray = <FormArray>(
         //   this.RequestBribeRewardForm
         // );
-        datatable_RequestBribeReward
-          .filter(f => f.HaveNotice === 1)
-          .forEach(x => {
-            const newGroup: FormGroup = this.fb.group({
-              check: [true],
-              sort: [1],
-              TitleName: [''],
-              FullName: ['สายลับ (ขอปิดนาม)'],
-              FirstName: ['สายลับ (ขอปิดนาม)'],
-              PositionName: [''],
-              PosLevelName: [''],
-              ContributorName: ['ผู้แจ้งความนำจับ'],
-              ContributorID: [''],
-              FirstPart: [null],
-              FirstMoney: [null],
-              SecondPart: [null],
-              SecondMoney: [null],
-              MoneySort1: [this.aggregate.BribeMoney.sum],
-              ToTalMoney: [this.aggregate.BribeMoney.sum]
+        setTimeout(() => {
+          datatable_RequestBribeReward
+            .filter(f => f.HaveNotice === 1)
+            .forEach(x => {
+              const newGroup: FormGroup = this.fb.group({
+                check: [true],
+                sort: [1],
+                TitleName: [''],
+                FullName: ['สายลับ (ขอปิดนาม)'],
+                FirstName: ['สายลับ (ขอปิดนาม)'],
+                PositionName: [''],
+                PosLevelName: [''],
+                ContributorName: ['ผู้แจ้งความนำจับ'],
+                ContributorID: [''],
+                FirstPart: [0],
+                FirstMoney: [0],
+                SecondPart: [0],
+                SecondMoney: [0],
+                MoneySort1: [this.aggregate.BribeMoney.sum],
+                ToTalMoney: [this.aggregate.BribeMoney.sum]
+              });
+              this.RequestRewardStaff.push(newGroup);
             });
-            // this.RequestRewardStaff.push(newGroup); //g
-          });
+        }, 1500);
         // this.ILG60_08_04_00_00_E08_DATA$.next({
         //   methodName: 'RequestBribeRewardgetByIndictmentID',
         //   data: RequestBribeReward
