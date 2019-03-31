@@ -121,7 +121,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }, 100);
       }
     async ngOnInit() {
-        this.sidebarService.setVersion('0.0.0.53');
+        this.sidebarService.setVersion('0.0.0.55');
         localStorage.setItem('programcode','ILG60-06-00');
         const form = new FormGroup({
             ArrestCode: new FormControl(''),
@@ -286,8 +286,10 @@ export class ListComponent implements OnInit, OnDestroy {
         this.paginage.TotalItems = this.CompareList.length;
     }
 
-    clickView(IndictmentID: string = '', ArrestCode: string = '', CompareID: string = '') {
+    clickView(IndictmentID: string = '0', ArrestCode: string = '0', CompareID: string = '0') {
         // CompareID = (+CompareID)
+        // alert('here');
+        console.log(`/fine/manage/${((!CompareID || CompareID == '0') ? 'C' : 'R')}/${CompareID}/${IndictmentID}/${ArrestCode}`);
         try {
             this._router.navigate([`/fine/manage/${((!CompareID || CompareID == '0') ? 'C' : 'R')}/${CompareID}/${IndictmentID}/${ArrestCode}`]);
         } catch (err) {
