@@ -123,8 +123,12 @@ export class ManageComponent implements OnInit {
   }
 
   async ngOnInit() {
+<<<<<<< HEAD
     this.sidebarService.setVersion('0.0.0.53');
     localStorage.setItem('programcode', 'ILG60-04-00')
+=======
+    this.sidebarService.setVersion('0.0.0.54');
+>>>>>>> Em_Dev
     this.preLoaderService.setShowPreloader(true);
     await this.getParamFromActiveRoute();
     await this.navigate_service();
