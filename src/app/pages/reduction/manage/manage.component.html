@@ -207,12 +207,13 @@
           <tr>
             <th class="footable-sortable">ลำดับ</th>
             <th class="footable-sortable">ชื่อผู้ต้องหา</th>
-            <th class="footable-sortable">ค่าปรับเดิม</th>
-            <th class="footable-sortable">ค่าปรับใหม่</th>
+            <th class="footable-sortable">ค่าปรับ</th>
+            <th class="footable-sortable">สถานะ</th>
             <th class="footable-sortable">วันที่ชำระค่าปรับ</th>
             <th class="footable-sortable">ช่องทางชำระ</th>
             <th class="footable-sortable">ใบเสร็จเล่มที่</th>
-            <th class="footable-sortable">ใบเสร็จเลขที่/เลขอ้างอิง</th>
+            <th class="footable-sortable">ใบเสร็จเลขที่</th>
+            <th class="footable-sortable">เลขอ้างอิง</th>
             <th class="footable-sortable">สถานะคดี</th>
             <th class="footable-sortable"></th>
           </tr>
@@ -221,18 +222,19 @@
           <tr class="footable" *ngFor="let item of tableData; let i = index;">
             <td>{{i+1}}</td>
             <td>{{item.LawbreakerName}}</td>
-            <td>{{ i == 0 ? tableData[i].TotalFine : tableData[i-1].TotalFine}}</td>
             <td>{{item.TotalFine}}</td>
+            <td>{{i == 0 ? '-' : tableData[i].TotalFine > tableData[i-1].TotalFine ? 'ปรับเพิ่ม' : tableData[i].TotalFine < tableData[i-1].TotalFine ? 'ปรับลด' : '-'}}</td>
             <td>{{item.ReceiptDateShow}}</td>
             <td>{{(item.ReceiptChanel === 1) ? 'เงินสด' : (item.ReceiptChanel === 2) ? 'EDC' : (item.ReceiptChanel === 3) ? 'เครดิต' : (item.ReceiptChanel === 4) ? 'เดบิต' : ''}}</td>
             <td>{{item.ReceiptBookNo}}</td>
             <td>{{item.ReceiptNo}}</td>
+            <td>{{item.ReceiptNo}}</td>
             <td>{{item.RevenueStatus === 1 ? 'นำส่งแล้ว' : 'ยังไม่ส่ง'}}</td>
             <td>
-              <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.CompareDetailID)">
+              <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.CompareDetailID, i)">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
-              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="editData(item.CompareDetailID)" [hidden]="showField || item.RevenueStatus === 1">
+              <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="editData(item.CompareDetailID, i)" [hidden]="showField || item.RevenueStatus === 1">
                 <i class="ti-pencil-alt btn-action"></i>
               </a>
             </td>
