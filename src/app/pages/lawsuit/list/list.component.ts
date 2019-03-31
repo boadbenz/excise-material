@@ -50,9 +50,10 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.53');
+    this.sidebarService.setVersion('0.0.0.54');
+    // await this.onSearchByKeyword()
+    await this.onInitSearchByKeyword();
     localStorage.setItem('programcode','ILG60-04-00')
-    await this.onSearchByKeyword()
     await this.setShowButton();
     // await this.onNextPage()
   }
@@ -91,6 +92,21 @@ export class ListComponent implements OnInit, OnDestroy {
   onSearchByKeyword() {
     this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
       await this.onSearch(Textsearch);
+    });
+  }
+
+  onInitSearchByKeyword() {
+    this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
+        this.preLoaderService.setShowPreloader(true);
+        let LawsuitArrestList = await this.lawsuitService.LawsuitArrestGetByKeyword("", localStorage.officeCode);
+        let temp = []
+        LawsuitArrestList.forEach(element => {
+          if(element['IsLawsuitComplete'] == 0) {
+            temp.push(element)
+          }
+        })
+        this.resultsPerPage = await this.setLawsuitArrestList(temp)
+        this.results = this.resultsPerPage
     });
   }
 
