@@ -129,7 +129,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     ) { }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.3.27');
+    this.sidebarService.setVersion('0.0.3.31');
     localStorage.setItem('programcode', 'ILG60-09-00');
     if (this.activeRoute.snapshot.queryParamMap.get('CompareID') == null
       || this.activeRoute.snapshot.queryParamMap.get('CompareID') === '') {
@@ -307,12 +307,12 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
                   , error => console.log(error));
   }
 
-  viewData(CompareDetailID: any = '') {
-    this.router.navigate(['/reduction/manage', 'V', this.compareID, CompareDetailID]);
+  viewData(CompareDetailID: any = '', index: any) {
+    this.router.navigate(['/reduction/manage', 'V', this.compareID, CompareDetailID], {queryParams: {IsOld: (index === 0 ? '1' : '0')}});
   }
 
-  editData(CompareDetailID: any) {
-    this.router.navigate(['/reduction/manage', 'E', this.compareID, CompareDetailID]);
+  editData(CompareDetailID: any, index: any) {
+    this.router.navigate(['/reduction/manage', 'E', this.compareID, CompareDetailID], {queryParams: {IsOld: (index === 0 ? '1' : '0')}});
   }
 
   addData() {
