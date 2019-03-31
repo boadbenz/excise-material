@@ -35,6 +35,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   public mode = 'A';
+  public isOld: any;
   public adjustArrest = {
     ArrestCode: '',
     ArrestDate: '',
@@ -243,7 +244,10 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.preloaderService.setShowPreloader(true);
     this.navService.setOnCancel(false);
     this.sidebarService.setVersion('0.0.3.30');
+    const qParam = this.activeRoute.snapshot.queryParams;
+    this.isOld = qParam.IsOld;
     this.mode = this.activeRoute.snapshot.paramMap.get('mode');
+
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
       this.navService.setEditField(true);
       this.navService.setSendIncomeButton(true);
@@ -830,7 +834,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
       adjustData.push({
         CompareFineID: '',
-        CompareDetailID: this.activeRoute.snapshot.paramMap.get('mode') === 'A' ? '' : this.adjustFine[i].CompareDetailID,
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:triple-equals
+        CompareDetailID: (this.activeRoute.snapshot.paramMap.get('mode') === 'A' || this.isOld == '1') ? '' : this.adjustFine[i].CompareDetailID,
         ProductID: this.adjustFine[i].ProductID,
         ProductFine: this.adjustFine[i].CompareFine,
         VatValue: 500,
@@ -918,7 +924,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public async saveData(adjustData, CompareFine, TreasuryMoney, BribeMoney, RewardMoney, Fine): Promise<void> {
 
     const param = {
-      CompareDetailID: this.activeRoute.snapshot.paramMap.get('mode') === 'A' ? '' : this.compareIdDetail,
+      // tslint:disable-next-line:triple-equals
+      CompareDetailID: (this.activeRoute.snapshot.paramMap.get('mode') === 'A' || this.isOld == '1') ? '' : this.compareIdDetail,
       CompareID: this.compareID,
       IndictmentDetailID: 0,
       CompareAction: '',
@@ -967,7 +974,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.CompareReceipt = this.CompareReceipt.filter((element, i) => {
       if (element.LawbreakerFirstName) {
         Object.assign(element, {
-          CompareReceiptID: this.activeRoute.snapshot.paramMap.get('mode') === 'A' ? '' :
+          // tslint:disable-next-line:triple-equals
+          CompareReceiptID: (this.activeRoute.snapshot.paramMap.get('mode') === 'A' || this.isOld == '1') ? '' :
           this.AdjustCompareDetail[0].AdjustCompareDetailReceipt[0].CompareReceiptID,
           ReceiptType: this.mode,
           ReceiptDate: moment().format('YYYY-MM-DD HH:mm:ss') + ' +00:00',
@@ -991,7 +999,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     try {
       let data;
-      if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
+      // tslint:disable-next-line:triple-equals
+      if (this.activeRoute.snapshot.paramMap.get('mode') === 'A' || this.isOld == '1') {
         data = await this.apiService.post('/XCS60/AdjustCompareDetailinsAll', param).toPromise();
       } else {
         data = await this.apiService.post('/XCS60/AdjustCompareDetailupdByCon', param).toPromise();
