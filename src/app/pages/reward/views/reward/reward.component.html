@@ -396,12 +396,12 @@
                 <label class="col-form-label col-sm-3 col-md-4">แบ่งเป็นส่วนๆละ : </label>
                 <div class="col-md-3">
                   <input class="form-control form-control-sm" type="text"
-                    [value]="(SumFirstMoneyPerPartView() || 0) | number:''" [attr.disabled]="'disabled'">
+                    [value]="(SumFirstMoneyPerPart() || 0) | currency:' '" [attr.disabled]="'disabled'">
                 </div>
                 <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
                 <div class="col-md-3">
                   <input class="form-control form-control-sm" type="text"
-                    [value]="(FirstRemainder() || 0)" [attr.disabled]="'disabled'">
+                    [value]="(FirstRemainder() > 0 ? FirstRemainder() : '')" [attr.disabled]="'disabled'">
                 </div>
               </div>
             </div>
@@ -409,7 +409,7 @@
           <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-6 ">
               <div class="form-group row">
-                <label class="col-form-label col-md-5 padding-adv-label">2 ใน 3 ส่วนแรกเป็นเงิน : </label>
+                <label class="col-form-label col-md-5 padding-adv-label">2 ใน 3 ส่วนหลังเป็นเงิน : </label>
                 <div class="col-md-7">
                   <input class="form-control form-control-sm" type="text"
                     [value]="(SumSecondMoney() || 0) | currency:' '" [attr.disabled]="'disabled'">
@@ -421,12 +421,12 @@
                 <label class="col-form-label col-sm-3 col-md-4">แบ่งเป็นส่วนๆละ : </label>
                 <div class="col-md-3">
                   <input class="form-control form-control-sm" type="text"
-                    [value]="(SumSecondMoneyPerPartView() || 0) | number:''" [attr.disabled]="'disabled'">
+                    [value]="(SumSecondMoneyPerPart() || 0) | currency:' '" [attr.disabled]="'disabled'">
                 </div>
                 <label class="col-form-label text-center col-md-2 padding-none">เหลือเศษ</label>
                 <div class="col-md-3">
                   <input class="form-control form-control-sm" type="text"
-                    [value]="(SecondRemainder() || 0)" [attr.disabled]="'disabled'">
+                    [value]="(SecondRemainder() > 0 ? SecondRemainder() : '')" [attr.disabled]="'disabled'">
                 </div>
               </div>
             </div>
