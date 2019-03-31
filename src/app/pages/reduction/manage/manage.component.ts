@@ -128,7 +128,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     ) { }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.3.27');
+    this.sidebarService.setVersion('0.0.3.31');
     localStorage.setItem('programcode', 'ILG60-09-00');
     if (this.activeRoute.snapshot.queryParamMap.get('CompareID') == null
       || this.activeRoute.snapshot.queryParamMap.get('CompareID') === '') {

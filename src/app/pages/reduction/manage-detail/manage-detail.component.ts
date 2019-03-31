@@ -243,7 +243,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public async ngOnInit() {
     this.preloaderService.setShowPreloader(true);
     this.navService.setOnCancel(false);
-    this.sidebarService.setVersion('0.0.3.30');
+    this.sidebarService.setVersion('0.0.3.31');
     const qParam = this.activeRoute.snapshot.queryParams;
     this.isOld = qParam.IsOld;
     this.mode = this.activeRoute.snapshot.paramMap.get('mode');
