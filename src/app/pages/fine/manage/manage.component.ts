@@ -139,7 +139,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.53');
+    this.sidebarService.setVersion('0.0.0.55');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -500,14 +500,20 @@ export class ManageComponent implements OnInit, OnDestroy {
       // this.e ditUser.PaymentFineAppointDate.formatted
       if (compare.CompareDetailReceipt.length > 0) {
         const length: any = (this.compareDataUpdateTmp.CompareDetail.length - compare.CompareDetailReceipt.length) + i;
+<<<<<<< HEAD
         console.log("++++", this.receipt.list[i]);
+=======
+        // console.log(this.receipt.list[i]);
+>>>>>>> bas_dev
         // this.receipt.list[i].TotalFine = compare.CompareFine;
         if (!this.receipt.list[i]) {
           this.receipt.list.push({});
         }
         const recLength: any = compare.CompareDetailReceipt.length;
         const recLastIndex: any = recLength > 0 ? recLength - 1 : recLength;
-        this.receipt.list[i].PaymentDate = compare.CompareDetailReceipt[recLastIndex].PaymentDate ? this.convertToNormalDate(new Date(compare.CompareDetailReceipt[recLastIndex].PaymentDate), true) : null;
+        // console.log(compare.CompareDetailReceipt[recLastIndex]);
+        const myDate: any = new Date(compare.CompareDetailReceipt[recLastIndex].PaymentDate);
+        this.receipt.list[i].PaymentDate = compare.CompareDetailReceipt[recLastIndex].PaymentDate ? this.toDatePickerFormat(myDate) : null;
         this.receipt.list[i].ReceipStation = compare.CompareDetailReceipt[recLastIndex].Station ? compare.CompareDetailReceipt[recLastIndex].Station : '';
         this.receipt.list[i].ReceiptChanel = compare.CompareDetailReceipt[recLastIndex].ReceiptChanel ? compare.CompareDetailReceipt[recLastIndex].ReceiptChanel : '';
         this.receipt.list[i].ReceiptBookNo = compare.CompareDetailReceipt[recLastIndex].ReceiptBookNo ? compare.CompareDetailReceipt[recLastIndex].ReceiptBookNo : '';
@@ -515,10 +521,17 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.receipt.list[i].ReceiptNo = compare.CompareDetailReceipt[recLastIndex].ReceiptNo ? compare.CompareDetailReceipt[recLastIndex].ReceiptNo : '';
         this.receipt.list[i].CompareReceiptID = compare.CompareDetailReceipt[recLastIndex].CompareReceiptID;
         this.receipt.list[i].CompareDetailID = compare.CompareDetailReceipt[recLastIndex].CompareDetailID;
+        this.receipt.list[i].RevenueStatus = compare.CompareDetailReceipt[recLastIndex].RevenueStatus;
+        // console.log(this.receipt.list[i]);
       }
+<<<<<<< HEAD
       console.log('compare');
       console.log('++++compare : ', compare);
       this.params.CompareDetailID = compare.CompareDetailID
+=======
+      console.log('receipt data ~');
+      console.log( this.receipt.list);
+>>>>>>> bas_dev
       if (compare.CompareDetailFine) {
         for (const cd of compare.CompareDetailFine) {
           if (!this.ListCompareDetail[countCD]) {
@@ -1253,7 +1266,9 @@ export class ManageComponent implements OnInit, OnDestroy {
             // บันทึกการเปรียบเทียบและชำระค่าปรับ
             const receiptData: any = {};
             receiptData.LawBrakerName = CompareDetail.LawbreakerName;
-            receiptData.PaymentDate = this.DateToday;
+            // if (!receiptData.PaymentDate) {
+              receiptData.PaymentDate = this.DateToday;
+            // }
             receiptData.ReceiptChanel = 1;
             if (localStorage.getItem('officeShortName')) {
               receiptData.officeShortName = localStorage.getItem('officeShortName');
@@ -2252,6 +2267,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     let i: any = 0;
     console.log(this.receipt);
     const reqField: any = ['ReceiptBookNo', 'ReceiptNo', 'ReceiptChanel', 'PaymentDate'];
+    console.log('payment');
     for (const rec of this.receipt.list) {
       console.log(rec);
       if (rec.CompareReceiptID) {
@@ -2448,9 +2464,17 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
   convertToNormalDate(date: any, isNewDate: any = null) {
     if (!date || (typeof date.year) == 'undefined') {
-      const d = new Date();
+      let d = new Date(date);
+      if (!d) {
+        d = new Date();
+      }
+      // console.log('convertToNormalDate');
       const m: any = d.getMonth() + 1;
+<<<<<<< HEAD
       date = { day: d.getDate(), month: m.length == 1 ? '0' + m : m, year: d.getFullYear() };
+=======
+      date = {day: d.getDate(), month: m.toString().length == 1 ? `0${m}` : m, year: d.getFullYear()};
+>>>>>>> bas_dev
       console.log(date);
     }
     let m: any;
@@ -2459,7 +2483,10 @@ export class ManageComponent implements OnInit, OnDestroy {
     } else {
       m = date.month == 0 ? (date.month + 1).toString() : date.month;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> bas_dev
     return `${date.year}-${m}-${date.day}`;
   }
   calSum(id: any = null) {
