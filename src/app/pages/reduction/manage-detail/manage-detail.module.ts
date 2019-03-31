@@ -9,6 +9,7 @@ import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MyDatePickerModule } from 'mydatepicker';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PrintReductionModalModule } from '../print-doc-modal/print-doc-modal.module' ;
+import { ReductionDatePipe } from '../pipe/reduction-date.pipe';
 
 const routes: Routes = [
   {
@@ -41,7 +42,8 @@ const routes: Routes = [
     PrintReductionModalModule
   ],
   declarations: [
-    ManageDetailComponent
+    ManageDetailComponent,
+    ReductionDatePipe
   ],
   providers: [ReductionApiService],
   exports: [MatAutocompleteModule]

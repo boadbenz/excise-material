@@ -97,7 +97,7 @@ export class ListComponent implements OnInit, OnDestroy, DoCheck {
 
     onSearch(Textsearch: any) {
         const form = {
-            Textsearch,
+            ...Textsearch,
             AccountOfficeCode: this.AccountOfficeCode
         }
         this.arrestService

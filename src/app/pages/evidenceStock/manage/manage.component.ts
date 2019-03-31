@@ -1,15 +1,14 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../../shared/header-navigation/navigation.service';
-import { EvidenceOutService } from '../evidenceOut.service';
+import { EvidenceStockService } from '../evidenceStock.service';
 import { EvidenceService } from '../../evidenceIn/evidenceIn.service'
 import { HttpErrorResponse } from '@angular/common/http';
-import { EvidenceOut, EvidenceOutStaff, Document, EvidenceOutItem, EvidenceOutStockBalance } from '../evidenceOut';
+// import { EvidenceOut, EvidenceOutStaff, Document, EvidenceOutItem, EvidenceOutStockBalance } from '../evidenceOut';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import * as formatDate from '../../../config/dateFormat';
 import { Message } from '../../../config/message';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Staff } from '../staff';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import { MatAutocomplete } from '@angular/material';
 import { del } from '../../../../../node_modules/@types/selenium-webdriver/http';
@@ -28,6 +27,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     private sub: any;
     private onPrintSubscribe: any;
 
+    WarehourseID: string;
+    OfficeName: string;
+    WarehouseName: string;
+    EvidenceInventoryList = [];
+    EvidenceInventoryPagging = [];
+
+
     modal: any;
     paginage = pagination;
 
@@ -40,7 +46,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private ngbModel: NgbModal,
         private navService: NavigationService,
-        private EvidenceOutService: EvidenceOutService,
+        private EvidenceStockService: EvidenceStockService,
         private preloader: PreloaderService,
         private router: Router,
         private sidebarService: SidebarService
@@ -56,7 +62,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.active_Route();
         this.navigate_Service();
 
-        await this.ShowEvidenceOut();
+        await this.ShowEvidenceStock();
         this.preloader.setShowPreloader(false);
     }
 
@@ -72,6 +78,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setEditButton(false);
         this.navService.setDeleteButton(false);
         this.navService.setEditField(false);
+
+        this.sub = this.activeRoute.params.subscribe(p => {
+            this.WarehourseID = p['code'];
+        });
     }
 
     private navigate_Service() {
@@ -86,23 +96,31 @@ export class ManageComponent implements OnInit, OnDestroy {
     clickView(EvidenceOutID: string) {
         this.router.navigate(['/evidenceStock/managedetail', '1']);
     }
-    
-    ShowEvidenceOut() {
-        // this.EvidenceOutService.getByCon("").then(async res => {
-        //     if (res != null && res.IsSuccess != "False") {
-                
-        //         this.preloader.setShowPreloader(false);
-        //     } else {
-        //         this.ShowAlertError("พบปัญหาที่ API EvidenceOutgetByCon");
-        //         this.preloader.setShowPreloader(false);
-        //         this.router.navigate(['/evidenceOut/list']);
-        //     }
-        // }, (err: HttpErrorResponse) => {
-        //     this.ShowAlertError("API EvidenceIngetByCon :: " + err.message);
-        // });
+
+    ShowEvidenceStock() {
+        this.EvidenceStockService.getByCon(this.WarehourseID).then(async res => {
+            if (res != null && res.IsSuccess != "False") {
+                this.EvidenceInventoryList = res;
+                this.preloader.setShowPreloader(false);
+
+                // set total record
+                this.paginage.TotalItems = this.EvidenceInventoryList.length;
+                this.EvidenceInventoryPagging = this.EvidenceInventoryList.slice(0, this.paginage.RowsPerPageOptions[0]);
+            } else {
+                this.ShowAlertError("Data not found");
+                this.preloader.setShowPreloader(false);
+                //this.router.navigate(['/evidenceStock/list']);
+            }
+        }, (err: HttpErrorResponse) => {
+            this.ShowAlertError("API EvidenceInventoryCheckStockgetByCon :: " + err.message);
+        });
     }
 
-        // **********************************
+    async pageChanges(event) {
+        this.EvidenceInventoryPagging = await this.EvidenceInventoryList.slice(event.startIndex - 1, event.endIndex);
+    }
+
+    // **********************************
     // -------------- Alert -------------
     // **********************************
     ShowAlertWarning(alertText: string) {

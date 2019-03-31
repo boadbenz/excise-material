@@ -10,6 +10,11 @@ import { ReductionModelListComponent } from './reduction-model-list/reduction-mo
 // import { AddReduceComponent } from './add-reduce/add-reduce.component';
 import { PrintDocModalComponent } from '../print-doc-modal/print-doc-modal.component'
 import swal from 'sweetalert2';
+
+// import moment = require('moment');
+import * as moment from 'moment';
+import 'moment/locale/th';
+import { SidebarService } from 'app/shared/sidebar/sidebar.component';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -45,7 +50,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     FaultSubject: '',
     FaultNo: '',
     Penalty: '',
-    CompareDate: ['', ''],
+    CompareDate: '',
     AdjustArrestStaff: [
       {
         ArrestCode: '',
@@ -119,10 +124,12 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
       private activeRoute: ActivatedRoute,
       private navService: NavigationService,
       private readonly apiServer: ReductionApiService,
+      private sidebarService: SidebarService,
       public ngbModel: NgbModal
     ) { }
 
   ngOnInit() {
+    this.sidebarService.setVersion('0.0.3.27');
     localStorage.setItem('programcode', 'ILG60-09-00');
     if (this.activeRoute.snapshot.queryParamMap.get('CompareID') == null
       || this.activeRoute.snapshot.queryParamMap.get('CompareID') === '') {
@@ -132,7 +139,6 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
 
     const param = this.activeRoute.snapshot.queryParams;
     this.compareID = param.CompareID;
-    this.indictmentID = param.IndictmentID;
 
     this.navService.setEditField(true);
     // set show button
@@ -260,31 +266,38 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
             this.detailData.CompareCode = 'น' + this.detailData.CompareCode;
           }
 
+          if (this.detailData.ArrestDate) {
+            this.detailData.ArrestDateShow = moment(this.detailData.ArrestDate).add(543, 'years').format('DD MMM YYYY');
+          }
+
+          if (this.detailData.LawsuitDate) {
+            this.detailData.LawsuitDateShow = moment(this.detailData.LawsuitDate).add(543, 'years').format('DD MMM YYYY');
+          }
+
           if (this.detailData.CompareDate) {
-            this.detailData.CompareDate = this.detailData.CompareDate.split(' ');
+            // this.detailData.CompareDate = this.detailData.CompareDate.split(' ');
+            this.detailData.CompareDateShow = moment(this.detailData.CompareDate).add(543, 'years').format('DD MMM YYYY');
+            this.detailData.CompareTimeShow = moment(this.detailData.CompareDate).add(543, 'years').format('HH:mm') + ' น.';
           } else {
             this.detailData.CompareDate = ['', ''];
           }
 
+          this.detailData.LocationlawName =
+          (this.detailData.SubDistrict || '') + ' ' + (this.detailData.District || '') + ' ' + (this.detailData.Province || '');
+
           this.tableData = this.detailData.AdjustCompareReceipt;
+          if (this.tableData.length > 0) {
+            this.tableData = this.tableData.map(e => {
+              if (e.ReceiptDate && moment(e.ReceiptDate).format('HH:mm') === '00:00') {
+                Object.assign(e, {ReceiptDateShow: moment(e.ReceiptDate).add(543, 'years').format('DD MMM YYYY')});
+              } else {
+                Object.assign(e, {ReceiptDateShow: moment(e.ReceiptDate).add(543, 'years').format('DD MMM YYYY HH:mm') + ' น.'});
+              }
+              return e;
+            });
+          }
         }, error => console.log(error));
   }
-
-  // private _adjustReceiptgetByCon(compareID) {
-  //   this.apiServer.post('/XCS60/AdjustReceiptgetByCon', {CompareID: compareID})
-  //       .subscribe(response => {
-  //         this.tableData = response;
-  //       }, error => {
-  //         console.log(error);
-  //       }
-  //   );
-  // }
-
-
-  // private  _adjustDetailgetByCon(compareID) {
-  //   this.apiServer.post('/XCS60/AdjustCompareDetailgetByCon', {CompareID: compareID})
-  //       .subscribe(response => this.adjustDetailData =  response, error => console.log(error));
-  // }
 
   private _masDocumentMailgetAll(compareID) {
     this.apiServer.post('/XCS60/MasDocumentMaingetAll', {DocumentType: 10, ReferenceCode: compareID})
@@ -294,12 +307,18 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
                   , error => console.log(error));
   }
 
-  viewData(CompareID: string = '', CompareDetailID: string = '') {
-    this.router.navigate(['/reduction/manage', 'V', this.compareID]);
+  viewData(CompareDetailID: any = '') {
+    this.router.navigate(['/reduction/manage', 'V', this.compareID, CompareDetailID]);
   }
 
-  editData(CompareID: string, CompareDetailID: string) {
-    this.router.navigate(['/reduction/manage', 'E', this.compareID]);
+  editData(CompareDetailID: any) {
+    this.router.navigate(['/reduction/manage', 'E', this.compareID, CompareDetailID]);
+  }
+
+  addData() {
+    const dataLength = this.detailData.AdjustCompareReceipt.length;
+    const compareDetailID = this.detailData.AdjustCompareReceipt[dataLength - 1 ].CompareDetailID;
+    this.router.navigate(['/reduction/manage', 'A', this.compareID, compareDetailID]);
   }
 
   attachFile(file) {
@@ -335,5 +354,6 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     // this.getDataFromListPage.unsubscribe();
     this.navService.setEditField(false);
     this.navServiceSub.unsubscribe();
+    this.onPrintSubscribe.unsubscribe();
   }
 }

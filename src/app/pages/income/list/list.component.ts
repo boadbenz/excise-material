@@ -60,7 +60,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(true);
         this.navService.setNewButton(true);
 
-        this.sidebarService.setVersion('Revenue 0.0.0.31');
+        this.sidebarService.setVersion('Revenue 0.0.0.33');
         this.RevenueStatus = "";
         //this.advSearch.next(true);
         //this.preloader.setShowPreloader(true);
@@ -68,16 +68,16 @@ export class ListComponent implements OnInit, OnDestroy {
         //this.getDepartmentRevenue();
         //this.onSearch({ Textsearch: "" });
 
-        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async TextSearch => {
-            if (TextSearch) {               
+        this.subOnSearch = await this.navService.searchByKeyword.subscribe(async res => {
+            if (res) {
                 await this.navService.setOnSearch('');
 
                 let ts;
                 ts = { TextSearch: "", AccountOfficeCode: localStorage.getItem("officeCode") }
-                ts = TextSearch;
+                ts = res;
 
-                if (ts.TextSearch == null) { this.onSearch({ TextSearch: "" }); }
-                else { this.onSearch(TextSearch); }
+                if (ts.Textsearch == null) { this.onSearch({ TextSearch: "" }); }
+                else { this.onSearch(res); }
 
             }
         })
@@ -107,7 +107,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     onSearch(p: any) {
         var paramsOther = {
-            TextSearch: p.TextSearch,
+            Textsearch: p.Textsearch,
             AccountOfficeCode: localStorage.getItem("officeCode")
         }
 

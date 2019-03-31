@@ -237,13 +237,13 @@
           <div class="col-md-6">
             <div class="row">
               <label class="control-label col-sm-4">เลขที่คดี : {{IsLawsuitType}}</label>
-              <div class="form-group col-sm-4">
+              <div class="form-group col-sm-3">
                 <input class="form-control form-control-sm" type="number" formControlName="LawsuitNo"
                   [readonly]="showEditField || lawsuitForm.controls['IsLawsuitCheck'].value"
                   [ngClass]="{'ng-touched':isRequired}" style="color: black;"
                   [required]="!lawsuitForm.controls['IsLawsuitCheck'].value">
               </div>
-              <label class="control-label text-center col-md-1">/</label>
+              <label class="control-label text-center col-md-2">/</label>
               <div class="form-group col-sm-3">
                 <input class="form-control form-control-sm" type="number" formControlName="LawsuitNoSub"
                   [readonly]="showEditField || lawsuitForm.controls['IsLawsuitCheck'].value"
@@ -306,16 +306,34 @@
 
           <div class="col-md-6">
             <div class="form-group row">
-              <label class="control-label col-md-4">หน่วยงาน : </label>
+              <label class="control-label col-md-4">สังกัด : </label>
               <div class="col-md-8">
                 <input class="form-control form-control-sm" type="text" style="color: black;"
                   formControlName="DepartmentName" disabled>
               </div>
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="control-label col-md-3">ส่วนราชการ : </label>
+              <div class="col-md-9">
+                <input class="form-control form-control-sm" [matAutocomplete]="auto3" name="LawsuitStation" type="text"
+                  style="color: black;" formControlName="LawsuitStation"
+                  [readonly]="showEditField || lawsuitForm.controls['IsLawsuitCheck'].value"
+                  [ngClass]="{'ng-touched':isRequired}" (input)="onChangeStation($event.target.value)"
+                  [required]="!lawsuitForm.controls['IsLawsuitCheck'].value">
+                <mat-autocomplete #auto3="matAutocomplete">
+                  <mat-option *ngFor="let sOption of suggestionsStation" [value]="sOption"
+                    (onSelectionChange)="onChangeStationReslut(sOption)">
+                    {{ sOption.OfficeName }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-md-6">
             <div class="form-group row">
               <label class="control-label col-md-4">เขียนที่ : </label>
@@ -334,7 +352,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="row">
           <div class="col-md-12">
             <div class="form-group row">
@@ -358,7 +376,7 @@
               <th class="footable-sortable">ประเภทผู้ต้องหา</th>
               <th class="footable-sortable">ประเภทบุคคล</th>
               <th class="footable-sortable">เลขประจำตัว</th>
-              <th class="footable-sortable">ชื่อผู้ต้องหา</th>
+              <th class="footable-sortable">ชื่อ - สกุล ผู้ต้องหา</th>
               <th class="footable-sortable">ลักษณะคดี</th>
               <th class="footable-sortable">คดีสิ้นสุดชั้น</th>
               <th class="footable-sortable"></th>

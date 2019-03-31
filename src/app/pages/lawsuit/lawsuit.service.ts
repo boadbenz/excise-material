@@ -303,8 +303,8 @@ export class LawsuitService {
     return await this.http.post<any>(url, JSON.stringify(params), this.httpOptions).toPromise();
   }
 
-  LawsuitReportArrestgetByCon(IndictmentID) {
-    const params = { IndictmentID };
+  LawsuitReportArrestgetByCon(LawsuitID) {
+    const params = { LawsuitID };
     const url = `${appConfig.apiReport}/ILG60_00_04_001.aspx`;
     return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
       .map(x => x)

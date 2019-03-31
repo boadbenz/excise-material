@@ -128,7 +128,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sidebarService.setVersion('0.0.1.11');
-    localStorage.setItem('programcode','ILG60-08-02');
+    localStorage.setItem('programcode', 'ILG60-08-02');
     this.pageLoad();
   }
 
@@ -222,13 +222,17 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         case 1:
           // 4.1.1(2.1)
           // 4.1.1(2.2)
+
           const RequestBribe: IRequestBribe[] = await this.requestBribeService
             .RequestBribegetByRequestBribeRewardID({
               RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
             })
             .toPromise();
+          if (RequestBribe.length > 0) {
             this.ReqBribeDTL = RequestBribe[0].RequestBribeID;
-            localStorage.setItem("ReqDTL",this.ReqBribeDTL)
+          }
+
+          localStorage.setItem("ReqDTL", this.ReqBribeDTL)
           // 4.1.1(2.2.1)
           if (RequestBribe.length > 0) {
             // 4.1.1(2.2.1(1))
@@ -258,13 +262,11 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           }
 
           // 4.1.1(2.5)
-
           const RequestCommand: IRequestCommand[] = await this.requestCommandService
             .RequestCommandgetByArrestCode({
               ArrestCode: this.ArrestCode$.getValue()
             })
             .toPromise();
-
           if (RequestCommand.length > 0) {
             // 4.1.1(2.6)
             this.ILG60_08_02_00_00E09_DATA$.next(RequestCommand);
@@ -772,7 +774,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
       })
       .toPromise();
-      console.log("++++RequestBribe : ",RequestBribe)
+    console.log("++++RequestBribe : ", RequestBribe)
 
     // 1.2
     const RequestReward: IRequestReward[] = await this.requestRewardService
@@ -780,16 +782,16 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
       })
       .toPromise();
-      console.log("++++RequestReward  : ",RequestReward)
+    console.log("++++RequestReward  : ", RequestReward)
 
     const printDocRequestBribe: any[] = RequestBribe.map(m => ({
       DocName: `${m.RequestBribeCode || ''}: คำร้องขอรับเงินสินบน`,
-      DocType: 'แบบฟอร์ม', RequestBribeID:`${m.RequestBribeID}`, checked: false, TypeName: "RB"
+      DocType: 'แบบฟอร์ม', RequestBribeID: `${m.RequestBribeID}`, checked: false, TypeName: "RB"
     }));
 
     const printDocRequestReward: any[] = RequestReward.map(m => ({
       DocName: `${m.RequestRewardCode || ''}: คำร้องขอรับเงินรางวัล`,
-      DocType: 'แบบฟอร์ม', RequestRewardID:`${m.RequestRewardID}`, checked: false, TypeName: "RR"
+      DocType: 'แบบฟอร์ม', RequestRewardID: `${m.RequestRewardID}`, checked: false, TypeName: "RR"
     }));
     const printDoc = [...printDocRequestBribe, ...printDocRequestReward];
 
@@ -797,13 +799,13 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       backdrop: 'static', size: 'lg'
     });
     dialogRef.componentInstance.data = printDoc;
-    dialogRef.result.then(res => {});
+    dialogRef.result.then(res => { });
     // 2 END
   }
   private RequestBribeRewardgetByIndictmentID(
     param: IRequestBribeRewardgetByIndictmentID
-  ) {}
-  private RequestCommandinsAll(param: IRequestCommandinsAll) {}
+  ) { }
+  private RequestCommandinsAll(param: IRequestCommandinsAll) { }
   private RequestCommandgetByArrestCode(
     param: IRequestCommandgetByArrestCode,
     event: string
@@ -868,7 +870,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
 
   private RequestBribegetByRequestBribeRewardID(
     param: IRequestBribegetByRequestBribeRewardID
-  ) {}
+  ) { }
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();

@@ -119,7 +119,7 @@
                   {{(item.AdjustCompareStaff[0]) ? item.AdjustCompareStaff[0].TitleName : ''}}{{(item.AdjustCompareStaff[0]) ? item.AdjustCompareStaff[0].FirstName : ''}} 
                   {{(item.AdjustCompareStaff[0]) ? item.AdjustCompareStaff[0].LastName : ''}}
                 </td>
-                <td>{{item.CompareDate}}</td>
+                <td>{{formatDate(item.CompareDate, 'DD MMM YYYY')}}</td>
                 <td>{{(item.AdjustCompareStaff[0]) ? item.AdjustCompareStaff[0].OfficeShortName : ''}}</td>
                 <td>
                   <a href="javaScript:void(0);" class="text-secondary" (click)="viewData(item.CompareID, item.IndictmentID)">

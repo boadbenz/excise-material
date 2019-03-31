@@ -182,7 +182,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onEditSubscribe.unsubscribe();
     }
 
-
     private active_Route() {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
@@ -592,15 +591,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.EvidenceInCode = "RC" + this.oEviInRecvStaff.OfficeCode + (this.EvidenceInDate.date.year + 543).toString().substring(4, 2) + "00001";
                         this.oEvidenceIn.EvidenceInCode = this.EvidenceInCode;
 
-                        await this.InsEvidenceInExternal();
-
-                        // if (this.evitype == "E") {
-                        //     await this.InsEvidenceInExternal();
-                        // }
-                        // else if (this.evitype == "G") {
-                        //     await this.InsEvidenceInGovernment();
-                        // }
-
+                        if (this.evitype != "I") {
+                            await this.InsEvidenceInExternal();
+                        }
                     }
                 }, (error) => { console.error(error); return false; });
             }
@@ -613,14 +606,9 @@ export class ManageComponent implements OnInit, OnDestroy {
                         this.EvidenceInCode = "RC" + this.oEviInRecvStaff.OfficeCode + (this.EvidenceInDate.date.year + 543).toString().substring(4, 2) + RunningNo;
                         this.oEvidenceIn.EvidenceInCode = this.EvidenceInCode;
 
-                        await this.InsEvidenceInExternal();
-
-                        // if (this.evitype == "E") {
-                        //     await this.InsEvidenceInExternal();
-                        // }
-                        // else if (this.evitype == "G") {
-                        //     await this.InsEvidenceInGovernment();
-                        // }
+                        if (this.evitype != "I") {
+                            await this.InsEvidenceInExternal();
+                        }
                     }
                 }, (error) => { console.error(error); return false; });
             }
@@ -867,7 +855,7 @@ export class ManageComponent implements OnInit, OnDestroy {
                 cancelButtonText: 'ยกเลิก'
             }).then((result) => {
                 if (result.value) {
-                    if (this.evitype == "E") {
+                    if (this.evitype != "I") {
                         this.EviService.EvidenceInupdDelete(this.EvidenceInID).then(async IsSuccess => {
                             if (IsSuccess) {
                                 this.oEvidenceIn = {};
@@ -1013,7 +1001,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    async generateItemCode() {
+    async  generateItemCode() {
         for (let i = 0; i < this.ListEvidenceInItem.length; i++) {
             if (this.ListEvidenceInItem[i].IsNewItem == true || this.ListEvidenceInItem[i].EvidenceInItemCode === "Auto Generate") {
                 await this.EviService.TransactionRunningItemgetByCon("IN", this.ListEvidenceInItem[i].GroupCode, this.WarehouseID).then(async item => {

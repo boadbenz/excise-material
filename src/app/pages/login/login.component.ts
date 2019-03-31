@@ -43,8 +43,14 @@ export class LoginComponent implements OnInit {
     }
     if (User && Pass) {
       if (this.authService.signin(from)) {
-
-
+        
+        // await this.authService.getTest()
+        // await this.authService.userAndPrivilegeInfo(User).subscribe(async res => {
+        //   console.log("ssoService res++++ : ", res);
+        // })
+        // await this.authService.testGet().then(async res => {
+        //   console.log("ssoService testGet res++++ : ", res);
+        // })
         //***********************************Used with in the Excise Only (Don't Delete)********************************** */
 
         // const params = {
@@ -53,12 +59,12 @@ export class LoginComponent implements OnInit {
         //   Password: Pass,
         //   ipAddress: "10.11.1.10",
         //   requestData: {
-        //     UserId: "lic02"
+        //     UserId: User
         //   }
         // };
         // await this.authService.ssoService(params).subscribe(async res => {
-        //   if (res.ResponseMessage == "SUCCESS") {
-        //     // console.log("res++++ : ", res);
+        //   console.log("ssoService res++++ : ", res);
+        //   if (res.ResponseCode == "OK") {
         //     await this.authService.userAndPrivilegeInfo(User).subscribe(async res => {
         //       // console.log("getpin : ", res);
         //       if (res.pin) {
@@ -71,9 +77,9 @@ export class LoginComponent implements OnInit {
         //             PersonNID: res.pin
         //           }
         //         }
-        //         if (User == Pass) {
+        //         // if (User == Pass) {
         //           await this.authService.eofficeInfo(paramsPinID).subscribe(async res => {
-        //             console.log("res eofficeInfo  : ", res);
+        //             // console.log("res eofficeInfo  : ", res);
         //             if (res.Status == "OK") {
         //               this.fullName = res.PersonInformation.PersonTHTitle + " " +
         //                 res.PersonInformation.PersonTHName + " " + res.PersonInformation.PersonTHSurName;
@@ -86,7 +92,7 @@ export class LoginComponent implements OnInit {
         //               this.router.navigateByUrl(url);
         //             } else this.errMsg = "Please Check User or Password "
         //           });
-        //         } else this.errMsg = "User or Password invalid"
+        //         // } else this.errMsg = "User or Password invalid"
         //       } else this.errMsg = "User or Password invalid"
         //     });
 

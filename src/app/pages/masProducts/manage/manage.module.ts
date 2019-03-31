@@ -10,6 +10,7 @@ import { PaginationTableModule } from '../../component/pagination-table/paginati
 import { MyDatePickerTHModule } from 'mydatepicker-th';
 import { MasProdService } from '../masProd.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 const routes: Routes = [
@@ -20,7 +21,7 @@ const routes: Routes = [
             urls: [{ title: 'หน้าหลัก', url: '/' }, { title: 'ค้นหาของกลาง', url: '/masProducts/list' }, 
             { title: 'จัดการของกลาง', url: '/masProducts/manage' }],
             // nextPage: { title: 'xxx', url: '/masProducts/list' },
-            codePage: 'ILG60-99-02-00-00'
+            codePage: 'ILG60-99-03-01-00'
         },
         component: ManageComponent
     }
@@ -36,7 +37,8 @@ const routes: Routes = [
         CardActionsModule,
         PaginationTableModule,
         MyDatePickerTHModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        NgbModule.forRoot()
     ],
     declarations: [ManageComponent],
     providers: [MasProdService],

@@ -1216,7 +1216,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         `${x.ProductDesc || ''}`;
 
     formatterRegion = (x: { SubdistrictNameTH: string, DistrictNameTH: string, ProvinceNameTH: string }) =>
-        `${x.SubdistrictNameTH+"/" || ''}${x.DistrictNameTH+"/" || ''}${x.ProvinceNameTH || ''}`;
+        `${x.SubdistrictNameTH+" " || ''}${x.DistrictNameTH+" " || ''}${x.ProvinceNameTH || ''}`;
 
     formatterStaff = (x: { TitleName: string, FirstName: string, LastName: string }) =>
         `${x.TitleName || ''} ${x.FirstName || ''} ${x.LastName || ''}`

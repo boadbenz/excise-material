@@ -8,7 +8,7 @@
     <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onAdvSearch(advForm)">
       <div>
         <div class="row">
-          <label for="" class="col-md-2 control-label padding-adv-search">เลขที่ใบงาน :</label>
+          <label for="" class="col-md-2 control-label ">เลขที่ใบงาน :</label>
           <div class="col-md-4 padding-input-adv-search">
             <div class="form-group">
               <div class="form-line">
@@ -16,7 +16,7 @@
               </div>
             </div>
           </div>
-          <label for="" class="col-md-2 control-label padding-adv-search">เลขที่คดีรับคำกล่าวโทษ :</label>
+          <label for="" class="col-md-2 control-label ">เลขที่คดีรับคำกล่าวโทษ :</label>
           <div class="col-md-4 padding-input-adv-search">
             <div class="form-group">
               <div class="form-line">
@@ -27,7 +27,7 @@
         </div>
 
         <div class="row">
-          <label for="" class="col-md-2 control-label padding-adv-search">ทะเบียนตรวจพิสูจน์ :</label>
+          <label for="" class="col-md-2 control-label ">ทะเบียนตรวจพิสูจน์ :</label>
           <div class="col-md-4 padding-input-adv-search">
             <div class="form-group">
               <div class="form-line">
@@ -35,7 +35,7 @@
               </div>
             </div>
           </div>
-          <label for="" class="col-md-2 control-label padding-adv-search">เลขที่เปรียบเทียบคดี :</label>
+          <label for="" class="col-md-2 control-label ">เลขที่เปรียบเทียบคดี :</label>
           <div class="col-md-4 padding-input-adv-search">
             <div class="form-group">
               <div class="form-line">
@@ -45,15 +45,15 @@
           </div>
         </div>
         <div class="row">
-          <!-- <label for="" class="col-md-2 control-label padding-adv-search">วันที่เปรียบเทียบคดี :</label>
+          <!-- <label for="" class="col-md-2 control-label ">วันที่เปรียบเทียบคดี :</label>
           <div class="col-md-4 padding-input-adv-search">
             <div class="form-group input-group form-line">
               <input type="date"  [(ngModel)]="CompareDateFrom" name="CompareDateFrom"  (blur)="varidateCDF(advForm,$event)"  ngModel class="form-control " placeholder="วว/ดด/ปปปป">
-              <label class="col-2 control-label text-center padding-adv-search">ถึง</label>
+              <label class="col-2 control-label text-center ">ถึง</label>
               <input type="date" [(ngModel)]="CompareDateTo" name="CompareDateTo"  (blur)="varidateCDE(advForm,$event)" ngModel class="form-control " placeholder="วว/ดด/ปปปป">
             </div>
           </div> -->
-          <label for="" class="col-md-2 control-label padding-adv-search">วันที่เปรียบเทียบคดี :</label>
+          <label for="" class="col-md-2 control-label ">วันที่เปรียบเทียบคดี :</label>
           <div class="col-md-4 padding-input-adv-search">
               <div class="form-group">
                   <div class="form-line">
@@ -62,7 +62,7 @@
                             <my-date-picker-th ngModel name="LawsuitDateFrom" placeholder="" locale="th" [options]="LawsuitDateFromOptions"
                               (dateChanged)="onDateFromChanged($event)"></my-date-picker-th>
                           </div>
-                          <label class="col-2 control-label text-center padding-adv-search">ถึง</label>
+                          <label class="col-2 control-label text-center ">ถึง</label>
                           <div class="col-md-5">
                             <my-date-picker-th ngModel name="LawsuitDateTo" placeholder="" locale="th" [options]="LawsuitDateToOptions"
                               (dateChanged)="onDateChanged($event)"></my-date-picker-th>
@@ -91,7 +91,7 @@
           <input type="hidden" name="ProgramCode" ngModel>
           <input type="hidden" name="ProcessCode" ngModel>
 
-          <label for="" class="col-md-2 control-label padding-adv-search">ผู้เปรียบเทียบคดี :</label>
+          <label for="" class="col-md-2 control-label ">ผู้เปรียบเทียบคดี :</label>
           <div class="col-md-4 padding-input-adv-search">
             <div class="form-group">
               <div class="form-line">
@@ -102,7 +102,7 @@
         </div>
 
         <div class="row">
-          <label for="" class="col-md-2 control-label padding-adv-search">หน่วยงาน :</label>
+          <label for="" class="col-md-2 control-label ">สังกัด :</label>
           <div class="col-md-4 padding-input-adv-search">
             <div class="form-group">
               <div class="form-line">
@@ -138,7 +138,7 @@
             <th style="text-align: center">เลขที่เปรียบเทียบคดี</th>
             <th>ผู้เปรียบเทียบคดี</th>
             <th style="text-align: center">วันที่เปรียบเทียบคดี</th>
-            <th>หน่วยงาน</th>
+            <th>สังกัด</th>
             <th></th>
           </tr>
         </thead>

@@ -108,7 +108,7 @@ export const routes: Routes = [
             { path: 'list', loadChildren: './pages/reduction/list/list.module#ListModule' },
             { path: 'manage/:mode', loadChildren: './pages/reduction/manage/manage.module#ManageModule' },
             {
-                path: 'manage/:mode/:compareid',
+                path: 'manage/:mode/:compareid/:comparedetailid',
                 loadChildren: './pages/reduction/manage-detail/manage-detail.module#ManageDetailModule'
             }
         ]
@@ -222,7 +222,6 @@ export const routes: Routes = [
         children: [
             { path: 'list', loadChildren: './pages/evidenceStock/list/list.module#ListModule' },
             { path: 'manage/:code', loadChildren: './pages/evidenceStock/manage/manage.module#ManageModule' },
-            { path: 'managedetail/:code', loadChildren: './pages/evidenceStock/managedetail/managedetail.module#ManageDetailModule' }
         ]
     }
 ];
