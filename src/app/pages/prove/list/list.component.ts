@@ -66,7 +66,7 @@ export class ListComponent implements OnInit {
         this.navService.setSearchBar(true);
         this.navService.setNewButton(false);
 
-        this.sidebarService.setVersion('Prove 0.0.0.35');
+        this.sidebarService.setVersion('Prove 0.0.0.36');
 
         //this.advSearch.next(true);
         this.DeliveryDateTo = null;
@@ -80,10 +80,10 @@ export class ListComponent implements OnInit {
                 await this.navService.setOnSearch('');
 
                 let ts;
-                ts = { TextSearch: "", AccountOfficeCode: localStorage.getItem("officeCode") }
+                ts = { Textsearch: "", AccountOfficeCode: localStorage.getItem("officeCode") }
                 ts = res;
 
-                if (ts.Textsearch == null) { this.onSearch({ TextSearch: "" }); }
+                if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
                 else { this.onSearch(res); }
             }
         })
@@ -233,6 +233,10 @@ export class ListComponent implements OnInit {
         } else {
             this.Prove.push(list);
         }
+
+        this.Prove.map(m => {
+            m.ProveReportNo = `${m.ProveReportNo == 'null' || m.ProveReportNo == null ? '' : m.ProveReportNo}`;
+        });
 
         // set total record
         this.Prove = this.Prove.sort((a, b) => a.ProveReportNo.localeCompare(b.ProveReportNo));
