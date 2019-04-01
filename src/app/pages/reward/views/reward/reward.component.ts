@@ -362,7 +362,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.17');
+    this.sidebarService.setVersion('0.0.1.18');
     localStorage.setItem('programcode', 'ILG60-08-02');
     this.pageLoad();
   }
@@ -559,13 +559,14 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
         .reduce((a, b) => (a += b))
     );
 
-    this.RequestRewardStaff.value.forEach((element, index) => {
-      if (Number(element['sort']) === 1) {
-        this.RequestRewardStaff.at(index)
-          .get('MoneySort1')
-          .patchValue(this.aggregate.BribeMoney.sum);
-      }
-    });
+    // close 0.1.18
+    // this.RequestRewardStaff.value.forEach((element, index) => {
+    //   if (Number(element['sort']) === 1) {
+    //     this.RequestRewardStaff.at(index)
+    //       .get('MoneySort1')
+    //       .patchValue(this.aggregate.BribeMoney.sum);
+    //   }
+    // });
 
     this.RewardFormGroup.get('RewardTotal').patchValue(
       this.aggregate.RewardMoney.sum
@@ -770,8 +771,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                 FirstMoney: [0],
                 SecondPart: [0],
                 SecondMoney: [0],
-                MoneySort1: [this.aggregate.BribeMoney.sum],
-                ToTalMoney: [this.aggregate.BribeMoney.sum]
+                MoneySort1: [0],
+                ToTalMoney: [0]
               });
               this.RequestRewardStaff.push(newGroup);
             });
