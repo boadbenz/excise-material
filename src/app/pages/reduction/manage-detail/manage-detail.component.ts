@@ -244,7 +244,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
   public async ngOnInit() {
     this.preloaderService.setShowPreloader(true);
     this.navService.setOnCancel(false);
-    this.sidebarService.setVersion('0.0.3.31');
+    this.navService.setOnSave(false);
+    this.sidebarService.setVersion('0.0.4.01');
     const qParam = this.activeRoute.snapshot.queryParams;
     this.isOld = qParam.IsOld;
     this.mode = this.activeRoute.snapshot.paramMap.get('mode');
@@ -293,28 +294,39 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.unsub.edit = this.navService.showFieldEdit.subscribe(status => {
+    this.unsub.edit = this.navService.showFieldEdit.subscribe(async status => {
       this.showField = status;
       if (!this.showField) {
-        this.navService.setDeleteButton(false);
-        this.navService.setSaveButton(true);
-        this.navService.setCancelButton(true);
-        this.navService.setPrintButton(false);
-        this.navService.setSearchBar(false);
-        this.navService.setEditButton(false);
-        this.navService.setSendIncomeButton(false);
+        await this.navService.setDeleteButton(false);
+        await this.navService.setSaveButton(true);
+        await this.navService.setCancelButton(true);
+        await this.navService.setPrintButton(false);
+        await this.navService.setSearchBar(false);
+        await this.navService.setEditButton(false);
+        await this.navService.setSendIncomeButton(false);
         this.mode = 'E';
       } else {
-        this.navService.setDeleteButton(true);
-        this.navService.setPrintButton(true);
-        this.navService.setEditButton(true);
-        this.navService.setSearchBar(false);
-        this.navService.setCancelButton(false);
-        this.navService.setSaveButton(false);
-        this.navService.setSendIncomeButton(true);
+        await this.navService.setDeleteButton(true);
+        await this.navService.setPrintButton(true);
+        await this.navService.setEditButton(true);
+        await this.navService.setSearchBar(false);
+        await this.navService.setCancelButton(false);
+        await this.navService.setSaveButton(false);
+        await this.navService.setSendIncomeButton(true);
         this.mode = 'V';
       }
     });
+
+    // tslint:disable-next-line:triple-equals
+    if (this.isOld == '1' && this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
+      this.navService.setDeleteButton(false);
+      this.navService.setSaveButton(false);
+      this.navService.setCancelButton(false);
+      this.navService.setPrintButton(true);
+      this.navService.setSearchBar(false);
+      this.navService.setEditButton(false);
+      this.navService.setSendIncomeButton(true);
+    }
 
     this.unsub.incame = this.navService.onSendIncome.subscribe(status => {
       if (status) {
@@ -427,6 +439,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       this.adjustFine[index].CompareFineBribeMoney = (this.sinbon * this.adjustFine[index].CompareFine) / 100;
       this.adjustFine[index].CompareFineRewardMoney = (this.rangwan * this.adjustFine[index].CompareFine) / 100;
       this.adjustFine[index].CompareFineTreasuryMoney = (this.songkrang * this.adjustFine[index].CompareFine) / 100;
+    } else {
+      this.adjustFine[index].CompareFineStatus = 2;
     }
   }
 
@@ -837,7 +851,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         CompareFineID: '',
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:triple-equals
-        CompareDetailID: (this.activeRoute.snapshot.paramMap.get('mode') === 'A' || this.isOld == '1') ? '' : this.adjustFine[i].CompareDetailID,
+        CompareDetailID: (this.activeRoute.snapshot.paramMap.get('mode') === 'A') ? '' : this.adjustFine[i].CompareDetailID,
         ProductID: this.adjustFine[i].ProductID,
         ProductFine: this.adjustFine[i].CompareFine,
         VatValue: 500,
@@ -926,7 +940,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     const param = {
       // tslint:disable-next-line:triple-equals
-      CompareDetailID: (this.activeRoute.snapshot.paramMap.get('mode') === 'A' || this.isOld == '1') ? '' : this.compareIdDetail,
+      CompareDetailID: (this.activeRoute.snapshot.paramMap.get('mode') === 'A') ? '' : this.compareIdDetail,
       CompareID: this.compareID,
       IndictmentDetailID: 0,
       CompareAction: '',
@@ -976,7 +990,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       if (element.LawbreakerFirstName) {
         Object.assign(element, {
           // tslint:disable-next-line:triple-equals
-          CompareReceiptID: (this.activeRoute.snapshot.paramMap.get('mode') === 'A' || this.isOld == '1') ? '' :
+          CompareReceiptID: (this.activeRoute.snapshot.paramMap.get('mode') === 'A') ? '' :
           this.AdjustCompareDetail[0].AdjustCompareDetailReceipt[0].CompareReceiptID,
           ReceiptType: this.mode,
           ReceiptDate: moment().format('YYYY-MM-DD HH:mm:ss') + ' +00:00',
@@ -1001,7 +1015,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     try {
       let data;
       // tslint:disable-next-line:triple-equals
-      if (this.activeRoute.snapshot.paramMap.get('mode') === 'A' || this.isOld == '1') {
+      if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
         data = await this.apiService.post('/XCS60/AdjustCompareDetailinsAll', param).toPromise();
       } else {
         data = await this.apiService.post('/XCS60/AdjustCompareDetailupdByCon', param).toPromise();
