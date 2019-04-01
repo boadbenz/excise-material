@@ -109,10 +109,10 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   SumMoney = () =>
     this.aggregate.BribeMoney.sum + this.aggregate.RewardMoney.sum;
   SumFirstMoney = () =>
-    Number(((this.SumMoney() || 0) / 3).toFixed(2));
+    Number(((this.aggregate.BribeMoney.sum || 0) / 3).toFixed(2));
   SumFirstMoneyPerPart = () =>
     Number(
-      ( Math.floor(((this.SumFirstMoney() || 0) / (this.aggregate.FirstPart.sum || 0) ) * 100 ) / 100 ).toFixed(2)
+      (Math.floor(((this.SumFirstMoney() || 0) / (this.aggregate.FirstPart.sum || 0)) * 100 ) / 100 ).toFixed(2)
     ) || 0;
   // SumFirstMoneyPerPartView = () => parseInt(this.SumFirstMoneyPerPart().toString()) || 0;
   // FirstRemainder = () =>
@@ -122,18 +122,18 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
       (this.SumFirstMoney() - (this.SumFirstMoneyPerPart() * (this.aggregate.FirstPart.sum || 0))).toFixed(2)
     ) || 0;
   SumSecondMoney = () =>
-    Number(((this.SumMoney() / 3) * 2).toFixed(2));
+    Number((this.SumFirstMoney() * 2).toFixed(2));
   SumSecondMoneyPerPart = () =>
     Number(
-      (Math.floor(((this.SumSecondMoney() || 0) / (this.aggregate.SecondPart.sum || 0) ) * 100 ) / 100 ).toFixed(2)
+      (Math.floor(((this.SumSecondMoney() || 0) / (this.aggregate.SecondPart.sum || 0)) * 100 ) / 100 ).toFixed(2)
     ) || 0;
   // SumSecondMoneyPerPartView = () => parseInt(this.SumSecondMoneyPerPart().toString()) || 0;
   // SecondRemainder = () =>
   //   this.SumSecondMoney() - this.aggregate.SecondMoney.sum;
   SecondRemainder = () => 
-  Number(
-    (this.SumSecondMoney() - (this.SumSecondMoneyPerPart() * (this.aggregate.SecondPart.sum || 0))).toFixed(2)
-  ) || 0;
+    Number(
+      (this.SumSecondMoney() - (this.SumSecondMoneyPerPart() * (this.aggregate.SecondPart.sum || 0))).toFixed(2)
+    ) || 0;
   searchStation = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -362,7 +362,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.16');
+    this.sidebarService.setVersion('0.0.1.17');
     localStorage.setItem('programcode', 'ILG60-08-02');
     this.pageLoad();
   }
@@ -737,7 +737,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               this.RequestRewardStaff.setControl(i,newGroup);
             });
           }
-        }, 500);
+        }, 1500);
         // console.log('forEach PosLevel : ', this.PosLeveltemp)
 
         // 1.1.9
@@ -775,7 +775,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
               });
               this.RequestRewardStaff.push(newGroup);
             });
-        }, 1500);
+        }, 2000);
         // this.ILG60_08_04_00_00_E08_DATA$.next({
         //   methodName: 'RequestBribeRewardgetByIndictmentID',
         //   data: RequestBribeReward
