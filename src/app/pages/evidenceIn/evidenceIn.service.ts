@@ -23,7 +23,7 @@ export class EvidenceService {
   //   const url = `${appConfig.api8776}/EvidenceInListgetByKeyword`;
   //   return this.http.post<Evidence_In[]>(url, params, this.httpOptions);
   // }
-  
+
   async getByKeyword(Textsearch: any): Promise<any> {
     const params = JSON.stringify(Textsearch);
     const url = `${appConfig.api8776}/EvidenceInListgetByKeyword`;
@@ -71,7 +71,7 @@ export class EvidenceService {
     }
   }
 
-  async getByCon(EvidenceInID:string, ProveID: string): Promise<any> {
+  async getByCon(EvidenceInID: string, ProveID: string): Promise<any> {
     const params = { EvidenceInID, ProveID };
     const url = `${appConfig.api8776}/EvidenceIngetByCon`;
 
@@ -242,7 +242,7 @@ export class EvidenceService {
   }
 
   async EvidenceInOutItemupdIsReturn(EvidenceOutItem: any): Promise<any> {
-    const params =  JSON.stringify(EvidenceOutItem);
+    const params = JSON.stringify(EvidenceOutItem);
     const url = `${appConfig.api8776}/EvidenceInOutItemupdIsReturn`;
 
     try {
@@ -261,13 +261,33 @@ export class EvidenceService {
     } catch (error) { }
   }
 
-  async Report_11_001(EvidenceInID: any): Promise<any> {
-    const params = { EvidenceInID };
-    const url = `${appConfig.apiReport}/ILG60_00_11_001.aspx`;
+  // async Report_11_001(EvidenceInID: any): Promise<any> {
+  //   const params = { EvidenceInID };
+  //   const url = `${appConfig.apiReport}/ILG60_00_11_001.aspx`;
 
+  //   try {
+  //     const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+  //     return res;
+  //   } catch (error) { }
+  // }
+
+  Report_11_001(EvidenceInID: string) {
+    const params = {
+      EvidenceInID: EvidenceInID
+    };
+    const url = `${appConfig.apiReport}/ILG60_00_11_001.aspx`;
     try {
-      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      return res;
+      return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+    } catch (error) { }
+  }
+
+  Report_11_002(EvidenceInID: string) {
+    const params = {
+      EvidenceInID: EvidenceInID
+    };
+    const url = `${appConfig.apiReport}/ILG60_00_11_002.aspx`;
+    try {
+      return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
     } catch (error) { }
   }
 }

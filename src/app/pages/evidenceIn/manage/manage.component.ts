@@ -18,6 +18,7 @@ import swal from 'sweetalert2';
 import { pagination } from '../../../config/pagination';
 import { async } from '../../../../../node_modules/@types/q';
 import { EvidenceOutService } from '../../evidenceOut/evidenceOut.service';
+import { PrintDocModalComponent } from '../printdoc-modal/printdoc-modal.component';
 
 
 @Component({
@@ -118,7 +119,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     constructor(
         private activeRoute: ActivatedRoute,
-        private ngbModel: NgbModal,
+        public ngbModel: NgbModal,
         private navService: NavigationService,
         private EviService: EvidenceService,
         private RevService: IncomeService,
@@ -126,7 +127,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         private preloader: PreloaderService,
         private proveService: ProveService,
         private EvidenceOutService: EvidenceOutService,
-        private router: Router
+        private router: Router,
+        // public dialog: NgbModal
     ) {
         // set false
         this.navService.setNewButton(false);
@@ -362,19 +364,21 @@ export class ManageComponent implements OnInit, OnDestroy {
                 IsChecked: false,
                 DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
                 DocType: 0,
-                DocTypeName: 'แบบฟอร์ม'
+                DocTypeName: 'แบบฟอร์ม',
+                EvidenceInID: this.EvidenceInID
             },
             {
                 IsChecked: false,
                 DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
                 DocType: 0,
-                DocTypeName: 'เอกสารแนบภายใน'
+                DocTypeName: 'เอกสารแนบภายใน',
+                EvidenceInID: this.EvidenceInID
             }
         ]
 
         const printDoc = [...printDocEvi]; //, ... this.ReportKD5, ... this.ReportKD6
 
-        const dialogRef = this.ngbModel.open(this.printDocModel, {
+        const dialogRef = this.ngbModel.open(PrintDocModalComponent ,{
           backdrop: 'static', size: 'lg'
     
         });

@@ -15,7 +15,8 @@ import { NgbModalRef, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class PrintDocModalComponent implements OnInit {
     public data: any
     printDoc: any[]
-    
+    EvidenceInID: string = '';
+
     // printDoc = [
     //     {
     //         IsChecked: false,
@@ -44,38 +45,66 @@ export class PrintDocModalComponent implements OnInit {
 
     ngOnInit() {
         this.printDoc = this.data;
-        console.log("fine printDoc : ", this.printDoc)
+        this.EvidenceInID = this.printDoc[0].EvidenceInID
+        console.log("evi printDoc : ", this.printDoc)
     }
 
     onPrint(f: any) {
         let _print = this.printDoc.filter(x => x.IsChecked == true && x.DocType == 0)
         if (_print.length) {
             this.preloader.setShowPreloader(true);
-            debugger
-            this.EviService.Report_11_001("this.EvidenceInID")
-                .then(x => {
-                    // const blob = new Blob([x], { type: "application/pdf" });
-                    // const link = document.createElement('a');
-                    // link.href = window.URL.createObjectURL(blob);
-                    // link.download = `${this.RevenueID}.pdf`;
-                    // link.click();
-                    const file = new Blob([x], { type: 'application/pdf' });
-                    const fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                    
-                    this.preloader.setShowPreloader(false);
-                }, (error) => {
-                    console.error(error);
-                    swal({
-                        title: '',
-                        text: "พบปัญหาในการพิมพ์รายงาน",
-                        type: 'error',
-                        confirmButtonText: 'ตกลง'
-                    });
+            // debugger
+            let forms = this.printDoc.filter(x => x.IsChecked == true && x.DocTypeName == 'แบบฟอร์ม')
+            if (forms.length) {
+                this.preloader.setShowPreloader(true);
+                this.EviService.Report_11_001(this.EvidenceInID)
+                    .subscribe(x => {
+                        // const blob = new Blob([x], { type: "application/pdf" });
+                        // const link = document.createElement('a');
+                        // link.href = window.URL.createObjectURL(blob);
+                        // link.download = `${this.EvidenceInID}.pdf`;
+                        // link.click();
+                        const file = new Blob([x], { type: 'application/pdf' });
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
 
-                    this.preloader.setShowPreloader(false);
-                    return false;
-                });
+                        this.preloader.setShowPreloader(false);
+                    }, (error) => {
+                        console.error(error);
+                        swal({
+                            title: '',
+                            text: "พบปัญหาในการพิมพ์รายงาน",
+                            type: 'error',
+                            confirmButtonText: 'ตกลง'
+                        });
+
+                        this.preloader.setShowPreloader(false);
+                        return false;
+                    });
+            }
+            let inside = this.printDoc.filter(x => x.IsChecked == true && x.DocTypeName == 'เอกสารแนบภายใน')
+            if (inside.length) {
+                this.preloader.setShowPreloader(true);
+                this.EviService.Report_11_002(this.EvidenceInID)
+                    .subscribe(x => {
+                        const file = new Blob([x], { type: 'application/pdf' });
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+
+                        this.preloader.setShowPreloader(false);
+                    }, (error) => {
+                        console.error(error);
+                        swal({
+                            title: '',
+                            text: "พบปัญหาในการพิมพ์รายงาน",
+                            type: 'error',
+                            confirmButtonText: 'ตกลง'
+                        });
+
+                        this.preloader.setShowPreloader(false);
+                        return false;
+                    });
+            }
         }
         else {
             swal({
@@ -87,7 +116,7 @@ export class PrintDocModalComponent implements OnInit {
             //alert("กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!");
         }
     }
-    
+
     dismiss(e: any) {
         this.d.emit(e);
         this.ActiveModal.close();
