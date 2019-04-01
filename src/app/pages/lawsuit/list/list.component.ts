@@ -101,7 +101,7 @@ export class ListComponent implements OnInit, OnDestroy {
         let LawsuitArrestList = await this.lawsuitService.LawsuitArrestGetByKeyword("", localStorage.officeCode);
         let temp = []
         LawsuitArrestList.forEach(element => {
-          if(element['IsLawsuitComplete'] == 0 && !element['LawsuitArrestIndicment'][0].IndictmentID) {
+          if(element['IsLawsuitComplete'] == 0) {
             temp.push(element)
           }
         })
