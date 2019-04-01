@@ -8,7 +8,8 @@ export const environment = {
     hostXCS60: 'http://103.233.193.94:8883/XCS60',
     api: 'http://103.233.193.94:7777',
     api90: 'http://103.233.193.94:8889',
-    api_port: 'http://103.233.193.94:'
+    api_port: 'http://103.233.193.94:',
+    aip_timeline: 'http://103.233.193.94:7788'
 };
 
 // export const environment = {

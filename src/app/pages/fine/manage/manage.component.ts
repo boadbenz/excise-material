@@ -122,7 +122,32 @@ export class ManageComponent implements OnInit, OnDestroy {
   get CompareDocument(): FormArray {
     return this.compareForm.get('CompareDocument') as FormArray;
   }
+  //-----var time line-------//
+  RestimeLine: any;
+  TL_ArrestCode: any[] = [];
+  TL_CompareID: any[] = [];
+  TL_LawsuitID: any[] = [];
+  TL_NoticeCode: any[] = [];
+  TL_ProveID: any[] = [];
+  TL_RequestBribeID: any[] = [];
+  TL_RevenueID: any[] = [];
 
+  DisTL_ArrestCode: boolean;
+  DisTL_CompareID: boolean;
+  DisTL_LawsuitID: boolean;
+  DisTL_NoticeCode: boolean;
+  DisTL_ProveID: boolean;
+  DisTL_RequestBribeID: boolean;
+  DisTL_RevenueID: boolean;
+
+  linkTL_Arrest: string;
+  linkTL_Compare: string;
+  linkTL_Lawsuit: string;
+  linkTL_Notice: string;
+  linkTL_Prove: string;
+  linkTL_RequestBribe: string;
+  linkTL_Revenue: string;
+  //-----End var time line-------//
   constructor(private navService: NavigationService,
     private ngbModel: NgbModal,
     private activeRoute: ActivatedRoute,
@@ -158,7 +183,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    localStorage.setItem('programcode','ILG60-06-00');
+    localStorage.setItem('programcode', 'ILG60-06-00');
     try {
       this.preloader.setShowPreloader(true);
       await this.MasofficeMaingetAll();
@@ -212,10 +237,73 @@ export class ManageComponent implements OnInit, OnDestroy {
       console.log(err);
       this.router.navigate([`/fine/list`]);
     }
-
+    this.timeLine(); 
     console.log(this.showEditField);
     // this.navigate_Service();
   }
+  timeLine() {
+    const params = {
+        "NoticeCode": "",
+        "ArrestCode":"",
+        "LawsuitID": "",
+        "ProveID": "",
+        "CompareID": this.params.CompareID,
+        "RevenueID": "",
+        "RequestBribeID": ""
+    }
+    this.fineService.gettimeLine(params).then(res => {
+        this.DisTL_ArrestCode = true;
+        const RestimeLine = res;
+        console.log('res timeline : ', RestimeLine);
+        if (RestimeLine) {
+            console.log('RestimeLine.length : ', RestimeLine.length)
+            for (let i = 0; i < RestimeLine.length; i++) {
+                this.TL_NoticeCode[i] = RestimeLine[i].NoticeCode == null || RestimeLine[i].NoticeCode == "" ? '' : RestimeLine[i].NoticeCode;
+                this.TL_NoticeCode = this.TL_NoticeCode.filter(f => f.valueOf() != '');
+                this.TL_ArrestCode[i] = RestimeLine[i].ArrestCode == null ? '' : RestimeLine[i].ArrestCode;
+                this.TL_ArrestCode = this.TL_ArrestCode.filter(f => f.valueOf() != '');
+                this.TL_LawsuitID[i] = RestimeLine[i].LawsuitID == null ? '' : RestimeLine[i].LawsuitID;
+                this.TL_LawsuitID = this.TL_LawsuitID.filter(f => f.valueOf() != '');
+                this.TL_ProveID[i] = RestimeLine[i].ProveID == null ? '' : RestimeLine[i].ProveID;
+                this.TL_ProveID = this.TL_ProveID.filter(f => f.valueOf() != '');
+                this.TL_CompareID[i] = RestimeLine[i].CompareID == null ? '' : RestimeLine[i].CompareID;
+                this.TL_CompareID = this.TL_CompareID.filter(f => f.valueOf() != '');
+                this.TL_RevenueID[i] = RestimeLine[i].RevenueID == null ? '' : RestimeLine[i].RevenueID;
+                this.TL_RevenueID = this.TL_RevenueID.filter(f => f.valueOf() != '');
+                this.TL_RequestBribeID[i] = RestimeLine[i].RequestBribeID == null ? '' : RestimeLine[i].RequestBribeID;
+                this.TL_RequestBribeID = this.TL_RequestBribeID.filter(f => f.valueOf() != '')
+            }
+            console.log('this.TL_NoticeCode : ', this.TL_NoticeCode);
+            console.log('this.TL_ArrestCode : ', this.TL_ArrestCode);
+            console.log('this.TL_LawsuitID : ', this.TL_LawsuitID);
+            console.log('this.TL_ProveID : ', this.TL_ProveID);
+            console.log('this.TL_CompareID : ', this.TL_CompareID);
+            console.log('this.TL_RevenueID : ', this.TL_RevenueID);
+            console.log('this.TL_RequestBribeID : ', this.TL_RequestBribeID);
+            this.TL_NoticeCode.length > 0 ? this.DisTL_NoticeCode = true : this.DisTL_NoticeCode = false;
+            this.TL_ArrestCode.length > 0 ? this.DisTL_ArrestCode = true : this.DisTL_ArrestCode = false;
+            this.TL_LawsuitID.length > 0 ? this.DisTL_LawsuitID = true : this.DisTL_LawsuitID = false;
+            this.TL_ProveID.length > 0 ? this.DisTL_ProveID = true : this.DisTL_ProveID = false;
+            this.TL_CompareID.length > 0 ? this.DisTL_CompareID = true : this.DisTL_CompareID = false;
+            this.TL_RevenueID.length > 0 ? this.DisTL_RevenueID = true : this.DisTL_RevenueID = false;
+            this.TL_RequestBribeID.length > 0 ? this.DisTL_RequestBribeID = true : this.DisTL_RequestBribeID = false;
+            console.log('this.DisTL_NoticeCode : ', this.DisTL_NoticeCode);
+            console.log('this.DisTL_ArrestCode : ', this.DisTL_ArrestCode);
+            console.log('this.DisTL_LawsuitID : ', this.DisTL_LawsuitID);
+            console.log('this.DisTL_ProveID : ', this.DisTL_ProveID);
+            console.log('this.DisTL_CompareID : ', this.DisTL_CompareID);
+            console.log('this.DisTL_RevenueID : ', this.DisTL_RevenueID);
+            console.log('this.DisTL_RequestBribeID : ', this.DisTL_RequestBribeID);
+
+            this.TL_ArrestCode.length > 1 ? this.linkTL_Arrest = "/arrest/list" : this.linkTL_Arrest = "/arrest/manage/R/" + this.TL_ArrestCode + "";
+            this.TL_LawsuitID.length > 1 ? this.linkTL_Lawsuit = "/lawsuit/list" : this.linkTL_Lawsuit = "/lawsuit/manage/R/" + 'this.IndictmentID' + "/" + this.TL_LawsuitID + "";
+            this.TL_ProveID.length > 1 ? this.linkTL_Prove = "/prove/list" : this.linkTL_Prove = "/prove/manage/R/" + this.TL_ProveID + "/{{IndictmentID}}";
+            this.TL_CompareID.length > 1 ? this.linkTL_Compare = "/fine/list" : this.linkTL_Compare = "/fine/manage/R/" + this.TL_CompareID + "/{{IndictmentID}}/" + this.TL_ArrestCode + "";
+            this.TL_RevenueID.length > 1 ? this.linkTL_Revenue = "/income/list" : this.linkTL_Revenue = "/income/manage/R/" + this.TL_RevenueID + "";
+            this.TL_RequestBribeID.length > 1 ? this.linkTL_RequestBribe = "reward/list" : this.linkTL_RequestBribe = "/reward/manage/{{IndictmentID}}/"+this.TL_ArrestCode+""
+        }
+    });
+}
   ngOnDestroy() {
     this.navService.setPrintButton(false);
     this.navService.setDeleteButton(false);
@@ -521,7 +609,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         // console.log(this.receipt.list[i]);
       }
       console.log('receipt data ~');
-      console.log( this.receipt.list);
+      console.log(this.receipt.list);
       if (compare.CompareDetailFine) {
         for (const cd of compare.CompareDetailFine) {
           if (!this.ListCompareDetail[countCD]) {
@@ -663,7 +751,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (status && this.isFinishLoad) {
         await this.navService.setOnPrint(false);
         // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
-        localStorage.programcode == "ILG60-06-00"? this.buttonPrint() : false
+        localStorage.programcode == "ILG60-06-00" ? this.buttonPrint() : false
       }
     })
   }
@@ -690,7 +778,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     const printDocfine1: any[] = this.receipt.list.map(m => ({
       DocName: `แบบฟอร์มบันทึกคำให้การของผู้ต้องหา ส.ส.2/53 ${m.LawBrakerName || ''}`,
-      DocType: 'แบบฟอร์ม', CompareID: CompareCIA[0].CompareID , checked: false, TypeName: "2/53"
+      DocType: 'แบบฟอร์ม', CompareID: CompareCIA[0].CompareID, checked: false, TypeName: "2/53"
     }));
     const printDocfine2: any[] = this.receipt.list.map(m => ({
       DocName: `แบบฟอร์มใบเสร็จรับเงินค่าปรับเปรียบเทียบคดี ${m.LawBrakerName || ''}`,
@@ -700,7 +788,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     const printDocfine3: any[] = this.receipt.list.map(m => ({
       DocName: `แบบฟอร์มรายงานขออนุมัติการเปรียบเทียบคดี คด.2 ${m.LawBrakerName || ''}`,
-      DocType: 'แบบฟอร์ม',CompareID: CompareCIA[0].CompareID , CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD2"
+      DocType: 'แบบฟอร์ม', CompareID: CompareCIA[0].CompareID, CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "KD2"
     }));
 
     for (var i = 0; i <= this.receipt.list.length - 1; i++) {
@@ -1256,7 +1344,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             const receiptData: any = {};
             receiptData.LawBrakerName = CompareDetail.LawbreakerName;
             // if (!receiptData.PaymentDate) {
-              receiptData.PaymentDate = this.DateToday;
+            receiptData.PaymentDate = this.DateToday;
             // }
             receiptData.ReceiptChanel = 1;
             if (localStorage.getItem('officeShortName')) {
@@ -1416,8 +1504,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             console.log(p);
             detail.all = this.roundDigit((detail.multi * detail.FineAmount));
             detail.BribeMoney = this.roundDigit((detail.multi * detail.FineAmount) * this.multiReward.BribeMoney);
-            detail.RewardMoney = this.roundDigit((detail.multi * detail.FineAmount) *  this.multiReward.RewardMoney);
-            detail.TreasuryMoney = this.roundDigit((detail.multi * detail.FineAmount) *  this.multiReward.TreasuryMoney);
+            detail.RewardMoney = this.roundDigit((detail.multi * detail.FineAmount) * this.multiReward.RewardMoney);
+            detail.TreasuryMoney = this.roundDigit((detail.multi * detail.FineAmount) * this.multiReward.TreasuryMoney);
             sum = (+sum) + (+detail.all);
             sum1 = (+sum1) + (+detail.BribeMoney);
             sum2 = (+sum2) + (+detail.RewardMoney);
@@ -2459,7 +2547,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
       // console.log('convertToNormalDate');
       const m: any = d.getMonth() + 1;
-      date = {day: d.getDate(), month: m.toString().length == 1 ? `0${m}` : m, year: d.getFullYear()};
+      date = { day: d.getDate(), month: m.toString().length == 1 ? `0${m}` : m, year: d.getFullYear() };
       console.log(date);
     }
     let m: any;

@@ -20,6 +20,10 @@ export class ProveService {
   };
 
 
+  gettimeLine(params) {
+    const url = `${appConfig.api7788}/TimeLineListgetByCon`;
+    return this.http.post<any>(url, params, this.httpOptions).toPromise();
+  }
   // getByKeyword(Textsearch: string) {
   //   const params = Textsearch;
   //   const url = `${appConfig.api7777}/ProveListgetByKeyword`;

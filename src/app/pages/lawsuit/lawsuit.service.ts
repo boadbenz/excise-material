@@ -47,6 +47,10 @@ export class LawsuitService {
     // const url = `${appConfig.api8777}/LawsuitgetByConAdv`;
     // return this.responsePromiseGetWithoutStatus(JSON.stringify(params), url)
   }
+  gettimeLine(params) {
+    const url = `${appConfig.api7788}/TimeLineListgetByCon`;
+    return this.http.post<any>(url, params, this.httpOptions).toPromise();
+  }
 
   getByKeyword(Textsearch: any): Promise<Lawsuit[]> {
     const params = Textsearch === '' ? { 'Textsearch': '' } : Textsearch;

@@ -8,41 +8,41 @@
     [ArrestCode]="ArrestCode"></app-indicment-modal>
 </ng-template>
 
-<div class="wizard-content">
+<div class="wizard-content" style="margin-bottom: 10px;">
   <div class="wizard-circle wizard clearfix clearfix">
-    <div class="steps tab-wizard">
-      <ul role="tablist" class="font-14">
-        <li role="tab" class="current" aria-disabled="false" aria-selected="true">
-          <a>
-            <span class="current-info audible">current step: </span>
-            <span class="step"></span> 1. ใบแจ้งความนำจับ</a>
-        </li>
-        <li role="tab" class="current" aria-disabled="true">
-          <a>
-            <span class="step"></span> 2. งานจับกุม </a>
-        </li>
-        <li role="tab" class="current" aria-disabled="true">
-          <a>
-            <span class="step"></span> 3. รับคำกล่าวโทษ </a>
-        </li>
-        <li role="tab" class="disabled" aria-disabled="true">
-          <a>
-            <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
-        </li>
-        <li role="tab" class="disabled" aria-disabled="true">
-          <a>
-            <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
-        </li>
-        <li role="tab" class="disabled" aria-disabled="true">
-          <a>
-            <span class="step"></span> 6. นำส่งเงินรายได้ </a>
-        </li>
-        <li role="tab" class="disabled" aria-disabled="true">
-          <a>
-            <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
-        </li>
-      </ul>
-    </div>
+      <div class="steps tab-wizard">
+          <ul role="tablist">
+              <li role="tab" [style.pointer-events]="!DisTL_NoticeCode ?'none':'auto'"  class="{{DisTL_NoticeCode ?'current':'disabled'}}" aria-disabled="false" aria-selected="true">
+                  <a>
+                      <span class="current-info audible">current step: </span>
+                      <span  class="step"></span> 1. ใบแจ้งความนำจับ</a>
+              </li>
+              <li role="tab" class="{{DisTL_ArrestCode ?'current':'disabled'}}"  aria-disabled="true" [style.pointer-events]="!DisTL_ArrestCode ?'none':'auto'">
+                  <a routerLink="{{linkTL_Arrest}}">
+                      <span class="step"></span> 2. งานจับกุม </a>
+              </li>
+              <li role="tab" class="{{DisTL_LawsuitID ?'current':'disabled'}}"  aria-disabled="true" [style.pointer-events]="!DisTL_LawsuitID ?'none':'auto'">
+                  <a  routerLink="{{linkTL_Lawsuit}}">
+                      <span class="step"></span> 3. รับคำกล่าวโทษ </a>
+              </li>
+              <li role="tab" class="{{DisTL_ProveID ?'current':'disabled'}}"  aria-disabled="true" [style.pointer-events]="!DisTL_ProveID ?'none':'auto'">
+                  <a  routerLink="{{linkTL_Prove}}"> 
+                      <span class="step"></span> 4. งานตรวจรับและพิสูจน์ของกลาง </a>
+              </li>
+              <li role="tab" class="{{DisTL_CompareID ?'current':'disabled'}}"  aria-disabled="true" [style.pointer-events]="!DisTL_CompareID ?'none':'auto'">
+                  <a  routerLink="{{linkTL_Compare}}">
+                      <span class="step"></span> 5. งานเปรียบเทียบและชำระค่าปรับ </a>
+              </li>
+              <li role="tab" class="{{DisTL_RevenueID ?'current':'disabled'}}"  aria-disabled="true" [style.pointer-events]="!DisTL_RevenueID ?'none':'auto'">
+                  <a routerLink="{{linkTL_Revenue}}">
+                      <span class="step"></span> 6. นำส่งเงินรายได้ </a>
+              </li>
+              <li role="tab" class="{{DisTL_RequestBribeID ?'current':'disabled'}}" aria-disabled="true" [style.pointer-events]="!DisTL_RequestBribeID ?'none':'auto'">
+                  <a routerLink="{{linkTL_RequestBribe}}">
+                      <span class="step"></span> 7. คำร้องขอรับเงินสินบนรางวัล </a>
+              </li>
+          </ul>
+      </div>
   </div>
 </div>
 

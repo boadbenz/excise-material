@@ -48,7 +48,6 @@ export class ArrestService {
     
 
     gettimeLine(params){
-        // const params = { 'Textsearch': '' };
         const url = `${appConfig.api7788}/TimeLineListgetByCon`;
         return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
     }

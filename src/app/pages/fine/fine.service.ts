@@ -8,7 +8,7 @@ import { Arrest } from '../model/arrest';
 import { Lawsuit } from '../model/lawsuit-model';
 import { GuiltBase } from '../model/guiltBase-model';
 import { ICompareIns, ICompareMistreat, IRateMistreat } from './condition-model';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class FineService {
@@ -39,6 +39,10 @@ export class FineService {
     //     const url = `${appConfig.api7777}/ComparegetByCon`;
     //     return this.http.post<Compare[]>(url, params, this.httpOptions);
     // }
+    gettimeLine(params) {
+        const url = `${appConfig.api7788}/TimeLineListgetByCon`;
+        return this.http.post<any>(url, params, this.httpOptions).toPromise();
+    }
 
     async getByCon(CompareID: string): Promise<any> {
         const params = { CompareID };
@@ -67,15 +71,15 @@ export class FineService {
 
     }
     async compareArrestGetByCon(ArrestCode: string) {
-      // http://192.168.3.158:8881/XCS60/CompareListgetByConAdv
-      const params = { 'ArrestCode' : ArrestCode };
-      const url = `${appConfig.api7777}/CompareListgetByConAdv`;
+        // http://192.168.3.158:8881/XCS60/CompareListgetByConAdv
+        const params = { 'ArrestCode': ArrestCode };
+        const url = `${appConfig.api7777}/CompareListgetByConAdv`;
 
-      try {
-        return await this.http.post<any>(url, params, this.httpOptions).toPromise();
-      } catch (error) {
-        await alert(error);
-      }
+        try {
+            return await this.http.post<any>(url, params, this.httpOptions).toPromise();
+        } catch (error) {
+            await alert(error);
+        }
     }
     // async getByConAdv(form: any): Promise<any> {
     //     const params = JSON.stringify(form);

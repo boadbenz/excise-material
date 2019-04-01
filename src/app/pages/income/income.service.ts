@@ -23,7 +23,10 @@ export class IncomeService {
   //   const url = `${appConfig.api8777}/RevenuegetByKeyword`;
   //   return this.http.post<Revenue[]>(url, params, this.httpOptions);
   // }
-
+  gettimeLine(params) {
+    const url = `${appConfig.api7788}/TimeLineListgetByCon`;
+    return this.http.post<any>(url, params, this.httpOptions).toPromise();
+  }
   async getByKeyword(Textsearch: any): Promise<any> {
     const params = JSON.stringify(Textsearch);
     const url = `${appConfig.api8777}/RevenuegetByKeyword`;

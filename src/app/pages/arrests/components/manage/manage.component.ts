@@ -43,6 +43,7 @@ import { find } from 'rxjs/operator/find';
     styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck {
+    //-----var time line-------//
     RestimeLine: any;
     TL_ArrestCode: any[] = [];
     TL_CompareID: any[] = [];
@@ -60,8 +61,14 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
     DisTL_RequestBribeID: boolean;
     DisTL_RevenueID: boolean;
 
-    testLink: string;
-
+    linkTL_Arrest: string;
+    linkTL_Compare: string;
+    linkTL_Lawsuit: string;
+    linkTL_Notice: string;
+    linkTL_Prove: string;
+    linkTL_RequestBribe: string;
+    linkTL_Revenue: string;
+    //-----End var time line-------//
     // C: ข้อมูลใหม่
     // R: อัพเดทข้อมูล
 
@@ -283,13 +290,13 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 console.log('this.TL_CompareID : ', this.TL_CompareID);
                 console.log('this.TL_RevenueID : ', this.TL_RevenueID);
                 console.log('this.TL_RequestBribeID : ', this.TL_RequestBribeID);
-                this.TL_NoticeCode.length > 0? this.DisTL_NoticeCode = true :  this.DisTL_NoticeCode= false;
-                this.TL_ArrestCode.length > 0 ? this.DisTL_ArrestCode= true :  this.DisTL_ArrestCode= false;
-                this.TL_LawsuitID.length > 0 ? this.DisTL_LawsuitID = true :  this.DisTL_LawsuitID = false;
-                this.TL_ProveID.length > 0 ? this.DisTL_ProveID =true : this.DisTL_ProveID = false;
-                this.TL_CompareID.length > 0 ? this.DisTL_CompareID =true : this.DisTL_CompareID = false;
-                this.TL_RevenueID.length > 0 ? this.DisTL_RevenueID =true : this.DisTL_RevenueID = false;
-                this.TL_RequestBribeID.length > 0 ? this.DisTL_RequestBribeID =true : this.DisTL_RequestBribeID = false;
+                this.TL_NoticeCode.length > 0 ? this.DisTL_NoticeCode = true : this.DisTL_NoticeCode = false;
+                this.TL_ArrestCode.length > 0 ? this.DisTL_ArrestCode = true : this.DisTL_ArrestCode = false;
+                this.TL_LawsuitID.length > 0 ? this.DisTL_LawsuitID = true : this.DisTL_LawsuitID = false;
+                this.TL_ProveID.length > 0 ? this.DisTL_ProveID = true : this.DisTL_ProveID = false;
+                this.TL_CompareID.length > 0 ? this.DisTL_CompareID = true : this.DisTL_CompareID = false;
+                this.TL_RevenueID.length > 0 ? this.DisTL_RevenueID = true : this.DisTL_RevenueID = false;
+                this.TL_RequestBribeID.length > 0 ? this.DisTL_RequestBribeID = true : this.DisTL_RequestBribeID = false;
                 console.log('this.DisTL_NoticeCode : ', this.DisTL_NoticeCode);
                 console.log('this.DisTL_ArrestCode : ', this.DisTL_ArrestCode);
                 console.log('this.DisTL_LawsuitID : ', this.DisTL_LawsuitID);
@@ -298,8 +305,12 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 console.log('this.DisTL_RevenueID : ', this.DisTL_RevenueID);
                 console.log('this.DisTL_RequestBribeID : ', this.DisTL_RequestBribeID);
 
-                this.testLink = "/income/manage/R/"+this.TL_RevenueID+""
-
+                this.TL_ArrestCode.length > 1 ? this.linkTL_Arrest = "/arrest/list" : this.linkTL_Arrest = "/arrest/manage/R/" + this.TL_ArrestCode + "";
+                this.TL_LawsuitID.length > 1 ? this.linkTL_Lawsuit = "/lawsuit/list" : this.linkTL_Lawsuit = "/lawsuit/manage/R/" + 'this.IndictmentID' + "/" + this.TL_LawsuitID + "";
+                this.TL_ProveID.length > 1 ? this.linkTL_Prove = "/prove/list" : this.linkTL_Prove = "/prove/manage/R/" + this.TL_ProveID + "/{{IndictmentID}}";
+                this.TL_CompareID.length > 1 ? this.linkTL_Compare = "/fine/list" : this.linkTL_Compare = "/fine/manage/R/" + this.TL_CompareID + "/{{IndictmentID}}/" + this.TL_ArrestCode + "";
+                this.TL_RevenueID.length > 1 ? this.linkTL_Revenue = "/income/list" : this.linkTL_Revenue = "/income/manage/R/" + this.TL_RevenueID + "";
+                this.TL_RequestBribeID.length > 1 ? this.linkTL_RequestBribe = "reward/list" : this.linkTL_RequestBribe = "/reward/manage/{{IndictmentID}}/" + this.TL_ArrestCode + ""
             }
         });
     }
