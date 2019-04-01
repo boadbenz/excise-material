@@ -50,7 +50,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
-    this.sidebarService.setVersion('0.0.0.54');
+    this.sidebarService.setVersion('0.0.0.55');
     // await this.onSearchByKeyword()
     await this.onInitSearchByKeyword();
     await this.setShowButton();
@@ -100,12 +100,13 @@ export class ListComponent implements OnInit, OnDestroy {
         let LawsuitArrestList = await this.lawsuitService.LawsuitArrestGetByKeyword("", localStorage.officeCode);
         let temp = []
         LawsuitArrestList.forEach(element => {
-          if(element['IsLawsuitComplete'] == 0) {
+          if(element['IsLawsuitComplete'] == 0 && !element['LawsuitArrestIndicment'][0].IndictmentID) {
             temp.push(element)
           }
         })
         this.resultsPerPage = await this.setLawsuitArrestList(temp)
         this.results = this.resultsPerPage
+        this.preLoaderService.setShowPreloader(false);
     });
   }
 
