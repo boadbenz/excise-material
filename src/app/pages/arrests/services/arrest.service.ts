@@ -45,6 +45,13 @@ export class ArrestService {
     private onCatch(error: any, caught: Observable<any>): Observable<any> {
         return Observable.throw(error);
     }
+    
+
+    gettimeLine(params){
+        // const params = { 'Textsearch': '' };
+        const url = `${appConfig.api7788}/TimeLineListgetByCon`;
+        return this.httpClient.post<any>(url, params, this.httpOptions).toPromise();
+    }
 
     ArrestReportgetByCon(ArrestCode: string) {
         const params = { ArrestCode };

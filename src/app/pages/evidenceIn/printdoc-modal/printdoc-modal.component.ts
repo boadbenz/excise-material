@@ -4,6 +4,7 @@ import { EvidenceService } from '../evidenceIn.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PreloaderService } from '../../../shared/preloader/preloader.component';
 import swal from 'sweetalert2';
+import { NgbModalRef, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-printdoc-modal',
@@ -12,20 +13,23 @@ import swal from 'sweetalert2';
 })
 
 export class PrintDocModalComponent implements OnInit {
-    printDoc = [
-        {
-            IsChecked: false,
-            DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
-            DocType: 0,
-            DocTypeName: 'แบบฟอร์ม'
-        },
-        {
-            IsChecked: false,
-            DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
-            DocType: 0,
-            DocTypeName: 'เอกสารแนบภายใน'
-        }
-    ]
+    public data: any
+    printDoc: any[]
+    
+    // printDoc = [
+    //     {
+    //         IsChecked: false,
+    //         DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
+    //         DocType: 0,
+    //         DocTypeName: 'แบบฟอร์ม'
+    //     },
+    //     {
+    //         IsChecked: false,
+    //         DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
+    //         DocType: 0,
+    //         DocTypeName: 'เอกสารแนบภายใน'
+    //     }
+    // ]
 
     @Input() RevenueID: string;
 
@@ -34,19 +38,22 @@ export class PrintDocModalComponent implements OnInit {
 
     constructor(
         private EviService: EvidenceService,
-        private preloader: PreloaderService
+        private preloader: PreloaderService,
+        private ActiveModal: NgbActiveModal,
     ) { }
 
     ngOnInit() {
+        this.printDoc = this.data;
+        console.log("fine printDoc : ", this.printDoc)
     }
 
-    /*onPrint(f: any) {
+    onPrint(f: any) {
         let _print = this.printDoc.filter(x => x.IsChecked == true && x.DocType == 0)
         if (_print.length) {
             this.preloader.setShowPreloader(true);
             debugger
-            this.revenueService.RevenueReportgetByCon(this.RevenueID)
-                .subscribe(x => {
+            this.EviService.Report_11_001("this.EvidenceInID")
+                .then(x => {
                     // const blob = new Blob([x], { type: "application/pdf" });
                     // const link = document.createElement('a');
                     // link.href = window.URL.createObjectURL(blob);
@@ -80,9 +87,10 @@ export class PrintDocModalComponent implements OnInit {
             //alert("กรุณาเลือกเอกสารที่ต้องการพิมพ์ !!!");
         }
     }
-    */
+    
     dismiss(e: any) {
         this.d.emit(e);
+        this.ActiveModal.close();
     }
 
     close(e: any) {

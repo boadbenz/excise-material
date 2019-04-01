@@ -140,7 +140,7 @@ export class PrintDocModalComponent implements OnInit {
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == '2/53') {
                 this.preloader.setShowPreloader(true);
                 console.log("onSelect : ", this.printDoc[i])
-                this.ReportForm06_001(this.printDoc[i].CompareDetailID).subscribe(x => {
+                this.ReportForm06_001(this.printDoc[i].CompareID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
                     const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
@@ -150,7 +150,7 @@ export class PrintDocModalComponent implements OnInit {
             if (this.printDoc[i].checked == true && this.printDoc[i].TypeName == 'Receipt') {
                 this.preloader.setShowPreloader(true);
                 console.log("onSelect : ", this.printDoc[i])
-                this.ReportForm06_002(this.printDoc[i].CompareDetailID, this.printDoc[i].CompareReceiptID).subscribe(x => {
+                this.ReportForm06_002(this.printDoc[i].CompareID, this.printDoc[i].IndictmentID).subscribe(x => {
                     const file = new Blob([x], { type: 'application/pdf' });
                     const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
@@ -394,9 +394,9 @@ export class PrintDocModalComponent implements OnInit {
     // }
 
 
-    ReportForm06_001(CompareDetailID: string) {
+    ReportForm06_001(CompareID: string) {
         const params = {
-            CompareDetailID: CompareDetailID
+            CompareID: CompareID
         };
         const url = `${appConfig.apiReport}/ILG60_00_06_001.aspx`;
 
@@ -410,10 +410,10 @@ export class PrintDocModalComponent implements OnInit {
             .map(x => x)
             .finally(() => this.onEnd());
     }
-    ReportForm06_002(CompareDetailID: string, CompareReceiptID: string) {
+    ReportForm06_002(CompareID: string, IndictmentID: string) {
         const params = {
-            CompareDetailID: CompareDetailID,
-            CompareReceiptID: CompareReceiptID
+            CompareID: CompareID,
+            IndictmentID: IndictmentID
         };
         const url = `${appConfig.apiReport}/ILG60_00_06_002.aspx`;
 

@@ -35,6 +35,7 @@ import { TransactionRunning } from 'app/models/transaction-running.model';
 import { groupArrayItem, removeObjectItem, clearFormArray, sortFormArray, sortingArray, IntialLastRowID } from '../../arrest.helper';
 import { setViewLawbreaker } from '../lawbreaker-modal/lawbreaker-modal.component';
 import { Acceptability, ArrestIndictmentDetail } from '../../models';
+import { find } from 'rxjs/operator/find';
 
 @Component({
     selector: 'app-manage',
@@ -42,6 +43,25 @@ import { Acceptability, ArrestIndictmentDetail } from '../../models';
     styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck {
+    RestimeLine: any;
+    TL_ArrestCode: any[] = [];
+    TL_CompareID: any[] = [];
+    TL_LawsuitID: any[] = [];
+    TL_NoticeCode: any[] = [];
+    TL_ProveID: any[] = [];
+    TL_RequestBribeID: any[] = [];
+    TL_RevenueID: any[] = [];
+
+    DisTL_ArrestCode: boolean;
+    DisTL_CompareID: boolean;
+    DisTL_LawsuitID: boolean;
+    DisTL_NoticeCode: boolean;
+    DisTL_ProveID: boolean;
+    DisTL_RequestBribeID: boolean;
+    DisTL_RevenueID: boolean;
+
+    testLink: string;
+
     // C: ข้อมูลใหม่
     // R: อัพเดทข้อมูล
 
@@ -221,6 +241,67 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         // this.ArrestProduct.valueChanges.subscribe(() => {
 
         // })
+        this.timeLine();
+    }
+
+    timeLine() {
+        const params = {
+            "NoticeCode": "",
+            "ArrestCode": this.arrestCode,
+            "LawsuitID": "",
+            "ProveID": "",
+            "CompareID": "",
+            "RevenueID": "",
+            "RequestBribeID": ""
+        }
+        this.s_arrest.gettimeLine(params).then(res => {
+            this.DisTL_ArrestCode = true;
+            const RestimeLine = res;
+            console.log('res timeline : ', RestimeLine);
+            if (RestimeLine) {
+                console.log('RestimeLine.length : ', RestimeLine.length)
+                for (let i = 0; i < RestimeLine.length; i++) {
+                    this.TL_NoticeCode[i] = RestimeLine[i].NoticeCode == null ? '' : RestimeLine[i].NoticeCode;
+                    this.TL_NoticeCode = this.TL_NoticeCode.filter(f => f.valueOf() != '');
+                    this.TL_ArrestCode[i] = RestimeLine[i].ArrestCode == null ? '' : RestimeLine[i].ArrestCode;
+                    this.TL_ArrestCode = this.TL_ArrestCode.filter(f => f.valueOf() != '');
+                    this.TL_LawsuitID[i] = RestimeLine[i].LawsuitID == null ? '' : RestimeLine[i].LawsuitID;
+                    this.TL_LawsuitID = this.TL_LawsuitID.filter(f => f.valueOf() != '');
+                    this.TL_ProveID[i] = RestimeLine[i].ProveID == null ? '' : RestimeLine[i].ProveID;
+                    this.TL_ProveID = this.TL_ProveID.filter(f => f.valueOf() != '');
+                    this.TL_CompareID[i] = RestimeLine[i].CompareID == null ? '' : RestimeLine[i].CompareID;
+                    this.TL_CompareID = this.TL_CompareID.filter(f => f.valueOf() != '');
+                    this.TL_RevenueID[i] = RestimeLine[i].RevenueID == null ? '' : RestimeLine[i].RevenueID;
+                    this.TL_RevenueID = this.TL_RevenueID.filter(f => f.valueOf() != '');
+                    this.TL_RequestBribeID[i] = RestimeLine[i].RequestBribeID == null ? '' : RestimeLine[i].RequestBribeID;
+                    this.TL_RequestBribeID = this.TL_RequestBribeID.filter(f => f.valueOf() != '')
+                }
+                console.log('this.TL_NoticeCode : ', this.TL_NoticeCode);
+                console.log('this.TL_ArrestCode : ', this.TL_ArrestCode);
+                console.log('this.TL_LawsuitID : ', this.TL_LawsuitID);
+                console.log('this.TL_ProveID : ', this.TL_ProveID);
+                console.log('this.TL_CompareID : ', this.TL_CompareID);
+                console.log('this.TL_RevenueID : ', this.TL_RevenueID);
+                console.log('this.TL_RequestBribeID : ', this.TL_RequestBribeID);
+                this.TL_NoticeCode.length > 0? this.DisTL_NoticeCode = true :  this.DisTL_NoticeCode= false;
+                this.TL_ArrestCode.length > 0 ? this.DisTL_ArrestCode= true :  this.DisTL_ArrestCode= false;
+                this.TL_LawsuitID.length > 0 ? this.DisTL_LawsuitID = true :  this.DisTL_LawsuitID = false;
+                this.TL_ProveID.length > 0 ? this.DisTL_ProveID =true : this.DisTL_ProveID = false;
+                this.TL_CompareID.length > 0 ? this.DisTL_CompareID =true : this.DisTL_CompareID = false;
+                this.TL_RevenueID.length > 0 ? this.DisTL_RevenueID =true : this.DisTL_RevenueID = false;
+                this.TL_RequestBribeID.length > 0 ? this.DisTL_RequestBribeID =true : this.DisTL_RequestBribeID = false;
+                console.log('this.DisTL_NoticeCode : ', this.DisTL_NoticeCode);
+                console.log('this.DisTL_ArrestCode : ', this.DisTL_ArrestCode);
+                console.log('this.DisTL_LawsuitID : ', this.DisTL_LawsuitID);
+                console.log('this.DisTL_ProveID : ', this.DisTL_ProveID);
+                console.log('this.DisTL_CompareID : ', this.DisTL_CompareID);
+                console.log('this.DisTL_RevenueID : ', this.DisTL_RevenueID);
+                console.log('this.DisTL_RequestBribeID : ', this.DisTL_RequestBribeID);
+
+                this.testLink = "/income/manage/R/"+this.TL_RevenueID+""
+
+            }
+        });
     }
 
     ngAfterViewInit(): void {
@@ -1310,7 +1391,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
         let item = new ArrestStaff();
         item.ArrestCode = this.arrestCode;
         item.IsModify = 'c'
-        
+
         item.ContributorID = lastIndex >= 0 ? '7' : '6';
         item.ContributorCode = lastIndex >= 0 ? '7' : '6';
 
@@ -1321,7 +1402,7 @@ export class ManageComponent implements OnInit, AfterViewInit, OnDestroy, DoChec
                 this.ArrestStaff.push(this.fb.group(item));
             }
         } else {
-            item.RowId = 1; 
+            item.RowId = 1;
             this.ArrestStaff.push(this.fb.group(item));
         }
         this.sortFormArray(this.ArrestStaff);

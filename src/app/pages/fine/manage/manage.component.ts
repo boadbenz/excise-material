@@ -690,13 +690,12 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     const printDocfine1: any[] = this.receipt.list.map(m => ({
       DocName: `แบบฟอร์มบันทึกคำให้การของผู้ต้องหา ส.ส.2/53 ${m.LawBrakerName || ''}`,
-      DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`, checked: false, TypeName: "2/53"
+      DocType: 'แบบฟอร์ม', CompareID: CompareCIA[0].CompareID , checked: false, TypeName: "2/53"
     }));
-
     const printDocfine2: any[] = this.receipt.list.map(m => ({
       DocName: `แบบฟอร์มใบเสร็จรับเงินค่าปรับเปรียบเทียบคดี ${m.LawBrakerName || ''}`,
-      DocType: 'แบบฟอร์ม', CompareDetailID: `${m.CompareDetailID}`,
-      CompareReceiptID: `${m.CompareReceiptID}`, checked: false, TypeName: "Receipt"
+      DocType: 'แบบฟอร์ม', CompareID: CompareCIA[0].CompareID,
+      IndictmentID: CompareCIA[0].IndictmentID, checked: false, TypeName: "Receipt"
     }))
 
     const printDocfine3: any[] = this.receipt.list.map(m => ({

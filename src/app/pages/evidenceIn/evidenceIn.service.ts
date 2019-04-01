@@ -260,4 +260,14 @@ export class EvidenceService {
       return res;
     } catch (error) { }
   }
+
+  async Report_11_001(EvidenceInID: any): Promise<any> {
+    const params = { EvidenceInID };
+    const url = `${appConfig.apiReport}/ILG60_00_11_001.aspx`;
+
+    try {
+      const res = await this.http.post<any>(url, params, this.httpOptions).toPromise();
+      return res;
+    } catch (error) { }
+  }
 }

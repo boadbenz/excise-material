@@ -252,7 +252,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
             if (status) {
                 await this.navService.setOnPrint(false);
-                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+                this.buttonPrint();
             }
         });
 
@@ -355,7 +355,34 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         })
     }
+    public async buttonPrint(){
 
+       const printDocEvi = [
+            {
+                IsChecked: false,
+                DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
+                DocType: 0,
+                DocTypeName: 'แบบฟอร์ม'
+            },
+            {
+                IsChecked: false,
+                DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
+                DocType: 0,
+                DocTypeName: 'เอกสารแนบภายใน'
+            }
+        ]
+
+        const printDoc = [...printDocEvi]; //, ... this.ReportKD5, ... this.ReportKD6
+
+        const dialogRef = this.ngbModel.open(this.printDocModel, {
+          backdrop: 'static', size: 'lg'
+    
+        });
+        dialogRef.componentInstance.data = printDoc;
+        dialogRef.result.then(res => { });
+
+        // this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+    }
     LoadDataFromLocalStorage() {
         let tempUser = this.rawStaffSendOptions.filter(f => f.StaffCode == localStorage.getItem("staffCode"));
 
