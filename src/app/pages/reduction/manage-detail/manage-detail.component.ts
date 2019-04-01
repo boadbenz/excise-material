@@ -244,7 +244,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.preloaderService.setShowPreloader(true);
     this.navService.setOnCancel(false);
     this.navService.setOnSave(false);
-    this.sidebarService.setVersion('0.0.3.31');
+    this.sidebarService.setVersion('0.0.4.01');
     const qParam = this.activeRoute.snapshot.queryParams;
     this.isOld = qParam.IsOld;
     this.mode = this.activeRoute.snapshot.paramMap.get('mode');
@@ -293,25 +293,25 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.unsub.edit = this.navService.showFieldEdit.subscribe(status => {
+    this.unsub.edit = this.navService.showFieldEdit.subscribe(async status => {
       this.showField = status;
       if (!this.showField) {
-        this.navService.setDeleteButton(false);
-        this.navService.setSaveButton(true);
-        this.navService.setCancelButton(true);
-        this.navService.setPrintButton(false);
-        this.navService.setSearchBar(false);
-        this.navService.setEditButton(false);
-        this.navService.setSendIncomeButton(false);
+        await this.navService.setDeleteButton(false);
+        await this.navService.setSaveButton(true);
+        await this.navService.setCancelButton(true);
+        await this.navService.setPrintButton(false);
+        await this.navService.setSearchBar(false);
+        await this.navService.setEditButton(false);
+        await this.navService.setSendIncomeButton(false);
         this.mode = 'E';
       } else {
-        this.navService.setDeleteButton(true);
-        this.navService.setPrintButton(true);
-        this.navService.setEditButton(true);
-        this.navService.setSearchBar(false);
-        this.navService.setCancelButton(false);
-        this.navService.setSaveButton(false);
-        this.navService.setSendIncomeButton(true);
+        await this.navService.setDeleteButton(true);
+        await this.navService.setPrintButton(true);
+        await this.navService.setEditButton(true);
+        await this.navService.setSearchBar(false);
+        await this.navService.setCancelButton(false);
+        await this.navService.setSaveButton(false);
+        await this.navService.setSendIncomeButton(true);
         this.mode = 'V';
       }
     });
@@ -438,6 +438,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       this.adjustFine[index].CompareFineBribeMoney = (this.sinbon * this.adjustFine[index].CompareFine) / 100;
       this.adjustFine[index].CompareFineRewardMoney = (this.rangwan * this.adjustFine[index].CompareFine) / 100;
       this.adjustFine[index].CompareFineTreasuryMoney = (this.songkrang * this.adjustFine[index].CompareFine) / 100;
+    } else {
+      this.adjustFine[index].CompareFineStatus = 2;
     }
   }
 

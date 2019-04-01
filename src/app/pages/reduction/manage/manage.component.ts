@@ -128,7 +128,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     ) { }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.3.31');
+    this.sidebarService.setVersion('0.0.4.01');
     localStorage.setItem('programcode', 'ILG60-09-00');
     if (this.activeRoute.snapshot.queryParamMap.get('CompareID') == null
       || this.activeRoute.snapshot.queryParamMap.get('CompareID') === '') {
@@ -149,22 +149,22 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     });
 
-    this.navServiceSub = this.navService.showFieldEdit.subscribe(status => {
+    this.navServiceSub = this.navService.showFieldEdit.subscribe(async status => {
       this.showField = status;
-      if (!this.showField) {
-        this.navService.setCancelButton(true);
-        this.navService.setSaveButton(true);
-        this.navService.setPrintButton(false);
-        this.navService.setSearchBar(false);
+      if (!status) {
+        await this.navService.setPrintButton(false);
+        await this.navService.setSaveButton(false);
         // this.navService.setDeleteButton(false);
-        this.navService.setEditButton(false);
+        await this.navService.setEditButton(false);
+        await this.navService.setSearchBar(false);
+        await this.navService.setCancelButton(true);
       } else {
-        this.navService.setPrintButton(true);
+        await this.navService.setSaveButton(false);
+        await this.navService.setPrintButton(true);
         // this.navService.setDeleteButton(true);
-        this.navService.setEditButton(true);
-        this.navService.setSearchBar(false);
-        this.navService.setCancelButton(false);
-        this.navService.setSaveButton(false);
+        await this.navService.setEditButton(true);
+        await this.navService.setSearchBar(false);
+        await this.navService.setCancelButton(false);
       }
     });
 
@@ -177,11 +177,11 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
     console.log('adjustReceiptgetByCon : ', this.tableData);
     console.log('adjustArrestgetByCon : ', this.detailData);
 
-    this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
-      if (status) {
-        this.onSave();
-      }
-    });
+    // this.navService.onSave.takeUntil(this.destroy$).subscribe(async status => {
+    //   if (status) {
+    //     this.onSave();
+    //   }
+    // });
 
     this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
       console.log('status print');
@@ -237,9 +237,9 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
   //   this.modal = this.ngbModel.open(content, { size: 'lg', centered: true });
   // }
 
-  private onSave() {
-    console.log('5555');
-  }
+  // private onSave() {
+  //   console.log('5555');
+  // }
 
   private _adjustArrestgetByCon(compareID) {
     this.apiServer.post('/XCS60/AdjustComparegetByCon', {CompareID: compareID})
