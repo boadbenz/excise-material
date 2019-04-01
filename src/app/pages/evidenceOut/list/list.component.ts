@@ -95,10 +95,10 @@ export class ListComponent implements OnInit, OnDestroy {
                 await this.navService.setOnSearch('');
 
                 let ts;
-                ts = { TextSearch: "", AccountOfficeCode: localStorage.getItem("officeCode") }
+                ts = { Textsearch: "", AccountOfficeCode: localStorage.getItem("officeCode") }
                 ts = res;
 
-                if (ts.Textsearch == null) { this.onSearch({ TextSearch: "" }); }
+                if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
                 else { this.onSearch(res); }
             }
         })

@@ -73,10 +73,10 @@ export class ListComponent implements OnInit, OnDestroy {
                 await this.navService.setOnSearch('');
 
                 let ts;
-                ts = { TextSearch: "", AccountOfficeCode: localStorage.getItem("officeCode") }
+                ts = { Textsearch: "", AccountOfficeCode: localStorage.getItem("officeCode") }
                 ts = res;
 
-                if (ts.Textsearch == null) { this.onSearch({ TextSearch: "" }); }
+                if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
                 else { this.onSearch(res); }
 
             }
@@ -164,7 +164,7 @@ export class ListComponent implements OnInit, OnDestroy {
         });
     }
 
-    async onSearchComplete(list: any) {
+    onSearchComplete(list: any) {
         this.revenue = [];
 
         if (!list.length) {
@@ -175,7 +175,7 @@ export class ListComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        await list.map((item) => {
+        list.map((item) => {
             var StaffSendMoney;
             item.RevenueDate = toLocalShort(item.RevenueDate);
             StaffSendMoney = item.RevenueStaff.filter(item => item.ContributorID === 20);
