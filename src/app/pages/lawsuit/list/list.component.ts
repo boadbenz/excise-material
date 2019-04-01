@@ -45,14 +45,15 @@ export class ListComponent implements OnInit, OnDestroy {
     private lawsuitService: LawsuitService,
     private sidebarService: SidebarService
   ) {
+
     this.setShowButton();
     this.setPagination()
     this.advSearch = this.navService.showAdvSearch;
   }
   async ngOnInit() {
     this.sidebarService.setVersion('0.0.0.55');
-    // await this.onSearchByKeyword()
     await this.onInitSearchByKeyword();
+    await this.onSearchByKeyword();
     localStorage.setItem('programcode','ILG60-04-00')
     await this.setShowButton();
     // await this.onNextPage()
@@ -95,20 +96,18 @@ export class ListComponent implements OnInit, OnDestroy {
     });
   }
 
-  onInitSearchByKeyword() {
-    this.subOnSearchByKeyword = this.navService.searchByKeyword.subscribe(async Textsearch => {
-        this.preLoaderService.setShowPreloader(true);
-        let LawsuitArrestList = await this.lawsuitService.LawsuitArrestGetByKeyword("", localStorage.officeCode);
-        let temp = []
-        LawsuitArrestList.forEach(element => {
-          if(element['IsLawsuitComplete'] == 0) {
-            temp.push(element)
-          }
-        })
-        this.resultsPerPage = await this.setLawsuitArrestList(temp)
-        this.results = this.resultsPerPage
-        this.preLoaderService.setShowPreloader(false);
-    });
+  async onInitSearchByKeyword() {
+    this.preLoaderService.setShowPreloader(true);
+    let LawsuitArrestList = await this.lawsuitService.LawsuitArrestGetByKeyword("", localStorage.officeCode);
+    let temp = []
+    LawsuitArrestList.forEach(element => {
+      if (element['IsLawsuitComplete'] == 0) {
+        temp.push(element)
+      }
+    })
+    this.resultsPerPage = await this.setLawsuitArrestList(temp)
+    this.results = this.resultsPerPage
+    this.preLoaderService.setShowPreloader(false);
   }
 
   onNextPage() {
@@ -147,6 +146,7 @@ export class ListComponent implements OnInit, OnDestroy {
       let LawsuitArrestList = await this.lawsuitService.LawsuitArrestGetByKeyword(Textsearch.Textsearch, officeCode);
       this.resultsPerPage = await this.setLawsuitArrestList(LawsuitArrestList)
       this.results = this.resultsPerPage
+      this.preLoaderService.setShowPreloader(false);
       // return await this.navService.setOnSearch('');
     } else {
       return false;
