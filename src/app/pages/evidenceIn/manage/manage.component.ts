@@ -424,7 +424,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         );
 
 
-        const printDoc = [...this.PrintDocEvidence]; //, ... this.ReportKD5, ... this.ReportKD6
+        const printDoc = [...this.PrintDocEvidence];
 
         const dialogRef = this.ngbModel.open(PrintDocModalComponent, {
             backdrop: 'static', size: 'lg'
