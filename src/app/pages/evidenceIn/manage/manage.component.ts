@@ -113,6 +113,8 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     isRequired: boolean | false;
 
+    PrintDocEvidence: any[] = [];
+
 
     // ----- Model ------ //
     @ViewChild('printDocModal') printDocModel: ElementRef;
@@ -137,7 +139,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        localStorage.setItem('programcode','ILG60-10-00');
+        localStorage.setItem('programcode', 'ILG60-10-00');
         this.preloader.setShowPreloader(true);
 
         this.oEvidenceIn = {
@@ -357,30 +359,76 @@ export class ManageComponent implements OnInit, OnDestroy {
             }
         })
     }
-    public async buttonPrint(){
+    public async buttonPrint() {
+        this.activeRoute.data.subscribe(
+            (data) => {
+                switch (this.evitype) {
+                    case 'I':
+                        // ILG60-10-02-00-00
+                        this.PrintDocEvidence = [
+                            {
+                                IsChecked: false,
+                                DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
+                                DocType: 0,
+                                DocTypeName: 'แบบฟอร์ม',
+                                EvidenceInID: this.EvidenceInID,
+                                IsName: 'RP1'
+                            },
+                            {
+                                IsChecked: false,
+                                DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
+                                DocType: 0,
+                                DocTypeName: 'เอกสารแนบภายใน',
+                                EvidenceInID: this.EvidenceInID,
+                                IsName: 'RP2'
+                            }
+                        ]
+                        break;
+                    case 'E':
+                        // ILG60-10-03-00-00
+                        this.PrintDocEvidence = [
+                            {
+                                IsChecked: false,
+                                DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
+                                DocType: 0,
+                                DocTypeName: 'แบบฟอร์ม',
+                                EvidenceInID: this.EvidenceInID,
+                                IsName: 'RP1' 
+                            },
+                            {
+                                IsChecked: false,
+                                DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
+                                DocType: 0,
+                                DocTypeName: 'เอกสารแนบภายใน',
+                                EvidenceInID: this.EvidenceInID,
+                                IsName: 'RP2'
+                            }
+                        ]
+                        break;
+                    case 'G':
+                        // ILG60-10-04-00-00
+                        this.PrintDocEvidence = [
+                            {
+                                IsChecked: false,
+                                DocName: 'บันทึกรับมอบของกลางจากคณะกรรมการเก็บรักษาของกลาง',
+                                DocType: 0,
+                                DocTypeName: 'แบบฟอร์ม',
+                                EvidenceInID: this.EvidenceInID,
+                                IsName: 'RP3'
+                            }
+                        ]
+                        break;
+                }
 
-       const printDocEvi = [
-            {
-                IsChecked: false,
-                DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
-                DocType: 0,
-                DocTypeName: 'แบบฟอร์ม',
-                EvidenceInID: this.EvidenceInID
-            },
-            {
-                IsChecked: false,
-                DocName: 'บันทึกการตรวจรับของกลางเพื่อเก็บรักษา',
-                DocType: 0,
-                DocTypeName: 'เอกสารแนบภายใน',
-                EvidenceInID: this.EvidenceInID
             }
-        ]
+        );
 
-        const printDoc = [...printDocEvi]; //, ... this.ReportKD5, ... this.ReportKD6
 
-        const dialogRef = this.ngbModel.open(PrintDocModalComponent ,{
-          backdrop: 'static', size: 'lg'
-    
+        const printDoc = [...this.PrintDocEvidence]; //, ... this.ReportKD5, ... this.ReportKD6
+
+        const dialogRef = this.ngbModel.open(PrintDocModalComponent, {
+            backdrop: 'static', size: 'lg'
+
         });
         dialogRef.componentInstance.data = printDoc;
         dialogRef.result.then(res => { });

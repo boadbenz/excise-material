@@ -290,4 +290,14 @@ export class EvidenceService {
       return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
     } catch (error) { }
   }
+
+  Report_11_003(EvidenceInID: string) {
+    const params = {
+      EvidenceInID: EvidenceInID
+    };
+    const url = `${appConfig.apiReport}/ILG60_00_11_003.aspx`;
+    try {
+      return this.http.post(url, params, { ...this.httpOptions, responseType: 'blob' })
+    } catch (error) { }
+  }
 }

@@ -54,8 +54,8 @@ export class PrintDocModalComponent implements OnInit {
         if (_print.length) {
             this.preloader.setShowPreloader(true);
             // debugger
-            let forms = this.printDoc.filter(x => x.IsChecked == true && x.DocTypeName == 'แบบฟอร์ม')
-            if (forms.length) {
+            let RP1 = this.printDoc.filter(x => x.IsChecked == true && x.IsName == 'RP1')
+            if (RP1.length) {
                 this.preloader.setShowPreloader(true);
                 this.EviService.Report_11_001(this.EvidenceInID)
                     .subscribe(x => {
@@ -82,10 +82,33 @@ export class PrintDocModalComponent implements OnInit {
                         return false;
                     });
             }
-            let inside = this.printDoc.filter(x => x.IsChecked == true && x.DocTypeName == 'เอกสารแนบภายใน')
-            if (inside.length) {
+            let RP2 = this.printDoc.filter(x => x.IsChecked == true && x.IsName == 'RP2')
+            if (RP2.length) {
                 this.preloader.setShowPreloader(true);
                 this.EviService.Report_11_002(this.EvidenceInID)
+                    .subscribe(x => {
+                        const file = new Blob([x], { type: 'application/pdf' });
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+
+                        this.preloader.setShowPreloader(false);
+                    }, (error) => {
+                        console.error(error);
+                        swal({
+                            title: '',
+                            text: "พบปัญหาในการพิมพ์รายงาน",
+                            type: 'error',
+                            confirmButtonText: 'ตกลง'
+                        });
+
+                        this.preloader.setShowPreloader(false);
+                        return false;
+                    });
+            }
+            let RP3 = this.printDoc.filter(x => x.IsChecked == true && x.IsName == 'RP3')
+            if (RP3.length) {
+                this.preloader.setShowPreloader(true);
+                this.EviService.Report_11_003(this.EvidenceInID)
                     .subscribe(x => {
                         const file = new Blob([x], { type: 'application/pdf' });
                         const fileURL = URL.createObjectURL(file);
