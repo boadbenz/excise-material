@@ -40,15 +40,4 @@ export class RequestRewardService extends HelperService {
   public gettimeLine(param): Observable<any> {
     return this.http.post(`${this.timeline}/TimeLineListgetByCon`, param);
   }
-
-  // gettimeLine(params) {
-  //   const url = `${appConfig.api7788}/TimeLineListgetByCon`;
-  //   return this.http.post<any>(url, params, this.httpOptions).toPromise();
-  // }
-  // private httpOptions = {
-  //   headers: new HttpHeaders(
-  //     {
-  //       'Content-Type': 'application/json'
-  //     })
-  // };
 }

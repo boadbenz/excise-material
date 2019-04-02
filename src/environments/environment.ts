@@ -17,5 +17,6 @@ export const environment = {
 //     hostXCS60: 'http://192.168.3.158:8883/XCS60',
 //     api: 'http://192.168.3.158:7777',
 //     api90: 'http://192.168.3.158:8889',
-//     api_port: 'http://192.168.3.158:'
+//     api_port: 'http://192.168.3.158:',
+//     aip_timeline: 'http://192.168.3.158:7788'
 // };

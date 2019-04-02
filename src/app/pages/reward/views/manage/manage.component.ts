@@ -156,9 +156,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     this.sidebarService.setVersion('0.0.1.11');
     localStorage.setItem('programcode', 'ILG60-08-02');
     this.pageLoad();
-    this.timeLine();
+
   }
-  timeLine() {
+
+  timeLine(RequestBribeID$) {
     const params = {
       "NoticeCode": "",
       "ArrestCode": "",
@@ -166,7 +167,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       "ProveID": "",
       "CompareID": "",
       "RevenueID": "",
-      "RequestBribeID": this.RequestBribeRewardID$.getValue()
+      "RequestBribeID": RequestBribeID$
     }
     this.requestRewardService.gettimeLine(params).subscribe(res => {
       this.DisTL_ArrestCode = true;
@@ -245,7 +246,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         IndictmentID: this.IndictmentID$.getValue()
       })
       .toPromise();
-    // console.log('IRequestBribeReward', res);
+    const RequestBribeID$ = RequestBribeRewards[0].RequestBribeRewardID
+    this.timeLine(RequestBribeID$);
     // 4.1
     if (RequestBribeRewards.length > 0) {
       const RequestBribeReward: IRequestBribeReward = RequestBribeRewards[0];
@@ -316,10 +318,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
             })
             .toPromise();
-            console.log('RequestBribe++++++++++++++++ ',RequestBribe)
+          console.log('RequestBribe++++++++++++++++ ', RequestBribe)
           if (RequestBribe.length > 0) {
             this.ReqBribeDTL = RequestBribe[0].RequestBribeID;
-            console.log('++++++++++++++----this.ReqBribeDTL ; ',this.ReqBribeDTL)
+            console.log('++++++++++++++----this.ReqBribeDTL ; ', this.ReqBribeDTL)
           }
 
           localStorage.setItem("ReqDTL", this.ReqBribeDTL)
