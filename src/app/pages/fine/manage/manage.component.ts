@@ -164,7 +164,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.55');
+    this.sidebarService.setVersion('0.0.0.56');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -2205,7 +2205,8 @@ export class ManageComponent implements OnInit, OnDestroy {
             AdjustReason: null,
             CompareDetailFine: []
           };
-          detail.CompareDetailReceipt = this.prepareReceiptData();
+          // detail.CompareDetailReceipt = this.prepareReceiptData();
+          this.prepareReceiptData();
           // if ((+this.params.CompareID) == 0) {
 
           // } else {
