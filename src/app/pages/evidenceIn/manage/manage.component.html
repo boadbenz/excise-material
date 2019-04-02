@@ -393,7 +393,7 @@
                         <tbody>
                             <tr *ngFor="let item of ListEvidenceInItem | IsActivePipe ; let i=index;">
                                 <td style="text-align:center;">{{i + 1}}</td>
-                                <td>
+                                <td data-toggle="tooltip" [title]="item.EvidenceInItemCode">
                                     <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.EvidenceInItemCode"
                                         name="item.EvidenceInItemCode" placeholder="" aria-label="Number" [matAutocomplete]="auto5"
                                         (input)="EviItemCodeonAutoChange($event.target.value, item.ProductSeq)" (focus)="ProductonAutoFocus($event.target.value)"
@@ -405,7 +405,7 @@
                                         </mat-option>
                                     </mat-autocomplete>
                                 </td>
-                                <td>
+                                <td  data-toggle="tooltip" [title]="item.ProductDesc">
                                     <input type="text" matInput class="form-control form-control-sm" style="font-size: 14px" [(ngModel)]="item.ProductDesc" name="item.ProductDesc"
                                         placeholder="" aria-label="Number" [matAutocomplete]="auto4" (input)="ProductonAutoChange($event.target.value, item.ProductSeq)"
                                         (focus)="ProductonAutoFocus($event.target.value)" [disabled]="showEditField || evitype != 'E'"
