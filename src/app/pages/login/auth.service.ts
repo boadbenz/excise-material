@@ -47,58 +47,40 @@ export class AuthService {
       .catch(this.handleErrorObservable);
   }
 
-  userAndPrivilegeInfo(User): Observable<any>{
-    // console.log('User : ',User)
+  // userAndPrivilegeInfo(User): Observable<any> {
+  //   // console.log('User : ',User)
+  //   let options = new RequestOptions({ headers: this.getHeaders() });
+  //   const url = `${appConfig.exciseService}/edssows/ldap/userAndPrivilegeInformation?userID=${User}&systemID=Test010`
+  //   return this.http.get(url)
+  //     .map((res: Response) => res.json())
+  //     .catch(this.handleErrorObservable);
+  // }
+
+  // eofficeInfo(params): Observable<any> {
+  //   let options = new RequestOptions({ headers: this.getHeaders() });
+  //   const url = `http://uat.eoffice.excise.go.th:7003/EOfficeWS/HrstPersonInformation `
+  //   return this.http.post(url, params, options)
+  //     .map((res: Response) => res.json())
+  //     .catch(this.handleErrorObservable);
+  // }
+
+  userAndPrivilegeInfo(params): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeaders() });
-    const url = `${appConfig.exciseService}/edssows/ldap/userAndPrivilegeInformation?userID=${User}&systemID=Test010`
-    return this.http.get(url)
-      .map((res: Response) => res.json())
-      .catch(this.handleErrorObservable);
-  }
-  
-  eofficeInfo(params): Observable<any> {
-    let options = new RequestOptions({ headers: this.getHeaders() });
-    const url = `http://uat.eoffice.excise.go.th:7003/EOfficeWS/HrstPersonInformation `
+    const url = `${appConfig.api8086}/userAndPrivilegeInfo`
     return this.http.post(url, params, options)
       .map((res: Response) => res.json())
       .catch(this.handleErrorObservable);
   }
 
-  //---------------------------------TEST---------------------------------------
-
-  // private httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-  // getTest() {
-  //   this.httpClient.get(`${appConfig.exciseService}/edssows/ldap/userAndPrivilegeInformation?userID=rod&systemID=Test010`).subscribe((res:any) => {
-  //     console.log('getTest :', res);
-  //   });
-  // }
-
-  // userAndPrivilegeInfo(User): Observable<any> {
-  //   const params = '';
-  //   const url = `${appConfig.exciseService}/edssows/ldap/userAndPrivilegeInformation?userID=${User}&systemID=Test010"`;
-  //   return this.httpClient.get<any>(url, this.httpOptions);
-  // }
-  // testGet(){
-  //   const url = `http://webtest.excise.go.th/edssows/ldap/userAndPrivilegeInformation?userID=rod&systemID=Test010`;
-  //   return this.responseGetMethod(url);
-  // }
-  //  async testGet() {
-  //   const getUrl = `http://webtest.excise.go.th/edssows/ldap/userAndPrivilegeInformation?userID=rod&systemID=Test010`
-
-  //   return await this.httpClient.get<Response>(getUrl).toPromise() ;
-  // }
-
-  // private getHeaderstest() {
-  //   let headers = new Headers();
-  //   headers.append('Content-Type','application/json; ');
-  //   headers.append('Access-Control-Allow-Origin','https://developer.mozilla.org')
-  //   headers.append( "cache-control", "no-cache")
-  //   // headers.append('Accept', '	text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8');
-  //   // headers.append('Access-Control-Allow-Origin', '*');
-  //   return headers;
-  // }
+  eofficeInfo(params): Observable<any> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    const url = `${appConfig.api8086}/eofficeInfo`
+    return this.http.post(url, params, options)
+      .map((res: Response) => res.json())
+      .catch(this.handleErrorObservable);
+  }
   /****************************(End Used with in the Excise Only)***************************** */
- 
+
 
   private getHeaders() {
     let headers = new Headers();

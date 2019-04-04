@@ -43,14 +43,7 @@ export class LoginComponent implements OnInit {
     }
     if (User && Pass) {
       if (this.authService.signin(from)) {
-        
-        // await this.authService.getTest()
-        // await this.authService.userAndPrivilegeInfo(User).subscribe(async res => {
-        //   console.log("ssoService res++++ : ", res);
-        // })
-        // await this.authService.testGet().then(async res => {
-        //   console.log("ssoService testGet res++++ : ", res);
-        // })
+
         //***********************************Used with in the Excise Only (Don't Delete)********************************** */
 
         // const params = {
@@ -65,33 +58,38 @@ export class LoginComponent implements OnInit {
         // await this.authService.ssoService(params).subscribe(async res => {
         //   console.log("ssoService res++++ : ", res);
         //   if (res.ResponseCode == "OK") {
-        //     await this.authService.userAndPrivilegeInfo(User).subscribe(async res => {
-        //       // console.log("getpin : ", res);
+        //     const params = {
+        //       "UserName": User,
+        //       "SystemID": "Test010"
+        //     }
+        //     await this.authService.userAndPrivilegeInfo(params).subscribe(async res => {
+        //       console.log("getpin : ", res);
         //       if (res.pin) {
         //         console.log("Hi pin : ", res.pin)
-        //         const paramsPinID = {
-        //           SystemID: "sso",
-        //           Username: "pccsso",
-        //           Password: "sso2561",
-        //           RequestData: {
-        //             PersonNID: res.pin
-        //           }
+        //           const paramsPinID = {
+        //             "SystemID": "sso",
+        //             "UserName": "pccsso",
+        //             "Password": "sso2561",
+        //             "RequestData":
+        //                            {
+        //                             "PersonNID": res.pin
+        //                           }
         //         }
         //         // if (User == Pass) {
-        //           await this.authService.eofficeInfo(paramsPinID).subscribe(async res => {
-        //             // console.log("res eofficeInfo  : ", res);
-        //             if (res.Status == "OK") {
-        //               this.fullName = res.PersonInformation.PersonTHTitle + " " +
-        //                 res.PersonInformation.PersonTHName + " " + res.PersonInformation.PersonTHSurName;
-        //               localStorage.setItem('fullName', this.fullName);
-        //               localStorage.setItem('operationPosName', res.PersonInformation.LinePotistion);
-        //               localStorage.setItem('officeShortName', res.PersonInformation.WorkOffName);
-        //               localStorage.setItem('staffCode', res.PersonInformation.PersonID);
-        //               localStorage.setItem('officeCode', res.PersonInformation.WorkOffCode);
-        //               let url = decodeURIComponent(this.returnUrl);
-        //               this.router.navigateByUrl(url);
-        //             } else this.errMsg = "Please Check User or Password "
-        //           });
+        //         await this.authService.eofficeInfo(paramsPinID).subscribe(async res => {
+        //           console.log("res eofficeInfo  : ", res);
+        //           if (res.Status == "OK") {
+        //             this.fullName = res.PersonInformation.PersonTHTitle + " " +
+        //               res.PersonInformation.PersonTHName + " " + res.PersonInformation.PersonTHSurName;
+        //             localStorage.setItem('fullName', this.fullName);
+        //             localStorage.setItem('operationPosName', res.PersonInformation.LinePotistion);
+        //             localStorage.setItem('officeShortName', res.PersonInformation.WorkOffName);
+        //             localStorage.setItem('staffCode', res.PersonInformation.PersonID);
+        //             localStorage.setItem('officeCode', res.PersonInformation.WorkOffCode);
+        //             let url = decodeURIComponent(this.returnUrl);
+        //             this.router.navigateByUrl(url);
+        //           } else this.errMsg = "Please Check User or Password "
+        //         });
         //         // } else this.errMsg = "User or Password invalid"
         //       } else this.errMsg = "User or Password invalid"
         //     });
@@ -131,7 +129,7 @@ export class LoginComponent implements OnInit {
     this.errMsg = '';
   }
 
-  ngOnInit() { }
+  ngOnInit() {  }
 
 
 
