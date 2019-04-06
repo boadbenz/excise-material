@@ -293,7 +293,12 @@
             <td class="text-center">{{i+1}}</td>
             <td>{{((item.LawbreakerTitleName || '')) 
                 + (item.LawbreakerFirstName || '') + ' ' + (item.LawbreakerLastName || '')}}</td>
-            <td>{{item.PaymentDate | reductionDatePipe: 'DD MMM YYYY'}}</td>
+            <!-- <td>{{item.PaymentDate | reductionDatePipe: 'DD MMM YYYY'}}</td> -->
+            <td style="padding: 0px 12px;">
+              <my-date-picker class="form-control date-setting" type="text" locale="th" [options]="DateOption" 
+                [(ngModel)]="CompareReceipt[i].PaymentDate">
+              </my-date-picker>
+            </td>
             <!-- <td>Missing ผู้รับชำระ</td> -->
             <td style="padding: 0px;">
               <!-- {{item.ReceiptChanel} -->

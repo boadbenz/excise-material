@@ -469,6 +469,13 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         // tslint:disable-next-line:triple-equals
         return element.CompareDetailID == this.compareIdDetail;
       });
+      this.CompareReceipt.forEach(element => {
+        console.log(element.PaymentDate);
+        if (element.PaymentDate) {
+          element.PaymentDate = this.toDatePickerFormat(new Date(moment(element.PaymentDate).format('YYYY-MM-DD')));
+        }
+      });
+      console.log(this.CompareReceipt);
     } catch (e) {
     }
   }
@@ -481,7 +488,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         const response = await this.apiService.post('/XCS60/AdjustCompareDetailgetByCon',
                                   {CompareDetailID: compareIdDetail})
                             .toPromise();
-                            console.log('กล่องสาม -> ', response);
+                            // console.log('กล่องสาม -> ', response);
         this.adjustFine.forEach((el, i) => {
           if (this.mode === 'V') {
             this.adjustFine[i].CompareFineBribeMoney = response.BribeMoney;
@@ -999,7 +1006,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
           RevenueDate: moment().format('YYYY-MM-DD HH:mm:ss') + ' +00:00',
           IsActive: 1,
           CompareAuthority: 1,
-          FineType: 1
+          FineType: 1,
+          PaymentDate: moment(element.PaymentDate.jsdate).format('YYYY-MM-DD HH:mm:ss') + ' +00:00'
         });
         return element;
       }
@@ -1010,7 +1018,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     param.AdjustCompareStaff = this.AdjustCompareStaff;
     // tslint:disable-next-line:radix
     param.CompareID = this.compareID;
-
+    console.log(param);
+    return;
     try {
       let data;
       // tslint:disable-next-line:triple-equals
