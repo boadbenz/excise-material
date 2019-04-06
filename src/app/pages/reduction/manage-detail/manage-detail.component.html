@@ -619,7 +619,7 @@
                           (input)="StaffonAutoChange($event.target.value)"
                           (focus)="StaffonAutoFocus($event.target.value)"
                           [required]="(EditApproveCaseComparisonPopUp.ApproveReportType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1)"
-                          [disabled]="(EditApproveCaseComparisonPopUp.ApproveReportType) == 1 || showField">
+                          [disabled]="(EditApproveCaseComparisonPopUp.ApproveReportType) != 1 || showField">
                   <mat-autocomplete #autoStaff1="matAutocomplete">
                     <mat-option *ngFor="let sOption of Staffoptions"
                                 [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
@@ -664,7 +664,7 @@
                           matInput [matAutocomplete]="autoStaff2"
                           (input)="StaffonAutoChange($event.target.value)"
                           (focus)="StaffonAutoFocus($event.target.value)"
-                          [disabled]="showField || (EditApproveCaseComparisonPopUp.ApproveReportType) == 1" 
+                          [disabled]="showField" 
                           [required]="(EditApproveCaseComparisonPopUp.ApproveReportType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 2)">
                   <mat-autocomplete #autoStaff2="matAutocomplete">
                     <mat-option *ngFor="let sOption of Staffoptions"
@@ -711,7 +711,7 @@
                     matInput [matAutocomplete]="autoStaff3"
                     (input)="StaffonAutoChange($event.target.value)"
                     (focus)="StaffonAutoFocus($event.target.value)"
-                    [disabled]="showField || (EditApproveCaseComparisonPopUp.ApproveReportType) == 1" 
+                    [disabled]="showField" 
                     [required]="(EditApproveCaseComparisonPopUp.ApproveReportType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 3)">
                 <mat-autocomplete #autoStaff3="matAutocomplete">
                   <mat-option *ngFor="let sOption of Staffoptions"
