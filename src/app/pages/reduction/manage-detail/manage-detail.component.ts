@@ -567,7 +567,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       this.EditApproveCaseComparisonPopUp.CommandNo = '';
       // this.EditApproveCaseComparisonPopUp.CommandDate = '';
       this.EditApproveCaseComparisonPopUp.Fact = '';
-      this.EditApproveCaseComparisonPopUp.AdjustReason = '';
+      this.EditApproveCaseComparisonPopUp.CompareReason = '';
 
       if (this.adjustFine.length > 0) {
         let CompareFine = 0;
@@ -591,7 +591,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       this.EditApproveCaseComparisonPopUp.CommandNo = '';
       // this.EditApproveCaseComparisonPopUp.CommandDate = '';
       this.EditApproveCaseComparisonPopUp.Fact = '';
-      this.EditApproveCaseComparisonPopUp.AdjustReason = '';
+      this.EditApproveCaseComparisonPopUp.CompareReason = '';
 
       if (this.adjustFine.length > 0) {
         let CompareFine = 0;
@@ -633,6 +633,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       (this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareLawbreaker[0].LawbreakerLastName || '');
 
       if (this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareStaff.length > 0) {
+        const mode = this.activeRoute.snapshot.paramMap.get('mode');
         const staffs = this.EditApproveCaseComparisonData[CompareDetailID].AdjustCompareStaff;
         const offerstaff = staffs.find(st => {
           return st.ContributorID === 39;
@@ -640,9 +641,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         this.AdjustCompareStaff[0] = offerstaff || {};
         if (offerstaff != null) {
           this.EditApproveCaseComparisonData[CompareDetailID].offerstaff
-              = offerstaff.TitleName + offerstaff.FirstName + ' ' + offerstaff.LastName || '';
-          this.EditApproveCaseComparisonData[CompareDetailID].offerPosition = offerstaff.PositionName || '';
-          this.EditApproveCaseComparisonData[CompareDetailID].offerDepartment = offerstaff.OfficeName || '';
+              = (mode !== 'A') ? offerstaff.TitleName + offerstaff.FirstName + ' ' + offerstaff.LastName || '' : '';
+          this.EditApproveCaseComparisonData[CompareDetailID].offerPosition = (mode !== 'A') ? offerstaff.PositionName || '' : '';
+          this.EditApproveCaseComparisonData[CompareDetailID].offerDepartment = (mode !== 'A') ? offerstaff.OfficeName || '' : '';
         }
 
         const staff = staffs.find(st => {
@@ -651,9 +652,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         this.AdjustCompareStaff[1] = staff || {};
         if (staff != null) {
           this.EditApproveCaseComparisonData[CompareDetailID].staff
-              = staff.TitleName + staff.FirstName + ' ' + staff.LastName || '';
-          this.EditApproveCaseComparisonData[CompareDetailID].position = staff.PositionName || '';
-          this.EditApproveCaseComparisonData[CompareDetailID].department = staff.OfficeName || '';
+              = (mode !== 'A') ? staff.TitleName + staff.FirstName + ' ' + staff.LastName || '' : '';
+          this.EditApproveCaseComparisonData[CompareDetailID].position = (mode !== 'A') ? staff.PositionName || '' : '';
+          this.EditApproveCaseComparisonData[CompareDetailID].department = (mode !== 'A') ? staff.OfficeName || '' : '';
         }
 
         const approveStaff = staffs.find(st => {
@@ -662,9 +663,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         this.AdjustCompareStaff[2] = approveStaff || {};
         if (approveStaff != null) {
           this.EditApproveCaseComparisonData[CompareDetailID].approveStaff
-              = approveStaff.TitleName + approveStaff.FirstName + ' ' + approveStaff.LastName || '';
-          this.EditApproveCaseComparisonData[CompareDetailID].approvePosition = approveStaff.PositionName || '';
-          this.EditApproveCaseComparisonData[CompareDetailID].approveDepartment = approveStaff.OfficeName || '';
+              = (mode !== 'A') ? approveStaff.TitleName + approveStaff.FirstName + ' ' + approveStaff.LastName || '' : '';
+          this.EditApproveCaseComparisonData[CompareDetailID].approvePosition = (mode !== 'A') ? approveStaff.PositionName || '' : '';
+          this.EditApproveCaseComparisonData[CompareDetailID].approveDepartment = (mode !== 'A') ? approveStaff.OfficeName || '' : '';
         }
       }
 
