@@ -565,7 +565,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
       this.viewMode = false;
       this.EditApproveCaseComparisonPopUp.CommandNo = '';
-      this.EditApproveCaseComparisonPopUp.CommandDate = '';
+      // this.EditApproveCaseComparisonPopUp.CommandDate = '';
       this.EditApproveCaseComparisonPopUp.Fact = '';
       this.EditApproveCaseComparisonPopUp.AdjustReason = '';
     }
@@ -580,7 +580,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
       this.viewMode = false;
       this.EditApproveCaseComparisonPopUp.CommandNo = '';
-      this.EditApproveCaseComparisonPopUp.CommandDate = '';
+      // this.EditApproveCaseComparisonPopUp.CommandDate = '';
       this.EditApproveCaseComparisonPopUp.Fact = '';
       this.EditApproveCaseComparisonPopUp.AdjustReason = '';
     }
@@ -652,34 +652,34 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
 
       this.EditApproveCaseComparisonPopUp = this.EditApproveCaseComparisonData[CompareDetailID];
-
-      this.EditApproveCaseComparisonPopUp.PaymentFineDate = ve === 1 ?
-      [this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))), '15:25 น.', '+12:15'] :
+      // tslint:disable-next-line:triple-equals
+      this.EditApproveCaseComparisonPopUp.PaymentFineDate = (ve === 1 && this.activeRoute.snapshot.paramMap.get('mode') === 'A') ?
+      [this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))), (moment().format('HH:mm')) + ' น.', '+12:15'] :
       // tslint:disable-next-line:max-line-length
       [this.toDatePickerFormat(new Date(moment(this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineAppointDate).format('YYYY-MM-DD'))), '00:00 น.', '+00:00'];
+      console.log(this.EditApproveCaseComparisonPopUp.PaymentFineDate);
 
-
-      this.EditApproveCaseComparisonPopUp.ApproveReportDate = ve === 1 ?
+      this.EditApproveCaseComparisonPopUp.ApproveReportDate = (ve === 1 && this.activeRoute.snapshot.paramMap.get('mode') === 'A') ?
       this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))) :
       this.toDatePickerFormat(new Date(moment(this.EditApproveCaseComparisonData[CompareDetailID].ApproveReportDate).format('YYYY-MM-DD')));
 
-      this.EditApproveCaseComparisonPopUp.CommandDate = ve === 1 ?
+      this.EditApproveCaseComparisonPopUp.CommandDate = (ve === 1 && this.activeRoute.snapshot.paramMap.get('mode') === 'A') ?
       this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))) :
       this.toDatePickerFormat(new Date(moment(this.EditApproveCaseComparisonData[CompareDetailID].CommandDate).format('YYYY-MM-DD')));
     } else {
       console.log('has data alredy');
       this.EditApproveCaseComparisonPopUp = this.EditApproveCaseComparisonData[CompareDetailID];
 
-      this.EditApproveCaseComparisonPopUp.PaymentFineDate = ve === 1 ?
-      [this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))), '15:25 น.', '+12:15'] :
+      this.EditApproveCaseComparisonPopUp.PaymentFineDate = (ve === 1 && this.activeRoute.snapshot.paramMap.get('mode') === 'A') ?
+      [this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))), (moment().format('HH:mm')) + ' น.', '+12:15'] :
       // tslint:disable-next-line:max-line-length
       [this.toDatePickerFormat(new Date(moment(this.EditApproveCaseComparisonData[CompareDetailID].PaymentFineAppointDate).format('YYYY-MM-DD'))), '00:00 น.', '+00:00'];
 
-      this.EditApproveCaseComparisonPopUp.ApproveReportDate = ve === 1 ?
+      this.EditApproveCaseComparisonPopUp.ApproveReportDate = (ve === 1 && this.activeRoute.snapshot.paramMap.get('mode') === 'A') ?
       this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))) :
       this.EditApproveCaseComparisonData[CompareDetailID].ApproveReportDate;
 
-      this.EditApproveCaseComparisonPopUp.CommandDate = ve === 1 ?
+      this.EditApproveCaseComparisonPopUp.CommandDate = (ve === 1 && this.activeRoute.snapshot.paramMap.get('mode') === 'A') ?
       this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD'))) :
       this.EditApproveCaseComparisonData[CompareDetailID].CommandDate;
     }
