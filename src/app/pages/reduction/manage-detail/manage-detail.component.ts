@@ -568,6 +568,15 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       // this.EditApproveCaseComparisonPopUp.CommandDate = '';
       this.EditApproveCaseComparisonPopUp.Fact = '';
       this.EditApproveCaseComparisonPopUp.AdjustReason = '';
+
+      if (this.adjustFine.length > 0) {
+        let CompareFine = 0;
+        this.adjustFine.forEach(el => {
+          el.CompareFine = el.CompareFine === '' ? 0 : el.CompareFine;
+          CompareFine += el.CompareFine;
+        });
+        this.EditApproveCaseComparisonPopUp.CompareFine = isNaN(CompareFine) ? 0 : CompareFine;
+      }
     }
 
     this.changApproveReportType();
@@ -583,6 +592,15 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       // this.EditApproveCaseComparisonPopUp.CommandDate = '';
       this.EditApproveCaseComparisonPopUp.Fact = '';
       this.EditApproveCaseComparisonPopUp.AdjustReason = '';
+
+      if (this.adjustFine.length > 0) {
+        let CompareFine = 0;
+        this.adjustFine.forEach(el => {
+          el.CompareFine = el.CompareFine === '' ? 0 : el.CompareFine;
+          CompareFine += el.CompareFine;
+        });
+        this.EditApproveCaseComparisonPopUp.CompareFine = isNaN(CompareFine) ? 0 : CompareFine;
+      }
     }
     this.changApproveReportType();
   }
