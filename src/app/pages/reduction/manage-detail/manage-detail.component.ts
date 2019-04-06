@@ -470,12 +470,15 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         return element.CompareDetailID == this.compareIdDetail;
       });
       this.CompareReceipt.forEach(element => {
-        console.log(element.PaymentDate);
         if (element.PaymentDate) {
           element.PaymentDate = this.toDatePickerFormat(new Date(moment(element.PaymentDate).format('YYYY-MM-DD')));
         }
+
+        if (this.mode === 'A') {
+          element.RevenueStatus = 0;
+        }
       });
-      console.log(this.CompareReceipt);
+
     } catch (e) {
     }
   }

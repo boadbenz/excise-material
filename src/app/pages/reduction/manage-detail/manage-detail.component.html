@@ -296,11 +296,11 @@
             <!-- <td>{{item.PaymentDate | reductionDatePipe: 'DD MMM YYYY'}}</td> -->
             <td style="padding: 0px 12px;">
               <my-date-picker class="form-control date-setting" type="text" locale="th" [options]="DateOption" 
-                [(ngModel)]="CompareReceipt[i].PaymentDate">
+                [(ngModel)]="CompareReceipt[i].PaymentDate" [disabled]="showField">
               </my-date-picker>
             </td>
             <!-- <td>Missing ผู้รับชำระ</td> -->
-            <td style="padding: 0px;">
+            <td style="padding: 0px 12px;">
               <!-- {{item.ReceiptChanel} -->
               <!-- <input type="text" [(ngModel)]="item.ReceiptChanel" name="ReceiptChanel" class="form-control" [disabled]="showField"> -->
               <select class="form-control" style="padding-top: 3px;" [value]="item.ReceiptChanel" (change)="changeReceiptChanel($event, i)" [disabled]="showField">
@@ -310,10 +310,20 @@
                 <option value='4'>เดบิต</option>
               </select>
             </td>
-            <td>{{item.ReceiptBookNo}}</td>
-            <td>{{item.ReceiptNo}}</td>
-            <td>{{item.ReferenceNo}}</td>
-            <td>{{item.RevenueStatus === 0 ? 'ยังไม่ส่งรายได้' : 'นำส่งรายได้'}}</td>
+            <!-- <td>{{item.ReceiptBookNo}}</td> -->
+            <td style="padding: 0px 12px;">
+              <input class="form-control" type="text" name="ReceiptBookNo" [(ngModel)]="CompareReceipt[i].ReceiptBookNo" [disabled]="showField">
+            </td>
+            <!-- <td>{{item.ReceiptNo}}</td> -->
+            <td style="padding: 0px 12px;">
+                <input class="form-control" type="text" name="ReceiptNo" [(ngModel)]="CompareReceipt[i].ReceiptNo" [disabled]="showField">
+            </td>
+            <!-- <td>{{item.ReferenceNo}}</td> -->
+            <td style="padding: 0px 12px;">
+                <input class="form-control" type="text" name="ReferenceNo" [(ngModel)]="CompareReceipt[i].ReceiptNo" [disabled]="showField || CompareReceipt[i].ReceiptChanel == 1">
+            </td>
+            <td style="padding: 0px 12px;" *ngIf="showField">{{item.RevenueStatus === 0 ? 'ยังไม่ส่งรายได้' : 'นำส่งรายได้'}}</td>
+            <td style="padding: 0px 12px;" *ngIf="!showField">{{item.RevenueStatus === 0 ? '-' : '-'}}</td>
             <!-- <td [hidden]="true">
               <a href="javaScript:void(0);" class="text-secondary" (click)="viewData()" data-toggle="modal" [hidden]="mode === 'A'" data-target="#finePopup">
                 <i class="mdi mdi-eye fa-lg"></i>
