@@ -115,7 +115,7 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('officeShortName', this.OfficeShortName);
             localStorage.setItem('staffCode', res.StaffCode);
             localStorage.setItem('officeCode', res.OfficeCode);
-            localStorage.setItem('UserAccountID',res.UserAccountID)
+            localStorage.setItem('UserAccountID', res.UserAccountID)
             let url = decodeURIComponent(this.returnUrl);
             this.router.navigateByUrl(url);
           } else this.errMsg = res.Msg;
@@ -129,8 +129,37 @@ export class LoginComponent implements OnInit {
     this.errMsg = '';
   }
 
-  ngOnInit() {  }
+  ngOnInit() {
 
+    // this.soapFN();
 
+  }
+
+  // soapFN() {
+  //   const xmlhttp = new XMLHttpRequest();
+  //   xmlhttp.open('POST', 'http://192.168.3.92:5080/LDAPGateway/LDPAGAuthenAndGetUserInfoService?wsdl', true);
+  //   // build SOAP request
+  //   var sr = '<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">' +
+  //               '<Body>' +
+  //               '<RequestObj xmlns="http://dexsrvint.excise.go.th/schema/AuthenAndGetUserInfo">' +
+  //                 '<userId>atthapon</userId>' +
+  //                   '<password>atthapon99</password>' +
+  //                 ' </RequestObj>' +
+  //               ' </Body>' +
+  //             '</Envelope>';
+
+  //   xmlhttp.onreadystatechange = function () {
+  //     if (xmlhttp.readyState == 4) {
+  //       if (xmlhttp.status == 200) {
+  //         console.log('xmlhttp.responseText : ', xmlhttp.responseText);
+  //         var myArr = JSON.stringify(this.responseText);
+  //         console.log('JSON.parse : ', xmlhttp.responseText);
+  //       }
+  //     }
+  //   }
+  //   // Send the POST request
+  //   xmlhttp.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8');
+  //   xmlhttp.send(sr);
+  // }
 
 }
