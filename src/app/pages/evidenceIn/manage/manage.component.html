@@ -477,7 +477,7 @@
                                         </mat-option>
                                     </mat-autocomplete>
                                 </td>
-                                <td>
+                                <td *ngIf="evitype != 'I'">
                                     <a href="javaScript:void(0);" class="text-warning">
                                         <i class="fa fa-trash-o fa-lg" (click)="DelProduct(item.ProductSeq)" [hidden]="showEditField"></i>
                                     </a>
