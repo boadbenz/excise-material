@@ -318,13 +318,13 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:triple-equals
     if (this.isOld == '1' && this.activeRoute.snapshot.paramMap.get('mode') === 'V') {
-      this.navService.setDeleteButton(false);
-      this.navService.setSaveButton(false);
-      this.navService.setCancelButton(false);
-      this.navService.setPrintButton(true);
-      this.navService.setSearchBar(false);
-      this.navService.setEditButton(false);
-      this.navService.setSendIncomeButton(true);
+      await this.navService.setDeleteButton(false);
+      await this.navService.setSaveButton(false);
+      await this.navService.setCancelButton(false);
+      await this.navService.setPrintButton(true);
+      await this.navService.setSearchBar(false);
+      await this.navService.setEditButton(false);
+      await this.navService.setSendIncomeButton(true);
     }
 
     this.unsub.incame = this.navService.onSendIncome.subscribe(status => {
@@ -469,14 +469,18 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
         // tslint:disable-next-line:triple-equals
         return element.CompareDetailID == this.compareIdDetail;
       });
-      this.CompareReceipt.forEach(element => {
+      this.CompareReceipt.forEach((element, i) => {
         if (element.PaymentDate) {
           element.PaymentDate = this.toDatePickerFormat(new Date(moment(element.PaymentDate).format('YYYY-MM-DD')));
         }
 
-        if (this.mode === 'A') {
+        if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
           element.RevenueStatus = 0;
+          this.CompareReceipt[i].ReceiptBookNo = '';
+          this.CompareReceipt[i].ReceiptNo = '';
         }
+        
+        this.CompareReceipt[i].ReferenceNo = null;
       });
 
     } catch (e) {
@@ -499,6 +503,11 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
             this.adjustFine[i].CompareFineTreasuryMoney = response.TreasuryMoney;
           }
         });
+        if (response && response.AdjustCompareDetailReceipt.length > 0 && response.AdjustCompareDetailReceipt.length === this.CompareReceipt.length) {
+          response.AdjustCompareDetailReceipt.forEach((element, i) => {
+            this.CompareReceipt[i].ReferenceNo = element.ReferenceNo;
+          });
+        }
         this.AdjustCompareDetail.push(response);
       } else {
         this.AdjustCompareDetail = [];
@@ -941,24 +950,26 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     }
 
     if (!docs || !docs_name) {
-      if (!docs) {
-        swal({
-          title: 'ไม่มีเอกสารแนบ?',
-          text: 'ต้องการบันทึกข้อมูลจริงหรือไม่!',
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'ตกลง',
-          cancelButtonText: 'ยกเลิก'
-        }).then(async result => {
-          if (result.value) {
-            await this.saveData(adjustData, CompareFine, TreasuryMoney, BribeMoney, RewardMoney, Fine);
-          } else {
-            return;
-          }
-        });
-      }
+      console.log('non doc');
+      await this.saveData(adjustData, CompareFine, TreasuryMoney, BribeMoney, RewardMoney, Fine);
+      // if (!docs) {
+      //   swal({
+      //     title: 'ไม่มีเอกสารแนบ?',
+      //     text: 'ต้องการบันทึกข้อมูลจริงหรือไม่!',
+      //     type: 'warning',
+      //     showCancelButton: true,
+      //     confirmButtonColor: '#3085d6',
+      //     cancelButtonColor: '#d33',
+      //     confirmButtonText: 'ตกลง',
+      //     cancelButtonText: 'ยกเลิก'
+      //   }).then(async result => {
+      //     if (result.value) {
+      //       await this.saveData(adjustData, CompareFine, TreasuryMoney, BribeMoney, RewardMoney, Fine);
+      //     } else {
+      //       return;
+      //     }
+      //   });
+      // }
     } else {
       await this.saveData(adjustData, CompareFine, TreasuryMoney, BribeMoney, RewardMoney, Fine);
     }
@@ -1040,8 +1051,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     param.AdjustCompareStaff = this.AdjustCompareStaff;
     // tslint:disable-next-line:radix
     param.CompareID = this.compareID;
-    console.log(param);
-    return;
+
     try {
       let data;
       // tslint:disable-next-line:triple-equals
