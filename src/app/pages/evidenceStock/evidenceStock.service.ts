@@ -29,8 +29,8 @@ export class EvidenceStockService {
     }
   }
 
-  async getByCon( WarehourseID: string): Promise<any> {
-    const params = {  WarehourseID };
+  async getByCon( WarehouseID: string): Promise<any> {
+    const params = {  WarehouseID };
     const url = `${appConfig.api7788}/EvidenceInventoryCheckStockgetByCon`;
 
     try {

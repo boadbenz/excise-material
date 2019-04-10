@@ -57,7 +57,7 @@ export class ListComponent implements OnInit, OnDestroy {
         // set true
         this.navService.setSearchBar(false);
         this.navService.setNewButton(false);
-        this.sidebarService.setVersion('evidenceStock 0.0.0.1');
+        this.sidebarService.setVersion('evidenceStock 0.0.0.2');
 
         this.OfficeName = "";
         this.WarehouseName = "";
