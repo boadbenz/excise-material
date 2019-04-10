@@ -282,7 +282,7 @@
             <!-- <th class="footable-sortable">ผู้รับชำระค่าปรับ</th> -->
             <th class="footable-sortable">ช่องทางชำระ</th>
             <th class="footable-sortable">ใบเสร็จเล่มที่</th>
-            <th class="footable-sortable">ใบเสร็จเลขที่/เลขอ้างอิง</th>
+            <th class="footable-sortable">ใบเสร็จเลขที่</th>
             <th class="footable-sortable">เลขที่อ้างอิง</th>
             <th class="footable-sortable">สถานะคดี</th>
             <!-- <th class="footable-sortable"></th> -->
@@ -320,7 +320,7 @@
             </td>
             <!-- <td>{{item.ReferenceNo}}</td> -->
             <td style="padding: 0px 12px;">
-                <input class="form-control" type="text" name="ReferenceNo" [(ngModel)]="CompareReceipt[i].ReceiptNo" [disabled]="showField || CompareReceipt[i].ReceiptChanel == 1">
+                <input class="form-control" type="text" name="ReferenceNo" [(ngModel)]="CompareReceipt[i].ReferenceNo" [disabled]="showField || CompareReceipt[i].ReceiptChanel == 1">
             </td>
             <td style="padding: 0px 12px;" *ngIf="showField">{{item.RevenueStatus === 0 ? 'ยังไม่ส่งรายได้' : 'นำส่งรายได้'}}</td>
             <td style="padding: 0px 12px;" *ngIf="!showField">{{item.RevenueStatus === 0 ? '-' : '-'}}</td>
@@ -500,7 +500,7 @@
             <td>{{item.ApproveReportDate | reductionDatePipe: 'DD MMM YYYY'}}</td>
             <td>{{(item.ApproveReportType === '') ? '' : 'แบบอนุมัติ' + (item.ApproveReportType)}}</td>
             <td>
-              <a href="javaScript:void(0);" class="text-secondary" (click)="ViewApproveData(item.CompareDetailID, i)" data-toggle="modal" [hidden]="mode === 'A'" data-target="#approvePopup">
+              <a href="javaScript:void(0);" class="text-secondary" (click)="ViewApproveData(item.CompareDetailID, i)" data-toggle="modal" [hidden]="mode == 'A' || mode == 'E'" data-target="#approvePopup">
                 <i class="mdi mdi-eye fa-lg"></i>
               </a>
               <a href="javaScript:void(0);" class="text-secondary m-l-10" (click)="EditApproveData(item.CompareDetailID, i)" [hidden]="mode === 'V'" data-toggle="modal" data-target="#approvePopup">
@@ -619,7 +619,7 @@
                           (input)="StaffonAutoChange($event.target.value)"
                           (focus)="StaffonAutoFocus($event.target.value)"
                           [required]="(EditApproveCaseComparisonPopUp.ApproveReportType) > 1"  (keydown.Tab)="StaffonAutoSelecteWord(sOption, 1)"
-                          [disabled]="(EditApproveCaseComparisonPopUp.ApproveReportType) != 1 || showField">
+                          [disabled]="(EditApproveCaseComparisonPopUp.ApproveReportType) == 1 || showField">
                   <mat-autocomplete #autoStaff1="matAutocomplete">
                     <mat-option *ngFor="let sOption of Staffoptions"
                                 [value]="sOption.TitleName + sOption.FirstName + ' ' + sOption.LastName"
