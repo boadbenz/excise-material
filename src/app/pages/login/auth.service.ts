@@ -47,7 +47,7 @@ export class AuthService {
       .catch(this.handleErrorObservable);
   }
 
-  // userAndPrivilegeInfo(User): Observable<any> {
+  // userAndPrivilegeInfoOld(User): Observable<any> {
   //   // console.log('User : ',User)
   //   let options = new RequestOptions({ headers: this.getHeaders() });
   //   const url = `${appConfig.exciseService}/edssows/ldap/userAndPrivilegeInformation?userID=${User}&systemID=Test010`
@@ -56,7 +56,7 @@ export class AuthService {
   //     .catch(this.handleErrorObservable);
   // }
 
-  // eofficeInfo(params): Observable<any> {
+  // eofficeInfoOld(params): Observable<any> {
   //   let options = new RequestOptions({ headers: this.getHeaders() });
   //   const url = `http://uat.eoffice.excise.go.th:7003/EOfficeWS/HrstPersonInformation `
   //   return this.http.post(url, params, options)
@@ -78,6 +78,13 @@ export class AuthService {
     return this.http.post(url, params, options)
       .map((res: Response) => res.json())
       .catch(this.handleErrorObservable);
+  }
+  LDPAGAuthen(params): Observable<any> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    const url = `${appConfig.api8086}/LDPAGAuthen`
+    return this.http.post(url, params, options)
+      .map((res: Response) => res.json())
+      // .catch(this.handleErrorObservable);
   }
   /****************************(End Used with in the Excise Only)***************************** */
 

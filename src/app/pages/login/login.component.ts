@@ -47,54 +47,36 @@ export class LoginComponent implements OnInit {
         //***********************************Used with in the Excise Only (Don't Delete)********************************** */
 
         // const params = {
-        //   systemId: "WSS",
         //   UserName: User,
-        //   Password: Pass,
-        //   ipAddress: "10.11.1.10",
-        //   requestData: {
-        //     UserId: User
-        //   }
-        // };
-        // await this.authService.ssoService(params).subscribe(async res => {
-        //   console.log("ssoService res++++ : ", res);
-        //   if (res.ResponseCode == "OK") {
-        //     const params = {
-        //       "UserName": User,
-        //       "SystemID": "Test010"
+        //   Password: Pass
+        // }
+        // await this.authService.LDPAGAuthen(params).subscribe(async res => {
+        //   console.log('LDAP Res : ', res.Body.ResponseObj.userThaiId);
+        //   if (res.Body.ResponseObj.userThaiId) {
+        //     const paramsPinID = {
+        //       "SystemID": "sso",
+        //       "UserName": "pccsso",
+        //       "Password": "sso2561",
+        //       "RequestData":
+        //       {
+        //         "PersonNID": res.Body.ResponseObj.userThaiId
+        //       }
         //     }
-        //     await this.authService.userAndPrivilegeInfo(params).subscribe(async res => {
-        //       console.log("getpin : ", res);
-        //       if (res.pin) {
-        //         console.log("Hi pin : ", res.pin)
-        //           const paramsPinID = {
-        //             "SystemID": "sso",
-        //             "UserName": "pccsso",
-        //             "Password": "sso2561",
-        //             "RequestData":
-        //                            {
-        //                             "PersonNID": res.pin
-        //                           }
-        //         }
-        //         // if (User == Pass) {
-        //         await this.authService.eofficeInfo(paramsPinID).subscribe(async res => {
-        //           console.log("res eofficeInfo  : ", res);
-        //           if (res.Status == "OK") {
-        //             this.fullName = res.PersonInformation.PersonTHTitle + " " +
-        //               res.PersonInformation.PersonTHName + " " + res.PersonInformation.PersonTHSurName;
-        //             localStorage.setItem('fullName', this.fullName);
-        //             localStorage.setItem('operationPosName', res.PersonInformation.LinePotistion);
-        //             localStorage.setItem('officeShortName', res.PersonInformation.WorkOffName);
-        //             localStorage.setItem('staffCode', res.PersonInformation.PersonID);
-        //             localStorage.setItem('officeCode', res.PersonInformation.WorkOffCode);
-        //             let url = decodeURIComponent(this.returnUrl);
-        //             this.router.navigateByUrl(url);
-        //           } else this.errMsg = "Please Check User or Password "
-        //         });
-        //         // } else this.errMsg = "User or Password invalid"
-        //       } else this.errMsg = "User or Password invalid"
+        //     await this.authService.eofficeInfo(paramsPinID).subscribe(async res => {
+        //       console.log("res eofficeInfo  : ", res);
+        //       if (res.Status == "OK") {
+        //         this.fullName = res.PersonInformation.PersonTHTitle + " " +
+        //           res.PersonInformation.PersonTHName + " " + res.PersonInformation.PersonTHSurName;
+        //         localStorage.setItem('fullName', this.fullName);
+        //         localStorage.setItem('operationPosName', res.PersonInformation.LinePotistion);
+        //         localStorage.setItem('officeShortName', res.PersonInformation.WorkOffName);
+        //         localStorage.setItem('staffCode', res.PersonInformation.PersonID);
+        //         localStorage.setItem('officeCode', res.PersonInformation.WorkOffCode);
+        //         let url = decodeURIComponent(this.returnUrl);
+        //         this.router.navigateByUrl(url);
+        //       } else this.errMsg = "Please Check User or Password "
         //     });
-
-        //   } else this.errMsg = res.ResponseMessage;// console.log("res.ErrMsg ++++ : ", res.ResponseMessage);
+        //   } else this.errMsg = "User or Password invalid"
         // });
 
         //****************************(End Used with in the Excise Only)***************************** */
@@ -129,37 +111,6 @@ export class LoginComponent implements OnInit {
     this.errMsg = '';
   }
 
-  ngOnInit() {
-
-    // this.soapFN();
-
-  }
-
-  // soapFN() {
-  //   const xmlhttp = new XMLHttpRequest();
-  //   xmlhttp.open('POST', 'http://192.168.3.92:5080/LDAPGateway/LDPAGAuthenAndGetUserInfoService?wsdl', true);
-  //   // build SOAP request
-  //   var sr = '<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">' +
-  //               '<Body>' +
-  //               '<RequestObj xmlns="http://dexsrvint.excise.go.th/schema/AuthenAndGetUserInfo">' +
-  //                 '<userId>atthapon</userId>' +
-  //                   '<password>atthapon99</password>' +
-  //                 ' </RequestObj>' +
-  //               ' </Body>' +
-  //             '</Envelope>';
-
-  //   xmlhttp.onreadystatechange = function () {
-  //     if (xmlhttp.readyState == 4) {
-  //       if (xmlhttp.status == 200) {
-  //         console.log('xmlhttp.responseText : ', xmlhttp.responseText);
-  //         var myArr = JSON.stringify(this.responseText);
-  //         console.log('JSON.parse : ', xmlhttp.responseText);
-  //       }
-  //     }
-  //   }
-  //   // Send the POST request
-  //   xmlhttp.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8');
-  //   xmlhttp.send(sr);
-  // }
+  ngOnInit() { }
 
 }
