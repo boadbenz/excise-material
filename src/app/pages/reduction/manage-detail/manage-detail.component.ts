@@ -229,6 +229,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     delete: null,
     print: null
   }
+
+  public ApproveReportDate = '';
   constructor(
     private router: Router,
     private activeRoute: ActivatedRoute,
@@ -342,7 +344,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     await this.MasStaffMaingetAll();
     await this.GetAdjustCompareCRgetByCon(this.compareID);
     await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
-    await this.GetAdjustCompareDetailgetByCon (this.compareIdDetail);
+    await this.GetAdjustCompareDetailgetByCon(this.compareIdDetail);
     await this.setDocument();
     await this.GetAdjustNoticegetByArrestCode();
 
@@ -471,7 +473,11 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       });
       this.CompareReceipt.forEach((element, i) => {
         if (element.PaymentDate) {
-          element.PaymentDate = this.toDatePickerFormat(new Date(moment(element.PaymentDate).format('YYYY-MM-DD')));
+          if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
+            element.PaymentDate = this.toDatePickerFormat(new Date(moment().format('YYYY-MM-DD')));
+          } else {
+            element.PaymentDate = this.toDatePickerFormat(new Date(moment(element.PaymentDate).format('YYYY-MM-DD')));
+          }
         }
 
         if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
@@ -479,7 +485,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
           this.CompareReceipt[i].ReceiptBookNo = '';
           this.CompareReceipt[i].ReceiptNo = '';
         }
-        
+
         this.CompareReceipt[i].ReferenceNo = null;
       });
 
@@ -493,7 +499,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     try {
       if (compareIdDetail !== '') {
         const response = await this.apiService.post('/XCS60/AdjustCompareDetailgetByCon',
-                                  {CompareDetailID: compareIdDetail})
+                                  {CompareDetailID: this.compareIdDetail})
                             .toPromise();
                             // console.log('กล่องสาม -> ', response);
         this.adjustFine.forEach((el, i) => {
@@ -503,9 +509,10 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
             this.adjustFine[i].CompareFineTreasuryMoney = response.TreasuryMoney;
           }
         });
+        // tslint:disable-next-line:max-line-length
         if (response && response.AdjustCompareDetailReceipt.length > 0 && response.AdjustCompareDetailReceipt.length === this.CompareReceipt.length) {
           response.AdjustCompareDetailReceipt.forEach((element, i) => {
-            this.CompareReceipt[i].ReferenceNo = element.ReferenceNo;
+            this.CompareReceipt[i].ReferenceNo = element.ReferenceNo == null || element.ReferenceNo === 'null' ? '' : element.ReferenceNo;
           });
         }
         this.AdjustCompareDetail.push(response);
@@ -619,7 +626,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       this.EditApproveCaseComparison.push(CompareDetailID);
 
       const response = await this.apiService.post('/XCS60/AdjustCompareDetailgetByCon', {
-        CompareDetailID: CompareDetailID
+        CompareDetailID: this.compareIdDetail
       }).toPromise();
 
       this.EditApproveCaseComparisonData[CompareDetailID] = response;
@@ -725,7 +732,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
 
   public async checkPopUp(detailID: any): Promise<any> {
     let checked = true;
-    if (this.EditApproveCaseComparisonPopUp.offerstaff === '' || this.EditApproveCaseComparisonPopUp.offerstaff == null) {
+    if ((this.EditApproveCaseComparisonPopUp.offerstaff === '' || this.EditApproveCaseComparisonPopUp.offerstaff == null)
+        // tslint:disable-next-line:triple-equals
+        && this.EditApproveCaseComparisonPopUp.ApproveReportType != 1) {
       await document.getElementById('offerstaff').focus();
       await document.getElementById('offerstaff').blur();
       checked = false;
@@ -770,6 +779,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.adjustArrest.ApproveReportDate = moment(this.EditApproveCaseComparisonPopUp.ApproveReportDate.jsdate).format('YYYY-MM-DD HH:mm:ss') + ' +00:00';
     this.adjustArrest.CommandDate = moment(this.EditApproveCaseComparisonPopUp.CommandDate.jsdate).format('YYYY-MM-DD HH:mm:ss') + ' +00:00';
     this.adjustArrest.ApproveReportType = this.EditApproveCaseComparisonPopUp.ApproveReportType;
+
+    this.ApproveReportDate = moment(this.EditApproveCaseComparisonPopUp.ApproveReportDate.jsdate).format('YYYY-MM-DD');
   }
 
   public attachFile(file) {
@@ -903,7 +914,9 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     }
 
 
-    if (this.EditApproveCaseComparisonPopUp.offerstaff === '' || this.EditApproveCaseComparisonPopUp.offerstaff == null) {
+    if ((this.EditApproveCaseComparisonPopUp.offerstaff === '' || this.EditApproveCaseComparisonPopUp.offerstaff == null)
+        // tslint:disable-next-line:triple-equals
+        && this.EditApproveCaseComparisonPopUp.ApproveReportType != 1) {
       cansave = false;
       swal('', 'กรุณากรอกผู้เสนอพิจารณาเห็นชอบ', 'error');
       return;
@@ -1035,7 +1048,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
           ReceiptDate: moment().format('YYYY-MM-DD HH:mm:ss') + ' +00:00',
           StationCode: this.EditApproveCaseComparisonPopUp.ApproveStationCode,
           Station: this.EditApproveCaseComparisonPopUp.ApproveStation,
-          TotalFine: Fine[element.CompareDetailID],
+          // TotalFine: Fine[element.CompareDetailID],
+          TotalFine: this.adjustFine[i].CompareFine,
           RevenueDate: moment().format('YYYY-MM-DD HH:mm:ss') + ' +00:00',
           IsActive: 1,
           CompareAuthority: 1,
@@ -1046,11 +1060,18 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       }
     });
 
+    if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
+      for (let c = 0; c < this.CompareReceipt.length; c++) {
+        this.CompareReceipt[c].CompareDetailID = '';
+      }
+    }
+
     param.AdjustCompareDetailFine = adjustData;
     param.AdjustCompareDetailReceipt = this.CompareReceipt;
     param.AdjustCompareStaff = this.AdjustCompareStaff;
     // tslint:disable-next-line:radix
     param.CompareID = this.compareID;
+    console.log(param);
 
     try {
       let data;
@@ -1060,6 +1081,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       } else {
         data = await this.apiService.post('/XCS60/AdjustCompareDetailupdByCon', param).toPromise();
       }
+      console.log(data);
       if (data.IsSuccess) {
         swal('', 'บันทึกข้อมูลสำเร็จ', 'success').then( async (result) => {
           if (result) {
@@ -1074,9 +1096,15 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
             this.navService.setEditField(true);
             this.navService.setSendIncomeButton(true);
 
-            await this.GetAdjustCompareCRgetByCon(this.compareID);
-            await this.GetAdjustCompareDetailgetByCon (this.compareID);
-            await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
+            if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
+              console.log(data.CompareDetailID);
+              this.compareIdDetail = data.CompareDetailID;
+              this.router.navigate(['/reduction/manage', 'V', this.compareID, data.CompareDetailID], {queryParams: {IsOld: '0'}});
+            } else {
+              await this.GetAdjustCompareCRgetByCon(this.compareID);
+              await this.GetAdjustCompareDetailgetByCon(this.compareIdDetail);
+              await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
+            }
 
           }
         });
