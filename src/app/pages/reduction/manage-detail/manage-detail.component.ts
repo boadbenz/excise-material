@@ -1084,28 +1084,8 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
       console.log(data);
       if (data.IsSuccess) {
         swal('', 'บันทึกข้อมูลสำเร็จ', 'success').then( async (result) => {
-          if (result) {
-            this.mode = 'V';
-            this.navService.setPrintButton(true);
-            this.navService.setDeleteButton(true);
-            this.navService.setEditButton(true);
-            this.navService.setSearchBar(false);
-            this.navService.setCancelButton(false);
-            this.navService.setSaveButton(false);
-
-            this.navService.setEditField(true);
-            this.navService.setSendIncomeButton(true);
-
-            if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
-              console.log(data.CompareDetailID);
-              this.compareIdDetail = data.CompareDetailID;
-              this.router.navigate(['/reduction/manage', 'V', this.compareID, data.CompareDetailID], {queryParams: {IsOld: '0'}});
-            } else {
-              await this.GetAdjustCompareCRgetByCon(this.compareID);
-              await this.GetAdjustCompareDetailgetByCon(this.compareIdDetail);
-              await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
-            }
-
+          if (result.value) {
+            await this.resetAfterSave(data);
           }
         });
       }
@@ -1120,6 +1100,32 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
           await this.insertFile(f);
         }
       }
+    }
+  }
+
+  public async resetAfterSave(data: any) {
+    this.mode = 'V';
+    await this.navService.setPrintButton(true);
+    await this.navService.setDeleteButton(true);
+    await this.navService.setEditButton(true);
+    await this.navService.setSearchBar(false);
+    await this.navService.setCancelButton(false);
+    await this.navService.setSaveButton(false);
+
+    await this.navService.setEditField(true);
+    await this.navService.setSendIncomeButton(true);
+
+    if (this.activeRoute.snapshot.paramMap.get('mode') === 'A') {
+      console.log(data.CompareDetailID);
+      this.compareIdDetail = data.CompareDetailID;
+      await this.GetAdjustCompareCRgetByCon(this.compareID);
+      await this.GetAdjustCompareDetailgetByCon(this.compareIdDetail);
+      await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
+      this.router.navigate(['/reduction/manage', 'V', this.compareID, data.CompareDetailID], {queryParams: {IsOld: '0'}});
+    } else {
+      await this.GetAdjustCompareCRgetByCon(this.compareID);
+      await this.GetAdjustCompareDetailgetByCon(this.compareIdDetail);
+      await this.GetAdjustCompareReciptConfirmgetByCon(this.compareID);
     }
   }
 
