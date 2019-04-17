@@ -497,7 +497,7 @@
             <td class="text-center">{{i+1}}</td>
             <td>{{(item.AdjustCompareLawbreaker[0].LawbreakerTitleName || '')
               + (item.AdjustCompareLawbreaker[0].LawbreakerFirstName || '') + ' ' + (item.AdjustCompareLawbreaker[0].LawbreakerLastName || '')}}</td>
-            <td>{{item.ApproveReportDate | reductionDatePipe: 'DD MMM YYYY'}}</td>
+            <td>{{ApproveReportDate == '' ? '' : (ApproveReportDate | reductionDatePipe: 'DD MMM YYYY')}}</td>
             <td>{{(item.ApproveReportType === '') ? '' : 'แบบอนุมัติ' + (item.ApproveReportType)}}</td>
             <td>
               <a href="javaScript:void(0);" class="text-secondary" (click)="ViewApproveData(item.CompareDetailID, i)" data-toggle="modal" [hidden]="mode == 'A' || mode == 'E'" data-target="#approvePopup">

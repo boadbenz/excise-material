@@ -291,7 +291,7 @@ export class ManageComponent implements AfterViewInit, OnInit, OnDestroy {
               if (e.ReceiptDate && moment(e.ReceiptDate).format('HH:mm') === '00:00') {
                 Object.assign(e, {ReceiptDateShow: moment(e.ReceiptDate).add(543, 'years').format('DD MMM YYYY')});
               } else {
-                Object.assign(e, {ReceiptDateShow: moment(e.ReceiptDate).add(543, 'years').format('DD MMM YYYY HH:mm') + ' น.'});
+                Object.assign(e, {ReceiptDateShow: moment(e.ReceiptDate).add(543, 'years').format('DD MMM YYYY')});
               }
               return e;
             });
