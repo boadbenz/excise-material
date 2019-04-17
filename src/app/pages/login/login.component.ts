@@ -72,9 +72,10 @@ export class LoginComponent implements OnInit {
         //         localStorage.setItem('officeShortName', res.PersonInformation.WorkOffName);
         //         localStorage.setItem('staffCode', res.PersonInformation.PersonID);
         //         localStorage.setItem('officeCode', res.PersonInformation.WorkOffCode);
+        //         localStorage.setItem('UserAccountID', '186');//fig for work complete
         //         let url = decodeURIComponent(this.returnUrl);
         //         this.router.navigateByUrl(url);
-        //       } else this.errMsg = "Please Check User or Password "
+        //       } else this.errMsg = "Please Check User or Password"
         //     });
         //   } else this.errMsg = "User or Password invalid"
         // });
@@ -97,7 +98,7 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('officeShortName', this.OfficeShortName);
             localStorage.setItem('staffCode', res.StaffCode);
             localStorage.setItem('officeCode', res.OfficeCode);
-            localStorage.setItem('UserAccountID', res.UserAccountID)
+            localStorage.setItem('UserAccountID', res.UserAccountID);
             let url = decodeURIComponent(this.returnUrl);
             this.router.navigateByUrl(url);
           } else this.errMsg = res.Msg;
