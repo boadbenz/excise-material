@@ -90,7 +90,6 @@ export class ManageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     localStorage.setItem('programcode', 'ILG60-99-01');
-    console.log('Mas manage ngOnInit')
     // this.couForm = this.fb.group({
     //   couControl: [this.IsDomestic]
     // });

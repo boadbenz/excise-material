@@ -7,6 +7,8 @@ import { MasProdService } from '../masProd.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormArray, FormControl, ValidatorFn } from '@angular/forms';
+import swal from 'sweetalert2'
+import { Message } from 'app/config/message';
 
 @Component({
   selector: 'app-list',
@@ -38,6 +40,7 @@ export class ListComponent implements OnInit {
 
   //after sreach
   listOfsreach = [];
+  masProductList: any = [];
 
   constructor(private navService: NavigationService,
     private preLoaderService: PreloaderService,
@@ -53,13 +56,7 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     // await this.navService.showAdvSearch.next(false); ?????????
-    this.listOfsreach = [
-      { prodCode: '070101000000T007MG00002228',ProductID:'75', GroupName: 'รถจักรยานยนต์', BrandMain: 'VESPA', BrandSecond: '', model: 'PX 125 WHITE', size: '125 ซีซี', Alcohol: '' },
-      { prodCode: '070104000001P007f800023428',ProductID:'76', GroupName: 'รถจักรยานยนต์', BrandMain: 'Harley-Davidson', BrandSecond: '', model: 'FLHXS ANX/2018', size: '1745 ซีซี', Alcohol: '' }
-    ]
-
     localStorage.setItem('programcode', 'ILG60-99-01');
-
 
     // set false
     this.navService.setEditButton(false);
@@ -89,7 +86,7 @@ export class ListComponent implements OnInit {
         ts = Textsearch;
 
         if (ts.Textsearch == null) { this.onSearch({ Textsearch: "" }); }
-        else { } // this.onSearch(Textsearch);
+        else { this.onSearch(Textsearch); }
       }
     })
 
@@ -188,25 +185,34 @@ export class ListComponent implements OnInit {
   }
 
   async onSearch(Textsearch) {
-    // await this.masProdService.DutyGroupgetAll().subscribe(list => {
-    //   this.onSearchComplete(list)
 
+    this.listOfsreach = [
+      { prodCode: '070101000000T007MG00002228',ProductID:'75', GroupName: 'รถจักรยานยนต์', BrandMain: 'VESPA', BrandSecond: '', model: 'PX 125 WHITE', size: '125 ซีซี', Alcohol: '' },
+      { prodCode: '070104000001P007f800023428',ProductID:'76', GroupName: 'รถจักรยานยนต์', BrandMain: 'Harley-Davidson', BrandSecond: '', model: 'FLHXS ANX/2018', size: '1745 ซีซี', Alcohol: '' }  
+    ]
+    if (!this.listOfsreach.length) {
+      swal('', Message.noRecord, 'warning');
+      return false;
+    } else { this.onSearchComplete(this.listOfsreach) }
+
+    // await this.masProdService.DutyGroupgetAll().subscribe(list => {
     // }, (err: HttpErrorResponse) => {
     //   // this.ShowAlertNoRecord();
     //   //alert(Message.noRecord);
     //   this.ListMasProd = [];
     // });
   }
-  onAdvSearch(f: any){
-    console.log('advForm : ',f)
+  onAdvSearch(f: any) {
+    console.log('advForm : ', f)
   }
 
-  async onSearchComplete(list: any) {
-    this.paginage.TotalItems = 10; // this.Prove.length;
-    // this.ListProve = this.Prove.slice(0, this.paginage.RowsPerPageOptions[0]);
+  async onSearchComplete(list: any[]) {
+
+    this.paginage.TotalItems = list.length;
+    this.masProductList = list.slice(0, this.paginage.RowsPerPageOptions[0]);
   }
   async pageChanges(event) {
-    // this.ListProve = await this.Prove.slice(event.startIndex - 1, event.endIndex);
+    this.masProductList = await this.listOfsreach.slice(event.startIndex - 1, event.endIndex);
   }
 
   ngOnDestroy(): void {
