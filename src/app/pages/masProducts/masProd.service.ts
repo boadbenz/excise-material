@@ -24,7 +24,7 @@ export class MasProdService {
   }
 
   MasProductgetByCon(ProductID: string) {
-    const params ={ProductID: ProductID} 
+    const params = { ProductID: ProductID }
     const url = `${appConfig.api7777}/MasProductgetByCon`;
     return this.http.post<any>(url, params, this.httpOptions);
   }
@@ -79,7 +79,7 @@ export class MasProdService {
   }
 
   MasProductupdDelete(ProductID) {
-    const params = {ProductID: ProductID}
+    const params = { ProductID: ProductID }
     const url = `${appConfig.api7777}/MasProductupdDelete`;
     return this.http.post<any>(url, params, this.httpOptions);
   }

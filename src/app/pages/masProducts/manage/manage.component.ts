@@ -8,13 +8,7 @@ import { Message } from 'app/config/message';
 import { FormGroup, FormBuilder, FormArray, FormControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-// import 'rxjs/add/operator/map';
-// import 'rxjs/add/operator/debounceTime';
-// import 'rxjs/add/operator/distinctUntilChanged';
-// import 'rxjs/add/observable/of';
-// import 'rxjs/add/operator/catch';
-// import 'rxjs/add/operator/do';
-// import 'rxjs/add/operator/switchMap';
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-manage',
@@ -72,9 +66,6 @@ export class ManageComponent implements OnInit, OnDestroy {
   //dataSet for Upd
   ParamsUpd: any;
 
-  //disable
-  disableBrandMain: boolean;
-
   private sub: any;
   mode: string;
   showEditField: any;
@@ -86,10 +77,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     private preLoaderService: PreloaderService,
     private masProdService: MasProdService,
     private router: Router,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private sidebarService: SidebarService) { }
 
   ngOnInit() {
     localStorage.setItem('programcode', 'ILG60-99-01');
+    this.sidebarService.setVersion('0.0.0.1');
     // this.couForm = this.fb.group({
     //   couControl: [this.IsDomestic]
     // });
@@ -107,8 +100,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.onEditSubscribe = this.navService.onEdit.subscribe(status => {
       if (status && localStorage.programcode == 'ILG60-99-01') {
         this.navService.setOnEdit(false);
-        console.log('onEdit.sub : ', status)
-        console.log('this.mode in edit : ', this.mode)
         switch (this.mode) {
           case 'R': {
             this.OnPageloadModeC();
@@ -168,11 +159,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
   }
   setButton() {
-    console.log('setButton')
     this.sub = this.activeRoute.params.subscribe(p => {
       this.mode = p['mode'];
       if (p['mode'] === 'C') {
-        console.log('setButton C')
         // set false
         this.navService.setPrintButton(false);
         this.navService.setEditButton(false);
@@ -184,7 +173,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.navService.setSaveButton(true);
         this.navService.setCancelButton(true);
       } else if (p['mode'] === 'R') {
-        console.log('setButton R')
         // set false
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
@@ -200,12 +188,9 @@ export class ManageComponent implements OnInit, OnDestroy {
   private active_route() {
     this.sub = this.activeRoute.params.subscribe(p => {
       this.mode = p['mode'];
-      console.log('active route mode ; ', this.mode)
       if (p['mode'] === 'C') {
-        console.log('in active_route mode C')
         this.OnPageloadModeC();
       } else if (p['mode'] === 'R') {
-        console.log(' p:[code] : ', p['code'])
         this.OnpageloadModeR(p['code'])
       }
     })
@@ -234,7 +219,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
   }
   setIsDomestic(IsDomestic) {
-    console.log('setIsDomestic : ', IsDomestic)
     this.IsDomesticvalue = this.IsDomesticOpt.filter(f => { f.IsDomestic == IsDomestic })
     console.log('this.IsDomesticvalue : ', this.IsDomesticvalue);
   }
@@ -255,13 +239,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
 
     await this.masProdService.BrandMaingetAll().subscribe(list => {
-      this.BrandMain = list, 
-      console.log('BrandMaingetAll C : ', list)
+      this.BrandMain = list,
+        console.log('BrandMaingetAll C : ', list)
     });
 
     await this.masProdService.BrandSecondgetAll().subscribe(list => {
       this.BrandSecond = list, console.log('BrandSecondgetAll C : ', list)
-    this.preLoaderService.setShowPreloader(false);////
+      this.preLoaderService.setShowPreloader(false);////
     });
 
     this.IsDomesticvalue = this.IsDomesticOpt;
@@ -483,7 +467,6 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   async onDeleteMasProd() {
-    console.log('onDel this.ProductID ', this.ProductID)
     await this.masProdService.MasProductupdDelete(this.ProductID).subscribe(list => {
       console.log('del res : ', list)
       if (list.IsSuccess == "True") {

@@ -7,8 +7,9 @@ import { MasProdService } from '../masProd.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormArray, FormControl, ValidatorFn } from '@angular/forms';
-import swal from 'sweetalert2'
+import swal from 'sweetalert2';
 import { Message } from 'app/config/message';
+import { SidebarService } from '../../../shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-list',
@@ -46,7 +47,8 @@ export class ListComponent implements OnInit {
     private preLoaderService: PreloaderService,
     private masProdService: MasProdService,
     private router: Router,
-    private fb: FormBuilder, ) {
+    private fb: FormBuilder,
+    private sidebarService: SidebarService) {
     this.advSearch = this.navService.showAdvSearch;
     // if (this.advSearch != undefined) {
     //     console.log('onAdv')
@@ -57,6 +59,7 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     // await this.navService.showAdvSearch.next(false); ?????????
     localStorage.setItem('programcode', 'ILG60-99-01');
+    this.sidebarService.setVersion('0.0.0.1');
 
     // set false
     this.navService.setEditButton(false);
@@ -187,8 +190,8 @@ export class ListComponent implements OnInit {
   async onSearch(Textsearch) {
 
     this.listOfsreach = [
-      { prodCode: '070101000000T007MG00002228',ProductID:'75', GroupName: 'รถจักรยานยนต์', BrandMain: 'VESPA', BrandSecond: '', model: 'PX 125 WHITE', size: '125 ซีซี', Alcohol: '' },
-      { prodCode: '070104000001P007f800023428',ProductID:'76', GroupName: 'รถจักรยานยนต์', BrandMain: 'Harley-Davidson', BrandSecond: '', model: 'FLHXS ANX/2018', size: '1745 ซีซี', Alcohol: '' }  
+      { prodCode: '070101000000T007MG00002228', ProductID: '75', GroupName: 'รถจักรยานยนต์', BrandMain: 'VESPA', BrandSecond: '', model: 'PX 125 WHITE', size: '125 ซีซี', Alcohol: '' },
+      { prodCode: '070104000001P007f800023428', ProductID: '76', GroupName: 'รถจักรยานยนต์', BrandMain: 'Harley-Davidson', BrandSecond: '', model: 'FLHXS ANX/2018', size: '1745 ซีซี', Alcohol: '' }
     ]
     if (!this.listOfsreach.length) {
       swal('', Message.noRecord, 'warning');
