@@ -31,6 +31,9 @@ export function detectChange() {
             else {
                 $("body").removeClass("mini-sidebar");
                 $('.navbar-brand span').show();
+                // $("body").addClass("mini-sidebar");//change for mini sidebar (old value is  $("body").removeClass("mini-sidebar");)
+                // $('.navbar-brand span').hide();//change for mini sidebar (old value is   $('.navbar-brand span').show();)
+                // $(".scroll-sidebar, .slimScrollDiv").css("overflow-x", "visible").parent().css("overflow", "visible"); //change for mini sidebar (old value is don't have)
                 //$(".sidebartoggler i").removeClass("ti-menu");
             }
             
@@ -54,6 +57,7 @@ export function detectChange() {
             $("body").removeClass("mini-sidebar");
             $('.navbar-brand span').show();
             //$(".sidebartoggler i").addClass("ti-menu");
+            console.log('if')
         }
         else {
             $("body").trigger("resize");
@@ -61,6 +65,7 @@ export function detectChange() {
             $("body").addClass("mini-sidebar");
             $('.navbar-brand span').hide();
             //$(".sidebartoggler i").removeClass("ti-menu");
+            console.log('else')
         }
     });
     // topbar stickey on scroll
