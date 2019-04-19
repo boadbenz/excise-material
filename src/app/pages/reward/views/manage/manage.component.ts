@@ -227,10 +227,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
             })
             .toPromise();
-            this.ReqBribeDTL = RequestBribe[0].RequestBribeID;
-            localStorage.setItem("ReqDTL",this.ReqBribeDTL)
           // 4.1.1(2.2.1)
           if (RequestBribe.length > 0) {
+            this.ReqBribeDTL = RequestBribe[0].RequestBribeID;
+            localStorage.setItem("ReqDTL",this.ReqBribeDTL)
             // 4.1.1(2.2.1(1))
             this.ILG60_08_02_00_00E11_DATA$.next(RequestBribe);
 
