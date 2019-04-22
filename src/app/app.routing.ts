@@ -187,5 +187,12 @@ export const routes: Routes = [
             { path: 'list', loadChildren: './pages/evidenceStock/list/list.module#ListModule' },
             { path: 'manage/:code', loadChildren: './pages/evidenceStock/manage/manage.module#ManageModule' },
         ]
+    },
+    {
+        path: 'msArrests', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msArrests/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msArrests/manage/manage.module#ManageModule' }
+        ]
     }
 ];
