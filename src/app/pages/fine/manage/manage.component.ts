@@ -164,7 +164,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.56');
+    this.sidebarService.setVersion('0.0.0.57');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -435,6 +435,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         }
         this.approveReportList[i].ApproveStation = cmpD[i].ApproveStation;
         this.approveReportList[i].payDate = this.toDatePickerFormat(new Date(cmpD[i].PaymentFineAppointDate));
+        console.log('This is time now');
+        console.log(new Date(cmpD[i].PaymentFineAppointDate));
         this.approveReportList[i].payTime = this.getTimeNow(new Date(cmpD[i].PaymentFineAppointDate));
         this.approveReportList[i].ApproveStationCode = cmpD[i].ApproveStationCode;
         this.approveReportList[i].ApproveType = cmpD[i].ApproveReportType ? cmpD[i].ApproveReportType : 1;
@@ -644,14 +646,14 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     return this.compareDataUpdateTmp.CompareStaff.filter(f => f.ContributorID === ContributorID);
   }
-  getTimeNow(d: any = new Date) {
+  getTimeNow(d: any = new Date, isZero: any = null) {
     let h = d.getHours().toString();
     let m = d.getMinutes().toString();
     if ((+h) < 10) {
       h = '0' + h;
     }
-    if ((+m) < 10) m = '0' + m;
-    return h + ':' + m;
+    if((+m) < 10) m = '0' + m;
+    return h + ':' + m + ':00';
   }
   private getRouteParams() {
     this.activeRoute.params.subscribe(p => {
@@ -910,11 +912,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             ReceiptType: 'A',
             ReceiptBookNo: rec.ReceiptBookNo,
             ReceiptNo: rec.ReceiptNo,
-            ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
+            ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' ' + this.getTimeNow() + ' +07:00',
             StationCode: this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.OfficeCode : '',
             Station: this.accused.StationName,
             CompareDetailID: CompareDetailID,
-            PaymentDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
+            PaymentDate: this.convertToNormalDate(rec.PaymentDate.date) + ' ' + this.getTimeNow() + ' +07:00',
             TotalFine: this.sumAllCompare.sum,
             RevenueStatus: 0,
             IsActive: 1,
@@ -977,29 +979,30 @@ export class ManageComponent implements OnInit, OnDestroy {
       return [];
     }
   }
+
   async ComparePaymentFineinsAll(CompareReceiptID: number, index: any) {
     try {
       const rec: any = this.receipt.list[index];
-      const data: any = {
-        FineType: ((+this.params.CompareID) > 0 ? 1 : 0),
-        ReferenceID: CompareReceiptID,
-        PaymentPeriodNo: 1,
-        PaymentFine: this.sumAllCompare.sum,
-        PaymentDueDate: '',
-        PaymentActualDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
-        ReceiveFinRate: '',
-        IsActive: 1,
-        IsRequestReward: 0,
-        ComparePaymentFineDetail: []
-      };
-      const resp: any = await this.CompareNoticegetByArrestCode();
-      for (const notice of resp) {
-        data.ComparePaymentFineDetail.push({
-          "NoticeCode": notice.NoticeCode,
-          "IsRequestBribe": '0',
-          "IsActive": '1'
-        });
-
+        const data: any = {
+          FineType: ((+this.params.CompareID) > 0 ? 1 : 0),
+          ReferenceID: CompareReceiptID,
+          PaymentPeriodNo: 1,
+          PaymentFine: this.sumAllCompare.sum,
+          PaymentDueDate: '',
+          PaymentActualDate: this.convertToNormalDate(rec.PaymentDate.date) + ' ' + this.getTimeNow() + '',
+          ReceiveFinRate: '',
+          IsActive: 1,
+          IsRequestReward: 0,
+          ComparePaymentFineDetail: []
+        };
+        const resp: any = await this.CompareNoticegetByArrestCode();
+        for (const notice of resp) {
+          data.ComparePaymentFineDetail.push({
+            "NoticeCode": notice.NoticeCode,
+            "IsRequestBribe": '0',
+            "IsActive": '1'
+          });
+        
       }
       const insPaymentFine: any = await this.fineService.postMethod('ComparePaymentFineinsAll', data);
       console.log(insPaymentFine);
@@ -2135,7 +2138,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     const CompareData: any = {
       CompareID: this.params.CompareID ? (+this.params.CompareID) : '',
       CompareCode: this.receipt.CompareNo + '/' + this.receipt.CompareYear,
-      CompareDate: `${this.convertToNormalDate(this.accused.CompareDate.date).toString()} ${this.accused.CompareTime.toString().substring(0, 5)}:00 +07.00`,
+      CompareDate: `${this.convertToNormalDate(this.accused.CompareDate.date).toString()} ${this.accused.CompareTime.toString().substring(0, 5)}:00 +07:00`,
       CompareStation: this.accused.StationName,
       CompareStationCode: (compareStation && compareStation[0]) ? compareStation[0].OfficeCode : '',
       IsOutside: this.receipt.IsOutside ? 1 : 0,
@@ -2187,17 +2190,17 @@ export class ManageComponent implements OnInit, OnDestroy {
             Guaruntee: this.accused.list[id].Guaruntee,
             CompareFine: user.CompareFine,
             PaymentFineDate: '',
-            PaymentFineAppointDate: this.convertToNormalDate(this.accused.list[id].PaymentFineAppointDate.date) + ' 00:00:00 +07.00',
-            PaymentVatDate: this.accused.list[id].PaymentVatDate ? this.convertToNormalDate(this.accused.list[id].PaymentVatDate.date) + ' 00:00:00 +07.00' : '',
+            PaymentFineAppointDate: this.convertToNormalDate(this.accused.list[id].PaymentFineAppointDate.date) + ' ' + this.getTimeNow() + ' +07:00',
+            PaymentVatDate: this.accused.list[id].PaymentVatDate ? this.convertToNormalDate(this.accused.list[id].PaymentVatDate.date) + ' ' + this.getTimeNow() + ' +07:00' : '',
             TreasuryMoney: user.TreasuryMoney,
             BribeMoney: user.BribeMoney,
             RewardMoney: user.RewardMoney,
             IsActive: 1,
             ApproveStationCode: (approveStation && approveStation[0]) ? approveStation[0].OfficeCode : '',
             ApproveStation: isAppFill ? this.approveReportList[id].ApproveStation : '',
-            ApproveReportDate: isAppFill ? this.convertToNormalDate(this.approveReportList[id].ApproveReportDate.date) + ' 00:00:00 +07.00' : '',
+            ApproveReportDate: isAppFill ? this.convertToNormalDate(this.approveReportList[id].ApproveReportDate.date) + ' ' + this.getTimeNow() + ' +07:00' : '',
             CommandNo: isAppFill ? this.approveReportList[id].departOrder : '',
-            CommandDate: isAppFill ? this.convertToNormalDate(this.approveReportList[id].dateOfIssue.date) + ' 00:00:00 +07.00' : '',
+            CommandDate: isAppFill ? this.convertToNormalDate(this.approveReportList[id].dateOfIssue.date) + ' ' + this.getTimeNow() + ' +07:00' : '',
             CompareAuthority: null,
             ApproveReportType: isAppFill ? this.approveReportList[id].ApproveType.toString().replace('แบบอนุมัติ ', '') : '',
             MistreatNo: user.MistreatNo,
@@ -2355,10 +2358,10 @@ export class ManageComponent implements OnInit, OnDestroy {
           ReceiptType: 'A',
           ReceiptBookNo: rec.ReceiptBookNo,
           ReceiptNo: rec.ReceiptNo,
-          ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
+          ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' ' + this.getTimeNow() + ' +07:00',
           StationCode: this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.OfficeCode : '',
           Station: this.accused.StationName,
-          PaymentDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
+          PaymentDate: this.convertToNormalDate(rec.PaymentDate.date) + ' ' + this.getTimeNow() + ' +07:00',
           TotalFine: this.sumAllCompare.sum,
           RevenueStatus: 0,
           RevenueDate: '',
@@ -2377,10 +2380,10 @@ export class ManageComponent implements OnInit, OnDestroy {
             ReceiptType: 'A',
             ReceiptBookNo: rec.ReceiptBookNo,
             ReceiptNo: rec.ReceiptNo,
-            ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
+            ReceiptDate: this.convertToNormalDate(rec.PaymentDate.date) + ' ' + this.getTimeNow() + ' +07:00',
             StationCode: this.DataToSave.CompareStationData ? this.DataToSave.CompareStationData.OfficeCode : '',
             Station: this.accused.StationName,
-            PaymentDate: this.convertToNormalDate(rec.PaymentDate.date) + ' 00:00:00 +07.00',
+            PaymentDate: this.convertToNormalDate(rec.PaymentDate.date) + ' ' + this.getTimeNow() + ' +07:00',
             TotalFine: this.sumAllCompare.sum,
             RevenueStatus: 0,
             RevenueDate: '',
