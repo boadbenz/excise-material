@@ -136,7 +136,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   ) {
     this.isFinishLoad = false;
     this.isEditMode.receipt = {};
-    this.sidebarService.setVersion('0.0.0.57');
+    this.sidebarService.setVersion('0.0.0.58');
     // set false
     this.navService.setNewButton(false);
     this.navService.setSearchBar(false);
@@ -561,7 +561,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       h = '0' + h;
     }
     if((+m) < 10) m = '0' + m;
-    return h + ':' + m + ':00';
+    return h + ':' + m + '';
   }
   private getRouteParams() {
     this.activeRoute.params.subscribe(p => {
@@ -716,7 +716,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     const rec = this.receipt.list[index];
     console.log(this.receipt);
     {
-      if (this.isNotValidTxtField(rec.PaymentDate)) {
+      if (!rec || this.isNotValidTxtField(rec.PaymentDate)) {
         return false;
       } else {
         try {
@@ -801,7 +801,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           PaymentPeriodNo: 1,
           PaymentFine: this.sumAllCompare.sum,
           PaymentDueDate: '',
-          PaymentActualDate: this.convertToNormalDate(rec.PaymentDate.date) + ' ' + this.getTimeNow() + '',
+          PaymentActualDate: this.convertToNormalDate(rec.PaymentDate.date) + ' ' + this.getTimeNow() + ' +07:00',
           ReceiveFinRate: '',
           IsActive: 1,
           IsRequestReward: 0,
