@@ -1,0 +1,49 @@
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">สัญชาติ</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <label for="" class="col-lg-2 col-sm-4 control-label">Running No :</label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" name="ArrestCode" [(ngModel)]="ArrestCode" class="form-control " disabled>
+                </div>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">รหัสสัญชาติ :</label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" name="Accuser" [(ngModel)]="Accuser" class="form-control " readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">ชื่อสัญชาติภาษาไทย :</label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" name="Accuser" [(ngModel)]="Accuser" class="form-control " readonly>
+                </div>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">ชื่อสัญชาติภาษาอังกฤษ :</label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" name="Accuser" [(ngModel)]="Accuser" class="form-control " readonly>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-sm-3">
+                <div class="row form-group">
+                    <div class="col">
+                        <input type="checkbox" id="md_checkbox_1" ngModel name="chk1" class="filled-in chk-col-indigo">
+                        <label for="md_checkbox_1">ใช้งาน</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

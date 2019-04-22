@@ -1,0 +1,120 @@
+<!-- <app-horizontal-timeline></app-horizontal-timeline> -->
+<div *ngIf="advSearch | async" class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-close></app-card-actions-close>
+        <h4 class="card-title m-b-0">ค้นหาขั้นสูง</h4>
+    </div>
+
+    <div class="card-body">
+        <form class="form-horizontal" #advForm="ngForm" (ngSubmit)="onAdvSearch(advForm)">
+            <div>
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-3 control-label">ประเภท :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <div class="form-line">
+                                <select ngModel name="EvidenceInType" class="form-control" [disabled]="showEditField">
+                                    <option value="">ทั้งหมด</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label for="" class="col-lg-2 col-sm-3 control-label">ชื่อคำนำหน้า :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" name="EvidenceInCode" ngModel class="form-control" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="" class="col-lg-2 col-sm-3 control-label">ชื่อย่อคำนำหน้า :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" name="EvidenceInCode" ngModel class="form-control" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <label for="" class="col-lg-2 col-sm-3 control-label">สถานะการใช้งาน :</label>
+                    <div class="col-lg-4 col-md-7 col-sm-9">
+                        <div class="form-group">
+                            <div class="form-line">
+                                <select ngModel name="EvidenceInType" class="form-control" [disabled]="showEditField">
+                                    <option value="">ทั้งหมด</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-10"></div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-block btn-themecolor">ค้นข้อมูล</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="table-responsive table-striped ">
+            <table #EvidenceTable class="table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;width:5%">ลำดับ</th>
+                        <th>ประเภท</th>
+                        <th>ชื่อคำนำหน้า</th>
+                        <th>ชื่อย่อคำนำหน้า</th>
+                        <th>สถานะการใช้งาน</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td style="text-align: center;">1</td>
+                        <td>บุคคลธรรมดา</td>
+                        <td>จ่าโท</td>
+                        <td>จ.ท.</td>
+                        <td>ใช้งาน</td>
+                        <td class="text-center;">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView('1')">
+                                <i class="mdi mdi-eye fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <!-- <tr *ngFor="let item of EvidenceInList; let i=index;">
+                        <td style="text-align: center;">{{i + 1}}</td>
+                        <td>{{item.EvidenceInCode}}</td>
+                        <td>{{item.EvidenceInDate}}</td>
+                        <td>{{item.DeptNameRecv}}</td>
+                        <td>{{item.DeliveryNo}}</td>
+                        <td>{{item.DeliveryDate}}</td>
+                        <td>{{item.DeptNameSent}}</td>
+                        <td>{{item.EvidenceInTypeName}}</td>
+                        <td class="text-center;">
+                            <a href="javaScript:void(0);" class="text-secondary" (click)="clickView(item.EvidenceInID, item.EvidenceInType, item.ProveID)">
+                                <i class="mdi mdi-eye fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr> -->
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- <div class="card-footer card-footer-unset">
+            <app-pagination-table [TotalItems]="paginage.TotalItems" [CurrentPage]="paginage.CurrentPage" [PageSize]="paginage.PageSize"
+                [RowsPerPageOptions]="paginage.RowsPerPageOptions" (onPageChange)="pageChanges($event)">
+            </app-pagination-table>
+        </div> -->
+    </div>
+</div>

@@ -1,0 +1,132 @@
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">มาตรา พ.ร.บ.</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <label for="" class="col-lg-2 col-sm-4 control-label">รหัสมาตรา :</label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" name="ArrestCode" [(ngModel)]="ArrestCode" class="form-control " disabled>
+                </div>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">ชื่อหมวด :</label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group">
+                    <div class="form-line">
+                        <select ngModel name="EvidenceInType" class="form-control" [disabled]="showEditField">
+                            <option value="">ทั้งหมด</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">ชื่อส่วน :</label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group">
+                    <div class="form-line">
+                        <select ngModel name="EvidenceInType" class="form-control" [disabled]="showEditField">
+                            <option value="">ทั้งหมด</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <label for="" class="col-lg-2 col-md-4 control-label">มาตรา :</label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" name="Accuser" [(ngModel)]="Accuser" class="form-control " readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">รายละเอียดมาตรา :</label>
+            <div class="col-md-10">
+                <div class="form-group ">
+                    <textarea class="form-control" rows="5" [disabled]="showField"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-sm-3 control-label">ปรับจำนวนเท่า :</label>
+            <div class="col-lg-4 col-md-7 col-sm-9">
+                <div class="input-group form-line">
+                    <div style="width:45%">
+                        <my-date-picker-th name="EvidenceInDateStart" [options]="myDatePickerOptions" (dateChanged)="onSRecvDateChange($event)" [(ngModel)]="EvidenceInDateStart"></my-date-picker-th>
+                    </div>
+
+                    <div style="margin:10px;">
+                        <label for="">&nbsp;ถึง&nbsp;</label>
+                    </div>
+
+                    <div style="width:45%">
+                        <my-date-picker-th name="EvidenceInDateTo" [options]="myDatePickerOptions" (dateChanged)="onERecvDateChange($event)" [(ngModel)]="EvidenceInDateTo"></my-date-picker-th>
+                    </div>
+                </div>
+            </div>
+
+            <label for="" class="col-lg-2 col-sm-3 control-label">ปรับเงิน :</label>
+            <div class="col-lg-4 col-md-7 col-sm-9">
+                <div class="input-group form-line">
+                    <div style="width:45%">
+                        <my-date-picker-th name="EvidenceInDateStart" [options]="myDatePickerOptions" (dateChanged)="onSRecvDateChange($event)" [(ngModel)]="EvidenceInDateStart"></my-date-picker-th>
+                    </div>
+
+                    <div style="margin:10px;">
+                        <label for="">&nbsp;ถึง&nbsp;</label>
+                    </div>
+
+                    <div style="width:45%">
+                        <my-date-picker-th name="EvidenceInDateTo" [options]="myDatePickerOptions" (dateChanged)="onERecvDateChange($event)" [(ngModel)]="EvidenceInDateTo"></my-date-picker-th>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">จำคุกระยะเวลา :</label>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="form-group ">
+                    <input type="text" name="Accuser" [(ngModel)]="Accuser" class="form-control " readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">อัตราโทษ :</label>
+            <div class="col-md-10">
+                <div class="form-group ">
+                    <textarea class="form-control" rows="5" [disabled]="showField"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2 col-sm-3">
+                <div class="row form-group">
+                    <div class="col">
+                        <input type="checkbox" id="md_checkbox_1" ngModel name="chk1" class="filled-in chk-col-indigo">
+                        <label for="md_checkbox_1">สามารถชำระภาษี</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2 col-sm-3">
+                <div class="row form-group">
+                    <div class="col">
+                        <input type="checkbox" id="md_checkbox_1" ngModel name="chk1" class="filled-in chk-col-indigo">
+                        <label for="md_checkbox_1">ใช้งาน</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

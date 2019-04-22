@@ -98,7 +98,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     
     clickView(masterID: string) {
-        this._router.navigate([`/msArrests/manage/${masterID}`]);
+        this._router.navigate([`/msRelation/manage/${masterID}`]);
     }
 
 /*

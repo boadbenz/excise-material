@@ -121,11 +121,11 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.onCancelSubscribe.unsubscribe();
-        this.onSaveSubscribe.unsubscribe();
-        this.onDeleSubscribe.unsubscribe();
-        this.onPrintSubscribe.unsubscribe();
-        this.onEditSubscribe.unsubscribe();
+        // this.onCancelSubscribe.unsubscribe();
+        // this.onSaveSubscribe.unsubscribe();
+        // this.onDeleSubscribe.unsubscribe();
+        // this.onPrintSubscribe.unsubscribe();
+        // this.onEditSubscribe.unsubscribe();
     }
 
     /*
