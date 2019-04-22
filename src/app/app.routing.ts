@@ -266,6 +266,24 @@ export const routes: Routes = [
         ]
     },
     {
+        path: 'msDivisionRate', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'manage', loadChildren: './pages/masters/msDivisionRate/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msRawardDivision', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'manage', loadChildren: './pages/masters/msRawardDivision/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msRawardRateDivision', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'manage', loadChildren: './pages/masters/msRawardRateDivision/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
         path: 'msLawGroup', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/masters/msLawGroup/list/list.module#ListModule' },
@@ -277,6 +295,13 @@ export const routes: Routes = [
         children: [
             { path: 'list', loadChildren: './pages/masters/msSection/list/list.module#ListModule' },
             { path: 'manage/:code', loadChildren: './pages/masters/msSection/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msWarehouse', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msWarehouse/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msWarehouse/manage/manage.module#ManageModule' }
         ]
     }
 ];

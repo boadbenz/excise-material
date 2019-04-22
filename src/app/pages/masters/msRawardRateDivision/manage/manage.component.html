@@ -1,0 +1,70 @@
+<div class="card card-outline-bluish unset-radius">
+    <div class="card-header unset-radius">
+        <app-card-actions-collapse></app-card-actions-collapse>
+        <h4 class="card-title m-b-0">สัดส่วนตามตำแหน่ง</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <label for="" class="col-lg-2 col-md-4 control-label">วันที่เริ่มใช้งาน :</label>
+            <div class="col-lg-4 col-md-7">
+                <div class="input-group ">
+                    <my-date-picker-th name="ReturnDate" [(ngModel)]="ReturnDate" [ngClass]="{'ng-touched':isRequired}" [disabled]="showEditField"
+                        class="form-control  unset-form-control" required></my-date-picker-th>
+                </div>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-lg-10 col-md-9 col-sm-8"></div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <button class="btn btn-block btn-themecolor" [disabled]="showEditField">เพิ่มสัดส่วน</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive table-striped ">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center; width: 10%">ลำดับ</th>
+                                <th style="width: 43%">ตำแหน่ง</th>
+                                <th style="width: 43%">ส่วน</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center">1</td>
+                                <td>
+                                    <input type="text" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
+                                </td>
+                                <td>
+                                    <input type="text" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
+                                </td>
+                                <td>
+                                    <a href="javaScript:void(0);" class="text-warning">
+                                        <i class="fa fa-trash-o fa-lg" (click)="DelDocument(lsDoc.DocumentSeq)" [hidden]="showEditField"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">2</td>
+                                <td>
+                                    <input type="text" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
+                                </td>
+                                <td>
+                                    <input type="text" name="lsDoc.DocumentName" class="form-control" [disabled]="showEditField">
+                                </td>
+                                <td>
+                                    <a href="javaScript:void(0);" class="text-warning">
+                                        <i class="fa fa-trash-o fa-lg" (click)="DelDocument(lsDoc.DocumentSeq)" [hidden]="showEditField"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
