@@ -54,7 +54,7 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     localStorage.setItem('programcode', 'ILG60-09-00');
     this.AccountOfficeCode = localStorage.getItem('officeCode');
-    this.sidebarService.setVersion('0.0.4.09');
+    this.sidebarService.setVersion('0.0.4.22');
     this.navService.setSearchBar(true);
     this.navService.setPrintButton(false);
     this.navService.setDeleteButton(false);

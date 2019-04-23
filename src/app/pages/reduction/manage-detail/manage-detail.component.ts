@@ -247,7 +247,7 @@ export class ManageDetailComponent implements OnInit, OnDestroy {
     this.preloaderService.setShowPreloader(true);
     this.navService.setOnCancel(false);
     this.navService.setOnSave(false);
-    this.sidebarService.setVersion('0.0.4.09');
+    this.sidebarService.setVersion('0.0.4.22');
     const qParam = this.activeRoute.snapshot.queryParams;
     this.isOld = qParam.IsOld;
     this.mode = this.activeRoute.snapshot.paramMap.get('mode');
