@@ -153,8 +153,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.11');
-    localStorage.setItem('programcode', 'ILG60-08-02');
+    this.sidebarService.setVersion('0.0.1.12');
+    localStorage.setItem('programcode','ILG60-08-02');
     this.pageLoad();
 
   }
@@ -282,7 +282,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           // 4.1.1(1.3)
           this.ILG60_08_02_00_00E08_EXPANDED = true;
           // 4.1.1(1.3.1)
-          this.ILG60_08_02_00_00E09_DISABLED = true
+          this.ILG60_08_02_00_00E09_EXPANDED = false;
           // 4.1.1(1.3.2)
           this.ILG60_08_02_00_00E11_EXPANDED = false;
           this.ILG60_08_02_00_00E14_EXPANDED = true;
@@ -292,7 +292,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.ILG60_08_02_00_00E08_DISABLED = false;
           this.ILG60_08_02_00_00E09_DISABLED = true;
           this.ILG60_08_02_00_00E11_DISABLED = true;
-          // 4.1.1(1.4.1)
+          // 4.1.1(1.4.2)
           this.ILG60_08_02_00_00E14_DISABLED = false;
 
           this.navService.setSearchBar(false);
@@ -497,11 +497,15 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           // 4.2.2(1.4.1(1))
           this.ILG60_08_02_00_00E08_EXPANDED = true;
           // 4.2.2(1.4.1(1.1))
-          this.ILG60_08_02_00_00E09_DISABLED = true;
+          this.ILG60_08_02_00_00E09_EXPANDED = false;
           this.ILG60_08_02_00_00E11_EXPANDED = true;
           this.ILG60_08_02_00_00E14_EXPANDED = true;
 
           // 4.2.2(1.4.1(2))
+          this.ILG60_08_02_00_00E08_DISABLED = false;
+          this.ILG60_08_02_00_00E09_DISABLED = true;
+          this.ILG60_08_02_00_00E11_DISABLED = false;
+          this.ILG60_08_02_00_00E14_DISABLED = false;
           // 4.2.2(1.4.1(2.1)) 'WAIT'
           // 4.2.2(1.4.1(2.2)) 'WAIT'
           // 4.2.2(1.4.1(2.3)) 'WAIT'
@@ -536,6 +540,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.ILG60_08_02_00_00E14_EXPANDED = true;
 
           // 4.2.2(1.4.2(3))
+          this.ILG60_08_02_00_00E08_DISABLED = false;
+          this.ILG60_08_02_00_00E09_DISABLED = false;
+          this.ILG60_08_02_00_00E11_DISABLED = false;
+          this.ILG60_08_02_00_00E14_DISABLED = false;
           // 4.2.2(1.4.2(3.1)) 'WAIT'
           // 4.2.2(1.4.2(3.2)) 'WAIT'
           // 4.2.2(1.4.2(3.3)) 'WAIT'
@@ -579,6 +587,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.ILG60_08_02_00_00E14_EXPANDED = true;
 
           // 4.2.2(2.3)
+          this.ILG60_08_02_00_00E08_DISABLED = false;
+          this.ILG60_08_02_00_00E09_DISABLED = true;
+          this.ILG60_08_02_00_00E11_DISABLED = true;
+          this.ILG60_08_02_00_00E14_DISABLED = false;
           // 4.2.2(2.3.1) 'WAIT'
           // 4.2.2(2.3.2) 'WAIT'
 
@@ -598,6 +610,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           this.navService.setPrevPageButton(false);
         }
       } else {
+        // 4.2.2(2)
+        // 4.2.2(2.1)
         const RequestBribeReward: IRequestBribeRewardinsAllResponse = await this.requestBribeRewardService
           .RequestBribeRewardinsAll({
             IndictmentID: this.IndictmentID$.getValue(),
@@ -609,6 +623,32 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         this.RequestBribeRewardID$.next(
           RequestBribeReward.RequestBribeRewardID
         );
+        // 4.2.2(2.2)
+        this.ILG60_08_02_00_00E08_EXPANDED = true;
+        // 4.2.2(2.2.1)
+        this.ILG60_08_02_00_00E09_EXPANDED = false;
+        // 4.2.2(2.2.2)
+        this.ILG60_08_02_00_00E11_EXPANDED = false;
+        this.ILG60_08_02_00_00E14_EXPANDED = true;
+
+        // 4.2.2(2.3)
+        this.ILG60_08_02_00_00E08_DISABLED = false;
+        this.ILG60_08_02_00_00E09_DISABLED = true;
+        this.ILG60_08_02_00_00E11_DISABLED = true;
+        this.ILG60_08_02_00_00E14_DISABLED = false;
+
+        // 4.2.2(2.4.1)
+        this.navService.setSaveButton(true);
+        // 4.2.2(2.4.2)
+        this.navService.setCancelButton(true);
+        this.navService.setPrintButton(false);
+        this.navService.setEditButton(false);
+        this.navService.setDeleteButton(false);
+        this.navService.setSearchBar(false);
+        this.navService.setNewButton(false);
+        this.navService.setEditField(false);
+        this.navService.setNextPageButton(false);
+        this.navService.setPrevPageButton(false);
       }
       this.RequestNoticegetByArrestCode$.next(RequestNotice);
     }
