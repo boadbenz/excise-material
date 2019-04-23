@@ -559,6 +559,10 @@ export class ManageComponent implements OnInit, OnDestroy {
                 cDateRevenue = new Date(`${DRate.year}-${DRate.month}-${DRate.day}`);
             }
 
+            if (this.ListRevenueDetail.find(x => x.IsCheck == false)) {
+                this.ListRevenueDetail.splice(this.ListRevenueDetail.findIndex(x => x.IsCheck == false));
+            }
+
             await this.IncService.RevenueComparegetByCon(setZeroHours(cDateRevenue), this.StaffDeptCode).then(async res => {
                 this.preloader.setShowPreloader(false);
 
@@ -604,7 +608,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
                 this.ListRevenueDetail = this.ListRevenueDetail.sort((a, b) => a.CompareCode.localeCompare(b.CompareCode));
                 this.isSortCompareAsc = true;
-                
+
                 this.paginage.TotalItems = this.ListRevenueDetail.length;
                 this.ListRevenueDetailPaging = this.ListRevenueDetail.slice(0, this.paginage.RowsPerPageOptions[0]);
 

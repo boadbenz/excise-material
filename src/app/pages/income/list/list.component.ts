@@ -59,7 +59,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.navService.setSearchBar(true);
         this.navService.setNewButton(true);
 
-        this.sidebarService.setVersion('Revenue 0.0.0.34');
+        this.sidebarService.setVersion('Revenue 0.0.0.35');
         this.RevenueStatus = "";
         //this.advSearch.next(true);
         //this.preloader.setShowPreloader(true);
