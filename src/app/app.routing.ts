@@ -223,5 +223,121 @@ export const routes: Routes = [
             { path: 'list', loadChildren: './pages/evidenceStock/list/list.module#ListModule' },
             { path: 'manage/:code', loadChildren: './pages/evidenceStock/manage/manage.module#ManageModule' },
         ]
+    },
+    {
+        path: 'msArrestTeam', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msArrestTeam/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msArrestTeam/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msCourt', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msCourt/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msCourt/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msCountry', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msCountry/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msCountry/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msProvince', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msProvince/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msProvince/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msDistrict', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msDistrict/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msDistrict/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msSubDistrict', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msSubDistrict/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msSubDistrict/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msRelation', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msRelation/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msRelation/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msNationality', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msNationality/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msNationality/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msRace', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msRace/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msRace/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msReligion', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msReligion/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msReligion/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msTitle', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msTitle/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msTitle/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msDivisionRate', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'manage', loadChildren: './pages/masters/msDivisionRate/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msRawardDivision', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'manage', loadChildren: './pages/masters/msRawardDivision/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msRawardRateDivision', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'manage', loadChildren: './pages/masters/msRawardRateDivision/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msLawGroup', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msLawGroup/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msLawGroup/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msSection', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msSection/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msSection/manage/manage.module#ManageModule' }
+        ]
+    },
+    {
+        path: 'msWarehouse', component: LayoutComponent, canActivate: [AuthGuard],
+        children: [
+            { path: 'list', loadChildren: './pages/masters/msWarehouse/list/list.module#ListModule' },
+            { path: 'manage/:code', loadChildren: './pages/masters/msWarehouse/manage/manage.module#ManageModule' }
+        ]
     }
 ];
