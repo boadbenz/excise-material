@@ -30,8 +30,6 @@
   <div style="padding-bottom: 20px">
     <label class="label-2">ระบบงานผู้กระทำผิดกฎหมายภาษีสรรพสามิต พระราชบัญญัติภาษีสรรพสามิต พ.ศ.2560</label>
   </div>
-  <!-- http://103.233.193.94/process?action=Login&cmd=chkLogin  -->
-  <!-- 192.168.103.21 -->
   <form action="" #form="ngForm" (ngSubmit)="onSubmit(form.value)">
     <div class="row" style="padding-bottom: 15px">
       <div class="col-sm-4">
@@ -62,8 +60,7 @@
     </div>
     <div class="row" style="padding-top: 20px">
       <div class="col-sm-12">
-        <button class="btn" type="submit">เข้าสู่ระบบ</button>
-        <!-- [disabled]="!form.valid" -->
+        <button class="btn" type="submit" [disabled]="!form.valid">เข้าสู่ระบบ</button>
       </div>
     </div>
     <div class="col-sm-12" style="padding-top: 10px">

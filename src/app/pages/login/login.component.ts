@@ -34,8 +34,8 @@ export class LoginComponent implements OnInit {
   }
 
   async onSubmit(form: any) {
-    var User = form.userName;
-    var Pass = form.password;
+    let User = form.userName;
+    let Pass = form.password;
     if (!User) {
       this.errMsg = "กรุณาระบุชื่อเข้าระบบ";
     } else if (!Pass) {
@@ -46,33 +46,24 @@ export class LoginComponent implements OnInit {
 
         //***********************************Used with in the Excise Only (Don't Delete)********************************** */
 
-        // const params = {
-        //   UserName: User,
-        //   Password: Pass
-        // }
+        // const params = { UserName: User, Password: Pass };
         // await this.authService.LDPAGAuthen(params).subscribe(async res => {
         //   console.log('LDAP Res : ', res.Body.ResponseObj.userThaiId);
         //   if (res.Body.ResponseObj.userThaiId) {
-        //     const paramsPinID = {
-        //       "SystemID": "sso",
-        //       "UserName": "pccsso",
-        //       "Password": "sso2561",
-        //       "RequestData":
-        //       {
-        //         "PersonNID": res.Body.ResponseObj.userThaiId
-        //       }
-        //     }
+        //     const paramsPinID = { "SystemID": "sso", "UserName": "pccsso", "Password": "sso2561", "RequestData":
+        //         { "PersonNID": res.Body.ResponseObj.userThaiId }};
         //     await this.authService.eofficeInfo(paramsPinID).subscribe(async res => {
         //       console.log("res eofficeInfo  : ", res);
         //       if (res.Status == "OK") {
-        //         this.fullName = res.PersonInformation.PersonTHTitle + " " +
+        //         const LinePositionLevel = res.PersonInformation.LinePositionLevel == null ? "" : res.PersonInformation.LinePositionLevel;
+        //         this.fullName = res.PersonInformation.PersonTHTitle +
         //           res.PersonInformation.PersonTHName + " " + res.PersonInformation.PersonTHSurName;
         //         localStorage.setItem('fullName', this.fullName);
-        //         localStorage.setItem('operationPosName', res.PersonInformation.LinePotistion);
+        //         localStorage.setItem('operationPosName', res.PersonInformation.LinePotistion + LinePositionLevel);
         //         localStorage.setItem('officeShortName', res.PersonInformation.WorkOffName);
         //         localStorage.setItem('staffCode', res.PersonInformation.PersonID);
         //         localStorage.setItem('officeCode', res.PersonInformation.WorkOffCode);
-        //         localStorage.setItem('UserAccountID', '186');//fig for work complete
+        //         localStorage.setItem('UserAccountID', '186');//fig for Permission complete
         //         let url = decodeURIComponent(this.returnUrl);
         //         this.router.navigateByUrl(url);
         //       } else this.errMsg = "Please Check User or Password"
