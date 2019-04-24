@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { CONFIG } from './CONFIG';
 import { RequestBribeRewardService } from 'app/pages/reward/services/RequestBribeReward.service';
 import { RequestBribeService } from 'app/pages/reward/services/RequestBribe.service';
@@ -15,6 +15,7 @@ export class ILG6008020000E11Component extends CONFIG
   implements OnInit, OnDestroy {
   public dataBinding = [];
   public sumBribeTotal;
+  @Input('ILG60_08_02_00_00E11_BUTTON_DISABLED') ILG60_08_02_00_00E11_BUTTON_DISABLED: boolean;
   constructor() {
     super();
 

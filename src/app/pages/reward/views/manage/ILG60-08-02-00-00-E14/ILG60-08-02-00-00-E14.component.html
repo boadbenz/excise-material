@@ -14,7 +14,7 @@
     <div class="text-right pb-3">
       <!-- RequestBribeRewardID: {{ (RequestBribeRewardID$ | async) }} 
         IndictmentID: {{ (IndictmentID$ | async)}} -->
-      <button class="btn waves-effect waves-light btn-navy" [routerLink]="['/reward/reward/C', (RequestBribeRewardID$ | async) , (IndictmentID$ | async)]">
+      <button class="btn waves-effect waves-light btn-navy" [routerLink]="['/reward/reward/C', (RequestBribeRewardID$ | async) , (IndictmentID$ | async)]" [disabled]="ILG60_08_02_00_00E14_BUTTON_DISABLED">
         ขอรับเงินรางวัล
       </button>
     </div>
