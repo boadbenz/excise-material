@@ -153,7 +153,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.12');
+    this.sidebarService.setVersion('0.0.1.13');
     localStorage.setItem('programcode','ILG60-08-02');
     this.pageLoad();
 
@@ -407,6 +407,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               this.ILG60_08_02_00_00E14_EXPANDED = true;
 
               // 4.1.1(2.6.2(3))
+              this.ILG60_08_02_00_00E11_BUTTON_DISABLED = true;
+              this.ILG60_08_02_00_00E14_BUTTON_DISABLED = true;
               // 4.1.1(2.6.2(3.1))
               this.ILG60_08_02_00_00E08_DISABLED = false;
               // 4.1.1(2.6.2(3.2))
@@ -415,6 +417,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               this.ILG60_08_02_00_00E11_DISABLED = false;
               // 4.1.1(2.6.2(3.4)) || 4.1.1(2.6.2(3.6))
               this.ILG60_08_02_00_00E14_DISABLED = false;
+              
 
               // 4.1.1(2.6.2(4))
               // 4.1.1(2.6.2(4.1))
@@ -688,17 +691,17 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       // 3.1
       if (!responseSave) {
         // 3.1.1
-        swal('บันทึกไม่สำเร็จ', 'error');
+        swal('', 'บันทึกไม่สำเร็จ', 'error');
       } else {
         // 3.2
         // 3.2.1
-        swal('บันทึกสำเร็จ', 'success');
+        swal('', 'บันทึกสำเร็จ', 'success');
 
         // 3.2.2
         this.pageLoad();
       }
     } else {
-      swal('ตรวจสอบข้อมูล Input ที่นำเข้า (Validate/Verify)', 'warning');
+      swal('', 'ตรวจสอบข้อมูล Input ที่นำเข้า (Validate/Verify)', 'warning');
     }
     // 4 END
   }

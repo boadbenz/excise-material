@@ -10,7 +10,7 @@
   </div>
 </div>
 <div class="text-right pb-3">
-  <button type="button" class="btn waves-effect waves-light btn-navy" [routerLink]="['/reward/bribe/C', (RequestBribeRewardID$ | async) ,(ArrestCode$ | async)]">
+  <button type="button" class="btn waves-effect waves-light btn-navy" [routerLink]="['/reward/bribe/C', (RequestBribeRewardID$ | async) ,(ArrestCode$ | async)]" [disabled]="ILG60_08_02_00_00E11_BUTTON_DISABLED">
     ขอรับเงินสินบน
   </button>
 

@@ -62,9 +62,8 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
 
         this.formGroup.get('CommandID').patchValue(inp[0].CommandID);
         this.formGroup.get('CommandNo').patchValue(inp[0].CommandNo);
-        this.formGroup
-          .get('CommandDate')
-          .patchValue(setDateMyDatepicker(new Date(inp[0].CommandDate)));
+        const commandDateValue = inp[0].CommandDate != null ? setDateMyDatepicker(new Date(inp[0].CommandDate)) : '';
+        this.formGroup.get('CommandDate').patchValue(commandDateValue);
         this.formGroup.get('CommandTime').patchValue(inp[0].CommandTime);
       }
     });

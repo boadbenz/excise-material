@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CONFIG } from './CONFIG';
 import { IRequestReward } from 'app/pages/reward/interfaces/RequestReward';
 import { IRequestRewardDetail } from 'app/pages/reward/interfaces/RequestRewardDetail';
@@ -13,6 +13,7 @@ export class ILG6008020000E14Component extends CONFIG implements OnInit {
   public tableData: any[] = [];
   public sumRewardTotal;
   public dataBinding = [];
+  @Input('ILG60_08_02_00_00E14_BUTTON_DISABLED') ILG60_08_02_00_00E14_BUTTON_DISABLED: boolean;
   constructor() {
     super();
     this.inputData$.subscribe((data: any[]) => {

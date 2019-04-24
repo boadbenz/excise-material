@@ -17,6 +17,9 @@ export class ManageConfig extends RewardHelper {
   public ILG60_08_02_00_00E11_DISABLED = false;
   public ILG60_08_02_00_00E14_DISABLED = false;
 
+  public ILG60_08_02_00_00E11_BUTTON_DISABLED = false;
+  public ILG60_08_02_00_00E14_BUTTON_DISABLED = false;
+  
   public ILG60_08_02_00_00E09_EDIT = false;
 
   public ILG60_08_02_00_00E08_DATA$ = new BehaviorSubject<
