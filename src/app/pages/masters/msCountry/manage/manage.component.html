@@ -8,14 +8,15 @@
             <label for="" class="col-lg-2 col-sm-4 control-label">Running No :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" name="ArrestCode" [(ngModel)]="ArrestCode" class="form-control " disabled>
+                    <input type="text" name="CountryID" [(ngModel)]="CountryID" class="form-control" readonly>
                 </div>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">รหัสประเทศ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" name="Accuser" [(ngModel)]="Accuser" class="form-control " readonly>
+                    <input type="text" name="CountryCode" [(ngModel)]="CountryCode" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
                 </div>
             </div>
         </div>
@@ -24,14 +25,16 @@
             <label for="" class="col-lg-2 col-md-4 control-label">ชื่อประเทศภาษาไทย :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" name="Accuser" [(ngModel)]="Accuser" class="form-control " readonly>
+                    <input type="text" name="CountryNameTH" [(ngModel)]="CountryNameTH" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
                 </div>
             </div>
 
             <label for="" class="col-lg-2 col-md-4 control-label">ชื่อประเทศภาษาอังกฤษ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" name="Accuser" [(ngModel)]="Accuser" class="form-control " readonly>
+                    <input type="text" name="CountryNameEN" [(ngModel)]="CountryNameEN" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
                 </div>
             </div>
         </div>
@@ -40,7 +43,8 @@
             <label for="" class="col-lg-2 col-md-4 control-label">ชื่อย่อประเทศ :</label>
             <div class="col-lg-4 col-md-7 col-sm-8">
                 <div class="form-group ">
-                    <input type="text" name="Accuser" [(ngModel)]="Accuser" class="form-control " readonly>
+                    <input type="text" name="CountryShortName" [(ngModel)]="CountryShortName" class="form-control" [disabled]="showEditField" [ngClass]="{'ng-touched':isRequired}"
+                    required>
                 </div>
             </div>
         </div>
@@ -48,8 +52,8 @@
             <div class="col-lg-2 col-sm-3">
                 <div class="row form-group">
                     <div class="col">
-                        <input type="checkbox" id="md_checkbox_1" ngModel name="chk1" class="filled-in chk-col-indigo">
-                        <label for="md_checkbox_1">ใช้งาน</label>
+                        <input type="checkbox" id="md_isActive" ngModel name="chk1" class="filled-in chk-col-indigo" [disabled]="showEditField">
+                        <label for="md_isActive">ใช้งาน</label>
                     </div>
                 </div>
             </div>

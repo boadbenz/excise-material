@@ -88,8 +88,8 @@ export class ManageComponent implements OnInit, OnDestroy {
         //     IsEdit: 1
         // }
 
-        // this.active_Route();
-        // this.navigate_Service();
+        this.active_Route();
+        this.navigate_Service();
         // this.getUnit();
         // await this.getEvidenceInStaff();
 
@@ -128,12 +128,10 @@ export class ManageComponent implements OnInit, OnDestroy {
         // this.onEditSubscribe.unsubscribe();
     }
 
-    /*
+    
     private active_Route() {
         this.sub = this.activeRoute.params.subscribe(p => {
             this.mode = p['mode'];
-            this.evitype = p['type'];
-            this.ProveID = p['proveid'];
 
             switch (this.mode) {
                 case 'C':
@@ -153,156 +151,134 @@ export class ManageComponent implements OnInit, OnDestroy {
                     this.navService.setSaveButton(false);
                     this.navService.setCancelButton(false);
                     this.navService.setNextPageButton(false);
+                    this.navService.setPrintButton(false);
+
                     // set true
-                    this.navService.setPrintButton(true);
                     this.navService.setEditButton(true);
                     this.navService.setDeleteButton(true);
                     this.navService.setEditField(true);
 
-                    if (p['code']) {
-                        this.EvidenceInID = p['code'];
-                    }
+                    // if (p['code']) {
+                    //     this.EvidenceInID = p['code'];
+                    // }
                     break;
             }
-
-            this.activeRoute.data.subscribe(
-                (data) => {
-                    switch (this.evitype) {
-                        case 'I':
-                            data.urls[2].title = "จัดการข้อมูลรายการตรวจรับของกลางจากหน่วยงานภายใน";
-                            data.codePage = "ILG60-10-02-00-00";
-                            this.EvidenceInType = "0";
-                            break;
-                        case 'E':
-                            data.urls[2].title = "จัดการข้อมูลรายการตรวจรับของกลางจากหน่วยงานภายนอก";
-                            data.codePage = "ILG60-10-03-00-00";
-                            this.EvidenceInType = "1";
-                            break;
-                        case 'G':
-                            data.urls[2].title = "จัดการข้อมูลรายการตรวจรับของกลางที่นำออกจากคลังไปใช้ในราชการ";
-                            data.codePage = "ILG60-10-04-00-00";
-                            this.EvidenceInType = "2";
-                            break;
-                    }
-
-                }
-            );
         });
     }
 
     private navigate_Service() {
-
         this.navService.showFieldEdit.subscribe(async p => {
             this.showEditField = p;
         });
 
-        this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnPrint(false);
-                this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
-            }
-        });
+        // this.onPrintSubscribe = this.navService.onPrint.subscribe(async status => {
+        //     if (status) {
+        //         await this.navService.setOnPrint(false);
+        //         this.modal = this.ngbModel.open(this.printDocModel, { size: 'lg', centered: true });
+        //     }
+        // });
 
-        this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
-            if (status) {
-                // set action save = false
-                await this.navService.setOnSave(false);
+        // this.onSaveSubscribe = this.navService.onSave.subscribe(async status => {
+        //     if (status) {
+        //         // set action save = false
+        //         await this.navService.setOnSave(false);
 
-                let listProd = this.ListEvidenceInItem.filter(f => f.EvidenceInItemCode == "" || f.ProductDesc == ""
-                    || f.DeliveryQty.toString() == "" || f.DamageQty.toString() == "" || f.DeliveryQtyUnit == ""
-                    || (this.evitype != "G" && (f.DeliveryNetVolumn.toString() == "" || f.DamageNetVolumn.toString() == "" || f.DeliveryNetVolumnUnit == ""))
-                );
+        //         let listProd = this.ListEvidenceInItem.filter(f => f.EvidenceInItemCode == "" || f.ProductDesc == ""
+        //             || f.DeliveryQty.toString() == "" || f.DamageQty.toString() == "" || f.DeliveryQtyUnit == ""
+        //             || (this.evitype != "G" && (f.DeliveryNetVolumn.toString() == "" || f.DamageNetVolumn.toString() == "" || f.DeliveryNetVolumnUnit == ""))
+        //         );
 
-                if (this.DeliveryNo == "" || this.DeliveryNo == undefined
-                    || this.DeliveryDate == null || this.DeliveryDate == undefined
-                    || (this.evitype == "E" && (this.DeliveryTime == "" || this.DeliveryTime == undefined))
-                    || (this.evitype == "E" && (this.ReturnDate == null || this.ReturnDate == undefined))
-                    || this.StaffSendName == "" || this.StaffSendName == undefined
-                    || (this.evitype == "E" &&
-                        (this.PosStaffSend == "" || this.PosStaffSend == undefined || this.DeptStaffSend == "" || this.DeptStaffSend == undefined))
-                    || this.EvidenceInCode == "" || this.EvidenceInCode == undefined
-                    || this.EvidenceInDate == null || this.EvidenceInDate == undefined
-                    || this.EvidenceInTime == "" || this.EvidenceInTime == undefined
-                    || this.StaffRecvName == "" || this.StaffRecvName == undefined
-                    || this.WarehouseID == "" || this.WarehouseID == undefined || this.WarehouseID == "0"
-                    || (this.evitype == "E" && (this.Remark == "" || this.Remark == undefined))
-                    || listProd.length > 0) {
-                    this.isRequired = true;
-                    this.ShowAlertWarning(Message.checkData);
+        //         if (this.DeliveryNo == "" || this.DeliveryNo == undefined
+        //             || this.DeliveryDate == null || this.DeliveryDate == undefined
+        //             || (this.evitype == "E" && (this.DeliveryTime == "" || this.DeliveryTime == undefined))
+        //             || (this.evitype == "E" && (this.ReturnDate == null || this.ReturnDate == undefined))
+        //             || this.StaffSendName == "" || this.StaffSendName == undefined
+        //             || (this.evitype == "E" &&
+        //                 (this.PosStaffSend == "" || this.PosStaffSend == undefined || this.DeptStaffSend == "" || this.DeptStaffSend == undefined))
+        //             || this.EvidenceInCode == "" || this.EvidenceInCode == undefined
+        //             || this.EvidenceInDate == null || this.EvidenceInDate == undefined
+        //             || this.EvidenceInTime == "" || this.EvidenceInTime == undefined
+        //             || this.StaffRecvName == "" || this.StaffRecvName == undefined
+        //             || this.WarehouseID == "" || this.WarehouseID == undefined || this.WarehouseID == "0"
+        //             || (this.evitype == "E" && (this.Remark == "" || this.Remark == undefined))
+        //             || listProd.length > 0) {
+        //             this.isRequired = true;
+        //             this.ShowAlertWarning(Message.checkData);
 
-                    return false;
-                }
+        //             return false;
+        //         }
 
-                if (this.mode === 'C') {
-                    await this.onInsEvidenceIn();
-                } else if (this.mode === 'R') {
-                    await this.onUdpEvidenceIn();
-                }
-            }
-        });
+        //         if (this.mode === 'C') {
+        //             await this.onInsEvidenceIn();
+        //         } else if (this.mode === 'R') {
+        //             await this.onUdpEvidenceIn();
+        //         }
+        //     }
+        // });
 
-        this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
-            if (status) {
-                this.navService.setOnCancel(false);
+        // this.onCancelSubscribe = this.navService.onCancel.subscribe(async status => {
+        //     if (status) {
+        //         this.navService.setOnCancel(false);
 
-                swal({
-                    title: '',
-                    text: Message.confirmAction,
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'ยืนยัน',
-                    cancelButtonText: 'ยกเลิก'
-                }).then((result) => {
-                    if (result.value) {
-                        if (this.mode === 'C') {
-                            this.router.navigate(['/evidenceIn/list']);
-                        } else if (this.mode === 'R') {
-                            if (this.oEvidenceIn.IsReceive == "0") {
-                                this.router.navigate(['/evidenceIn/list']);
-                            } else {
-                                // set false
-                                this.navService.setSaveButton(false);
-                                this.navService.setCancelButton(false);
-                                // set true
-                                this.navService.setPrintButton(true);
-                                this.navService.setEditButton(true);
-                                this.navService.setDeleteButton(true);
-                                this.navService.setEditField(true);
+        //         swal({
+        //             title: '',
+        //             text: Message.confirmAction,
+        //             type: 'warning',
+        //             showCancelButton: true,
+        //             confirmButtonColor: '#3085d6',
+        //             cancelButtonColor: '#d33',
+        //             confirmButtonText: 'ยืนยัน',
+        //             cancelButtonText: 'ยกเลิก'
+        //         }).then((result) => {
+        //             if (result.value) {
+        //                 if (this.mode === 'C') {
+        //                     this.router.navigate(['/evidenceIn/list']);
+        //                 } else if (this.mode === 'R') {
+        //                     if (this.oEvidenceIn.IsReceive == "0") {
+        //                         this.router.navigate(['/evidenceIn/list']);
+        //                     } else {
+        //                         // set false
+        //                         this.navService.setSaveButton(false);
+        //                         this.navService.setCancelButton(false);
+        //                         // set true
+        //                         this.navService.setPrintButton(true);
+        //                         this.navService.setEditButton(true);
+        //                         this.navService.setDeleteButton(true);
+        //                         this.navService.setEditField(true);
 
-                                this.ShowEvidenceIn();
-                            }
-                        }
-                    }
-                    else {
-                        this.navService.setSaveButton(true);
-                        this.navService.setCancelButton(true);
+        //                         this.ShowEvidenceIn();
+        //                     }
+        //                 }
+        //             }
+        //             else {
+        //                 this.navService.setSaveButton(true);
+        //                 this.navService.setCancelButton(true);
 
-                        this.navService.setPrintButton(false);
-                        this.navService.setEditButton(false);
-                        this.navService.setDeleteButton(false);
-                        this.navService.setEditField(false);
-                    }
-                })
-            }
-        });
+        //                 this.navService.setPrintButton(false);
+        //                 this.navService.setEditButton(false);
+        //                 this.navService.setDeleteButton(false);
+        //                 this.navService.setEditField(false);
+        //             }
+        //         })
+        //     }
+        // });
 
-        this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
-            if (status) {
-                await this.navService.setOnDelete(false);
-                this.onDelete();
-            }
-        });
+        // this.onDeleSubscribe = this.navService.onDelete.subscribe(async status => {
+        //     if (status) {
+        //         await this.navService.setOnDelete(false);
+        //         this.onDelete();
+        //     }
+        // });
 
-        this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
-            if (this.oEvidenceIn.IsEdit == 0) {
-                this.ShowAlertWarning("ไม่อนุญาตให้ทำการแก้ไขข้อมูลการจัดเก็บของกลาง !!!");
-                this.onComplete();
-            }
-        })
+        // this.onEditSubscribe = this.navService.onEdit.subscribe(async status => {
+        //     if (this.oEvidenceIn.IsEdit == 0) {
+        //         this.ShowAlertWarning("ไม่อนุญาตให้ทำการแก้ไขข้อมูลการจัดเก็บของกลาง !!!");
+        //         this.onComplete();
+        //     }
+        // })
     }
 
+/*
     LoadDataFromLocalStorage() {
         let tempUser = this.rawStaffSendOptions.filter(f => f.StaffCode == localStorage.getItem("staffCode"));
 

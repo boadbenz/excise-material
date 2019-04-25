@@ -85,8 +85,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.subSetNextPage = this.navService.onNextPage.subscribe(async status => {
             if (status) {
                 await this.navService.setOnNextPage(false);
-
-                //this.modal = this.ngbModel.open(this.evidenceTypeModel, { size: 'lg', centered: true });
+                this._router.navigate(['/msCourt/manage', 'C', 'NEW']);
             }
         })
     }
@@ -98,7 +97,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     
     clickView(masterID: string) {
-        this._router.navigate([`/msCourt/manage/${masterID}`]);
+        this._router.navigate([`/msCourt/manage/R/${masterID}`]);
     }
 
 /*
