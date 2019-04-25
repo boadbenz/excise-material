@@ -127,8 +127,8 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.13');
-    localStorage.setItem('programcode','ILG60-08-02');
+    this.sidebarService.setVersion('0.0.1.14');
+    localStorage.setItem('programcode', 'ILG60-08-02');
     this.pageLoad();
   }
 
@@ -205,6 +205,9 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           // 4.1.1(1.4.2)
           this.ILG60_08_02_00_00E14_DISABLED = false;
 
+          this.ILG60_08_02_00_00E11_BUTTON_DISABLED = true;
+          this.ILG60_08_02_00_00E14_BUTTON_DISABLED = true;
+
           this.navService.setSearchBar(false);
           this.navService.setPrintButton(true);
           this.navService.setDeleteButton(true);
@@ -230,7 +233,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           // 4.1.1(2.2.1)
           if (RequestBribe.length > 0) {
             this.ReqBribeDTL = RequestBribe[0].RequestBribeID;
-            localStorage.setItem("ReqDTL",this.ReqBribeDTL)
+            localStorage.setItem("ReqDTL", this.ReqBribeDTL)
             // 4.1.1(2.2.1(1))
             this.ILG60_08_02_00_00E11_DATA$.next(RequestBribe);
 
@@ -288,6 +291,9 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
               this.ILG60_08_02_00_00E11_DISABLED = false;
               // 4.1.1(2.6.1(2.3)) || 4.1.1(2.6.1(2.5))
               this.ILG60_08_02_00_00E14_DISABLED = false;
+
+              this.ILG60_08_02_00_00E11_BUTTON_DISABLED = true;
+              this.ILG60_08_02_00_00E14_BUTTON_DISABLED = true;
 
               // 4.1.1(2.6.1(3))
               this.navService.setSearchBar(false);
@@ -424,6 +430,9 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           // 4.2.2(1.4.1(2.2)) 'WAIT'
           // 4.2.2(1.4.1(2.3)) 'WAIT'
 
+          this.ILG60_08_02_00_00E11_BUTTON_DISABLED = false;
+          this.ILG60_08_02_00_00E14_BUTTON_DISABLED = false;
+
           // 4.2.2(1.4.1(3))
           // 4.2.2(1.4.1(3.1))
           this.navService.setSaveButton(true);
@@ -461,6 +470,9 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           // 4.2.2(1.4.2(3.1)) 'WAIT'
           // 4.2.2(1.4.2(3.2)) 'WAIT'
           // 4.2.2(1.4.2(3.3)) 'WAIT'
+
+          this.ILG60_08_02_00_00E11_BUTTON_DISABLED = false;
+          this.ILG60_08_02_00_00E14_BUTTON_DISABLED = false;
 
           // 4.2.2(1.4.2(4))
           // 4.2.2(1.4.2(4.1))
@@ -508,6 +520,9 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
           // 4.2.2(2.3.1) 'WAIT'
           // 4.2.2(2.3.2) 'WAIT'
 
+          this.ILG60_08_02_00_00E11_BUTTON_DISABLED = false;
+          this.ILG60_08_02_00_00E14_BUTTON_DISABLED = false;
+
           // 4.2.2(2.4)
           // 4.2.2(2.4.1)
           this.navService.setSaveButton(true);
@@ -550,6 +565,9 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         this.ILG60_08_02_00_00E09_DISABLED = true;
         this.ILG60_08_02_00_00E11_DISABLED = true;
         this.ILG60_08_02_00_00E14_DISABLED = false;
+
+        this.ILG60_08_02_00_00E11_BUTTON_DISABLED = false;
+        this.ILG60_08_02_00_00E14_BUTTON_DISABLED = false;
 
         // 4.2.2(2.4.1)
         this.navService.setSaveButton(true);
@@ -620,6 +638,10 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
     // ILG60-08-02-00-00
     // 1
     this.ILG60_08_02_00_00E09_EDIT = true;
+
+    this.ILG60_08_02_00_00E11_BUTTON_DISABLED = false;
+    this.ILG60_08_02_00_00E14_BUTTON_DISABLED = false;
+
     // 1.1
 
     if (this.ILG60_08_02_00_00E09_EXPANDED === true) {
@@ -815,7 +837,7 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
       })
       .toPromise();
-      console.log("++++RequestBribe : ",RequestBribe)
+    console.log("++++RequestBribe : ", RequestBribe)
 
     // 1.2
     const RequestReward: IRequestReward[] = await this.requestRewardService
@@ -823,16 +845,16 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
         RequestBribeRewardID: this.RequestBribeRewardID$.getValue()
       })
       .toPromise();
-      console.log("++++RequestReward  : ",RequestReward)
+    console.log("++++RequestReward  : ", RequestReward)
 
     const printDocRequestBribe: any[] = RequestBribe.map(m => ({
       DocName: `${m.RequestBribeCode || ''}: คำร้องขอรับเงินสินบน`,
-      DocType: 'แบบฟอร์ม', RequestBribeID:`${m.RequestBribeID}`, checked: false, TypeName: "RB"
+      DocType: 'แบบฟอร์ม', RequestBribeID: `${m.RequestBribeID}`, checked: false, TypeName: "RB"
     }));
 
     const printDocRequestReward: any[] = RequestReward.map(m => ({
       DocName: `${m.RequestRewardCode || ''}: คำร้องขอรับเงินรางวัล`,
-      DocType: 'แบบฟอร์ม', RequestRewardID:`${m.RequestRewardID}`, checked: false, TypeName: "RR"
+      DocType: 'แบบฟอร์ม', RequestRewardID: `${m.RequestRewardID}`, checked: false, TypeName: "RR"
     }));
     const printDoc = [...printDocRequestBribe, ...printDocRequestReward];
 
@@ -840,13 +862,13 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
       backdrop: 'static', size: 'lg'
     });
     dialogRef.componentInstance.data = printDoc;
-    dialogRef.result.then(res => {});
+    dialogRef.result.then(res => { });
     // 2 END
   }
   private RequestBribeRewardgetByIndictmentID(
     param: IRequestBribeRewardgetByIndictmentID
-  ) {}
-  private RequestCommandinsAll(param: IRequestCommandinsAll) {}
+  ) { }
+  private RequestCommandinsAll(param: IRequestCommandinsAll) { }
   private RequestCommandgetByArrestCode(
     param: IRequestCommandgetByArrestCode,
     event: string
@@ -911,13 +933,12 @@ export class ManageComponent extends ManageConfig implements OnInit, OnDestroy {
 
   private RequestBribegetByRequestBribeRewardID(
     param: IRequestBribegetByRequestBribeRewardID
-  ) {}
+  ) { }
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
   public ILG60_08_02_00_00E09_RETURN($event: IRequestCommand) {
-    // console.log('IRequestCommand', $event);
     this.ILG60_08_02_00_00E09_SAVE = $event;
   }
 }
