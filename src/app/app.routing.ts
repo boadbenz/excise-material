@@ -235,14 +235,14 @@ export const routes: Routes = [
         path: 'msCourt', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/masters/msCourt/list/list.module#ListModule' },
-            { path: 'manage/:code', loadChildren: './pages/masters/msCourt/manage/manage.module#ManageModule' }
+            { path: 'manage/:mode/:code', loadChildren: './pages/masters/msCourt/manage/manage.module#ManageModule' }
         ]
     },
     {
         path: 'msCountry', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
             { path: 'list', loadChildren: './pages/masters/msCountry/list/list.module#ListModule' },
-            { path: 'manage/:code', loadChildren: './pages/masters/msCountry/manage/manage.module#ManageModule' }
+            { path: 'manage/:mode/:code', loadChildren: './pages/masters/msCountry/manage/manage.module#ManageModule' }
         ]
     },
     {
