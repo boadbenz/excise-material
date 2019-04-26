@@ -112,7 +112,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     Number(((this.aggregate.BribeMoney.sum || 0) / 3).toFixed(2));
   SumFirstMoneyPerPart = () =>
     Number(
-      (Math.floor(((this.SumFirstMoney() || 0) / (this.aggregate.FirstPart.sum || 0)) * 100 ) / 100 ).toFixed(2)
+      (Math.floor(((this.SumFirstMoney() || 0) / (this.aggregate.FirstPart.sum || 0)) * 100) / 100).toFixed(2)
     ) || 0;
   // SumFirstMoneyPerPartView = () => parseInt(this.SumFirstMoneyPerPart().toString()) || 0;
   // FirstRemainder = () =>
@@ -125,12 +125,12 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     Number((this.SumFirstMoney() * 2).toFixed(2));
   SumSecondMoneyPerPart = () =>
     Number(
-      (Math.floor(((this.SumSecondMoney() || 0) / (this.aggregate.SecondPart.sum || 0)) * 100 ) / 100 ).toFixed(2)
+      (Math.floor(((this.SumSecondMoney() || 0) / (this.aggregate.SecondPart.sum || 0)) * 100) / 100).toFixed(2)
     ) || 0;
   // SumSecondMoneyPerPartView = () => parseInt(this.SumSecondMoneyPerPart().toString()) || 0;
   // SecondRemainder = () =>
   //   this.SumSecondMoney() - this.aggregate.SecondMoney.sum;
-  SecondRemainder = () => 
+  SecondRemainder = () =>
     Number(
       (this.SumSecondMoney() - (this.SumSecondMoneyPerPart() * (this.aggregate.SecondPart.sum || 0))).toFixed(2)
     ) || 0;
@@ -362,7 +362,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sidebarService.setVersion('0.0.1.18');
+    this.sidebarService.setVersion('0.0.1.19');
     localStorage.setItem('programcode', 'ILG60-08-02');
     this.pageLoad();
   }
@@ -459,7 +459,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     //   this.aggregate.FirstMoney.sum +
     //   this.aggregate.SecondMoney.sum +
     //   this.aggregate.MoneySort1.sum;      
-    
+
   }
   public setTotal(controls: FormArray, index) {
     const FirstMoney: number = controls.at(index).get('FirstMoney').value;
@@ -536,7 +536,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
   public deleteHandle(rowItem) {
     // remove the chosen row
     if (this.mode == 'R') {
-      this.caseRStaffRemoveRow.push(this.RequestRewardStaff.value[rowItem]);      
+      this.caseRStaffRemoveRow.push(this.RequestRewardStaff.value[rowItem]);
     }
     this.RequestRewardStaff.removeAt(rowItem);
     this.calChangeAll(); //g
@@ -662,6 +662,30 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
           methodName: 'RequstLawsuitJudgementgetByIndictmentID',
           data: LawsuitJudgement
         });
+        if (LawsuitJudgement.length > 0) {
+          const LawsuitJudgementMapName = {
+            text: `คำพิพากษาฏีกาที่ / ${
+              LawsuitJudgement[0].JudgementNo
+              }`,
+            value: LawsuitJudgement[0].JudgementNo
+          };
+          this.ReferenceNoList.push(LawsuitJudgementMapName);
+          this.RewardFormGroup.get('RequestRewardCode').patchValue(
+            'Auto Generate'
+          );
+          const mapData = LawsuitJudgement[0].RequestPaymentFine.map(m => ({
+            ...m,
+            // tslint:disable-next-line:max-line-length
+            LawbreakerName: `${m.LawbreakerTitleName ||
+              ' '}${m.LawbreakerFirstName || ' '}${m.LawbreakerMiddleName ||
+              ' '}${m.LawbreakerLastName || ' '}${m.LawbreakerOtherName ||
+              ' '}`,
+            PaymentDueDate: `${m.PaymentActualDate}`,
+            BribeMoney: `${m.PaymentFine * 0.2 || 0}`,
+            RewardMoney: `${m.PaymentFine * 0.2 || 0}`
+          }));
+          this.listData = mapData;
+        }
         // 1.1.5
 
         // 1.1.7
@@ -673,10 +697,10 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
         // 1.1.9 NEW
         nonRequestRewardStaff.forEach(element => {
-          this.mainMasterService.SecondPartLevelCode(element.PosLevel).then(res => { 
+          this.mainMasterService.SecondPartLevelCode(element.PosLevel).then(res => {
             const secondPart = res.length > 0 ? res[0].SecondPart : 0;
             this.PosLeveltemp.push(secondPart)  //g
-          }) 
+          })
         });
         // console.log('++++++nonRequestRewardStaff : ', nonRequestRewardStaff)
         console.log('++++this.PosLeveltemp', this.PosLeveltemp)
@@ -727,7 +751,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
         setTimeout(() => {
           if (this.PosLeveltemp.length > 0) {
-            this.PosLeveltemp.forEach((p,i) => {
+            this.PosLeveltemp.forEach((p, i) => {
               datatable_nonRequestRewardStaff[i].SecondPart = p;
               const objForm = {};
               var x = datatable_nonRequestRewardStaff[i]
@@ -735,7 +759,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                 objForm[f] = [x[f]];
               });
               const newGroup: FormGroup = this.fb.group(objForm);
-              this.RequestRewardStaff.setControl(i,newGroup);
+              this.RequestRewardStaff.setControl(i, newGroup);
             });
           }
         }, 1500);
@@ -923,7 +947,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
         this.caseRStaffRemoveRow = [];
         this.selectChange();
-        
+
         this.navService.setSaveButton(false);
         this.navService.setCancelButton(false);
         this.navService.setPrintButton(true);
@@ -1031,7 +1055,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                   m12['FirstName'] = element['FullName'].split(' ')[0] || '';
                   m12['LastName'] = element['FullName'].split(' ')[1] || '';
                   m12['ContributorName'] = this.ContributorList.filter(f => f.value === parseInt(element['ContributorID'])).map(m => m.text).shift() || ' ';
-                }else{
+                } else {
                   Object.keys(m12).forEach(x => {
                     m12[x] = element[x] || '';
                   });
@@ -1136,7 +1160,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
                   m12['FirstName'] = element['FullName'].split(' ')[0] || '';
                   m12['LastName'] = element['FullName'].split(' ')[1] || '';
                   m12['ContributorName'] = this.ContributorList.filter(f => f.value === parseInt(element['ContributorID'])).map(m => m.text).shift() || ' ';
-                }else{
+                } else {
                   Object.keys(m12).forEach(x => {
                     m12[x] = element[x] || '';
                   });
@@ -1199,14 +1223,14 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
 
             // 2.2.3-1
             this.caseRStaffRemoveRow
-            .filter(f => f.StaffID)
-            .forEach(async StaffID => {
-              await this.requestRewardStaffService
-                .RequestRewardStaffupdDelete({
-                  StaffID: StaffID.StaffID
-                })
-                .toPromise();
-            });
+              .filter(f => f.StaffID)
+              .forEach(async StaffID => {
+                await this.requestRewardStaffService
+                  .RequestRewardStaffupdDelete({
+                    StaffID: StaffID.StaffID
+                  })
+                  .toPromise();
+              });
 
             // 2.2.4
             this.RequestRewardStaff.value
@@ -1252,7 +1276,7 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
             // 2.2.6 'WAIT'
             // 2.2.7 'WAIT'
             // 2.2.8 'WAIT'
-            
+
             this.navService.setSaveButton(false);
             this.navService.setCancelButton(false);
             this.navService.setPrintButton(true);
@@ -1361,7 +1385,8 @@ export class RewardComponent extends RewardConfig implements OnInit, OnDestroy {
     }));
     const printDoc = [...printDoc1, ...printDoc2, ...printDoc3, ...printDoc4, ...printDoc5];
 
-    const dialogRef = this.dialog.open(PrintDialogComponent, { size: 'lg',
+    const dialogRef = this.dialog.open(PrintDialogComponent, {
+      size: 'lg',
       backdrop: 'static'
     });
     dialogRef.componentInstance.data = printDoc;

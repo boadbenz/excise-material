@@ -65,14 +65,26 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
         const commandDateValue = inp[0].CommandDate != null ? setDateMyDatepicker(new Date(inp[0].CommandDate)) : '';
         this.formGroup.get('CommandDate').patchValue(commandDateValue);
         this.formGroup.get('CommandTime').patchValue(inp[0].CommandTime);
+
+        // set input data
+        this.submitData.CommandID = inp[0].CommandID != null ? inp[0].CommandID : '';
+        this.submitData.CommandNo = inp[0].CommandNo != null ? inp[0].CommandNo : '';
+        this.submitData.CommandDate = inp[0].CommandDate != null ? inp[0].CommandDate : '';
+        this.submitData.CommandTime = inp[0].CommandTime != null ? inp[0].CommandTime : '';
       }
+    });
+    this.formGroup.valueChanges.subscribe(() => {
+      this.submitData.CommandDate = this.ConvDateTimeToDate(
+        convertDateForSave(getDateMyDatepicker(this.formGroup.controls['CommandDate'].value))
+      );
+      this.itemChange();
     });
   }
 
   ngOnInit() {
     this.fetchData();
   }
-  private fetchData() {}
+  private fetchData() { }
   public sumItem(): number {
     if (this.inputItem.length > 0) {
       return this.inputItem.reduce((a, b) => (a += b));
@@ -82,24 +94,35 @@ export class ILG6008020000E09Component extends CONFIG implements OnInit {
   public changeForm(formGroup: FormGroup) {
     // console.log('data', data);
     const data: IRequestCommand = formGroup.value;
-    const newData = RequestCommandupdByConModel;
-    Object.keys(RequestCommandupdByConModel).forEach(f => {
-      newData[f] = data[f] || '';
-    });
-    newData['TotalPart'] = this.sumItem().toString();
-    newData['CommandDate'] = this.ConvDateTimeToDate(
+    // const newData = RequestCommandupdByConModel;
+    // Object.keys(RequestCommandupdByConModel).forEach(f => {
+    //   newData[f] = data[f] || '';
+    // });
+    // newData['TotalPart'] = this.sumItem().toString();
+    // newData['CommandDate'] = this.ConvDateTimeToDate(
+    //   convertDateForSave(getDateMyDatepicker(data['CommandDate']))
+    // );
+    // newData['RequestCommandDetail'] = this.bindingData.map((m, index) => ({
+    //   CommandDetailID: `${m.CommandDetailID}`,
+    //   NoticeCode: `${m.NoticeCode}`,
+    //   CommandID: `${m.CommandID}`,
+    //   IsActive: 1,
+    //   PartMoney: this.inputItem[index]
+    // }));
+
+    this.submitData.CommandID = data['CommandID'];
+    this.submitData.CommandNo = data['CommandNo'];
+    this.submitData.CommandDate = this.ConvDateTimeToDate(
       convertDateForSave(getDateMyDatepicker(data['CommandDate']))
     );
-    newData['RequestCommandDetail'] = this.bindingData.map((m, index) => ({
-      CommandDetailID: `${m.CommandDetailID}`,
-      NoticeCode: `${m.NoticeCode}`,
-      CommandID: `${m.CommandID}`,
-      IsActive: '1',
+    this.submitData.CommandTime = data['CommandTime'];
+    this.submitData.TotalPart = this.sumItem();
+    this.submitData.RequestCommandDetail = this.bindingData.map((m, index) => ({
+      ...m,
       PartMoney: this.inputItem[index]
     }));
 
-    this.submitData = newData;
-    console.log('newData', newData);
+    // this.submitData = newData;
     this.sendEmitData();
   }
   public itemChange() {
